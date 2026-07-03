@@ -41,7 +41,7 @@ O tema `desenhe` estende o tema *neutral* do Astryx:
 - **Acento:** laranja da marca `#F67800` (tom queimado `#BC5B00` no modo claro,
   para contraste AA em botões)
 - **Fundos:** tons de papel/gesso quentes; dark mode automático (segue o sistema)
-- **Tipografia:** Fraunces (títulos) + Figtree (corpo), via Google Fonts
+- **Tipografia:** Courier Prime (títulos) + Manrope (corpo), via Google Fonts
 
 Após alterar `src/theme/desenheTheme.ts`, rode `npm run theme:build` e commite
 os artefatos gerados.

@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import {Text} from '@astryxdesign/core/Text';
-import {SITE, whatsappLink} from '../data/site';
+import {SITE, asset, whatsappLink} from '../data/site';
 
 export function SiteFooter() {
   return (
@@ -8,7 +8,10 @@ export function SiteFooter() {
       <div className="container site-footer__grid">
         <div>
           <Link to="/" className="site-header__brand">
-            DESENHE <em>escola de arte</em>
+            <img
+              src={asset('/images/brand/logo.svg')}
+              alt="Desenhe — Escola de Arte"
+            />
           </Link>
           <div style={{marginTop: 12, maxWidth: 380}}>
             <Text type="supporting">

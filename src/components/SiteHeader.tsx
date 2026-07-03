@@ -1,5 +1,6 @@
 import {NavLink, Link} from 'react-router-dom';
 import {WhatsCta} from './WhatsCta';
+import {asset} from '../data';
 
 const NAV_ITEMS = [
   {to: '/cursos', label: 'Cursos'},
@@ -16,7 +17,10 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="container site-header__inner">
         <Link to="/" className="site-header__brand">
-          DESENHE <em>escola de arte</em>
+          <img
+            src={asset('/images/brand/logo.svg')}
+            alt="Desenhe — Escola de Arte"
+          />
         </Link>
         <nav className="site-nav" aria-label="Navegação principal">
           {NAV_ITEMS.map((item) => (

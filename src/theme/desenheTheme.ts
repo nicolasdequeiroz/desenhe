@@ -9,8 +9,8 @@
  * botões (WCAG); no modo claro usamos um tom queimado derivado dele,
  * e o vivo fica para o dark mode e elementos decorativos.
  *
- * Tipografia: Fraunces (serifada de display, personalidade artística)
- * para títulos; Figtree para corpo, pela legibilidade em telas.
+ * Tipografia: Courier Prime (monoespaçada tipo máquina de escrever,
+ * ecoando o traço do logo) para títulos; Manrope para corpo e parágrafos.
  */
 
 import {defineTheme} from '@astryxdesign/core/theme';
@@ -30,11 +30,11 @@ export const desenheTheme = defineTheme({
     // O carregamento das fontes é responsabilidade do consumidor:
     // os <link> do Google Fonts estão no index.html.
     heading: {
-      family: 'Fraunces',
-      fallbacks: 'Georgia, "Times New Roman", serif',
+      family: 'Courier Prime',
+      fallbacks: '"Courier New", Courier, monospace',
     },
     body: {
-      family: 'Figtree',
+      family: 'Manrope',
       fallbacks:
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
     },
