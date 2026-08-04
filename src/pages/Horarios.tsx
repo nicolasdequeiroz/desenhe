@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
@@ -7,7 +8,19 @@ import {SCHEDULE, SCHEDULE_NOTES} from '../data';
 
 const DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
+/** getDay(): 0=domingo...6=sábado. Mapeia para o índice em DAYS (ou -1 se domingo). */
+function todayIndex(): number {
+  const jsDay = new Date().getDay();
+  return jsDay === 0 ? -1 : jsDay - 1;
+}
+
 export function Horarios() {
+  const [todayIdx, setTodayIdx] = useState(-1);
+
+  useEffect(() => {
+    setTodayIdx(todayIndex());
+  }, []);
+
   return (
     <>
       <Seo
@@ -20,72 +33,92 @@ export function Horarios() {
         title="Grade semanal de turmas"
         lead="Aulas de segunda a sábado, manhã, tarde e noite. Escolha o curso e confirme a vaga no horário que combina com a sua rotina."
       >
-        <div style={{display: 'grid', gap: 40}}>
-          {SCHEDULE.map((entry) => (
-            <div key={entry.courseSlug}>
-              <Heading level={3}>
-                <Link
-                  to={`/cursos/${entry.courseSlug}`}
-                  style={{color: 'inherit', textDecoration: 'none'}}
-                >
-                  {entry.course}
-                </Link>
-              </Heading>
-              <div
-                style={{
-                  marginTop: 16,
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                  gap: 16,
-                }}
-              >
-                {DAYS.map((day) => {
-                  const slot = entry.slots.find((s) => s.day === day);
-                  return (
-                    <div key={day}>
-                      <Text weight="bold" display="block">
-                        {day}
-                      </Text>
-                      {slot ? (
-                        <ul
-                          style={{
-                            margin: '6px 0 0',
-                            padding: 0,
-                            listStyle: 'none',
-                            display: 'grid',
-                            gap: 4,
-                          }}
-                        >
-                          {slot.times.map((t) => (
-                            <li key={t}>
-                              <Text color="secondary">{t}</Text>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <Text type="supporting">—</Text>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              {entry.note && (
-                <div style={{marginTop: 12}}>
-                  <Text type="supporting">{entry.note}</Text>
+        <div className="schedule-list">
+          {SCHEDULE.map((entry) => {
+            const daysWithClass = DAYS.filter((day) =>
+              entry.slots.some((s) => s.day === day),
+            ).length;
+            return (
+              <div key={entry.courseSlug} className="schedule-card">
+                <div className="schedule-card__header">
+                  <Heading level={3}>
+                    <Link
+                      to={`/cursos/${entry.courseSlug}`}
+                      className="schedule-card__title-link"
+                    >
+                      {entry.course}
+                    </Link>
+                  </Heading>
+                  <span className="schedule-card__days-badge">
+                    {daysWithClass}x por semana
+                  </span>
                 </div>
-              )}
-            </div>
-          ))}
+
+                <div className="schedule-grid">
+                  {DAYS.map((day, index) => {
+                    const slot = entry.slots.find((s) => s.day === day);
+                    return (
+                      <div
+                        key={day}
+                        className={`schedule-day${
+                          index === todayIdx ? ' schedule-day--today' : ''
+                        }`}
+                      >
+                        <span className="schedule-day__label">
+                          {day.slice(0, 3)}
+                          {index === todayIdx && (
+                            <span className="schedule-day__today-dot" aria-hidden="true" />
+                          )}
+                        </span>
+                        {slot ? (
+                          <div className="schedule-day__slots">
+                            {slot.times.map((t) => (
+                              <span key={t} className="schedule-chip">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="schedule-day__empty">Sem aula</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {entry.note && (
+                  <div className="schedule-card__note">
+                    <Text type="supporting">{entry.note}</Text>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </Section>
 
       <Section muted>
-        <div style={{maxWidth: 720}}>
+        <div style={{maxWidth: 720, marginInline: 'auto'}} className="text-center">
           <Heading level={3}>Como funciona o calendário</Heading>
-          <ul style={{margin: '16px 0 0', paddingLeft: 20, display: 'grid', gap: 8}}>
+          <ul
+            style={{
+              margin: '16px 0 0',
+              padding: 0,
+              listStyle: 'none',
+              display: 'grid',
+              gap: 8,
+              textAlign: 'center',
+            }}
+          >
             {SCHEDULE_NOTES.map((note) => (
               <li key={note.slice(0, 24)}>
-                <Text color="secondary">{note}</Text>
+                <Text
+                  color="secondary"
+                  display="block"
+                  style={{textWrap: 'balance'}}
+                >
+                  {note}
+                </Text>
               </li>
             ))}
           </ul>

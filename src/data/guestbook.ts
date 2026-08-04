@@ -2,7 +2,7 @@
  * Livro de visitas desenhado do rodapé.
  *
  * O desenho não é salvo como imagem, e sim como traços vetoriais com
- * coordenadas normalizadas (0..1) — assim o mesmo dado é redesenhado tanto no
+ * coordenadas normalizadas (0..1), assim o mesmo dado é redesenhado tanto no
  * quadro grande quanto nas miniaturas da pilha, sempre nítido, e o payload cabe
  * numa célula de planilha.
  *
@@ -30,7 +30,7 @@ export interface Doodle {
 }
 
 const LOCAL_KEY = 'desenhe:guestbook';
-/** Proporção do quadro de desenho — usada no quadro e nas miniaturas. */
+/** Proporção do quadro de desenho: usada no quadro e nas miniaturas. */
 export const DOODLE_RATIO = 4 / 3;
 
 export const isRemoteEnabled = () => GUESTBOOK_ENDPOINT.length > 0;
@@ -95,7 +95,7 @@ function writeLocal(doodles: Doodle[]) {
 
 /**
  * Lista os desenhos. Os enviados por este navegador entram sempre, mesmo que a
- * planilha ainda não os tenha devolvido — quem desenhou vê o próprio na hora.
+ * planilha ainda não os tenha devolvido: quem desenhou vê o próprio na hora.
  */
 export async function listDoodles(): Promise<Doodle[]> {
   const local = readLocal();

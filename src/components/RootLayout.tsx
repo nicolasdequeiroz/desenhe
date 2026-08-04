@@ -14,7 +14,7 @@ export function RootLayout() {
        *
        * O header fica FORA dessa camada de propósito: `overflow: hidden` (usado
        * para recortar os cantos arredondados) transforma o ancestral num
-       * "scroll container" para efeitos de `position: sticky` — mas como
+       * "scroll container" para efeitos de `position: sticky`, mas como
        * ninguém rola essa div (quem rola é a janela), o header dentro dela
        * nunca gruda no topo. Com o header como irmão, ele soma sua rolagem
        * à da janela normalmente.

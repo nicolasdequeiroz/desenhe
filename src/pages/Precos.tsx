@@ -18,72 +18,76 @@ export function Precos() {
       <Section
         kicker="Investimento"
         title="Planos e mensalidades 2026"
-        lead="Aulas 1x por semana, em planos de 3, 6 ou 12 meses — quanto maior o compromisso, menor a mensalidade."
+        lead="Aulas 1x por semana, em planos de 3, 6 ou 12 meses: quanto maior o compromisso, menor a mensalidade."
       >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 24,
-          }}
-        >
-          {PRICING.map((tier) => (
-            <Card key={tier.id} padding={6}>
-              <Heading level={3}>{tier.title}</Heading>
-              <Text type="supporting" display="block">
-                {tier.subtitle}
-              </Text>
-              <div style={{marginTop: 20, display: 'grid', gap: 16}}>
-                {tier.plans.map((plan) => (
-                  <div key={plan.months}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'baseline',
-                        gap: 12,
-                      }}
-                    >
-                      <Text weight="semibold">{plan.months} meses</Text>
-                      <Text type="large" weight="bold">
-                        {formatBRL(plan.monthly)}
-                        <Text type="supporting"> /mês</Text>
-                      </Text>
-                    </div>
-                    <Text type="supporting">{plan.note}</Text>
-                  </div>
-                ))}
-              </div>
-              <div style={{marginTop: 20}}>
-                <Divider />
-                <div
-                  style={{
-                    marginTop: 16,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: 12,
-                  }}
-                >
-                  <Text color="secondary">Aula experimental avulsa</Text>
-                  <Badge label={formatBRL(tier.trialPrice)} variant="orange" />
+        <div className="pricing-grid">
+          {PRICING.map((tier) => {
+            const [heroPlan, ...altPlans] = tier.plans;
+            return (
+              <Card key={tier.id} padding={6} className="pricing-card">
+                <Heading level={3}>{tier.title}</Heading>
+                <Text type="supporting" display="block">
+                  {tier.subtitle}
+                </Text>
+
+                <div className="pricing-card__price">
+                  <span className="pricing-card__price-value">
+                    {formatBRL(heroPlan.monthly)}
+                  </span>
+                  <span className="pricing-card__price-unit">/mês</span>
                 </div>
-              </div>
-            </Card>
-          ))}
+                <Text type="supporting" display="block">
+                  No plano de {heroPlan.months} meses: {heroPlan.note.toLowerCase()}
+                </Text>
+
+                <div className="pricing-card__cta">
+                  <WhatsCta
+                    message={`Olá! Quero saber mais sobre o curso de ${tier.title}, no plano de ${heroPlan.months} meses.`}
+                    label="Falar sobre esse plano"
+                    size="sm"
+                  />
+                </div>
+
+                <Divider />
+
+                <ul className="pricing-card__features" role="list">
+                  {altPlans.map((plan) => (
+                    <li key={plan.months} className="pricing-card__feature">
+                      <span>
+                        <Text weight="semibold">{plan.months} meses</Text>
+                        {' — '}
+                        <Text weight="semibold">
+                          {formatBRL(plan.monthly)} /mês
+                        </Text>
+                        <Text type="supporting" display="block">
+                          {plan.note}
+                        </Text>
+                      </span>
+                    </li>
+                  ))}
+                  <li className="pricing-card__feature">
+                    <span className="pricing-card__trial">
+                      <Text weight="semibold">Aula experimental avulsa</Text>
+                      <Badge label={formatBRL(tier.trialPrice)} variant="orange" />
+                    </span>
+                  </li>
+                </ul>
+              </Card>
+            );
+          })}
         </div>
 
-        <div style={{marginTop: 32, maxWidth: 720}}>
-          <ul style={{margin: 0, paddingLeft: 20, display: 'grid', gap: 8}}>
+        <div className="pricing-notes">
+          <ul className="pricing-notes__list" role="list">
             {PRICING_NOTES.map((note) => (
-              <li key={note.slice(0, 24)}>
+              <li key={note.slice(0, 24)} className="pricing-notes__item">
                 <Text color="secondary">{note}</Text>
               </li>
             ))}
           </ul>
           <div style={{marginTop: 16}}>
             <Text color="secondary">
-              O curso de História da Arte tem valores próprios — consulte pelo
+              O curso de História da Arte tem valores próprios, consulte pelo
               WhatsApp.
             </Text>
           </div>

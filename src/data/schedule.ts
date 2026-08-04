@@ -37,7 +37,7 @@ export const SCHEDULE: CourseSchedule[] = [
     note: 'Crianças entre 6 e 8 anos podem fazer 1 hora de aula no mesmo período.',
   },
   {
-    course: 'Quadrinhos — HQ, Mangá e Cartoon',
+    course: 'Quadrinhos - HQ, Mangá e Cartoon',
     courseSlug: 'quadrinhos-hq-manga-cartoon',
     slots: [
       {day: 'Segunda', times: ['18h–21h']},
@@ -47,7 +47,7 @@ export const SCHEDULE: CourseSchedule[] = [
     ],
   },
   {
-    course: 'Pintura a Óleo ou Acrílica',
+    course: 'Pintura a Óleo e Acrílica',
     courseSlug: 'pintura-a-oleo-ou-acrilica',
     slots: [
       {day: 'Segunda', times: ['14h–16h']},
@@ -59,7 +59,7 @@ export const SCHEDULE: CourseSchedule[] = [
     ],
   },
   {
-    course: 'Pintura em Aquarela ou Guache',
+    course: 'Pintura Aquarela ou Guache',
     courseSlug: 'pintura-em-aquarela-ou-guache',
     slots: [
       {day: 'Terça', times: ['14h–16h']},

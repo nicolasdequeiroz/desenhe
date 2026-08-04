@@ -19,7 +19,7 @@ export function ColoniaDeFerias() {
   return (
     <>
       <Seo
-        title="Colônia de Férias — Inverno 2026"
+        title="Colônia de Férias · Inverno 2026"
         description="Colônia de férias de arte em Curitiba: de 13 a 17 de julho de 2026, para crianças de 6 a 12 anos. Desenho à mão livre, guache, lápis de cor e colagem, com materiais e lanche inclusos."
         path="/colonia-de-ferias"
       />
@@ -56,7 +56,7 @@ export function ColoniaDeFerias() {
             </div>
             <div className="fact-list__item">
               <span className="fact-list__label">Onde</span>
-              <Text>Rua Padre Anchieta, 265A — Mercês, Curitiba</Text>
+              <Text>Rua Padre Anchieta, 265A, Mercês, Curitiba</Text>
             </div>
           </div>
 

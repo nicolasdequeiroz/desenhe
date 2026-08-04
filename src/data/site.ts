@@ -1,7 +1,7 @@
 /** Informações institucionais e helpers compartilhados por todo o site. */
 
 export const SITE = {
-  name: 'Desenhe — Escola de Arte',
+  name: 'Desenhe · Escola de Arte',
   shortName: 'Desenhe',
   tagline: 'Escola de desenho e pintura em Curitiba há 38 anos',
   description:
@@ -19,6 +19,8 @@ export const SITE = {
   facebook: 'https://www.facebook.com/estudiodesenhe',
   mapsUrl:
     'https://www.google.com/maps/search/?api=1&query=Rua+Padre+Anchieta+265A+Merc%C3%AAs+Curitiba',
+  googleReviewUrl:
+    'https://www.google.com/search?q=desenhe%20escola%20de%20arte&sourceid=chrome&ie=UTF-8#lrd=0x94dce408114c0f31:0xc92df404ccd5457c,3,,,,',
 } as const;
 
 /** Link de WhatsApp com mensagem pré-preenchida. */

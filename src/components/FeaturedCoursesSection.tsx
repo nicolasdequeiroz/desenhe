@@ -17,7 +17,7 @@ const SETTINGS = {
 
 /**
  * Seção de cursos em destaque: lista de títulos grandes numerados e, ao lado,
- * a capa do curso sob o cursor — ela troca com blur + deslize e acompanha o
+ * a capa do curso sob o cursor: ela troca com blur + deslize e acompanha o
  * mouse com uma inclinação suave.
  */
 export function FeaturedCoursesSection() {
@@ -227,6 +227,11 @@ export function FeaturedCoursesSection() {
                 >
                   <span className="featured-courses__link-title">
                     {course.shortTitle}
+                    {course.featuredSubtitle ? (
+                      <span className="featured-courses__link-subtitle">
+                        {course.featuredSubtitle}
+                      </span>
+                    ) : null}
                   </span>
                   <span className="featured-courses__count" aria-hidden="true">
                     <span>/</span>

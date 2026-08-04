@@ -36,7 +36,7 @@ export const PRICING: PricingTier[] = [
   },
   {
     id: 'oleo-3h',
-    title: 'Pintura a Óleo ou Acrílica',
+    title: 'Pintura a Óleo e Acrílica',
     subtitle: 'Aulas de 3 horas, 1x por semana',
     plans: [
       {

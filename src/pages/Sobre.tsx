@@ -31,7 +31,7 @@ export function Sobre() {
           <div className="prose" style={{marginTop: 20}}>
             <p>
               A Desenhe nasceu em 1988, fundada pelo professor e artista Oscar
-              Pedroso — licenciado em Educação Artística pela FAP, com passagem
+              Pedroso, licenciado em Educação Artística pela FAP, com passagem
               pela Editora Abril e autor de manuais de desenho para o SENAC
               Paraná.
             </p>
@@ -44,7 +44,7 @@ export function Sobre() {
             </p>
             <p>
               Hoje somos uma equipe de artistas-professores atendendo crianças,
-              adolescentes e adultos — do primeiro traço ao trabalho autoral.
+              adolescentes e adultos, do primeiro traço ao trabalho autoral.
             </p>
           </div>
         </div>
@@ -67,7 +67,7 @@ export function Sobre() {
       <Section
         kicker="Nosso espaço"
         title="Ateliês, galeria e biblioteca"
-        lead="Salas de aula equipadas, uma galeria para expor os trabalhos dos alunos, biblioteca de arte e um café para os intervalos — no bairro Mercês, em Curitiba."
+        lead="Salas de aula equipadas, uma galeria para expor os trabalhos dos alunos, biblioteca de arte e um café para os intervalos, no bairro Mercês, em Curitiba."
       >
         <div className="masonry">
           {ESPACO.map((img) => (

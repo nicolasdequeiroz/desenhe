@@ -1,9 +1,9 @@
 /*
- * Tokens de design da Desenhe — CSS puro (substitui o tema gerado do Astryx).
+ * Tokens de design da Desenhe: CSS puro (substitui o tema gerado do Astryx).
  *
  * O site é dark fixo, então os valores já são os do modo escuro (sem
- * light-dark()). São exatamente os que o tema Astryx resolvia — extraídos
- * do site em produção antes da migração — para manter o visual idêntico.
+ * light-dark()). São exatamente os que o tema Astryx resolvia: extraídos
+ * do site em produção antes da migração: para manter o visual idêntico.
  */
 
 :root {
@@ -23,8 +23,13 @@
   --color-text-primary: #eee0d7;
   --color-text-secondary: #bba79c;
 
+  /* Cores de categoria (badges/tags de curso) */
+  --color-category-desenho: #d55415;
+  --color-category-pintura: #cd3e28;
+  --color-category-institucional: #df7400;
+
   /*
-   * Superfície clara "papel". Usada pelo rodapé e pelo quadro de desenho —
+   * Superfície clara "papel". Usada pelo rodapé e pelo quadro de desenho:
    * o quadro vive num portal no <body>, fora do rodapé, então estas precisam
    * estar na raiz para ele conseguir resolvê-las.
    */
@@ -80,16 +85,20 @@
   --spacing-8: 32px;
   --spacing-10: 40px;
   --spacing-12: 48px;
+
+  /* Altura da faixa promocional fixa no topo (mobile/tablet). */
+  --promo-bar-height: 36px;
 }
 
 /*
  * Estilos base de tipografia (equivalente ao reset tipográfico que o tema
- * Astryx aplicava). Usa :where() para specificity 0 — qualquer classe do
+ * Astryx aplicava). Usa :where() para specificity 0: qualquer classe do
  * site sobrescreve sem conflito.
  */
 :where(h1, h2, h3, h4, h5, h6) {
   font-family: var(--font-family-heading);
   color: var(--color-text-primary);
+  text-wrap: balance;
 }
 :where(h1) {
   font-size: var(--font-size-2xl);

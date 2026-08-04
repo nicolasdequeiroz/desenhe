@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import {Button} from '../ui';
 import {Seo} from '../components/Seo';
+import {ColoniaPromoBar} from '../components/ColoniaPromoBar';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
 import {SpaceShowcaseSection} from '../components/SpaceShowcaseSection';
 import {TestimonialsSection} from '../components/TestimonialsSection';
@@ -11,6 +12,8 @@ export function Home() {
   return (
     <>
       <Seo path="/" />
+
+      <ColoniaPromoBar />
 
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
@@ -23,25 +26,30 @@ export function Home() {
         </div>
 
         <div className="container hero__inner">
+          <div className="hero__top">
+            <span className="section__eyebrow hero__top-eyebrow">
+              Desde 1988 ensinando
+              <br />
+              arte em Curitiba
+            </span>
+          </div>
           <div className="hero__main">
             <div className="hero__bottom">
               <div className="hero__subheading">
                 <div className="hero__heading">
-                  <span className="section__eyebrow">
-                    Escola de arte em Curitiba · desde 1988
-                  </span>
                   <h1 className="hero__title">
                     Aqui você aprende a desenhar!
                   </h1>
                   <p className="hero__lead">
-                    Técnica e desenvolvimento criativo são as bases da arte de
-                    alto nível. 38 anos de experiência para todas as idades.
+                    Aulas de desenho e pintura para todas as idades e níveis,
+                    do primeiro traço à técnica avançada, em turmas pequenas e
+                    no ritmo de cada aluno.
                   </p>
                 </div>
                 <div className="hero__actions">
                   <WhatsCta
                     message="Olá! Quero agendar uma aula experimental na Desenhe."
-                    label="Agendar aula experimental"
+                    label="Agende sua primeira aula"
                     size="sm"
                   />
                   <Button
@@ -54,11 +62,11 @@ export function Home() {
               </div>
 
               <div className="hero__gallery">
-                <span className="section__eyebrow">Em destaque</span>
+                <span className="hero__gallery-badge">Em destaque</span>
                 <Link to="/colonia-de-ferias" className="hero__featured-card">
                   <img
                     src={asset('/images/colonia/poster-hero.jpg')}
-                    alt="Colônia de Férias de Inverno 2026 — Desenhe, Curitiba"
+                    alt="Colônia de Férias de Inverno 2026, Desenhe, Curitiba"
                   />
                 </Link>
               </div>

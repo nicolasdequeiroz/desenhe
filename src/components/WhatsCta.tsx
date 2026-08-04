@@ -6,6 +6,7 @@ interface WhatsCtaProps {
   label?: string;
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
 /** CTA padrão do site: abre conversa de WhatsApp com mensagem pré-preenchida. */
@@ -14,6 +15,7 @@ export function WhatsCta({
   label = 'Falar no WhatsApp',
   variant = 'primary',
   size = 'md',
+  className,
 }: WhatsCtaProps) {
   return (
     <Button
@@ -23,6 +25,7 @@ export function WhatsCta({
       href={whatsappLink(message)}
       target="_blank"
       rel="noopener noreferrer"
+      className={className}
     />
   );
 }

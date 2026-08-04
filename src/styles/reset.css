@@ -21,6 +21,10 @@
   margin: 0;
 }
 
+:where(p) {
+  text-wrap: pretty;
+}
+
 :where(a) {
   color: inherit;
   text-decoration: inherit;

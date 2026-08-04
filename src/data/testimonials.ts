@@ -1,4 +1,4 @@
-/** Depoimentos de alunos — extraídos de avaliações reais no Google. */
+/** Depoimentos de alunos: extraídos de avaliações reais no Google. */
 
 export interface Testimonial {
   quote: string;
@@ -15,7 +15,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      'Fui aluna da Desenhe na época da faculdade e até hoje acompanho o trabalho deles — é referência em estudo de desenho na cidade! Espaço acolhedor e professores incríveis.',
+      'Fui aluna da Desenhe na época da faculdade e até hoje acompanho o trabalho deles: é referência em estudo de desenho na cidade! Espaço acolhedor e professores incríveis.',
     author: 'Dora S.',
     role: 'Ex-aluna',
   },
@@ -39,7 +39,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      'Tratamento muito profissional e excelentes professores. Ensinam desde o básico até técnicas avançadas de desenho artístico, para adultos e crianças — e também preparam para vestibular.',
+      'Tratamento muito profissional e excelentes professores. Ensinam desde o básico até técnicas avançadas de desenho artístico, para adultos e crianças, e também preparam para vestibular.',
     author: 'Luiz P.',
     role: 'Aluno',
   },

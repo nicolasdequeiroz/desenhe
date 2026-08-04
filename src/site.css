@@ -17,7 +17,7 @@
 body {
   /*
    * Aparece de propósito: no scroll máximo, a caixa do rodapé (sticky) termina
-   * exatamente onde a .site-shell termina — não sobra sobreposição para o
+   * exatamente onde a .site-shell termina: não sobra sobreposição para o
    * canto arredondado da shell revelar. É o body que preenche esse recorte, e
    * por isso ele usa a cor clara do rodapé, não a escura do resto do site.
    */
@@ -35,7 +35,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: var(--spacing-6);
 }
@@ -78,7 +78,7 @@ body {
   padding-inline: var(--spacing-3) calc(var(--spacing-3) - 0.04em);
   /*
    * Altura controlada por min-height para manter todos os botões do site
-   * consistentes entre si (tamanhos e variantes) — a centragem óptica vem
+   * consistentes entre si (tamanhos e variantes): a centragem óptica vem
    * do translateY no label.
    */
   box-sizing: border-box;
@@ -236,11 +236,11 @@ body {
   padding-top: var(--spacing-2);
   overflow: visible;
   /*
-   * O `padding-top` acima é o respiro da pill flutuante — .site-header__inner
+   * O `padding-top` acima é o respiro da pill flutuante: .site-header__inner
    * não preenche essa faixa, só o próprio .site-header. Nas páginas internas
    * não há hero nenhum atrás pra revelar, então essa faixa precisa ser opaca
    * (a cor escura da página), senão vaza a cor clara do body (necessária pro
-   * recorte da gaveta no rodapé — ver comentário no `body`). Trocar sticky
+   * recorte da gaveta no rodapé: ver comentário no `body`). Trocar sticky
    * por fixed não mudaria nada aqui: o problema é essa faixa transparente,
    * não o esquema de posicionamento.
    */
@@ -251,7 +251,7 @@ body {
   position: fixed;
   inset-inline: 0;
   top: 0;
-  /* Na home o header fica sobre o hero — aqui sim a faixa deve ser transparente. */
+  /* Na home o header fica sobre o hero: aqui sim a faixa deve ser transparente. */
   background: transparent;
 }
 
@@ -266,8 +266,8 @@ body {
   /*
    * Opaco por padrão: nas páginas internas o header é o primeiro elemento da
    * página (sticky normal, não overlay), então "atrás" dele não tem hero
-   * nenhum — só o body. Ficar transparente ali só expõe a cor do body (que
-   * agora é clara, por causa do recorte da gaveta no rodapé — ver .site-shell
+   * nenhum: só o body. Ficar transparente ali só expõe a cor do body (que
+   * agora é clara, por causa do recorte da gaveta no rodapé: ver .site-shell
    * e o comentário no `body`), o que lê como um bug visual.
    */
   background: color-mix(in srgb, var(--color-background-card) 90%, transparent);
@@ -279,7 +279,7 @@ body {
 }
 
 /*
- * Só a home começa transparente — ali o header é overlay (fixed) sobre a
+ * Só a home começa transparente: ali o header é overlay (fixed) sobre a
  * imagem do hero, e ganha o fundo acima ao rolar, revelando o hero por baixo
  * enquanto isso.
  */
@@ -484,8 +484,7 @@ body {
   justify-content: center;
   width: 44px;
   height: 44px;
-  margin-left: auto;
-  border: 1px solid var(--color-border);
+  border: none;
   border-radius: var(--radius-element);
   background: transparent;
   color: var(--color-text-primary);
@@ -507,7 +506,7 @@ body {
 }
 
 @media (max-width: 900px) {
-  /* No mobile a navegação vive no painel; a inline some. */
+  /* No mobile/tablet a navegação vive no painel; a inline some. */
   .site-nav,
   .site-header__actions {
     display: none;
@@ -517,25 +516,60 @@ body {
     display: inline-flex;
   }
 
+  /* Logo sai do centro absoluto e cola perto do botão de menu. */
+  .site-header__brand {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+
+  /*
+   * Respiro real das bordas da tela para a pill do header. Padding no
+   * `.site-header` (não margin no `.site-header__inner`, que tem
+   * `width: 100%` herdado de `.container` e estouraria a viewport somando
+   * margin por fora dessa largura).
+   */
+  .site-header {
+    padding-inline: var(--spacing-2);
+  }
+
+  /*
+   * Painel do menu: mesma linguagem visual do dropdown de Cursos (pill
+   * flutuante, blur, sombra), ancorado logo abaixo do header. Nasce
+   * encolhido perto do botão e cresce com uma leve sobra elástica.
+   */
   .site-menu {
     display: block;
     position: absolute;
-    inset-inline: 0;
-    top: 100%;
+    left: var(--spacing-2);
+    right: var(--spacing-2);
+    top: calc(100% + var(--spacing-2));
     z-index: 49;
-    max-height: calc(100dvh - 94px);
+    max-height: calc(100dvh - 120px);
     overflow-y: auto;
     padding: var(--spacing-3) var(--spacing-4) var(--spacing-5);
-    /* Fundo sólido: backdrop-filter não funciona aninhado em um header
-       que já usa backdrop-filter (vira backdrop root), e o painel
-       precisa cobrir o conteúdo com legibilidade total. */
-    background: var(--color-background-body);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 18px 32px color-mix(in srgb, #000 35%, transparent);
+    border-radius: var(--radius-container);
+    border: none;
+    background: color-mix(in srgb, var(--color-background-popover) 96%, transparent);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 18px 40px color-mix(in srgb, #000 40%, transparent);
+    transform-origin: top left;
+    transform: scale(0.9) translateY(-12px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 0.22s ease,
+      visibility 0.35s;
   }
 
-  .site-menu[hidden] {
-    display: none;
+  .site-menu.is-open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .site-menu__nav {
@@ -554,7 +588,46 @@ body {
     font-size: var(--font-size-base);
     font-weight: 600;
     text-decoration: none;
+    opacity: 0;
     transition: background var(--duration-fast), color var(--duration-fast);
+  }
+
+  /* Itens entram em cascata, um pouco depois da pill do painel. */
+  .site-menu.is-open .site-menu__link {
+    animation: site-menu-item-in 0.3s ease forwards;
+  }
+
+  .site-menu.is-open .site-menu__link:nth-child(1) {
+    animation-delay: 0.08s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(2) {
+    animation-delay: 0.11s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(3) {
+    animation-delay: 0.14s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(4) {
+    animation-delay: 0.17s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(5) {
+    animation-delay: 0.2s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(6) {
+    animation-delay: 0.23s;
+  }
+  .site-menu.is-open .site-menu__link:nth-child(7) {
+    animation-delay: 0.26s;
+  }
+
+  @keyframes site-menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .site-menu__link:hover {
@@ -574,6 +647,77 @@ body {
 
   .site-menu__cta .btn {
     width: 100%;
+  }
+}
+
+/* ---------- Faixa promocional (Colônia de Férias, mobile/tablet) ---------- */
+
+.promo-bar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /*
+   * Fica acima até do header: o header (fixo na home) desce a altura da
+   * faixa via a classe `has-promo-bar` no body, aplicada enquanto a faixa
+   * existe (ver ColoniaPromoBar.tsx).
+   */
+  /* Em fluxo normal: rola junto com a página, não fica fixa. */
+  .promo-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+    min-height: var(--promo-bar-height);
+    padding: var(--spacing-1) var(--spacing-4);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  /*
+   * No topo (não rolado) o header fixo abre espaço para a faixa acima dele.
+   * Ao rolar, a faixa já saiu de vista (fluxo normal) e o header volta para
+   * o topo, sem deixar vão vazio.
+   */
+  body.has-promo-bar .site-header--overlay {
+    top: var(--promo-bar-height);
+  }
+
+  body.has-promo-bar .site-header--overlay.site-header--scrolled {
+    top: 0;
+  }
+
+  .promo-bar__link {
+    color: inherit;
+    text-decoration: none;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  .promo-bar__link:hover {
+    text-decoration: underline;
+  }
+
+  .promo-bar__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-on-accent) 15%, transparent);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .promo-bar__close:hover {
+    background: color-mix(in srgb, var(--color-on-accent) 25%, transparent);
   }
 }
 
@@ -611,19 +755,19 @@ body {
   background:
     linear-gradient(
       to bottom,
-      color-mix(in srgb, #000 55%, transparent) 0,
+      color-mix(in srgb, #000 45%, transparent) 0,
       transparent 140px
     ),
     radial-gradient(
       circle at 50% 100%,
-      var(--color-background-body) 11%,
-      transparent 62%
+      var(--color-background-body) 8%,
+      transparent 55%
     ),
     linear-gradient(
       to bottom,
-      color-mix(in srgb, var(--color-background-body) 35%, transparent) 0,
-      var(--color-background-body) 92%,
-      var(--color-background-body) 100%
+      color-mix(in srgb, var(--color-background-body) 15%, transparent) 0,
+      color-mix(in srgb, var(--color-background-body) 55%, transparent) 60%,
+      var(--color-background-body) 96%
     );
 }
 
@@ -655,10 +799,21 @@ body {
   margin-top: calc(-1 * var(--spacing-1));
 }
 
+.hero__top {
+  display: flex;
+  margin-top: var(--spacing-8);
+  margin-bottom: var(--spacing-4);
+}
+
+.hero__top-eyebrow {
+  line-height: 1.4;
+  font-weight: 700;
+}
+
 .hero__title {
   font-family: var(--font-family-heading);
   font-size: clamp(1.875rem, 4vw, 3rem);
-  line-height: 1.15;
+  line-height: 1.05;
   font-weight: 700;
   letter-spacing: 0.03em;
   margin: 0;
@@ -698,9 +853,24 @@ body {
 .hero__gallery {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--spacing-4);
   width: 100%;
   max-width: 18rem;
+}
+
+.hero__gallery-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .hero__featured-card {
@@ -759,6 +929,27 @@ body {
     min-height: 0;
   }
 
+  /* Fade mais suave: a foto do ateliê fica coberta demais nesta largura. */
+  .hero__background-overlay {
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, #000 45%, transparent) 0,
+        transparent 140px
+      ),
+      radial-gradient(
+        circle at 50% 100%,
+        var(--color-background-body) 8%,
+        transparent 55%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-background-body) 15%, transparent) 0,
+        color-mix(in srgb, var(--color-background-body) 55%, transparent) 60%,
+        var(--color-background-body) 96%
+      );
+  }
+
   .hero__inner {
     min-height: 0;
   }
@@ -773,26 +964,9 @@ body {
     gap: var(--spacing-6);
   }
 
+  /* Vira a faixa .promo-bar aqui embaixo; o card com foto some. */
   .hero__gallery {
-    /*
-     * Canto superior direito da janela da imagem. O topo é calculado a
-     * partir do início do .hero__inner (que começa depois do gap):
-     * subimos o gap inteiro e descemos só o respiro abaixo do header.
-     */
-    position: absolute;
-    z-index: 2;
-    top: calc(var(--spacing-4) - var(--hero-gap));
-    /* Acompanha o padding-inline do .container (absoluto ancora na
-       caixa de padding, então o recuo precisa ser explícito). */
-    right: var(--spacing-6);
-    max-width: 13rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero__gallery {
-    right: var(--spacing-4);
-    max-width: 9.5rem;
+    display: none;
   }
 }
 
@@ -819,6 +993,23 @@ body {
   margin-bottom: var(--spacing-6);
 }
 
+.section__head--centered {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: var(--spacing-10);
+}
+
+.section__head--centered .section__eyebrow {
+  margin-bottom: var(--spacing-3);
+}
+
+.section__head--centered h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
 .section__eyebrow {
   display: block;
   font-size: var(--font-size-sm);
@@ -842,12 +1033,12 @@ body {
 .featured-courses__services {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: var(--spacing-4);
+  gap: var(--spacing-10);
 }
 
 /*
  * Coluna das capas: as imagens são posicionadas em absoluto e só a ativa
- * fica visível — o JS ajusta o `top` para centrar na linha sob o cursor.
+ * fica visível: o JS ajusta o `top` para centrar na linha sob o cursor.
  */
 .featured-courses__images {
   position: relative;
@@ -930,7 +1121,8 @@ body {
 
 .featured-courses__link {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
+  justify-content: space-between;
   gap: var(--spacing-6);
   padding-block: var(--spacing-6);
   border-bottom: 1px solid var(--color-border);
@@ -970,6 +1162,18 @@ body {
   color: inherit;
 }
 
+.featured-courses__link-subtitle {
+  display: inline-block;
+  margin-left: var(--spacing-4);
+  font-family: var(--font-family-heading);
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  vertical-align: baseline;
+  color: inherit;
+}
+
 .featured-courses__count {
   display: flex;
   gap: var(--spacing-1);
@@ -1000,14 +1204,13 @@ body {
 }
 
 .featured-courses__footnote {
-  max-width: 44rem;
+  max-width: 32rem;
   margin: 0;
-  font-family: var(--font-family-heading);
-  font-size: clamp(1.125rem, 2vw, 1.75rem);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
 @media (max-width: 900px) {
@@ -1023,8 +1226,16 @@ body {
     display: none;
   }
 
+  .featured-courses__link {
+    justify-content: space-between;
+  }
+
   .featured-courses__link-title {
     font-size: clamp(1.25rem, 5.5vw, 2rem);
+  }
+
+  .featured-courses__count {
+    font-size: var(--font-size-xs);
   }
 
   .featured-courses__footer {
@@ -1076,6 +1287,43 @@ body {
   gap: var(--spacing-2);
   padding: var(--spacing-4);
   flex: 1;
+}
+
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: 9999px;
+  background: var(--category-color, var(--color-accent));
+  color: #fff;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.category-tag--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.category-tag--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.category-tag--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-card__cover {
+  position: relative;
+}
+
+.course-card__cover .category-tag {
+  position: absolute;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
 }
 
 .course-card__title {
@@ -1228,7 +1476,7 @@ body {
 /*
  * Galeria editorial (inspirada em referência com scroll longo e
  * generoso espaço vazio): duas colunas, cada uma uma PILHA VERTICAL
- * independente de fotos — não uma grade rígida. Os vãos entre fotos
+ * independente de fotos: não uma grade rígida. Os vãos entre fotos
  * são grandes de propósito (a seção deve "respirar" e alongar o
  * scroll), e cada item tem largura e alinhamento próprios para um
  * leve desalinhamento horizontal (jitter) em vez de tudo emparelhado.
@@ -1244,7 +1492,7 @@ body {
 .space-showcase__gallery-col {
   display: flex;
   flex-direction: column;
-  /* Vão grande e uniforme entre as fotos da mesma coluna — o
+  /* Vão grande e uniforme entre as fotos da mesma coluna: o
      escalonamento entre as colunas nasce só da altura de cada foto,
      sem deslocamento artificial. */
   gap: clamp(3rem, 9vw, 7rem);
@@ -1258,7 +1506,7 @@ body {
 .space-showcase__gallery-item {
   display: flex;
   flex-direction: column;
-  /* Gap pequeno entre a foto e sua legenda — bem menor que o vão entre
+  /* Gap pequeno entre a foto e sua legenda: bem menor que o vão entre
      itens da coluna, para o texto ficar visualmente "colado" à foto. */
   gap: var(--spacing-3);
   margin: 0;
@@ -1344,19 +1592,29 @@ body {
 @media (max-width: 700px) {
   .space-showcase__gallery {
     grid-template-columns: 1fr;
+    /* As duas colunas empilham nessa largura: sem isto, a última foto de
+       uma coluna encosta na primeira da próxima (só havia column-gap,
+       pensado para o layout de duas colunas lado a lado). */
+    row-gap: clamp(3.5rem, 16vw, 5.5rem);
   }
 
+  /* Mais vão entre as fotos dentro da mesma coluna também. */
   .space-showcase__gallery-col {
-    gap: clamp(2.5rem, 12vw, 4rem);
+    gap: clamp(3.5rem, 16vw, 5.5rem);
   }
 
   .space-showcase__gallery-item--sm {
-    width: 74%;
+    width: 82%;
   }
 
   .space-showcase__gallery-item--lg,
   .space-showcase__gallery-item--xl {
     width: 100%;
+  }
+
+  /* Cozinha (única foto "sm" centralizada) ganha jitter à direita aqui. */
+  .space-showcase__gallery-item--sm.space-showcase__gallery-item--center {
+    align-self: flex-end;
   }
 }
 
@@ -1399,7 +1657,7 @@ body {
 .testimonials__lead {
   margin: 0;
   width: 100%;
-  max-width: 28rem;
+  max-width: 34rem;
   font-family: var(--font-family-body);
   font-size: 14px;
   line-height: 1.5;
@@ -1415,8 +1673,13 @@ body {
 }
 
 .testimonials__carousel {
+  position: relative;
   margin-top: var(--spacing-10);
   overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -1433,22 +1696,55 @@ body {
   );
 }
 
+.testimonials__carousel--dragging {
+  cursor: grabbing;
+}
+
+.testimonials__hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transform: translate(-50%, 1.1rem) translateY(-0.25rem);
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill, 999px);
+  background: color-mix(in srgb, var(--color-background-card) 88%, transparent);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-shadow) 55%, transparent);
+  font-family: var(--font-family-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  will-change: left, top;
+}
+
+.testimonials__carousel:hover .testimonials__hint {
+  opacity: 1;
+  transform: translate(-50%, 1.1rem);
+}
+
+.testimonials__carousel--dragging .testimonials__hint {
+  opacity: 0;
+}
+
 .testimonials__track {
   display: flex;
   width: max-content;
   gap: var(--spacing-4);
   padding-inline: max(
     var(--spacing-6),
-    calc((100vw - 1120px) / 2 + var(--spacing-6))
+    calc((100vw - 1280px) / 2 + var(--spacing-6))
   );
-  animation: testimonials-ticker 48s linear infinite;
-}
-
-.testimonials__track:hover {
-  animation-play-state: paused;
+  will-change: transform;
 }
 
 .testimonials__card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
@@ -1459,6 +1755,29 @@ body {
   border-radius: var(--radius-container);
   background: var(--color-background-card);
   box-shadow: 0 2px 10px color-mix(in srgb, var(--color-shadow) 55%, transparent);
+  overflow: hidden;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+
+.testimonials__card:hover {
+  opacity: 1;
+}
+
+.testimonials__quote-icon {
+  position: absolute;
+  right: var(--spacing-4);
+  bottom: var(--spacing-4);
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-accent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.testimonials__card:hover .testimonials__quote-icon {
+  opacity: 0.18;
 }
 
 .testimonials__stars {
@@ -1499,22 +1818,15 @@ body {
   color: var(--color-text-secondary);
 }
 
-@keyframes testimonials-ticker {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .testimonials__track {
-    animation: none;
     flex-wrap: wrap;
     width: auto;
     justify-content: center;
+  }
+
+  .testimonials__card {
+    opacity: 1;
   }
 }
 
@@ -1530,6 +1842,18 @@ body {
 
   .testimonials__track {
     padding-inline: var(--spacing-4);
+  }
+
+  .testimonials__card {
+    width: min(17rem, 72vw);
+    min-height: 11rem;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+  }
+
+  .testimonials__quote {
+    font-size: var(--font-size-base);
+    line-height: 1.5;
   }
 }
 
@@ -1614,11 +1938,17 @@ body {
   background: var(--color-background-body);
   border-radius: 0 0 var(--spacing-10) var(--spacing-10);
   /*
-   * Sem isto o raio só existe no fundo da própria div — a última seção
+   * Sem isto o raio só existe no fundo da própria div: a última seção
    * (depoimentos) pinta um retângulo reto até a borda e mascara a curva.
    * overflow:hidden faz os filhos serem recortados pelo cantos arredondados.
    */
   overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .site-shell {
+    border-radius: 0 0 var(--spacing-6) var(--spacing-6);
+  }
 }
 
 /* ---------- Footer (livro de visitas desenhado) ---------- */
@@ -1626,7 +1956,7 @@ body {
 .site-footer {
   /*
    * Preso ao fundo da viewport durante toda a rolagem, escondido atrás da
-   * .site-shell — só aparece quando ela termina. Sem z-index de propósito:
+   * .site-shell: só aparece quando ela termina. Sem z-index de propósito:
    * com z-index o rodapé viraria um contexto de empilhamento e prenderia os
    * botões flutuantes (position: fixed) atrás do conteúdo.
    */
@@ -1634,24 +1964,24 @@ body {
   bottom: 0;
   /*
    * O texto não fica acima da pilha: as duas coisas dividem a mesma área.
-   * A pilha (.doodle-pile) preenche o rodapé inteiro por baixo do texto — como
+   * A pilha (.doodle-pile) preenche o rodapé inteiro por baixo do texto: como
    * na referência, uma pilha alta pode subir e chegar perto do título.
    */
-  min-height: clamp(440px, 50vw, 620px);
-  padding-top: calc(var(--spacing-10) * 1.5);
-  padding-bottom: var(--spacing-8);
+  min-height: clamp(380px, 42vw, 520px);
+  padding-top: calc(var(--spacing-10) * 1.2);
+  padding-bottom: var(--spacing-6);
   overflow: hidden;
 }
 
 @media (max-width: 640px) {
   /*
    * No celular o texto empilha em coluna única (mais alto) e os cartões são
-   * poucos e pequenos (ver DoodlePile.tsx) — 640px dá espaço pra pilha
+   * poucos e pequenos (ver DoodlePile.tsx): 640px dá espaço pra pilha
    * assentar logo abaixo do texto, sem sobrar um vão vazio no meio como
    * "100dvh" deixava.
    */
   .site-footer {
-    min-height: 640px;
+    min-height: 560px;
   }
 }
 
@@ -1781,15 +2111,28 @@ body {
   color: var(--surface-warm-text-subtle);
 }
 
+.site-footer__mark {
+  position: absolute;
+  left: var(--spacing-6);
+  bottom: var(--spacing-6);
+  z-index: 0;
+  width: clamp(90px, 11vw, 140px);
+  height: auto;
+  color: var(--surface-warm-text);
+  opacity: 0.3;
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+
 /* ---------- Pilha de desenhos ---------- */
 
 .doodle-pile {
-  /* Preenche o rodapé inteiro — mesma área que o texto, atrás dele. */
+  /* Preenche o rodapé inteiro: mesma área que o texto, atrás dele. */
   position: absolute;
   inset: 0;
   z-index: 1;
   /* Sem JS (ou com movimento reduzido) os cartões ficam enfileirados, presos
-     ao rodapé da área — mesmo comportamento visual de "assentar embaixo". */
+     ao rodapé da área: mesmo comportamento visual de "assentar embaixo". */
   display: flex;
   flex-wrap: wrap;
   align-content: flex-end;
@@ -1856,8 +2199,8 @@ body {
 /* ---------- Botão-estrela ---------- */
 
 /*
- * Fixo, como o botão do WhatsApp — flutua sobre o site inteiro, não só sobre
- * o rodapé — e fica empilhado logo acima dele, mesma borda direita.
+ * Fixo, como o botão do WhatsApp: flutua sobre o site inteiro, não só sobre
+ * o rodapé, e fica empilhado logo acima dele, mesma borda direita.
  */
 .guestbook-fab {
   position: fixed;
@@ -1900,7 +2243,7 @@ body {
 }
 
 /*
- * Chama atenção pro lápis só perto do rodapé (90% da página) — antes fica
+ * Chama atenção pro lápis só perto do rodapé (90% da página): antes fica
  * quieto. Cresce e vibra: é o botão que abre o desenho, precisa ser óbvio.
  */
 .guestbook-fab.is-shaking {
@@ -2310,7 +2653,7 @@ body {
 
 @media (max-width: 640px) {
   /*
-   * No celular a "carta flutuante" fica apertada — vira uma folha que sobe do
+   * No celular a "carta flutuante" fica apertada: vira uma folha que sobe do
    * rodapé da tela, com mais espaço pro quadro de desenho e sem depender de
    * mirar os cantinhos do card pra fechar.
    */
@@ -2462,5 +2805,467 @@ body {
     bottom: var(--spacing-4);
     width: 3.25rem;
     height: 3.25rem;
+  }
+}
+
+/* ---------- Preços (cards inspirados no componente Klarheit Pricing) ---------- */
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-4);
+}
+
+.pricing-card {
+  border: 1px solid var(--color-border);
+  transition: border-color var(--duration-medium) ease;
+}
+
+.pricing-card:hover {
+  border-color: var(--color-accent);
+}
+
+.pricing-card .divider {
+  margin-block: var(--spacing-6);
+}
+
+.pricing-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-5);
+}
+
+.pricing-card__price-value {
+  font-family: var(--font-family-body);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.pricing-card__price-unit {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.pricing-card__cta {
+  margin-top: var(--spacing-5);
+}
+
+.pricing-card__features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.pricing-card__feature {
+  display: flex;
+  align-items: flex-start;
+}
+
+.pricing-card__trial {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.pricing-notes {
+  margin-top: var(--spacing-12);
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.pricing-notes__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+/* ---------- Horários (grade semanal por curso) ---------- */
+
+.schedule-list {
+  display: grid;
+  gap: var(--spacing-6);
+  max-width: 840px;
+  margin-inline: auto;
+}
+
+.schedule-card {
+  background: var(--color-background-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  padding: var(--spacing-6);
+  transition: border-color var(--duration-medium) ease;
+}
+
+.schedule-card:hover {
+  border-color: var(--color-accent);
+}
+
+.schedule-card__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
+}
+
+.schedule-card__title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.schedule-card__title-link:hover {
+  color: var(--color-accent);
+}
+
+.schedule-card__days-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 162, 88, 0.16);
+  color: var(--color-accent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 128px));
+  gap: var(--spacing-3);
+}
+
+.schedule-day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-element);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition:
+    border-color var(--duration-medium) ease,
+    background-color var(--duration-medium) ease;
+}
+
+.schedule-day--today {
+  border-color: var(--color-accent);
+  background: rgba(255, 162, 88, 0.08);
+}
+
+.schedule-day__label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.schedule-day--today .schedule-day__label {
+  color: var(--color-accent);
+}
+
+.schedule-day__today-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.schedule-day__slots {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.schedule-chip {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: var(--radius-inner);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.schedule-day__empty {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+}
+
+.schedule-card__note {
+  margin-top: var(--spacing-4);
+}
+
+@media (max-width: 900px) {
+  .schedule-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .schedule-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .schedule-card {
+    padding: var(--spacing-4);
+  }
+}
+
+/* ---------- Professores (grade escalonada + modal de biografia) ---------- */
+
+.professors-content {
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.professors-banner {
+  display: flex;
+  padding-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.professors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-8) var(--spacing-5);
+}
+
+@media (max-width: 860px) {
+  .professors-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .professors-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .professors-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.professor-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (min-width: 700px) {
+  .professor-card:nth-child(even) {
+    margin-top: var(--spacing-10);
+  }
+}
+
+.professor-card__image-wrap {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1.15;
+  padding: var(--spacing-3);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-accent) 55%, #171310 45%);
+  transition: box-shadow var(--duration-medium) ease;
+}
+
+.professor-card:nth-child(3n + 2) .professor-card__image-wrap {
+  background: var(--color-background-surface);
+}
+
+.professor-card:nth-child(3n) .professor-card__image-wrap {
+  background: color-mix(in srgb, var(--color-accent) 22%, var(--color-background-surface) 78%);
+}
+
+.professor-card:hover .professor-card__image-wrap,
+.professor-card:focus-visible .professor-card__image-wrap {
+  box-shadow: var(--shadow-med);
+}
+
+.professor-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-element);
+  transition: transform var(--duration-medium) ease;
+}
+
+.professor-card:hover .professor-card__image,
+.professor-card:focus-visible .professor-card__image {
+  transform: scale(1.04);
+}
+
+.professor-card__details {
+  display: block;
+  margin-top: var(--spacing-3);
+}
+
+.professor-card__cta {
+  display: inline-block;
+  margin-top: var(--spacing-2);
+  color: var(--color-accent);
+  font-family: var(--font-family-body);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity var(--duration-medium) ease,
+    transform var(--duration-medium) ease;
+}
+
+.professor-card:hover .professor-card__cta,
+.professor-card:focus-visible .professor-card__cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.professor-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: color-mix(in srgb, #000 55%, transparent);
+  animation: professor-modal-backdrop-in var(--duration-medium) ease both;
+}
+
+@keyframes professor-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.professor-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 70;
+  width: min(560px, calc(100vw - 2 * var(--spacing-4)));
+  max-height: calc(100vh - 2 * var(--spacing-6));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+  box-shadow: 0 24px 60px color-mix(in srgb, #000 40%, transparent);
+  transform: translate(-50%, -50%);
+  animation: professor-modal-in var(--duration-medium) var(--site-button-ease, ease) both;
+}
+
+@keyframes professor-modal-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .professor-modal-backdrop,
+  .professor-modal {
+    animation: none;
+  }
+}
+
+.professor-modal__close {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, #fff 20%, transparent);
+  background: color-mix(in srgb, #000 35%, transparent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+}
+
+.professor-modal__close:hover {
+  background: color-mix(in srgb, #000 55%, transparent);
+}
+
+.professor-modal__media {
+  flex-shrink: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.professor-modal__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.professor-modal__body {
+  padding: var(--spacing-6);
+}
+
+.professor-modal__role {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.professor-modal__name {
+  margin: var(--spacing-1) 0 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-primary);
+}
+
+.professor-modal__bio {
+  margin: var(--spacing-4) 0 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 560px) {
+  .professor-modal__body {
+    padding: var(--spacing-5);
   }
 }

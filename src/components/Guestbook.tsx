@@ -11,7 +11,7 @@ const GuestbookPanel = lazy(() =>
 
 /**
  * Livro de visitas do rodapé: a pilha de desenhos e o botão-lápis que abre o
- * quadro. A leitura acontece só no cliente — a página estática é gerada sem
+ * quadro. A leitura acontece só no cliente: a página estática é gerada sem
  * desenho nenhum e eles entram na hidratação.
  */
 export function Guestbook() {
@@ -34,7 +34,7 @@ export function Guestbook() {
     };
   }, []);
 
-  // O lápis treme só a partir de 90% da página — antes disso fica quieto.
+  // O lápis treme só a partir de 90% da página; antes disso fica quieto.
   useEffect(() => {
     const checkScroll = () => {
       const ratio =
@@ -53,7 +53,7 @@ export function Guestbook() {
   /*
    * O botão e o quadro vão para o <body> num portal. O rodapé usa
    * `position: sticky` (efeito de gaveta) e sticky sempre cria um contexto de
-   * empilhamento — de dentro dele, nem `position: fixed` com z-index alto
+   * empilhamento; de dentro dele, nem `position: fixed` com z-index alto
    * escaparia para cima da camada de conteúdo.
    */
   const floating = (

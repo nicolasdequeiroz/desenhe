@@ -10,7 +10,7 @@ import {
   type Stroke,
 } from '../data/guestbook';
 
-/** Paleta do quadro — lápis de cor da escola. */
+/** Paleta do quadro: lápis de cor da escola. */
 const COLORS = [
   '#231a13',
   '#f67800',
@@ -55,7 +55,7 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
   const drawingRef = useRef<Stroke | null>(null);
 
-  // Fecha com Escape e trava o foco dentro do painel — padrão de diálogo modal.
+  // Fecha com Escape e trava o foco dentro do painel: padrão de diálogo modal.
   useEffect(() => {
     const panel = panelRef.current;
     panel?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
@@ -327,7 +327,7 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
             {status === 'local' && (
               <p className="guestbook-panel__msg">
                 {isRemoteEnabled()
-                  ? 'Não deu para salvar no servidor agora — seu desenho ficou salvo neste navegador.'
+                  ? 'Não deu para salvar no servidor agora. Seu desenho ficou salvo neste navegador.'
                   : 'Salvo neste navegador. Configure o endpoint para que todos vejam.'}
               </p>
             )}

@@ -1,9 +1,13 @@
-import {Heading, Text} from '../ui';
+import {useState} from 'react';
+import {Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
-import {TEACHERS, asset} from '../data';
+import {ProfessorModal} from '../components/ProfessorModal';
+import {TEACHERS, asset, type Teacher} from '../data';
 
 export function Professores() {
+  const [selected, setSelected] = useState<Teacher | null>(null);
+
   return (
     <>
       <Seo
@@ -14,37 +18,46 @@ export function Professores() {
       <Section
         kicker="Equipe"
         title="Professores que vivem de arte"
-        lead="Artistas visuais, ilustradores e pesquisadores — cada um com sua trajetória, todos dedicados a acompanhar o seu desenvolvimento."
+        lead="Artistas visuais, ilustradores e pesquisadores, cada um com sua trajetória, todos dedicados a acompanhar o seu desenvolvimento."
       >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: 32,
-          }}
-        >
-          {TEACHERS.map((teacher) => (
-            <article key={teacher.name}>
-              <img
-                className="img-round"
-                src={asset(teacher.photo)}
-                alt={`${teacher.name}, ${teacher.role.toLowerCase()} da Desenhe`}
-                style={{width: '100%', aspectRatio: '4 / 3', objectFit: 'cover'}}
-                loading="lazy"
-              />
-              <div style={{marginTop: 12}}>
-                <Heading level={3}>{teacher.name}</Heading>
-                <Text type="supporting" display="block">
-                  {teacher.role}
-                </Text>
-                <div style={{marginTop: 8}}>
-                  <Text color="secondary">{teacher.bio}</Text>
-                </div>
-              </div>
-            </article>
-          ))}
+        <div className="professors-content">
+          <div className="professors-banner" />
+
+
+          <div className="professors-grid">
+            {TEACHERS.map((teacher) => (
+              <button
+                key={teacher.name}
+                type="button"
+                className="professor-card"
+                onClick={() => setSelected(teacher)}
+              >
+                <span className="professor-card__image-wrap">
+                  <img
+                    className="professor-card__image"
+                    src={asset(teacher.photo)}
+                    alt={`${teacher.name}, ${teacher.role.toLowerCase()} da Desenhe`}
+                    loading="lazy"
+                  />
+                </span>
+                <span className="professor-card__details">
+                  <Text as="span" weight="bold" display="block">
+                    {teacher.name}
+                  </Text>
+                  <Text type="supporting" display="block">
+                    {teacher.role}
+                  </Text>
+                  <span className="professor-card__cta">Ler biografia →</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </Section>
+
+      {selected && (
+        <ProfessorModal teacher={selected} onClose={() => setSelected(null)} />
+      )}
     </>
   );
 }

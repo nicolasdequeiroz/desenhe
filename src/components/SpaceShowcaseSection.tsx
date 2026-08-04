@@ -8,7 +8,7 @@ interface GalleryItem {
   alt: string;
   label: string;
   number: string;
-  /** Legenda breve, opcional — só as fotos "grandes" costumam ter. */
+  /** Legenda breve, opcional: só as fotos "grandes" costumam ter. */
   caption?: string;
 }
 
@@ -65,7 +65,7 @@ const HIGHLIGHTS: Highlight[] = [
   {
     icon: () => <ChartLineUp size={22} aria-hidden="true" />,
     title: 'Para todos os níveis',
-    body: 'Do amador ao profissional — o curso acompanha desde o primeiro traço até o aperfeiçoamento técnico.',
+    body: 'Do amador ao profissional, o curso acompanha desde o primeiro traço até o aperfeiçoamento técnico.',
   },
 ];
 
@@ -97,7 +97,7 @@ function GalleryFigure({
  * (idades / níveis). Abaixo, uma galeria editorial: duas colunas, cada
  * uma uma pilha vertical independente de fotos de tamanhos e larguras
  * variados, com grandes vãos entre elas e leve desalinhamento horizontal
- * (jitter) entre os itens — sem grade rígida, sem auto-scroll. As fotos
+ * (jitter) entre os itens; sem grade rígida, sem auto-scroll. As fotos
  * maiores levam uma legenda breve. O espaço vazio generoso é
  * intencional: o scroll da seção é longo.
  */

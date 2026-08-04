@@ -62,6 +62,20 @@ export function SiteHeader() {
       className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
     >
       <div className="container site-header__inner">
+        <button
+          type="button"
+          className="site-header__toggle"
+          aria-expanded={menuOpen}
+          aria-controls="site-mobile-menu"
+          aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          {menuOpen ? (
+            <X size={22} weight="bold" aria-hidden="true" />
+          ) : (
+            <List size={22} weight="bold" aria-hidden="true" />
+          )}
+        </button>
         <nav className="site-nav" aria-label="Navegação principal">
           <NavCoursesDropdown />
           {NAV_ITEMS.map((item) => (
@@ -80,30 +94,21 @@ export function SiteHeader() {
                 {item.label}
               </NavLink>
             ))}
-            <WhatsCta
-              message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
-              label="Matricule-se"
-              size="sm"
-            />
           </div>
-          <button
-            type="button"
-            className="site-header__toggle"
-            aria-expanded={menuOpen}
-            aria-controls="site-mobile-menu"
-            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
-            onClick={() => setMenuOpen((value) => !value)}
-          >
-            {menuOpen ? (
-              <X size={22} weight="bold" aria-hidden="true" />
-            ) : (
-              <List size={22} weight="bold" aria-hidden="true" />
-            )}
-          </button>
+          <WhatsCta
+            message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
+            label="Matricule-se"
+            size="sm"
+            className="site-header__cta"
+          />
         </div>
       </div>
 
-      <div id="site-mobile-menu" className="site-menu" hidden={!menuOpen}>
+      <div
+        id="site-mobile-menu"
+        className={`site-menu${menuOpen ? ' is-open' : ''}`}
+        aria-hidden={!menuOpen}
+      >
         <nav className="site-menu__nav" aria-label="Navegação principal (menu)">
           {MOBILE_NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} className="site-menu__link">

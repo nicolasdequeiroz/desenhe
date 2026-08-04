@@ -15,7 +15,7 @@ export function Cursos() {
       <Section
         kicker="Cursos"
         title="Encontre o seu caminho na arte"
-        lead="Turmas de no máximo 8 alunos, cronogramas personalizados e matrículas abertas o ano inteiro — presencial ou online ao vivo."
+        lead="Turmas de no máximo 8 alunos, cronogramas personalizados e matrículas abertas o ano inteiro: presencial ou online ao vivo."
       >
         <div className="course-grid">
           {COURSES.map((course) => (

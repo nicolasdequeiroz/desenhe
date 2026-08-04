@@ -90,7 +90,7 @@ export interface HeadingProps {
 }
 
 /**
- * Título. Renderiza o <hN> correspondente — o tamanho/peso vem do reset
+ * Título. Renderiza o <hN> correspondente; o tamanho/peso vem do reset
  * tipográfico em tokens.css (mesmo mapeamento do tema Astryx).
  */
 export function Heading({children, level, className, style, id}: HeadingProps) {

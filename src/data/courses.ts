@@ -8,11 +8,23 @@ export interface CourseModule {
   description: string;
 }
 
+export type CourseCategory = 'desenho' | 'pintura' | 'institucional';
+
+export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
+  desenho: 'Desenho',
+  pintura: 'Pintura',
+  institucional: 'Teoria da arte',
+};
+
 export interface Course {
   slug: string;
   title: string;
   /** Título curto para cards e navegação. */
   shortTitle: string;
+  /** Subtítulo pequeno exibido ao lado do título no carrossel de cursos em destaque da home. */
+  featuredSubtitle?: string;
+  /** Categoria usada para colorir badges/tags nos cards e na página do curso. */
+  category: CourseCategory;
   excerpt: string;
   description: string[];
   audience: string;
@@ -34,6 +46,7 @@ export const COURSES: Course[] = [
   {
     slug: 'desenho-artistico',
     title: 'Desenho Artístico',
+    category: 'desenho',
     shortTitle: 'Desenho Artístico',
     excerpt:
       'Os fundamentos do desenho: formas bidimensionais e tridimensionais, sombreamento, composição, perspectiva e teoria das cores.',
@@ -78,18 +91,20 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'quadrinhos-hq-manga-cartoon',
-    title: 'Quadrinhos — HQ | Mangá | Cartoon',
+    title: 'Quadrinhos - HQ | Mangá | Cartoon',
+    category: 'desenho',
     shortTitle: 'Quadrinhos',
+    featuredSubtitle: 'HQ, Mangá e Cartoon',
     excerpt:
       'Construção de personagens, cenários e narrativas visuais seguindo as estéticas do universo dos quadrinhos.',
     description: [
       'O objetivo do curso é desenvolver histórias em quadrinhos, personagens (character design), cenários e cenas, narrativas textuais e visuais.',
-      'Os alunos aprendem a construção de personagens seguindo as estéticas características do universo dos quadrinhos, partindo de formas básicas até chegar em trabalhos finalizados — explorando movimentos e aperfeiçoando o uso da luz e da sombra nas narrativas visuais.',
+      'Os alunos aprendem a construção de personagens seguindo as estéticas características do universo dos quadrinhos, partindo de formas básicas até chegar em trabalhos finalizados, explorando movimentos e aperfeiçoando o uso da luz e da sombra nas narrativas visuais.',
     ],
     audience: 'Todas as idades',
     ageBadge: 'Todas as idades',
     classLength: '2 horas por aula',
-    totalHours: '144 horas — aproximadamente 18 meses',
+    totalHours: '144 horas, aproximadamente 18 meses',
     enrollment: 'Presencial e online: matrículas abertas o ano todo',
     modules: [
       {
@@ -120,12 +135,13 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-a-oleo-ou-acrilica',
-    title: 'Pintura a Óleo ou Acrílica',
-    shortTitle: 'Óleo ou Acrílica',
+    title: 'Pintura a Óleo e Acrílica',
+    category: 'pintura',
+    shortTitle: 'Óleo e Acrílica',
     excerpt:
       'Da teoria das cores à pintura em camadas e velaturas, em papel, madeira e tela.',
     description: [
-      'No curso, os alunos exploram a pintura com tinta a óleo ou acrílica, iniciando pela teoria das cores e composição com paletas restritas. Experimentam diferentes superfícies — papel, madeira, tela — e conhecem os materiais e ferramentas essenciais.',
+      'No curso, os alunos exploram a pintura com tinta a óleo ou acrílica, iniciando pela teoria das cores e composição com paletas restritas. Experimentam diferentes superfícies (papel, madeira, tela) e conhecem os materiais e ferramentas essenciais.',
       'A metodologia valoriza a progressão natural do desenho para a pintura: é recomendada base prévia em desenho para conceitos como perspectiva e luz e sombra.',
     ],
     audience: 'Adultos e adolescentes a partir de 13 anos',
@@ -169,7 +185,8 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-em-aquarela-ou-guache',
-    title: 'Pintura em Aquarela ou Guache',
+    title: 'Pintura Aquarela ou Guache',
+    category: 'pintura',
     shortTitle: 'Aquarela ou Guache',
     excerpt:
       'Transparências, sobreposições e gradientes na aquarela; camadas densas e acabamentos suaves no guache.',
@@ -219,6 +236,7 @@ export const COURSES: Course[] = [
   {
     slug: 'desenho-infantil',
     title: 'Desenho Infantil',
+    category: 'desenho',
     shortTitle: 'Desenho Infantil',
     excerpt:
       'Habilidades manuais e percepção espacial para crianças a partir dos 6 anos, com muita experimentação de materiais.',
@@ -261,33 +279,34 @@ export const COURSES: Course[] = [
   {
     slug: 'historia-da-arte',
     title: 'Para Além do Cânone: uma história conectada da arte',
+    category: 'institucional',
     shortTitle: 'História da Arte',
     excerpt:
       'Um curso teórico que repensa a História da Arte para além de narrativas eurocentradas, da Antiguidade à contemporaneidade.',
     description: [
       'O curso convida a repensar a História da Arte para além de narrativas eurocentradas e lineares, compreendendo a arte como um campo dinâmico de trocas, circulações e disputas entre culturas.',
-      'Percorre da Antiguidade à contemporaneidade em três módulos, explorando conexões entre sociedades e a circulação de ideias — concluindo com reflexões sobre inteligência artificial na produção artística.',
+      'Percorre da Antiguidade à contemporaneidade em três módulos, explorando conexões entre sociedades e a circulação de ideias, concluindo com reflexões sobre inteligência artificial na produção artística.',
       'As aulas são expositivas e dialogadas, com estudos de caso, dinâmicas interativas e atividades individuais e em grupo que estimulam o pensamento crítico.',
     ],
     audience:
       'Profissionais criativos, estudantes, pesquisadores, guias e mediadores culturais, público 50+ e apaixonados por museus e cultura',
     ageBadge: 'Adultos e jovens',
     classLength: '2h30 por encontro semanal',
-    totalHours: '90 horas (30h por módulo) — 9 meses',
-    enrollment: 'Curso teórico presencial — turmas a partir de abril de 2026',
+    totalHours: '90 horas (30h por módulo), 9 meses',
+    enrollment: 'Curso teórico presencial, turmas a partir de abril de 2026',
     modules: [
       {
-        title: 'Módulo 1 — Antiguidade e mundos conectados',
+        title: 'Módulo 1: Antiguidade e mundos conectados',
         description:
           'A arte como campo de trocas entre culturas desde a Antiguidade.',
       },
       {
-        title: 'Módulo 2 — Circulações e disputas',
+        title: 'Módulo 2: Circulações e disputas',
         description:
           'Conexões entre sociedades e a circulação de ideias e imagens.',
       },
       {
-        title: 'Módulo 3 — Contemporaneidade',
+        title: 'Módulo 3: Contemporaneidade',
         description:
           'Da arte moderna às reflexões sobre inteligência artificial na produção artística.',
       },

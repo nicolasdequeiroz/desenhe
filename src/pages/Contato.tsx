@@ -10,13 +10,13 @@ export function Contato() {
     <>
       <Seo
         title="Contato e localização"
-        description="Fale com a Desenhe pelo WhatsApp (41) 98712-1371 ou visite a escola na Rua Padre Anchieta, 265A — Mercês, Curitiba/PR."
+        description="Fale com a Desenhe pelo WhatsApp (41) 98712-1371 ou visite a escola na Rua Padre Anchieta, 265A, Mercês, Curitiba/PR."
         path="/contato"
       />
       <Section
         kicker="Contato"
         title="Vamos conversar sobre arte?"
-        lead="O jeito mais rápido de falar com a gente é pelo WhatsApp — para dúvidas, matrículas ou para agendar uma visita à escola."
+        lead="O jeito mais rápido de falar com a gente é pelo WhatsApp: para dúvidas, matrículas ou para agendar uma visita à escola."
       >
         <div
           style={{
@@ -39,7 +39,7 @@ export function Contato() {
               <Heading level={3}>Endereço</Heading>
               <div style={{marginTop: 8, marginBottom: 12}}>
                 <Text color="secondary">
-                  {SITE.address.street} — {SITE.address.neighborhood},{' '}
+                  {SITE.address.street}, {SITE.address.neighborhood},{' '}
                   {SITE.address.city}/{SITE.address.state}
                 </Text>
               </div>

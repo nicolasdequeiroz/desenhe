@@ -6,6 +6,7 @@ import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';
 import {
+  COURSE_CATEGORY_LABELS,
   PRICING,
   SCHEDULE,
   asset,
@@ -31,8 +32,12 @@ export function CursoDetalhe({slug}: {slug: string}) {
 
       <div className="container course-hero">
         <div>
-          <span className="section__eyebrow">Curso</span>
-          <Heading level={1}>{course.title}</Heading>
+          <span className={`category-tag category-tag--${course.category}`}>
+            {COURSE_CATEGORY_LABELS[course.category]}
+          </span>
+          <div style={{marginTop: 12}}>
+            <Heading level={1}>{course.title}</Heading>
+          </div>
 
           <div className="prose" style={{marginTop: 20}}>
             {course.description.map((p) => (
@@ -151,7 +156,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
           )}
           <div style={{marginTop: 16}}>
             <Text type="supporting">
-              Confirme a disponibilidade de vagas pelo WhatsApp —{' '}
+              Confirme a disponibilidade de vagas pelo WhatsApp:{' '}
               <Link to="/horarios">ver grade completa</Link>.
             </Text>
           </div>
@@ -169,7 +174,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
               <img
                 key={img}
                 src={asset(img)}
-                alt={`${course.galleryCaption ?? course.shortTitle} — imagem ${i + 1}`}
+                alt={`${course.galleryCaption ?? course.shortTitle}, imagem ${i + 1}`}
                 loading="lazy"
               />
             ))}

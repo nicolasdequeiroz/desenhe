@@ -3,7 +3,7 @@ import {renderStrokes, DOODLE_RATIO, type Doodle} from '../data/guestbook';
 
 /** Quantos desenhos ficam empilhados no rodapé (os mais recentes). */
 const MAX_VISIBLE_DESKTOP = 22;
-/** No mobile o rodapé é mais baixo em largura — poucos cartões, menores. */
+/** No mobile o rodapé é mais baixo em largura: poucos cartões, menores. */
 const MAX_VISIBLE_MOBILE = 6;
 const THUMB_WIDTH_DESKTOP = 116;
 const THUMB_WIDTH_MOBILE = 84;
@@ -62,7 +62,7 @@ export function DoodlePile({doodles}: {doodles: Doodle[]}) {
   const signature = visible.map((d) => d.id).join(',');
 
   /*
-   * A física só começa quando o scroll chega de fato no fim da página — não
+   * A física só começa quando o scroll chega de fato no fim da página: não
    * dá pra usar IntersectionObserver no container: o rodapé é `position:
    * sticky; bottom: 0`, então geometricamente ele já "está na tela" quase
    * desde o início, só que escondido atrás da camada opaca (.site-shell,
@@ -95,7 +95,7 @@ export function DoodlePile({doodles}: {doodles: Doodle[]}) {
 
     /*
      * Os cartões nascem ocultos (ver CSS) pra não piscar a grade estática
-     * antes da física assumir — o import do matter-js é assíncrono e demora
+     * antes da física assumir: o import do matter-js é assíncrono e demora
      * um instante. Sem movimento reduzido, não tem física nenhuma pra
      * esperar: revela a grade estática de uma vez.
      */
