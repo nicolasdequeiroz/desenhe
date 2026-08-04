@@ -1,9 +1,11 @@
 name: Deploy para GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+  # Deploy automático desativado até o site ficar pronto.
+  # Para reativar, descomente:
+  # push:
+  #   branches: [main]
 
 permissions:
   contents: read
