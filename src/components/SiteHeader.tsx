@@ -1,39 +1,122 @@
-import {NavLink, Link} from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {NavLink, Link, useLocation} from 'react-router-dom';
+import {List, X} from '@phosphor-icons/react';
 import {WhatsCta} from './WhatsCta';
-import {asset} from '../data';
+import {NavCoursesDropdown} from './NavCoursesDropdown';
+import {BrandLogo} from './BrandLogo';
 
-const NAV_ITEMS = [
+const HORARIOS_ITEM = {to: '/horarios', label: 'Horários'};
+const PROFESSORES_ITEM = {to: '/professores', label: 'Professores'};
+const COLONIA_ITEM = {to: '/colonia-de-ferias', label: 'Colônia de Férias'};
+const PRECOS_ITEM = {to: '/precos', label: 'Preços'};
+const SOBRE_ITEM = {to: '/sobre', label: 'Sobre'};
+const CONTATO_ITEM = {to: '/contato', label: 'Contato'};
+
+const NAV_ITEMS = [HORARIOS_ITEM, PROFESSORES_ITEM, COLONIA_ITEM];
+
+/** Itens auxiliares (Preços, Sobre, Contato) agrupados perto das ações. */
+const AUX_NAV_ITEMS = [PRECOS_ITEM, SOBRE_ITEM, CONTATO_ITEM];
+
+/** Itens do menu mobile: mesma ordem lógica da nav + Cursos como link direto. */
+const MOBILE_NAV_ITEMS = [
   {to: '/cursos', label: 'Cursos'},
-  {to: '/horarios', label: 'Horários'},
-  {to: '/precos', label: 'Preços'},
-  {to: '/professores', label: 'Professores'},
-  {to: '/colonia-de-ferias', label: 'Colônia de Férias'},
-  {to: '/sobre', label: 'Sobre'},
-  {to: '/contato', label: 'Contato'},
+  HORARIOS_ITEM,
+  PRECOS_ITEM,
+  PROFESSORES_ITEM,
+  COLONIA_ITEM,
+  SOBRE_ITEM,
+  CONTATO_ITEM,
 ];
 
 export function SiteHeader() {
+  const {pathname} = useLocation();
+  const overlay = pathname === '/';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Fecha o menu ao navegar para outra página.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Header transparente no topo; ganha fundo ao rolar a página.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Fecha com Escape (padrão de disclosure acessível).
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
+
   return (
-    <header className="site-header">
+    <header
+      className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
+    >
       <div className="container site-header__inner">
-        <Link to="/" className="site-header__brand">
-          <img
-            src={asset('/images/brand/logo.svg')}
-            alt="Desenhe — Escola de Arte"
-          />
-        </Link>
         <nav className="site-nav" aria-label="Navegação principal">
+          <NavCoursesDropdown />
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to}>
               {item.label}
             </NavLink>
           ))}
         </nav>
-        <WhatsCta
-          message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
-          label="Matricule-se"
-          size="sm"
-        />
+        <Link to="/" className="site-header__brand">
+          <BrandLogo />
+        </Link>
+        <div className="site-header__right">
+          <div className="site-header__actions">
+            {AUX_NAV_ITEMS.map((item) => (
+              <NavLink key={item.to} to={item.to} className="site-header__nav-link">
+                {item.label}
+              </NavLink>
+            ))}
+            <WhatsCta
+              message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
+              label="Matricule-se"
+              size="sm"
+            />
+          </div>
+          <button
+            type="button"
+            className="site-header__toggle"
+            aria-expanded={menuOpen}
+            aria-controls="site-mobile-menu"
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            {menuOpen ? (
+              <X size={22} weight="bold" aria-hidden="true" />
+            ) : (
+              <List size={22} weight="bold" aria-hidden="true" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div id="site-mobile-menu" className="site-menu" hidden={!menuOpen}>
+        <nav className="site-menu__nav" aria-label="Navegação principal (menu)">
+          {MOBILE_NAV_ITEMS.map((item) => (
+            <NavLink key={item.to} to={item.to} className="site-menu__link">
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="site-menu__cta">
+          <WhatsCta
+            message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
+            label="Matricule-se"
+          />
+        </div>
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
-import {Button} from '@astryxdesign/core/Button';
+import {Button} from '../ui';
 import {whatsappLink} from '../data/site';
 
 interface WhatsCtaProps {

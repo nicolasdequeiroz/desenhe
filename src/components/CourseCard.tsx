@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
-import {Badge} from '@astryxdesign/core/Badge';
-import {Text} from '@astryxdesign/core/Text';
+import {Badge} from '../ui';
+import {Text} from '../ui';
 import {asset, type Course} from '../data';
 
 export function CourseCard({course}: {course: Course}) {

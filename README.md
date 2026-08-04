@@ -3,7 +3,8 @@
 Novo site institucional da [Desenhe](https://www.desenhe.com.br) (Curitiba/PR), construído com:
 
 - **Vite + React + TypeScript**
-- **[Astryx](https://astryx.atmeta.com/)** como design system (React + StyleX), com tema próprio da marca
+- **Design system próprio** em CSS puro: tokens em `src/styles/tokens.css` e
+  componentes em `src/ui/` (sem dependências de UI de terceiros)
 - **vite-react-ssg** para pré-renderizar cada página em HTML estático (SEO)
 - **GitHub Pages** como hospedagem, com deploy automático via GitHub Actions
 
@@ -14,17 +15,19 @@ npm install
 npm run dev        # dev server em http://localhost:5173
 npm run build      # build estático em dist/ (14+ páginas pré-renderizadas)
 npm run preview    # serve o build de produção
-npm run theme:build  # recompila o tema (após editar src/theme/desenheTheme.ts)
 ```
 
 ## Estrutura
 
 ```
 src/
-  theme/desenheTheme.ts   Tema da marca (tokens, tipografia) — fonte da verdade
-  theme/desenhe.css/.js   Artefatos gerados por `npm run theme:build` (commitados)
+  styles/tokens.css       Tokens da marca (cores, tipografia, espaçamento) + reset tipográfico
+  styles/reset.css        Reset de CSS mínimo
+  ui/                     Componentes de UI (Button, Text, Heading, Badge, Card…)
+  ui/ui.css               Estilos dos componentes de UI
+  site.css                Estilos estruturais do site (header, hero, seções, botões…)
   data/                   Todo o conteúdo do site (cursos, professores, preços…)
-  components/             Header, footer, seções, CTAs de WhatsApp
+  components/             Header, footer, seções, CTAs de WhatsApp, efeito de tinta
   pages/                  Uma página por rota
   routes.tsx              Rotas + redirects das URLs do site antigo
 public/images/            Imagens otimizadas (WebP) extraídas do site Wix
@@ -36,15 +39,14 @@ push; o deploy é automático.
 
 ## Design system
 
-O tema `desenhe` estende o tema *neutral* do Astryx:
+Tokens definidos em `src/styles/tokens.css` (`:root`), consumidos via
+`var(--...)` no `site.css` e nos componentes de `src/ui/`:
 
-- **Acento:** laranja da marca `#F67800` (tom queimado `#BC5B00` no modo claro,
-  para contraste AA em botões)
-- **Fundos:** tons de papel/gesso quentes; dark mode automático (segue o sistema)
+- **Acento:** laranja da marca `#F67800`
+- **Fundos:** tons de papel/gesso quentes; site travado em modo escuro
+  (`color-scheme: dark`), com as seções de Depoimentos e footer em superfície
+  clara própria (variáveis `--surface-warm-*`)
 - **Tipografia:** Courier Prime (títulos) + Manrope (corpo), via Google Fonts
-
-Após alterar `src/theme/desenheTheme.ts`, rode `npm run theme:build` e commite
-os artefatos gerados.
 
 ## Deploy e domínio
 

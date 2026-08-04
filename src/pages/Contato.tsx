@@ -1,5 +1,5 @@
-import {Heading, Text} from '@astryxdesign/core/Text';
-import {Button} from '@astryxdesign/core/Button';
+import {Heading, Text} from '../ui';
+import {Button} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';

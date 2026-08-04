@@ -1,5 +1,5 @@
-import {Heading, Text} from '@astryxdesign/core/Text';
-import {Blockquote} from '@astryxdesign/core/Blockquote';
+import {Heading, Text} from '../ui';
+import {Blockquote} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';
@@ -26,7 +26,7 @@ export function Sobre() {
 
       <div className="container course-hero">
         <div>
-          <span className="section__kicker">Desde 1988</span>
+          <span className="section__eyebrow">Desde 1988</span>
           <Heading level={1}>38 anos formando artistas em Curitiba</Heading>
           <div className="prose" style={{marginTop: 20}}>
             <p>

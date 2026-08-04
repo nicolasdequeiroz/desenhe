@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
-import {Badge} from '@astryxdesign/core/Badge';
-import {Heading, Text} from '@astryxdesign/core/Text';
-import {Divider} from '@astryxdesign/core/Divider';
+import {Badge} from '../ui';
+import {Heading, Text} from '../ui';
+import {Divider} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';
@@ -31,7 +31,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
 
       <div className="container course-hero">
         <div>
-          <span className="section__kicker">Curso</span>
+          <span className="section__eyebrow">Curso</span>
           <Heading level={1}>{course.title}</Heading>
 
           <div className="prose" style={{marginTop: 20}}>

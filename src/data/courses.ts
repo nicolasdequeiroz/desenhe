@@ -16,6 +16,8 @@ export interface Course {
   excerpt: string;
   description: string[];
   audience: string;
+  /** Texto curto de faixa etária para badges em cards. */
+  ageBadge: string;
   classLength: string;
   totalHours?: string;
   enrollment: string;
@@ -40,6 +42,7 @@ export const COURSES: Course[] = [
       'Ao longo das aulas práticas são explorados materiais como grafite, nanquim, sanguíneo, sépia, lápis branco 6B, giz pastel seco e lápis de cor.',
     ],
     audience: 'Adultos, adolescentes e crianças a partir dos 9 anos',
+    ageBadge: 'A partir de 9 anos',
     classLength: '2 horas por aula',
     totalHours: 'Conteúdo programado para 144 horas de aula',
     enrollment: 'Presencial ou online ao vivo: matrículas abertas o ano todo',
@@ -84,6 +87,7 @@ export const COURSES: Course[] = [
       'Os alunos aprendem a construção de personagens seguindo as estéticas características do universo dos quadrinhos, partindo de formas básicas até chegar em trabalhos finalizados — explorando movimentos e aperfeiçoando o uso da luz e da sombra nas narrativas visuais.',
     ],
     audience: 'Todas as idades',
+    ageBadge: 'Todas as idades',
     classLength: '2 horas por aula',
     totalHours: '144 horas — aproximadamente 18 meses',
     enrollment: 'Presencial e online: matrículas abertas o ano todo',
@@ -125,6 +129,7 @@ export const COURSES: Course[] = [
       'A metodologia valoriza a progressão natural do desenho para a pintura: é recomendada base prévia em desenho para conceitos como perspectiva e luz e sombra.',
     ],
     audience: 'Adultos e adolescentes a partir de 13 anos',
+    ageBadge: 'A partir de 13 anos',
     classLength: '3 horas por aula',
     totalHours: 'Conteúdo programado para 120 horas de aula',
     enrollment: 'Presencial e online: matrículas abertas o ano todo',
@@ -173,6 +178,7 @@ export const COURSES: Course[] = [
       'Há espaço para o desenvolvimento de trabalhos autorais através da experimentação de técnicas mistas, de acordo com o gosto estético de cada aluno.',
     ],
     audience: 'Adultos, adolescentes e crianças a partir de 9 anos',
+    ageBadge: 'A partir de 9 anos',
     classLength: '2 horas por aula',
     totalHours: 'Conteúdo programado para 112 horas de aula',
     enrollment: 'Presencial e/ou online ao vivo: matrículas abertas o ano todo',
@@ -221,6 +227,7 @@ export const COURSES: Course[] = [
       'O curso acompanha o nível e o ritmo de cada aluno, seja iniciante ou avançado, com registro contínuo do progresso individual.',
     ],
     audience: 'Crianças a partir dos 6 anos',
+    ageBadge: 'A partir de 6 anos',
     classLength: '2 horas por aula',
     enrollment: 'Matrículas abertas o ano todo',
     modules: [
@@ -264,6 +271,7 @@ export const COURSES: Course[] = [
     ],
     audience:
       'Profissionais criativos, estudantes, pesquisadores, guias e mediadores culturais, público 50+ e apaixonados por museus e cultura',
+    ageBadge: 'Adultos e jovens',
     classLength: '2h30 por encontro semanal',
     totalHours: '90 horas (30h por módulo) — 9 meses',
     enrollment: 'Curso teórico presencial — turmas a partir de abril de 2026',

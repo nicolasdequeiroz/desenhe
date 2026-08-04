@@ -1,96 +1,75 @@
 import {Link} from 'react-router-dom';
-import {Text} from '@astryxdesign/core/Text';
-import {SITE, asset, whatsappLink} from '../data/site';
+import {SITE, whatsappLink} from '../data/site';
+import {Guestbook} from './Guestbook';
 
+const EXPLORAR_LINKS = [
+  {label: 'Cursos', to: '/cursos'},
+  {label: 'Horários', to: '/horarios'},
+  {label: 'Preços', to: '/precos'},
+  {label: 'Sobre', to: '/sobre'},
+] as const;
+
+const CONTATO_LINKS = [
+  {label: 'WhatsApp', href: whatsappLink('Olá! Vim pelo site da Desenhe.')},
+  {label: 'Instagram', href: SITE.instagram},
+  {label: 'Como chegar', href: SITE.mapsUrl},
+] as const;
+
+/** Footer — livro de visitas desenhado, no formato do site de referência. */
 export function SiteFooter() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="site-footer">
-      <div className="container site-footer__grid">
-        <div>
-          <Link to="/" className="site-header__brand">
-            <img
-              src={asset('/images/brand/logo.svg')}
-              alt="Desenhe — Escola de Arte"
-            />
-          </Link>
-          <div style={{marginTop: 12, maxWidth: 380}}>
-            <Text type="supporting">
-              Há 38 anos ensinando desenho e pintura em Curitiba, com turmas
-              pequenas e ensino individualizado para todas as idades.
-            </Text>
+      <div className="container site-footer__top">
+        <div className="site-footer__intro">
+          <span className="site-footer__badge">
+            <span className="site-footer__badge-dot" aria-hidden="true" />
+            Matrículas abertas
+          </span>
+          <h2 className="site-footer__headline">
+            Antes de ir, deixe um desenho.
+            <br />
+            Toque no lápis para começar.
+          </h2>
+          <p className="site-footer__copyright">
+            © {year} Desenhe — Escola de Arte · {SITE.address.street},{' '}
+            {SITE.address.neighborhood}, {SITE.address.city}/{SITE.address.state}
+          </p>
+        </div>
+
+        <div className="site-footer__nav-groups">
+          <div className="site-footer__group">
+            <p className="site-footer__group-title">(Explorar)</p>
+            <nav className="site-footer__nav" aria-label="Explorar">
+              {EXPLORAR_LINKS.map((item) => (
+                <Link key={item.to} to={item.to} className="site-footer__link">
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="site-footer__group">
+            <p className="site-footer__group-title">(Contato)</p>
+            <nav className="site-footer__nav" aria-label="Contato">
+              {CONTATO_LINKS.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="site-footer__link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {item.label} ↗
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
-
-        <div>
-          <h3>Visite-nos</h3>
-          <ul>
-            <li>
-              <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer">
-                {SITE.address.street}
-                <br />
-                {SITE.address.neighborhood}, {SITE.address.city}/
-                {SITE.address.state}
-              </a>
-            </li>
-            <li>
-              <a
-                href={whatsappLink('Olá! Vim pelo site da Desenhe.')}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                WhatsApp {SITE.whatsappDisplay}
-              </a>
-            </li>
-            <li>
-              <a
-                href={SITE.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">
-                Facebook
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>Navegue</h3>
-          <ul>
-            <li>
-              <Link to="/cursos">Cursos</Link>
-            </li>
-            <li>
-              <Link to="/horarios">Horários</Link>
-            </li>
-            <li>
-              <Link to="/precos">Preços</Link>
-            </li>
-            <li>
-              <Link to="/professores">Professores</Link>
-            </li>
-            <li>
-              <Link to="/colonia-de-ferias">Colônia de Férias</Link>
-            </li>
-            <li>
-              <Link to="/sobre">Sobre a escola</Link>
-            </li>
-          </ul>
-        </div>
       </div>
-      <div
-        className="container"
-        style={{marginTop: 40, paddingTop: 16, borderTop: '1px solid var(--color-border)'}}
-      >
-        <Text type="supporting">
-          © {new Date().getFullYear()} Desenhe — Escola de Arte. Todos os
-          direitos reservados.
-        </Text>
-      </div>
+
+      <Guestbook />
     </footer>
   );
 }

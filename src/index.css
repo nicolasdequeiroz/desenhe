@@ -1,4 +1,4 @@
-@import '@astryxdesign/core/reset.css';
-@import '@astryxdesign/core/astryx.css';
-@import './theme/desenhe.css';
+@import './styles/reset.css';
+@import './styles/tokens.css';
+@import './ui/ui.css';
 @import './site.css';

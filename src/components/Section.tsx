@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {Heading, Text} from '@astryxdesign/core/Text';
+import {Heading, Text} from '../ui';
 
 interface SectionProps {
   kicker?: string;
@@ -25,7 +25,7 @@ export function Section({
         {(kicker || title) && (
           <div className="section__head">
             <div style={{maxWidth: 640}}>
-              {kicker && <span className="section__kicker">{kicker}</span>}
+              {kicker && <span className="section__eyebrow">{kicker}</span>}
               {title && <Heading level={2}>{title}</Heading>}
               {lead && (
                 <div style={{marginTop: 8}}>

@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {Heading, Text} from '@astryxdesign/core/Text';
+import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';

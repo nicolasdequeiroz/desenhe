@@ -1,6 +1,6 @@
-import {Card} from '@astryxdesign/core/Card';
-import {Badge} from '@astryxdesign/core/Badge';
-import {Heading, Text} from '@astryxdesign/core/Text';
+import {Card} from '../ui';
+import {Badge} from '../ui';
+import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';
@@ -26,7 +26,7 @@ export function ColoniaDeFerias() {
 
       <div className="container course-hero">
         <div>
-          <span className="section__kicker">Inverno 2026 · 13 a 17 de julho</span>
+          <span className="section__eyebrow">Inverno 2026 · 13 a 17 de julho</span>
           <Heading level={1}>Colônia de Férias de Arte</Heading>
           <div className="prose" style={{marginTop: 20}}>
             <p>

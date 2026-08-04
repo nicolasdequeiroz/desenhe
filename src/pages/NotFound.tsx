@@ -1,5 +1,5 @@
-import {EmptyState} from '@astryxdesign/core/EmptyState';
-import {Button} from '@astryxdesign/core/Button';
+import {EmptyState} from '../ui';
+import {Button} from '../ui';
 import {Seo} from '../components/Seo';
 
 export function NotFound() {

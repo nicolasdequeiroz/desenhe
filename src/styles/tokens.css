@@ -1,0 +1,145 @@
+/*
+ * Tokens de design da Desenhe — CSS puro (substitui o tema gerado do Astryx).
+ *
+ * O site é dark fixo, então os valores já são os do modo escuro (sem
+ * light-dark()). São exatamente os que o tema Astryx resolvia — extraídos
+ * do site em produção antes da migração — para manter o visual idêntico.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Cores */
+  --color-accent: #f67800;
+  --color-on-accent: #651100;
+  --color-background-body: #171310;
+  --color-background-card: #1d1813;
+  --color-background-muted: #1d1813;
+  --color-background-popover: #1d1813;
+  --color-background-surface: #282219;
+  --color-border: rgba(253, 238, 229, 0.1);
+  --color-border-emphasized: #53443a;
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-text-primary: #eee0d7;
+  --color-text-secondary: #bba79c;
+
+  /*
+   * Superfície clara "papel". Usada pelo rodapé e pelo quadro de desenho —
+   * o quadro vive num portal no <body>, fora do rodapé, então estas precisam
+   * estar na raiz para ele conseguir resolvê-las.
+   */
+  --surface-warm-bg: #fff4e0;
+  --surface-warm-text: #231a13;
+  --surface-warm-text-muted: #53443a;
+  --surface-warm-text-subtle: #736058;
+  --surface-warm-border: color-mix(in srgb, #231a13 14%, #fff4e0);
+  --surface-warm-card: #fffbf7;
+
+  /* Tipografia */
+  --font-family-heading: 'Courier Prime', 'Courier New', Courier, monospace;
+  --font-family-body: Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-family-code: ui-monospace, 'SF Mono', Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  --font-size-xs: 0.625rem; /* 10px */
+  --font-size-sm: 0.75rem; /* 12px */
+  --font-size-base: 0.9375rem; /* 15px */
+  --font-size-lg: 1.1875rem; /* 19px */
+  --font-size-xl: 1.4375rem; /* 23px */
+  --font-size-2xl: 1.8125rem; /* 29px */
+  --font-size-3xl: 2.3125rem; /* 37px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Raios */
+  --radius-inner: 4px;
+  --radius-element: 8px;
+  --radius-container: 12px;
+
+  /* Sombra */
+  --shadow-med:
+    0 2px 4px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+
+  /* Durações */
+  --duration-fast: 125ms;
+  --duration-medium: 300ms;
+  --duration-slow: 700ms;
+
+  /* Espaçamento (escala base 4px) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+}
+
+/*
+ * Estilos base de tipografia (equivalente ao reset tipográfico que o tema
+ * Astryx aplicava). Usa :where() para specificity 0 — qualquer classe do
+ * site sobrescreve sem conflito.
+ */
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-family-heading);
+  color: var(--color-text-primary);
+}
+:where(h1) {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3793;
+}
+:where(h2) {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3913;
+}
+:where(h3) {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4737;
+}
+:where(h4) {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6;
+}
+:where(h5) {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6667;
+}
+:where(h6) {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6;
+}
+:where(p) {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+:where(small) {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.6667;
+  color: var(--color-text-secondary);
+}
+:where(code, pre) {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+:where(hr) {
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
