@@ -9,34 +9,16 @@ export interface Teacher {
 
 export const TEACHERS: Teacher[] = [
   {
-    name: 'Oscar Pedroso',
-    role: 'Fundador e professor',
-    bio: 'Professor, artista e fundador da Desenhe. Licenciado em Educação Artística com especialização em Artes Plásticas pela FAP (Faculdade de Artes do Paraná). Trabalhou na Editora Abril e é autor de manuais de desenho para o SENAC Paraná.',
-    photo: '/images/professores/oscar-pedroso.webp',
-  },
-  {
-    name: 'Roberta Bentes',
-    role: 'Professora de desenho',
-    bio: 'Professora de desenho com foco em história da arte, em especial nos estudos da cor. Vê a arte como um despertar dos sentidos, acessível a todas as pessoas.',
-    photo: '/images/professores/roberta-bentes.webp',
-  },
-  {
     name: 'Dafheny Pacheco',
     role: 'Ilustradora e professora',
     bio: 'Ilustradora e designer formada pela UTFPR (2018). Artista desde os quatro anos de idade, descobriu a docência durante a pandemia, ministrando aulas online.',
     photo: '/images/professores/dafheny-pacheco.webp',
   },
   {
-    name: 'Mateus Dikevicz',
-    role: 'Professor de desenho e pintura',
-    bio: 'Professor de desenho e pintura, formado pela EMBAP (Escola de Música e Belas Artes do Paraná). Ex-aluno da Desenhe, desenha desde sempre.',
-    photo: '/images/professores/mateus-dikevicz.webp',
-  },
-  {
-    name: 'Rafael Mesquita',
+    name: 'Douglas Cruz',
     role: 'Artista visual e professor',
-    bio: 'Artista visual dedicado à pintura a óleo desde 2019. Autodidata, pesquisa retratos, olhares abstratos e o autorretrato.',
-    photo: '/images/professores/rafael-mesquita.webp',
+    bio: 'Artista visual e professor de desenho e pintura, com pesquisa voltada aos elementos do corpo na prática artística.',
+    photo: '/images/professores/douglas-cruz.webp',
   },
   {
     name: 'Efigênio Pavei',
@@ -45,9 +27,27 @@ export const TEACHERS: Teacher[] = [
     photo: '/images/professores/efigenio-pavei.webp',
   },
   {
-    name: 'Douglas Cruz',
+    name: 'Mateus Dukevicz',
+    role: 'Professor de desenho e pintura',
+    bio: 'Professor de desenho e pintura, formado pela EMBAP (Escola de Música e Belas Artes do Paraná). Ex-aluno da Desenhe, desenha desde sempre.',
+    photo: '/images/professores/mateus-dikevicz.webp',
+  },
+  {
+    name: 'Oscar Pedroso',
+    role: 'Fundador e professor',
+    bio: 'Professor, artista e fundador da Desenhe. Licenciado em Educação Artística com especialização em Artes Plásticas pela FAP (Faculdade de Artes do Paraná). Trabalhou na Editora Abril e é autor de manuais de desenho para o SENAC Paraná.',
+    photo: '/images/professores/oscar-pedroso.webp',
+  },
+  {
+    name: 'Rafael Mesquita',
     role: 'Artista visual e professor',
-    bio: 'Artista visual e professor de desenho e pintura, com pesquisa voltada aos elementos do corpo na prática artística.',
-    photo: '/images/professores/douglas-cruz.webp',
+    bio: 'Artista visual dedicado à pintura a óleo desde 2019. Autodidata, pesquisa retratos, olhares abstratos e o autorretrato.',
+    photo: '/images/professores/rafael-mesquita.webp',
+  },
+  {
+    name: 'Roberta Bentes',
+    role: 'Professora de desenho',
+    bio: 'Professora de desenho com foco em história da arte, em especial nos estudos da cor. Vê a arte como um despertar dos sentidos, acessível a todas as pessoas.',
+    photo: '/images/professores/roberta-bentes.webp',
   },
 ];

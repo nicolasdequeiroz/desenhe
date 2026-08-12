@@ -28,6 +28,17 @@
   --color-category-pintura: #cd3e28;
   --color-category-institucional: #df7400;
 
+  /* Tons esverdeados usados nos cartões de professores */
+  --color-teacher-tone-1: #6baaa1;
+  --color-teacher-tone-2: #b8cdb5;
+
+  /* Cor de cada curso na grade semanal unificada (/horarios) */
+  --color-course-desenho-artistico: #f6903a;
+  --color-course-desenho-infantil: #e6b450;
+  --color-course-quadrinhos: #d9614a;
+  --color-course-oleo-acrilica: #6baaa1;
+  --color-course-aquarela-guache: #b8cdb5;
+
   /*
    * Superfície clara "papel". Usada pelo rodapé e pelo quadro de desenho:
    * o quadro vive num portal no <body>, fora do rodapé, então estas precisam

@@ -1,18 +1,16 @@
 import {Link} from 'react-router-dom';
-import {Badge} from '../ui';
+import {
+  CalendarCheck,
+  Clock,
+  CurrencyDollar,
+  Users,
+} from '@phosphor-icons/react';
 import {Heading, Text} from '../ui';
 import {Divider} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {WhatsCta} from '../components/WhatsCta';
-import {
-  COURSE_CATEGORY_LABELS,
-  PRICING,
-  SCHEDULE,
-  asset,
-  formatBRL,
-  getCourse,
-} from '../data';
+import {PRICING, SCHEDULE, asset, formatBRL, getCourse} from '../data';
 
 /** Página de detalhe de curso: descrição, módulos, horários, preço e CTA. */
 export function CursoDetalhe({slug}: {slug: string}) {
@@ -20,6 +18,38 @@ export function CursoDetalhe({slug}: {slug: string}) {
   const pricing = PRICING.find((t) => t.id === course.pricingTier);
   const schedule = SCHEDULE.find((s) => s.courseSlug === course.slug);
   const enrollMessage = `Olá! Tenho interesse no curso de ${course.shortTitle} e gostaria de mais informações.`;
+
+  const factCards = [
+    {
+      icon: Users,
+      title: 'Para quem',
+      items: [course.audience],
+    },
+    {
+      icon: Clock,
+      title: 'Duração',
+      items: [course.classLength, course.totalHours].filter(
+        (item): item is string => Boolean(item),
+      ),
+    },
+    {
+      icon: CalendarCheck,
+      title: 'Matrículas',
+      items: [
+        course.enrollment,
+        course.requiresDrawing
+          ? 'Recomendado conhecimento prévio em desenho'
+          : null,
+      ].filter((item): item is string => Boolean(item)),
+    },
+    {
+      icon: CurrencyDollar,
+      title: 'Mensalidade',
+      items: pricing
+        ? [`A partir de ${formatBRL(pricing.plans[0].monthly)}/mês`]
+        : [],
+    },
+  ];
 
   return (
     <>
@@ -30,72 +60,62 @@ export function CursoDetalhe({slug}: {slug: string}) {
         image={course.cover}
       />
 
-      <div className="container course-hero">
-        <div>
-          <span className={`category-tag category-tag--${course.category}`}>
-            {COURSE_CATEGORY_LABELS[course.category]}
-          </span>
-          <div style={{marginTop: 12}}>
-            <Heading level={1}>{course.title}</Heading>
+      <section className={`course-deck course-deck--${course.category}`}>
+        <div className="container">
+          <div className="course-deck__header">
+            <div className="course-deck__heading">
+              <span className="course-deck__eyebrow">
+                {course.shortTitle}
+                {course.featuredSubtitle ? `: ${course.featuredSubtitle}` : ''}
+              </span>
+              <Heading level={1}>{course.tagline}</Heading>
+            </div>
+            <p className="course-deck__lead">{course.excerpt}</p>
           </div>
 
-          <div className="prose" style={{marginTop: 20}}>
-            {course.description.map((p) => (
-              <p key={p.slice(0, 24)}>{p}</p>
+          <div className="course-deck__cards">
+            {course.gallery.slice(0, 4).map((img, i) => (
+              <div key={img} className={`course-deck__card course-deck__card--${i + 1}`}>
+                <img
+                  src={asset(img)}
+                  alt={`${course.galleryCaption ?? `Trabalhos do curso de ${course.shortTitle}`}, imagem ${i + 1}`}
+                />
+              </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="fact-list">
-            <div className="fact-list__item">
-              <span className="fact-list__label">Para quem</span>
-              <Text>{course.audience}</Text>
-            </div>
-            <div className="fact-list__item">
-              <span className="fact-list__label">Duração</span>
-              <Text>
-                {course.classLength}
-                {course.totalHours ? ` · ${course.totalHours}` : ''}
-              </Text>
-            </div>
-            <div className="fact-list__item">
-              <span className="fact-list__label">Matrículas</span>
-              <Text>{course.enrollment}</Text>
-            </div>
-            {pricing && (
-              <div className="fact-list__item">
-                <span className="fact-list__label">Mensalidade</span>
-                <Text>
-                  A partir de {formatBRL(pricing.plans[0].monthly)}/mês ·{' '}
-                  <Link to="/precos">ver planos</Link>
-                </Text>
-              </div>
-            )}
-          </div>
-
-          {course.requiresDrawing && (
-            <div style={{marginBottom: 20}}>
-              <Badge
-                variant="warning"
-                label="Recomendado conhecimento prévio em desenho"
-              />
-            </div>
-          )}
-
-          <div style={{display: 'flex', gap: 12, flexWrap: 'wrap'}}>
-            <WhatsCta message={enrollMessage} label="Quero me matricular" size="lg" />
-            <WhatsCta
-              message={`Olá! Gostaria de agendar uma aula experimental de ${course.shortTitle}.`}
-              label="Aula experimental"
-              variant="secondary"
-              size="lg"
-            />
-          </div>
+      <div className="container course-intro">
+        <div className="prose course-intro__prose">
+          {course.description.map((p) => (
+            <p key={p.slice(0, 24)}>{p}</p>
+          ))}
         </div>
 
-        <img
-          src={asset(course.cover)}
-          alt={`Curso de ${course.shortTitle} na Desenhe`}
-        />
+        <div className={`course-facts course-facts--${course.category}`}>
+          {factCards.map(({icon: Icon, title, items}) => (
+            <div key={title} className="course-facts__card">
+              <Icon size={26} weight="light" className="course-facts__icon" />
+              <div className="course-facts__title">{title}</div>
+              {items.length > 0 && (
+                <ul className="course-facts__list">
+                  {items.map((item) => (
+                    <li key={item} className="course-facts__item">
+                      <span className="course-facts__bullet" aria-hidden="true" />
+                      <Text>{item}</Text>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {title === 'Mensalidade' && pricing && (
+                <Link to="/precos" className="course-facts__link">
+                  Ver planos completos →
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <Section kicker="Conteúdo" title="Como o curso é estruturado" muted>

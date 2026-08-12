@@ -9,7 +9,7 @@ export function Professores() {
   const [selected, setSelected] = useState<Teacher | null>(null);
 
   return (
-    <>
+    <div className="professores-page">
       <Seo
         title="Professores"
         description="Conheça os professores da Desenhe: artistas visuais, ilustradores e pesquisadores com formação em belas artes, dedicados ao ensino individualizado de desenho e pintura."
@@ -58,6 +58,6 @@ export function Professores() {
       {selected && (
         <ProfessorModal teacher={selected} onClose={() => setSelected(null)} />
       )}
-    </>
+    </div>
   );
 }

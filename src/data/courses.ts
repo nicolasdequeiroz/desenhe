@@ -13,7 +13,7 @@ export type CourseCategory = 'desenho' | 'pintura' | 'institucional';
 export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
   desenho: 'Desenho',
   pintura: 'Pintura',
-  institucional: 'Teoria da arte',
+  institucional: 'Curso teórico',
 };
 
 export interface Course {
@@ -25,6 +25,11 @@ export interface Course {
   featuredSubtitle?: string;
   /** Categoria usada para colorir badges/tags nos cards e na página do curso. */
   category: CourseCategory;
+  /**
+   * Chamada de efeito exibida como título grande na primeira dobra da página
+   * do curso (o nome do curso vira o eyebrow ali). Máximo 2 linhas.
+   */
+  tagline: string;
   excerpt: string;
   description: string[];
   audience: string;
@@ -45,6 +50,7 @@ export interface Course {
 export const COURSES: Course[] = [
   {
     slug: 'desenho-artistico',
+    tagline: 'O primeiro traço de uma técnica que dura a vida toda.',
     title: 'Desenho Artístico',
     category: 'desenho',
     shortTitle: 'Desenho Artístico',
@@ -58,7 +64,7 @@ export const COURSES: Course[] = [
     ageBadge: 'A partir de 9 anos',
     classLength: '2 horas por aula',
     totalHours: 'Conteúdo programado para 144 horas de aula',
-    enrollment: 'Presencial ou online ao vivo: matrículas abertas o ano todo',
+    enrollment: 'Curso presencial: matrículas abertas o ano todo',
     modules: [
       {
         title: 'Módulo 1',
@@ -91,6 +97,7 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'quadrinhos-hq-manga-cartoon',
+    tagline: 'Personagens e histórias que nascem na ponta do seu lápis.',
     title: 'Quadrinhos - HQ | Mangá | Cartoon',
     category: 'desenho',
     shortTitle: 'Quadrinhos',
@@ -105,7 +112,7 @@ export const COURSES: Course[] = [
     ageBadge: 'Todas as idades',
     classLength: '2 horas por aula',
     totalHours: '144 horas, aproximadamente 18 meses',
-    enrollment: 'Presencial e online: matrículas abertas o ano todo',
+    enrollment: 'Curso presencial: matrículas abertas o ano todo',
     modules: [
       {
         title: 'Módulo 1',
@@ -135,6 +142,7 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-a-oleo-ou-acrilica',
+    tagline: 'Da tinta pura à composição que carrega um olhar.',
     title: 'Pintura a Óleo e Acrílica',
     category: 'pintura',
     shortTitle: 'Óleo e Acrílica',
@@ -148,7 +156,7 @@ export const COURSES: Course[] = [
     ageBadge: 'A partir de 13 anos',
     classLength: '3 horas por aula',
     totalHours: 'Conteúdo programado para 120 horas de aula',
-    enrollment: 'Presencial e online: matrículas abertas o ano todo',
+    enrollment: 'Curso presencial: matrículas abertas o ano todo',
     requiresDrawing: true,
     modules: [
       {
@@ -185,6 +193,7 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-em-aquarela-ou-guache',
+    tagline: 'Transparências e camadas até a cor virar seu jeito de ver.',
     title: 'Pintura Aquarela ou Guache',
     category: 'pintura',
     shortTitle: 'Aquarela ou Guache',
@@ -198,7 +207,7 @@ export const COURSES: Course[] = [
     ageBadge: 'A partir de 9 anos',
     classLength: '2 horas por aula',
     totalHours: 'Conteúdo programado para 112 horas de aula',
-    enrollment: 'Presencial e/ou online ao vivo: matrículas abertas o ano todo',
+    enrollment: 'Curso presencial: matrículas abertas o ano todo',
     requiresDrawing: true,
     modules: [
       {
@@ -235,6 +244,7 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'desenho-infantil',
+    tagline: 'Mãos pequenas, primeiros traços, uma vida inteira desenhando.',
     title: 'Desenho Infantil',
     category: 'desenho',
     shortTitle: 'Desenho Infantil',
@@ -278,6 +288,7 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'historia-da-arte',
+    tagline: 'A arte contada além do que sempre te disseram sobre ela.',
     title: 'Para Além do Cânone: uma história conectada da arte',
     category: 'institucional',
     shortTitle: 'História da Arte',

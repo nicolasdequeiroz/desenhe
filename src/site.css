@@ -343,7 +343,7 @@ body {
   min-height: 2.125rem;
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-element);
-  color: var(--color-text-secondary);
+  color: color-mix(in srgb, var(--surface-warm-bg) 70%, transparent);
   font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: 1.4;
@@ -361,7 +361,7 @@ body {
 
 .site-nav > a:hover,
 .site-header__nav-link:hover {
-  color: var(--color-text-primary);
+  color: var(--surface-warm-bg);
   background: var(--color-background-muted);
   transform: translateY(-1px);
 }
@@ -391,7 +391,7 @@ body {
 
 .site-nav-dropdown__trigger:hover,
 .site-nav-dropdown.is-open .site-nav-dropdown__trigger {
-  color: var(--color-text-primary);
+  color: var(--surface-warm-bg);
   background: var(--color-background-muted);
   transform: translateY(-1px);
 }
@@ -997,7 +997,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: var(--spacing-10);
+  margin-bottom: var(--spacing-12);
 }
 
 .section__head--centered .section__eyebrow {
@@ -1017,6 +1017,19 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
+}
+
+.section__eyebrow::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  margin-top: var(--spacing-3);
+  background: var(--color-border-emphasized);
+}
+
+.section__head--centered .section__eyebrow::after {
+  margin-inline: auto;
 }
 
 /* ---------- Cursos em destaque (lista com capa flutuante) ---------- */
@@ -1259,25 +1272,39 @@ body {
   border-radius: var(--radius-container);
   overflow: hidden;
   background: var(--color-background-card);
-  border: 1px solid var(--color-border);
   text-decoration: none;
   color: inherit;
   transition:
     transform var(--duration-medium),
-    box-shadow var(--duration-medium),
-    border-color var(--duration-medium);
+    box-shadow var(--duration-medium);
 }
 
 .course-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-med);
-  border-color: var(--color-border-emphasized);
 }
 
-.course-card img {
+.course-card:hover .course-card__cover img {
+  transform: scale(1.06);
+}
+
+.course-card:hover .course-card__cta {
+  color: var(--color-text-primary);
+}
+
+.course-card:hover .course-card__cta-arrow {
+  transform: translateX(3px);
+}
+
+.course-card__cover {
+  overflow: hidden;
+}
+
+.course-card__cover img {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+  transition: transform var(--duration-slow);
 }
 
 .course-card__body {
@@ -1285,7 +1312,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-2);
-  padding: var(--spacing-4);
+  padding: var(--spacing-5) var(--spacing-4) var(--spacing-4);
   flex: 1;
 }
 
@@ -1302,6 +1329,7 @@ body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .category-tag--desenho {
@@ -1326,6 +1354,18 @@ body {
   left: var(--spacing-3);
 }
 
+.course-card__age-badge {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+}
+
+.course-card__age-badge .badge {
+  background: rgba(23, 19, 16, 0.65);
+  backdrop-filter: blur(2px);
+  color: #fff;
+}
+
 .course-card__title {
   font-family: var(--font-family-heading);
   font-size: var(--font-size-lg);
@@ -1334,11 +1374,79 @@ body {
 }
 
 .course-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
   margin-top: auto;
   padding-top: var(--spacing-2);
   color: var(--color-accent);
   font-weight: 600;
   font-size: var(--font-size-sm);
+  transition: color var(--duration-medium);
+}
+
+.course-card__cta-arrow {
+  display: inline-block;
+  transition: transform var(--duration-medium);
+}
+
+/* ---------- Proposta pedagógica (cursos) ---------- */
+
+.course-philosophy {
+  padding: clamp(var(--spacing-10), 10vw, 96px) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.course-philosophy__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-8);
+  margin-bottom: clamp(var(--spacing-10), 8vw, 96px);
+}
+
+.course-philosophy__heading {
+  max-width: 640px;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.course-philosophy__lead {
+  max-width: 420px;
+  margin-left: auto;
+  text-align: left;
+}
+
+.course-philosophy__eyebrow {
+  display: block;
+  margin-bottom: var(--spacing-6);
+  color: var(--color-accent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.course-philosophy__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: var(--spacing-8);
+  row-gap: var(--spacing-8);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.course-philosophy__item h3 {
+  margin: 0 0 var(--spacing-3);
+}
+
+@media (max-width: 640px) {
+  .course-philosophy__lead {
+    margin-left: 0;
+    max-width: none;
+  }
 }
 
 /* ---------- Nosso espaço (galeria em mosaico) ---------- */
@@ -1872,6 +1980,279 @@ body {
 }
 
 /* ---------- Página de curso ---------- */
+
+/*
+ * Primeira dobra: faixa na cor da categoria do curso com um "baralho" de
+ * trabalhos da galeria, girados e sobrepostos, que vaza pela borda inferior
+ * (o overflow: hidden da faixa é o que corta as cartas).
+ */
+.course-deck {
+  position: relative;
+  overflow: hidden;
+  /* O piso (88px) garante espaço para o header fixo (overlay) nesta dobra,
+     que em telas estreitas passa dos 40px que o clamp usava antes. */
+  padding-top: clamp(88px, 7vw, 96px);
+  /* A cor da categoria é escurecida contra o fundo do site: mantém o tom do
+     curso e garante contraste do texto branco por cima. */
+  background: color-mix(in srgb, var(--category-color) 80%, #171310);
+  color: #fff;
+}
+
+.course-deck--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.course-deck--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.course-deck--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-deck__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-12);
+}
+
+.course-deck__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  max-width: 640px;
+}
+
+.course-deck__heading h1 {
+  margin: 0;
+  color: inherit;
+  text-wrap: balance;
+}
+
+.course-deck__eyebrow {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.course-deck__lead {
+  max-width: 384px;
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.course-deck__cards {
+  display: flex;
+  justify-content: center;
+  max-width: 1152px;
+  margin-inline: auto;
+  /* Empurra as cartas para fora da faixa: elas são cortadas pela borda. */
+  margin-bottom: -5%;
+  padding-top: 5%;
+}
+
+.course-deck__card {
+  --card-x: 0rem;
+  --card-y: 0rem;
+  --card-rotate: 0deg;
+  --card-lift: 0rem;
+  flex: 1 1 0;
+  max-width: 288px;
+  aspect-ratio: 1 / 1.25;
+  border: 8px solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+  transform: translate(var(--card-x), calc(var(--card-y) + var(--card-lift)))
+    rotate(var(--card-rotate));
+  transition: transform var(--duration-medium) ease;
+}
+
+.course-deck__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cada carta tem seu deslocamento e giro, como um baralho aberto na mesa. */
+.course-deck__card--1 {
+  z-index: 4;
+  --card-x: 2rem;
+  --card-rotate: -12deg;
+}
+
+.course-deck__card--2 {
+  z-index: 3;
+  --card-x: 1rem;
+  --card-y: 4rem;
+  --card-rotate: -5deg;
+}
+
+.course-deck__card--3 {
+  z-index: 2;
+  --card-x: -1rem;
+  --card-rotate: 4deg;
+}
+
+.course-deck__card--4 {
+  z-index: 1;
+  --card-x: -2rem;
+  --card-y: 3rem;
+  --card-rotate: -7deg;
+}
+
+/* Hover: a carta sobe um pouco e vem para a frente do baralho. */
+.course-deck__card:hover {
+  --card-lift: -1.5rem;
+}
+
+@media (max-width: 900px) {
+  .course-deck__card {
+    border-width: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .course-deck__cards {
+    /* Em telas estreitas 4 cartas ficam finas demais: mostra as duas
+       primeiras, ainda sobrepostas. */
+    margin-bottom: -12%;
+    padding-top: 8%;
+  }
+
+  .course-deck__card--3,
+  .course-deck__card--4 {
+    display: none;
+  }
+}
+
+.course-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding-block: clamp(var(--spacing-10), 6vw, 72px);
+}
+
+.course-intro__prose {
+  max-width: 720px;
+}
+
+/*
+ * Baralho de "fatos" do curso (para quem, duração...), no estilo do
+ * componente de referência: uma faixa dividida em colunas por bordas
+ * internas, cada uma com ícone, rótulo e uma pequena lista.
+ */
+.course-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+}
+
+.course-facts--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.course-facts--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.course-facts--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-facts__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-6) var(--spacing-5);
+  border-left: 1px solid var(--color-border);
+}
+
+.course-facts__card:first-child {
+  border-left: none;
+}
+
+.course-facts__icon {
+  color: var(--category-color, var(--color-accent));
+}
+
+.course-facts__title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.course-facts__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.course-facts__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+}
+
+.course-facts__bullet {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--category-color, var(--color-accent));
+  transform: translateY(-2px);
+}
+
+.course-facts__link {
+  margin-top: auto;
+  padding-top: var(--spacing-2);
+  color: var(--category-color, var(--color-accent));
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 760px) {
+  .course-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .course-facts__card:nth-child(3) {
+    border-left: none;
+  }
+
+  .course-facts__card:nth-child(n + 3) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media (max-width: 460px) {
+  .course-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .course-facts__card {
+    border-left: none;
+  }
+
+  .course-facts__card:not(:first-child) {
+    border-top: 1px solid var(--color-border);
+  }
+}
 
 .course-hero {
   display: grid;
@@ -2890,152 +3271,278 @@ body {
   gap: var(--spacing-3);
 }
 
-/* ---------- Horários (grade semanal por curso) ---------- */
+/* ---------- Horários (grade semanal única, períodos x dias) ---------- */
 
-.schedule-list {
-  display: grid;
-  gap: var(--spacing-6);
-  max-width: 840px;
-  margin-inline: auto;
+.timetable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
 }
 
-.schedule-card {
-  background: var(--color-background-card);
+/* Cor por categoria (mesmas cores usadas nos cards de curso): repete entre
+   cursos da mesma categoria, ex. Desenho Artístico, Infantil e Quadrinhos
+   compartilham o tom laranja de "desenho". */
+.timetable__tag--desenho,
+.timetable__filter--desenho {
+  --course-tone: var(--color-category-desenho);
+}
+
+.timetable__tag--pintura,
+.timetable__filter--pintura {
+  --course-tone: var(--color-category-pintura);
+}
+
+.timetable__tag--institucional,
+.timetable__filter--institucional {
+  --course-tone: var(--color-category-institucional);
+}
+
+.timetable__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.timetable__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 6px 14px;
+  border-radius: 9999px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-container);
-  padding: var(--spacing-6);
-  transition: border-color var(--duration-medium) ease;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast),
+    border-color var(--duration-fast),
+    background-color var(--duration-fast);
 }
 
-.schedule-card:hover {
-  border-color: var(--color-accent);
+.timetable__filter:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-emphasized);
 }
 
-.schedule-card__header {
+.timetable__filter.is-active {
+  color: var(--course-tone, var(--color-text-primary));
+  border-color: var(--course-tone, var(--color-border-emphasized));
+  background: color-mix(in srgb, var(--course-tone, #fff) 12%, transparent);
+}
+
+.timetable__filter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--course-tone);
+}
+
+.timetable__caption {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.timetable__caption a {
+  color: var(--color-text-primary);
+}
+
+.timetable__scroll {
+  overflow-x: auto;
+}
+
+.timetable__board {
+  min-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.timetable__row {
+  display: grid;
+  grid-template-columns: 84px repeat(6, minmax(0, 1fr));
+  gap: var(--spacing-2);
+  align-items: stretch;
+}
+
+.timetable__day-head {
+  padding-bottom: var(--spacing-2);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.timetable__day-head.is-today {
+  color: var(--color-accent);
+}
+
+.timetable__period {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-5);
-}
-
-.schedule-card__title-link {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--duration-fast);
-}
-
-.schedule-card__title-link:hover {
-  color: var(--color-accent);
-}
-
-.schedule-card__days-badge {
-  flex-shrink: 0;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  background: rgba(255, 162, 88, 0.16);
-  color: var(--color-accent);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  white-space: nowrap;
+  color: var(--color-text-secondary);
 }
 
-.schedule-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 128px));
-  gap: var(--spacing-3);
-}
-
-.schedule-day {
+.timetable__cell {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
   padding: var(--spacing-3);
+  min-height: 64px;
   border-radius: var(--radius-element);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--color-background-card);
   border: 1px solid transparent;
-  transition:
-    border-color var(--duration-medium) ease,
-    background-color var(--duration-medium) ease;
 }
 
-.schedule-day--today {
-  border-color: var(--color-accent);
-  background: rgba(255, 162, 88, 0.08);
+.timetable__cell.is-today {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
 }
 
-.schedule-day__label {
-  display: flex;
+.timetable__cell.is-empty {
+  background: rgba(255, 255, 255, 0.02);
   align-items: center;
-  gap: var(--spacing-1);
+  justify-content: center;
+}
+
+/* Rótulo "Quarta · Manhã": só aparece no empilhamento mobile. */
+.timetable__cell-day {
+  display: none;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
 }
 
-.schedule-day--today .schedule-day__label {
-  color: var(--color-accent);
-}
-
-.schedule-day__today-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-.schedule-day__slots {
+.timetable__slot {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: 5px;
 }
 
-.schedule-chip {
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
+.timetable__time {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
   color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 3px 8px;
-  border-radius: var(--radius-inner);
-  text-align: center;
   white-space: nowrap;
 }
 
-.schedule-day__empty {
+.timetable__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.timetable__tag {
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--course-tone) 18%, transparent);
+  color: var(--course-tone);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.timetable__empty {
   color: var(--color-text-secondary);
-  opacity: 0.5;
+  opacity: 0.35;
 }
 
-.schedule-card__note {
-  margin-top: var(--spacing-4);
+.timetable__note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin: 0;
 }
 
+/* Abaixo de 900px a grade vira uma lista vertical agrupada por período. */
 @media (max-width: 900px) {
-  .schedule-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .timetable__scroll {
+    overflow-x: visible;
+  }
+
+  .timetable__board {
+    min-width: 0;
+    gap: var(--spacing-5);
+  }
+
+  .timetable__row--head {
+    display: none;
+  }
+
+  .timetable__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-2);
+  }
+
+  .timetable__period {
+    padding-bottom: var(--spacing-1);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-accent);
+  }
+
+  .timetable__cell.is-empty {
+    display: none;
+  }
+
+  .timetable__cell-day {
+    display: block;
+  }
+
+  .timetable__slot {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--spacing-3);
+  }
+
+  .timetable__time {
+    min-width: 76px;
   }
 }
 
-@media (max-width: 560px) {
-  .schedule-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.schedule-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: var(--spacing-5);
+  row-gap: var(--spacing-6);
+  max-width: 840px;
+  margin-inline: auto;
+  padding-top: var(--spacing-6);
+  padding-bottom: var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
 
-  .schedule-card {
-    padding: var(--spacing-4);
-  }
+.schedule-info-grid__item {
+  text-align: center;
+}
+
+.schedule-info-grid__item h3 {
+  margin: 0 0 var(--spacing-2);
 }
 
 /* ---------- Professores (grade escalonada + modal de biografia) ---------- */
+
+.professores-page .section__eyebrow {
+  color: var(--color-teacher-tone-1);
+}
 
 .professors-content {
   max-width: 960px;
@@ -3050,26 +3557,31 @@ body {
 }
 
 .professors-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--spacing-8) var(--spacing-5);
 }
 
+.professors-grid .professor-card {
+  flex: 0 1 calc((100% - 3 * var(--spacing-5)) / 4);
+}
+
 @media (max-width: 860px) {
-  .professors-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .professors-grid .professor-card {
+    flex-basis: calc((100% - 2 * var(--spacing-5)) / 3);
   }
 }
 
 @media (max-width: 640px) {
-  .professors-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .professors-grid .professor-card {
+    flex-basis: calc((100% - var(--spacing-5)) / 2);
   }
 }
 
 @media (max-width: 460px) {
-  .professors-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .professors-grid .professor-card {
+    flex-basis: 100%;
   }
 }
 
@@ -3100,16 +3612,16 @@ body {
   padding: var(--spacing-3);
   border-radius: var(--radius-container);
   overflow: hidden;
-  background: color-mix(in srgb, var(--color-accent) 55%, #171310 45%);
+  background: color-mix(in srgb, var(--color-teacher-tone-1) 55%, #171310 45%);
   transition: box-shadow var(--duration-medium) ease;
 }
 
 .professor-card:nth-child(3n + 2) .professor-card__image-wrap {
-  background: var(--color-background-surface);
+  background: color-mix(in srgb, var(--color-teacher-tone-2) 45%, var(--color-background-surface) 55%);
 }
 
 .professor-card:nth-child(3n) .professor-card__image-wrap {
-  background: color-mix(in srgb, var(--color-accent) 22%, var(--color-background-surface) 78%);
+  background: color-mix(in srgb, var(--color-teacher-tone-1) 22%, var(--color-background-surface) 78%);
 }
 
 .professor-card:hover .professor-card__image-wrap,
@@ -3138,7 +3650,7 @@ body {
 .professor-card__cta {
   display: inline-block;
   margin-top: var(--spacing-2);
-  color: var(--color-accent);
+  color: var(--color-teacher-tone-1);
   font-family: var(--font-family-body);
   font-weight: 600;
   font-size: var(--font-size-sm);
@@ -3246,7 +3758,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-teacher-tone-1);
 }
 
 .professor-modal__name {

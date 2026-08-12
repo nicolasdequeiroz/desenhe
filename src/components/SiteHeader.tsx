@@ -30,7 +30,10 @@ const MOBILE_NAV_ITEMS = [
 
 export function SiteHeader() {
   const {pathname} = useLocation();
-  const overlay = pathname === '/';
+  // A home e as páginas de curso têm uma dobra colorida/imagem cheia no
+  // topo: o header flutua por cima dela, em vez de empurrar o conteúdo com
+  // uma faixa opaca (só faz sentido nas páginas sem essa dobra).
+  const overlay = pathname === '/' || /^\/cursos\/[^/]+$/.test(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

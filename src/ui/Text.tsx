@@ -14,7 +14,7 @@ const TYPE_STYLE: Record<TextType, CSSProperties> = {
   },
   large: {
     fontFamily: 'var(--font-family-body)',
-    fontSize: 'var(--font-size-lg)',
+    fontSize: '1rem',
     fontWeight: 400,
     lineHeight: 1.5,
   },
