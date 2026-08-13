@@ -4,7 +4,10 @@
  */
 
 export interface CourseModule {
+  /** "Módulo N": rótulo de ordem, exibido como o marco na linha do tempo da página do curso. */
   title: string;
+  /** Título curto do módulo, exibido ao lado do rótulo. */
+  heading: string;
   description: string;
 }
 
@@ -68,20 +71,27 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
+        heading: 'Fundamentos da forma',
         description:
-          'Construção bidimensional e tridimensional, cores, luz e sombra.',
+          'O aluno constrói as bases do desenho observando formas bidimensionais e tridimensionais, com exercícios de cor, luz e sombra que treinam o olhar antes da técnica.',
       },
       {
         title: 'Módulo 2',
-        description: 'Perspectiva com múltiplos pontos de fuga e composição.',
+        heading: 'Perspectiva e composição',
+        description:
+          'Múltiplos pontos de fuga entram em cena para dar profundidade ao desenho, ao lado dos princípios de composição que organizam o que vai para o papel.',
       },
       {
         title: 'Módulo 3',
-        description: 'Estudos de cor, técnicas secas e úmidas.',
+        heading: 'Cor e técnica',
+        description:
+          'Os estudos de cor se aprofundam em técnicas secas e úmidas, ampliando o repertório de materiais e texturas que o aluno passa a dominar.',
       },
       {
         title: 'Módulo 4',
-        description: 'Produção autoral e aprofundamento técnico.',
+        heading: 'Produção autoral',
+        description:
+          'Com a base consolidada, o foco passa para o desenvolvimento de um trabalho autoral, com acompanhamento próximo para aprofundar a técnica de cada aluno.',
       },
     ],
     pricingTier: 'desenho-2h',
@@ -116,18 +126,21 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
+        heading: 'Primeiros traços',
         description:
-          'Apresentação de materiais (grafite, lápis de cor, giz de cera); introdução a escala tonal e luz e sombra.',
+          'Apresentação dos materiais (grafite, lápis de cor, giz de cera) e introdução à escala tonal, luz e sombra: a base técnica antes de partir para os personagens.',
       },
       {
         title: 'Módulo 2',
+        heading: 'Materiais e volume',
         description:
-          'Aprofundamento em materiais; lápis de cor aquareláveis; figuras com volume; guache e experimentações.',
+          'Aprofundamento em materiais como lápis de cor aquareláveis, com foco em figuras com volume e nas primeiras experimentações com guache.',
       },
       {
         title: 'Módulo 3',
+        heading: 'Efeito e textura',
         description:
-          'Tintas e pastéis; refinamento de sombras e luz para efeito realista; proporção, composição e texturas.',
+          'Tintas e pastéis entram no processo para o refinamento de sombras e luz com efeito realista, ao lado de proporção, composição e texturas mais elaboradas.',
       },
     ],
     pricingTier: 'desenho-2h',
@@ -161,23 +174,27 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
+        heading: 'Cores e materiais',
         description:
-          'Introdução às cores e materiais; experimentação com tinta a óleo/acrílica, grafite e carvão.',
+          'Introdução às cores e aos materiais da pintura, com as primeiras experimentações em tinta a óleo ou acrílica, grafite e carvão.',
       },
       {
         title: 'Módulo 2',
+        heading: 'Superfícies e texturas',
         description:
-          'Estudos em carvão e superfícies, explorando texturas com tinta a óleo/acrílica.',
+          'Estudos em carvão e em diferentes superfícies aprofundam a exploração de texturas com tinta a óleo ou acrílica.',
       },
       {
         title: 'Módulo 3',
+        heading: 'Camadas e profundidade',
         description:
-          'Pintura em camadas, velaturas e técnicas mistas, desenvolvendo profundidade.',
+          'A pintura em camadas e velaturas entra em cena, combinando técnicas mistas para desenvolver profundidade e volume nas telas.',
       },
       {
         title: 'Módulo 4',
+        heading: 'Projeto autoral',
         description:
-          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido.',
+          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido, para o aluno amadurecer o próprio estilo.',
       },
     ],
     pricingTier: 'oleo-3h',
@@ -212,23 +229,27 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
+        heading: 'Círculo cromático',
         description:
-          'Introdução às cores e materiais: círculo cromático, isocromia, monocromia, policromia e harmonia das cores.',
+          'Introdução às cores e aos materiais: círculo cromático, isocromia, monocromia, policromia e harmonia das cores como base para toda a pintura.',
       },
       {
         title: 'Módulo 2',
+        heading: 'Texturas e diluição',
         description:
-          'Estudos de superfícies e diluição, com experimentação de texturas, máscaras e técnicas de aguada.',
+          'Estudos de superfícies e diluição, com experimentação de texturas, máscaras e técnicas de aguada, ampliando o controle sobre a água e a tinta.',
       },
       {
         title: 'Módulo 3',
+        heading: 'Técnica mista',
         description:
-          'Técnica mista: tinta aquarela/guache, grafite, nanquim e texturas.',
+          'Técnica mista combinando aquarela ou guache com grafite, nanquim e texturas, para composições mais ricas e pessoais.',
       },
       {
         title: 'Módulo 4',
+        heading: 'Projeto autoral',
         description:
-          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido.',
+          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido, para o aluno amadurecer o próprio estilo.',
       },
     ],
     pricingTier: 'desenho-2h',
@@ -261,18 +282,21 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
+        heading: 'Primeiro contato',
         description:
-          'Apresentação de materiais (grafite, lápis de cor, giz de cera), escala tonal, luz e sombra.',
+          'Apresentação de materiais (grafite, lápis de cor, giz de cera), com os primeiros exercícios de escala tonal, luz e sombra, no ritmo de cada criança.',
       },
       {
         title: 'Módulo 2',
+        heading: 'Volume e cor',
         description:
-          'Aprofundamento de materiais com lápis de cor aquareláveis, volume e perspectiva, introdução à tinta guache.',
+          'Aprofundamento de materiais com lápis de cor aquareláveis, explorando volume e perspectiva, com introdução à tinta guache.',
       },
       {
         title: 'Módulo 3',
+        heading: 'Realismo e textura',
         description:
-          'Ampliação com tintas e pastéis, sombras e luz para efeito realista, proporção, composição e texturas.',
+          'Ampliação com tintas e pastéis, trabalhando sombras e luz para efeito mais realista, proporção, composição e texturas.',
       },
     ],
     pricingTier: 'desenho-2h',
@@ -307,19 +331,22 @@ export const COURSES: Course[] = [
     enrollment: 'Curso teórico presencial, turmas a partir de abril de 2026',
     modules: [
       {
-        title: 'Módulo 1: Antiguidade e mundos conectados',
+        title: 'Módulo 1',
+        heading: 'Antiguidade e mundos conectados',
         description:
-          'A arte como campo de trocas entre culturas desde a Antiguidade.',
+          'A arte é estudada como um campo de trocas entre culturas desde a Antiguidade, rompendo com a ideia de uma história linear e centrada na Europa.',
       },
       {
-        title: 'Módulo 2: Circulações e disputas',
+        title: 'Módulo 2',
+        heading: 'Circulações e disputas',
         description:
-          'Conexões entre sociedades e a circulação de ideias e imagens.',
+          'O módulo percorre as conexões entre sociedades e a circulação de ideias e imagens, mostrando como a arte se transforma no contato entre culturas diferentes.',
       },
       {
-        title: 'Módulo 3: Contemporaneidade',
+        title: 'Módulo 3',
+        heading: 'Contemporaneidade',
         description:
-          'Da arte moderna às reflexões sobre inteligência artificial na produção artística.',
+          'Da arte moderna às reflexões sobre inteligência artificial na produção artística, fechando o curso com os debates mais atuais do campo.',
       },
     ],
     pricingTier: 'consultar',

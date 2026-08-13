@@ -155,6 +155,30 @@ export const WEEKLY_SCHEDULE: WeeklyRow[] = SCHEDULE_PERIODS.map((period) => ({
   }),
 }));
 
+export interface CourseWeeklyRow {
+  period: PeriodId;
+  label: string;
+  cells: {day: string; times: string[]}[];
+}
+
+/**
+ * Mesma grade período x dia da página /horarios, mas só com os horários de
+ * um curso (usada na página de detalhe do curso).
+ */
+export function weeklyRowsForCourse(entry: CourseSchedule): CourseWeeklyRow[] {
+  return SCHEDULE_PERIODS.map((period) => ({
+    period: period.id,
+    label: period.label,
+    cells: SCHEDULE_DAYS.map((day) => {
+      const slot = entry.slots.find((s) => s.day === day);
+      const times = (slot?.times ?? [])
+        .filter((time) => periodOf(time) === period.id)
+        .sort((a, b) => startHour(a) - startHour(b));
+      return {day, times};
+    }),
+  }));
+}
+
 export const SCHEDULE_NOTES = [
   {
     title: '4 semanas por mês',

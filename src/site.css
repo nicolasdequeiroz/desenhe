@@ -1982,6 +1982,28 @@ body {
 /* ---------- Página de curso ---------- */
 
 /*
+ * Cor da categoria do curso, disponível para a página inteira: os blocos
+ * (deck, facts, timeline) redefinem a mesma variável localmente, mas o
+ * eyebrow de qualquer <Section> genérica usada na página (Horários, Galeria)
+ * também deve usar essa cor, daí a redefinição aqui em cima, no wrapper raiz.
+ */
+.course-page--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.course-page--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.course-page--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-page .section__eyebrow {
+  color: var(--category-color, var(--color-accent));
+}
+
+/*
  * Primeira dobra: faixa na cor da categoria do curso com um "baralho" de
  * trabalhos da galeria, girados e sobrepostos, que vaza pela borda inferior
  * (o overflow: hidden da faixa é o que corta as cartas).
@@ -2061,6 +2083,22 @@ body {
   padding-top: 5%;
 }
 
+/*
+ * No desktop nem a trilha nem o wrapper do conjunto duplicado existem
+ * visualmente: `display: contents` os remove do fluxo, então as cartas
+ * viram filhas diretas de .course-deck__cards e o baralho estático (flex +
+ * transforms abaixo) funciona como se eles nunca tivessem existido. As
+ * cartas do conjunto duplicado (usado só no marquee mobile) ficam ocultas.
+ */
+.course-deck__track,
+.course-deck__track-duplicate {
+  display: contents;
+}
+
+.course-deck__card--duplicate {
+  display: none;
+}
+
 .course-deck__card {
   --card-x: 0rem;
   --card-y: 0rem;
@@ -2122,16 +2160,112 @@ body {
 }
 
 @media (max-width: 640px) {
+  /*
+   * Em telas estreitas o baralho estático não cabe. Vira uma marquee
+   * horizontal infinita: duas trilhas idênticas lado a lado (a segunda,
+   * duplicada, reaparece aqui) andam juntas para a esquerda; quando a
+   * primeira sai totalmente de cena a segunda já ocupa exatamente o lugar
+   * dela, então o loop reinicia sem costura. As cartas mantêm exatamente a
+   * mesma interpolação (translate + rotate) do baralho no desktop, herdada
+   * das regras .course-deck__card--N mais acima: aqui só ajustamos o
+   * tamanho da carta para a largura da tela.
+   */
   .course-deck__cards {
-    /* Em telas estreitas 4 cartas ficam finas demais: mostra as duas
-       primeiras, ainda sobrepostas. */
-    margin-bottom: -12%;
+    display: flex;
+    /*
+     * Só esconde o excesso horizontal (o vaivém do marquee): se cortasse
+     * também na vertical, o deslocamento --card-y de cada carta (a mesma
+     * interpolação do baralho no desktop) revelaria uma tarja vazia do
+     * fundo no topo ou embaixo, onde a carta deslocada não alcança a borda.
+     * Precisa ser `clip`, não `hidden`: combinar overflow-x: hidden com
+     * overflow-y: visible faz o navegador forçar o eixo visible para auto
+     * (regra da spec de Overflow), o que cria um scroll interno indesejado
+     * (com barra de rolagem) nesta faixa. `clip` não sofre essa conversão.
+     */
+    overflow-x: clip;
+    overflow-y: visible;
+    margin-bottom: -10%;
     padding-top: 8%;
+    /* Cancela o padding-inline do .container pai: a faixa de cartas ocupa a
+       largura cheia da tela em vez de ficar recuada nas laterais. */
+    margin-inline: calc(-1 * var(--spacing-4));
   }
 
-  .course-deck__card--3,
+  /*
+   * Uma trilha só com 8 cartas (4 reais + 4 duplicadas, achatadas pelo
+   * `display: contents` do wrapper). -50% desloca exatamente um conjunto
+   * inteiro (cartas + gaps), então a segunda metade, ao terminar, está pixel
+   * a pixel onde a primeira começou: sem salto, sem costura, sem depender de
+   * medir nada em JS.
+   */
+  .course-deck__track {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--spacing-4);
+    animation: course-deck-marquee 24s linear infinite;
+    /*
+     * Sem isso, o navegador só rasteriza/composita o conteúdo perto da área
+     * visível: a segunda leva de cartas (bem longe, fora da tela, do outro
+     * lado da trilha) só é pintada no instante em que entra na região
+     * visível, e isso aparece como um "pop" instantâneo em vez de deslizar.
+     * `will-change` avisa com antecedência para manter a trilha inteira
+     * pronta numa camada composta.
+     */
+    will-change: transform;
+  }
+
+  .course-deck__cards:hover .course-deck__track {
+    animation-play-state: paused;
+  }
+
+  .course-deck__card {
+    flex-shrink: 0;
+    width: 68vw;
+    max-width: 260px;
+  }
+
+  .course-deck__card--duplicate {
+    display: block;
+  }
+
+  /*
+   * A interpolação do desktop foi pensada pra um leque fixo de 4 cartas: a
+   * carta 1 puxa pra um lado e a carta 4 pro outro. Num carrossel infinito
+   * isso faz a costura (carta 4 encontrando a carta 1 seguinte) abrir um
+   * vão bem maior que o resto, quebrando o ritmo. Reduz pela metade só o
+   * deslocamento (x/y) no mobile, mantendo a mesma rotação do desktop.
+   */
+  .course-deck__card--1 {
+    --card-x: 1rem;
+  }
+
+  .course-deck__card--2 {
+    --card-x: 0.5rem;
+    --card-y: 2rem;
+  }
+
+  .course-deck__card--3 {
+    --card-x: -0.5rem;
+  }
+
   .course-deck__card--4 {
-    display: none;
+    --card-x: -1rem;
+    --card-y: 1.5rem;
+  }
+
+  @keyframes course-deck-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .course-deck__track {
+      animation: none;
+    }
   }
 }
 
@@ -2183,6 +2317,16 @@ body {
   border-left: none;
 }
 
+.course-facts__icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--category-color, var(--color-accent)) 45%, transparent);
+  border-radius: 50%;
+}
+
 .course-facts__icon {
   color: var(--category-color, var(--color-accent));
 }
@@ -2219,11 +2363,38 @@ body {
 }
 
 .course-facts__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  width: 100%;
   margin-top: auto;
-  padding-top: var(--spacing-2);
-  color: var(--category-color, var(--color-accent));
-  font-weight: 600;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-element);
+  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 12%, transparent);
+  color: color-mix(in srgb, var(--category-color, var(--color-accent)) 75%, var(--color-text-secondary));
+  font-weight: 700;
   font-size: var(--font-size-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  transition:
+    background var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.course-facts__link:hover {
+  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 22%, transparent);
+  color: var(--category-color, var(--color-accent));
+}
+
+.course-facts__link-arrow {
+  display: inline-block;
+  transition: transform var(--duration-medium) ease;
+}
+
+.course-facts__link:hover .course-facts__link-arrow {
+  transform: translateX(3px);
 }
 
 @media (max-width: 760px) {
@@ -2251,6 +2422,137 @@ body {
 
   .course-facts__card:not(:first-child) {
     border-top: 1px solid var(--color-border);
+  }
+}
+
+/*
+ * Linha do tempo dos módulos do curso: 3 colunas. Cabeçalho fixo à esquerda,
+ * módulos à direita, e entre os dois uma trilha central (a coluna do meio,
+ * "auto", cai exatamente no centro do .container porque as colunas 1 e 3 têm
+ * o mesmo 1fr — o mesmo eixo em que a logo DESENHE do header se centraliza).
+ * Dentro da trilha, um rastro colorido cresce conforme a lista é rolada.
+ */
+.course-timeline--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.course-timeline--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.course-timeline--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-timeline {
+  padding-block: 96px;
+}
+
+.course-timeline__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: var(--spacing-8);
+  align-items: stretch;
+}
+
+.course-timeline__header-bounds {
+  position: relative;
+  align-self: stretch;
+}
+
+.course-timeline__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  max-width: 400px;
+}
+
+.course-timeline__header .section__eyebrow::after {
+  margin-inline: 0;
+}
+
+.course-timeline__track {
+  position: relative;
+  width: 2px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.course-timeline__track-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--category-color, var(--color-accent));
+}
+
+.course-timeline__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.course-timeline__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding-block: var(--spacing-8);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.course-timeline__item:first-child {
+  padding-top: 0;
+}
+
+.course-timeline__item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.course-timeline__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.course-timeline__icon {
+  flex-shrink: 0;
+  color: var(--category-color, var(--color-accent));
+}
+
+.course-timeline__label {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.course-timeline__heading {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+}
+
+.course-timeline__item :where(p, span) + p {
+  margin-top: var(--spacing-1);
+}
+
+@media (max-width: 760px) {
+  .course-timeline__layout {
+    grid-template-columns: 1fr;
+    row-gap: var(--spacing-6);
+  }
+
+  .course-timeline__track {
+    display: none;
+  }
+
+  .course-timeline__header {
+    position: static;
   }
 }
 
