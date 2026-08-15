@@ -25,7 +25,7 @@ export function Cursos() {
     <>
       <Seo
         title="Cursos de desenho e pintura"
-        description="Cursos de desenho artístico, quadrinhos, pintura a óleo e acrílica, aquarela e guache, desenho infantil e história da arte em Curitiba. Matrículas abertas o ano todo."
+        description="Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache, desenho infantil e história da arte em Curitiba. Matrículas abertas o ano todo."
         path="/cursos"
       />
       <Section

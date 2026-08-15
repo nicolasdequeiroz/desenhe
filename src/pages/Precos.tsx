@@ -86,8 +86,15 @@ export function Precos() {
             ))}
           </ul>
           <div style={{marginTop: 16}}>
+            <Text color="secondary" display="block">
+              O curso de História da Arte tem valores próprios: mensalidade de
+              R$ 460, à vista ou parcelada, mais taxa de matrícula de R$ 120.
+              Alunos e ex-alunos da escola têm condições especiais.
+            </Text>
+          </div>
+          <div style={{marginTop: 8}}>
             <Text color="secondary">
-              O curso de História da Arte tem valores próprios, consulte pelo
+              Os valores do curso de Desenho de Moda são informados pelo
               WhatsApp.
             </Text>
           </div>

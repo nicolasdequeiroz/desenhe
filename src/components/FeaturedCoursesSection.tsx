@@ -206,16 +206,32 @@ export function FeaturedCoursesSection() {
           <span className="section__eyebrow">Cursos em destaque</span>
 
           <div className="featured-courses__services">
+            {/*
+              Uma "capa" por curso, na mesma ordem dos links: o JS acima casa
+              os dois arrays por índice. Curso ainda sem foto entra como um
+              painel na cor da categoria, para não furar esse pareamento.
+            */}
             <div className="featured-courses__images" aria-hidden="true">
-              {COURSES.map((course, index) => (
-                <img
-                  key={course.slug}
-                  className={`featured-courses__image${index === 0 ? ' is-active' : ''}`}
-                  src={asset(course.cover)}
-                  alt=""
-                  loading={index === 0 ? undefined : 'lazy'}
-                />
-              ))}
+              {COURSES.map((course, index) =>
+                course.cover ? (
+                  <img
+                    key={course.slug}
+                    className={`featured-courses__image${index === 0 ? ' is-active' : ''}`}
+                    src={asset(course.cover)}
+                    alt=""
+                    loading={index === 0 ? undefined : 'lazy'}
+                  />
+                ) : (
+                  <div
+                    key={course.slug}
+                    className={`featured-courses__image featured-courses__image--placeholder category-tint--${course.category}${
+                      index === 0 ? ' is-active' : ''
+                    }`}
+                  >
+                    <span>{course.shortTitle}</span>
+                  </div>
+                ),
+              )}
             </div>
 
             <div className="featured-courses__links">

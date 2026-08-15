@@ -1085,6 +1085,11 @@ body {
   will-change: top, transform, opacity, filter;
 }
 
+/* Sem imagem não há altura intrínseca: o painel assume a proporção das capas. */
+.featured-courses__image--placeholder {
+  aspect-ratio: 4 / 3;
+}
+
 .featured-courses__image.is-active {
   --hover-scale: 1;
   z-index: 2;
@@ -1332,16 +1337,51 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-.category-tag--desenho {
+.category-tag--desenho,
+.category-tint--desenho {
   --category-color: var(--color-category-desenho);
 }
 
-.category-tag--pintura {
+.category-tag--pintura,
+.category-tint--pintura {
   --category-color: var(--color-category-pintura);
 }
 
-.category-tag--institucional {
+.category-tag--institucional,
+.category-tint--institucional {
   --category-color: var(--color-category-institucional);
+}
+
+/*
+ * Substituto da capa enquanto um curso novo ainda não tem fotos: um painel
+ * na cor da categoria com o nome do curso, no lugar de uma imagem quebrada.
+ */
+.course-card__cover-placeholder,
+.featured-courses__image--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-6);
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--category-color) 70%, #171310),
+    color-mix(in srgb, var(--category-color) 28%, #171310)
+  );
+  color: #fff;
+  text-align: center;
+}
+
+.course-card__cover-placeholder span,
+.featured-courses__image--placeholder span {
+  font-family: var(--font-family-heading);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  line-height: 1.15;
+  text-wrap: balance;
+  opacity: 0.9;
+}
+
+.course-card__cover-placeholder {
+  aspect-ratio: 16 / 10;
 }
 
 .course-card__cover {
@@ -1979,6 +2019,634 @@ body {
   break-inside: avoid;
 }
 
+/* ---------- Galeria do curso: parede de trabalhos ---------- */
+
+/*
+ * Altura da tarja de autoria do polaroid. Tem que ser a mesma nos três
+ * lugares: na parede, na cópia em voo (que vive no body) e no visor. É ela
+ * que garante que só a área da foto absorva a diferença de tamanho durante o
+ * voo, e portanto que a peça aterrisse exatamente sobre o polaroid do visor.
+ */
+:root {
+  --polaroid-caption-h: 60px;
+}
+
+/*
+ * Os trabalhos não ficam alinhados numa régua: cada um é "pendurado" na sua
+ * altura, levemente torto, e sobe num ritmo próprio conforme a página rola
+ * (--wall-progress vem do JS em CourseGallery.tsx). Clicar abre o visor.
+ */
+.work-wall {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-6);
+  align-items: start;
+}
+
+/* Poucos trabalhos não devem deixar uma coluna vazia na parede. */
+.work-wall--1 {
+  grid-template-columns: minmax(0, 720px);
+  justify-content: center;
+}
+
+.work-wall--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.work-wall__item {
+  --wall-depth: 0px;
+  --wall-tilt: 0deg;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: zoom-in;
+  /*
+   * O parallax fica no botão e a reação ao hover no quadro, por dentro: como
+   * são elementos diferentes, a transição do hover não precisa perseguir o
+   * transform que o scroll reescreve a cada quadro.
+   */
+  transform: translate3d(0, calc(var(--wall-progress, 0) * var(--wall-depth)), 0);
+  /* Este transform muda a cada quadro da rolagem: numa camada própria, o
+     deslocamento é feito pelo compositor, sem repintar nada. */
+  will-change: transform;
+}
+
+/* Alturas e inclinações alternadas, em ciclo de 3, para funcionar com
+   qualquer quantidade de trabalhos. */
+.work-wall__item:nth-child(3n + 1) {
+  --wall-depth: 26px;
+  --wall-tilt: -1.1deg;
+}
+
+.work-wall__item:nth-child(3n + 2) {
+  --wall-depth: -30px;
+  --wall-tilt: 0.9deg;
+  margin-top: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.work-wall__item:nth-child(3n) {
+  --wall-depth: 14px;
+  --wall-tilt: -0.5deg;
+  margin-top: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+/*
+ * O quadro reage a duas coisas, pela mesma conta: --work-focus (0 a 1) vem da
+ * rolagem no mobile e o hover, no desktop, é o caso extremo dele. Quanto mais
+ * em foco, mais a peça se endireita e sai da parede.
+ */
+/*
+ * Foto e legenda moram dentro do MESMO .work-wall__frame, que é quem gira:
+ * se a legenda fosse uma irmã fora do quadro, cada uma giraria em torno do
+ * próprio centro (o padrão de `rotate()`) e a "moldura" se romperia no meio
+ * em vez de girar como uma peça física só.
+ */
+.work-wall__frame {
+  /* Espessura da moldura: o raio da foto é derivado dela (ver .work-wall__photo). */
+  --frame-border: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Mesma moldura de papel das cartas da primeira dobra do curso. */
+  border: var(--frame-border) solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  /*
+   * Sombra fixa, que não participa de transição nenhuma: `box-shadow` não
+   * composita na GPU, então transicioná-la junto de um `rotate()` forçaria um
+   * repaint a cada quadro, fora de sincronia com o transform do compositor.
+   * Mesmo padrão do baralho da primeira dobra (.course-deck__card).
+   */
+  box-shadow: 0 16px 34px color-mix(in srgb, #000 42%, transparent);
+  transform: rotate(calc(var(--wall-tilt) * (1 - var(--work-focus, 0))))
+    translateY(calc(var(--wall-lift, 0px) + var(--work-focus, 0) * -10px));
+  transition: transform var(--duration-medium) ease;
+  /*
+   * Sem `overflow: hidden` de propósito. Quem recorta a foto é a própria
+   * .work-wall__photo, que fica parada; recortar aqui somaria uma máscara
+   * arredondada a um elemento que gira, e refazer essa máscara a cada quadro
+   * é o que fazia a moldura branca cintilar. O `will-change` deixa a rotação
+   * inteira (moldura, sombra e conteúdo) numa camada só, girada pelo
+   * compositor sem repintura.
+   */
+  will-change: transform;
+}
+
+/*
+ * Área da foto: arredondada nos quatro cantos, com recorte próprio para o
+ * zoom do hover não vazar. É este elemento, e não o quadro, que faz o
+ * recorte: ele fica parado enquanto a foto por dentro dá zoom, então a
+ * máscara arredondada é rasterizada uma vez e reaproveitada. Recortar no
+ * quadro, que gira, obrigaria a refazer a máscara a cada quadro da rotação.
+ */
+.work-wall__photo {
+  position: relative;
+  overflow: hidden;
+  /* Concêntrico ao raio do quadro, descontada a espessura da moldura. */
+  border-radius: calc(var(--radius-container) - var(--frame-border));
+}
+
+.work-wall__photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  /*
+   * Sem raio próprio de propósito: quem arredonda é o recorte do pai. Um raio
+   * aqui também seria escalado pelo zoom do hover, sobrepondo duas máscaras
+   * arredondadas de tamanhos ligeiramente diferentes, e é isso que cintila
+   * nas bordas durante a animação.
+   */
+  /* --work-drift só existe onde a rolagem comanda: ver o bloco de toque. */
+  transform: scale(var(--work-zoom, 1))
+    translateY(calc(var(--work-shift, 0) * var(--work-drift, 0px)));
+  transition: transform var(--duration-slow) ease;
+}
+
+/*
+ * Margem inferior no estilo polaroid: o espaço em branco onde se escreve
+ * quem desenhou e quando. `galleryCredits` em courses.ts alimenta o autor e
+ * o ano; sem crédito cadastrado entra um texto genérico (ver CourseGallery).
+ */
+.work-wall__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  /* Altura exata, e não mínima: é o que o voo assume para aterrissar certo. */
+  height: var(--polaroid-caption-h);
+  padding-inline: var(--spacing-3);
+  text-align: center;
+  overflow: hidden;
+}
+
+.work-wall__author {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  color: var(--surface-warm-text);
+}
+
+.work-wall__year {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  color: var(--surface-warm-text-muted);
+}
+
+/* No hover a peça se endireita e sai da parede, como quem tira para olhar. */
+.work-wall__item:hover .work-wall__frame,
+.work-wall__item:focus-visible .work-wall__frame {
+  --wall-tilt: 0deg;
+  --wall-lift: -10px;
+  --work-zoom: 1.04;
+  --work-focus: 1;
+}
+
+.work-wall__zoom {
+  position: absolute;
+  right: var(--spacing-3);
+  bottom: var(--spacing-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: 9999px;
+  /*
+   * Fundo sólido, sem `backdrop-filter`. O desfoque de fundo reamostra tudo
+   * que está atrás a cada quadro, e esta pílula aparece justamente enquanto o
+   * quadro gira e a foto dá zoom: era a operação mais cara do hover inteiro,
+   * e a que mais travava o movimento. A opacidade maior compensa a leitura
+   * que o desfoque dava.
+   */
+  background: color-mix(in srgb, #171310 88%, transparent);
+  color: #fff;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--duration-medium) ease,
+    transform var(--duration-medium) ease;
+}
+
+.work-wall__item:hover .work-wall__zoom,
+.work-wall__item:focus-visible .work-wall__zoom {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * Telas de toque (e janelas estreitas): quem comanda é a rolagem. A imagem
+ * ganha uma folga de escala para poder deslizar por dentro da moldura sem
+ * mostrar as bordas, e a etiqueta acompanha o trabalho que está em foco.
+ * Antes de o JS rodar, --work-focus não existe e a etiqueta fica visível.
+ */
+@media (hover: none), (max-width: 900px) {
+  .work-wall__frame,
+  .work-wall__item:hover .work-wall__frame {
+    --work-zoom: 1.08;
+    --work-drift: -8px;
+  }
+
+  /*
+   * Sem transição aqui: nestas telas o valor vem da rolagem e é reescrito a
+   * cada quadro (ver CourseGallery.tsx). Uma transição seria reiniciada 60
+   * vezes por segundo, nunca alcançaria o alvo e transformaria o movimento
+   * num arrasto atrasado. Quem suaviza já é a própria curva da rolagem.
+   */
+  .work-wall__frame,
+  .work-wall__photo img,
+  .work-wall__label {
+    transition: none;
+  }
+
+  .work-wall__zoom {
+    opacity: var(--work-focus, 1);
+    transform: none;
+  }
+}
+
+/* Etiqueta de catálogo, no mesmo formato dos cursos em destaque da home. */
+.work-wall__label {
+  display: block;
+  margin-top: var(--spacing-3);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.16em;
+  /* Acende junto com a peça, seja por hover ou pela rolagem. */
+  color: color-mix(
+    in srgb,
+    var(--category-color, var(--color-accent)) calc(var(--work-focus, 0) * 100%),
+    var(--color-text-secondary)
+  );
+  transition: color var(--duration-medium) ease;
+}
+
+.work-wall__item:hover .work-wall__label,
+.work-wall__item:focus-visible .work-wall__label {
+  color: var(--category-color, var(--color-accent));
+}
+
+@media (max-width: 900px) {
+  .work-wall,
+  .work-wall--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-4);
+  }
+
+  .work-wall__item:nth-child(3n + 2),
+  .work-wall__item:nth-child(3n) {
+    margin-top: 0;
+  }
+
+  .work-wall__item:nth-child(2n) {
+    margin-top: clamp(1rem, 5vw, 2.5rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .work-wall,
+  .work-wall--1,
+  .work-wall--2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .work-wall__item:nth-child(2n) {
+    margin-top: 0;
+  }
+
+  /* Muda só a variável: a borda e o raio da foto acompanham juntos. */
+  .work-wall__frame {
+    --frame-border: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-wall__item {
+    transform: none;
+  }
+
+  .work-wall__frame,
+  .work-wall__photo img,
+  .work-wall__zoom {
+    transition: none;
+  }
+}
+
+/* ---------- Visor de trabalho (tela cheia) ---------- */
+
+/*
+ * Renderizado por portal no body (ver CourseGallery.tsx), então fica acima do
+ * header, que é irmão da .site-shell e tem z-index 50.
+ */
+.work-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(var(--spacing-4), 5vw, var(--spacing-10));
+}
+
+.work-viewer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #171310 88%, transparent);
+  backdrop-filter: blur(6px);
+  cursor: zoom-out;
+  animation: work-viewer-fade var(--duration-medium) ease both;
+}
+
+/*
+ * Polaroid em voo: a cópia que atravessa a tela entre a peça na página e o
+ * polaroid do visor (ver WorkViewer.tsx). Tem a mesma estrutura dos dois
+ * lados (foto em cima, tarja de autoria embaixo), então o bloco inteiro
+ * viaja como uma peça só.
+ *
+ * A tarja tem altura fixa, igual na parede e no visor: assim só a foto
+ * absorve a diferença de tamanho e, como ela recorta com `object-fit: cover`,
+ * crescer revela mais do trabalho em vez de deformá-lo. O texto também nunca
+ * é escalado, então não borra durante o percurso.
+ */
+.work-ghost {
+  --ghost-border: 10px;
+  position: fixed;
+  z-index: 90;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: var(--ghost-border) solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  box-shadow: 0 30px 70px color-mix(in srgb, #000 55%, transparent);
+  pointer-events: none;
+}
+
+.work-ghost__photo {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: calc(var(--radius-container) - var(--ghost-border));
+}
+
+.work-ghost__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-ghost__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: var(--polaroid-caption-h);
+  padding-inline: var(--spacing-3);
+  text-align: center;
+  overflow: hidden;
+}
+
+.work-ghost__author {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  color: var(--surface-warm-text);
+}
+
+.work-ghost__year {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  color: var(--surface-warm-text-muted);
+}
+
+/* Ao fechar, só a peça continua animando: o resto do visor apaga junto. */
+.work-viewer.is-closing .work-viewer__backdrop,
+.work-viewer.is-closing .work-viewer__caption,
+.work-viewer.is-closing .work-viewer__close,
+.work-viewer.is-closing .work-viewer__nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 360ms ease;
+}
+
+/*
+ * Quando não há peça de origem não existe voo, e a imagem apaga junto com o
+ * resto. No fechamento com voo ela já sai por estilo inline, então esta regra
+ * não interfere.
+ */
+.work-viewer.is-closing .work-viewer__polaroid {
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.work-viewer__figure {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  max-width: min(1000px, 100%);
+  margin: 0;
+}
+
+/*
+ * O polaroid grande: a mesma peça da parede, agora no centro da tela. A
+ * largura é calculada para o conjunto (foto 4:3 + tarja + molduras) caber na
+ * altura disponível, senão a foto estouraria a viewport em telas baixas.
+ */
+.work-viewer__polaroid {
+  --viewer-border: 10px;
+  display: flex;
+  flex-direction: column;
+  width: min(
+    720px,
+    100%,
+    calc(
+      (78dvh - var(--polaroid-caption-h) - 2 * var(--viewer-border)) * 4 / 3
+    )
+  );
+  border: var(--viewer-border) solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  box-shadow: 0 30px 70px color-mix(in srgb, #000 55%, transparent);
+  animation: work-viewer-in var(--duration-medium) ease both;
+}
+
+.work-viewer__photo {
+  overflow: hidden;
+  border-radius: calc(var(--radius-container) - var(--viewer-border));
+}
+
+.work-viewer__photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.work-viewer__credit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: var(--polaroid-caption-h);
+  padding-inline: var(--spacing-3);
+  text-align: center;
+  overflow: hidden;
+}
+
+.work-viewer__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+  text-align: center;
+  color: color-mix(in srgb, #fff 78%, transparent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+}
+
+.work-viewer__count {
+  font-family: var(--font-family-heading);
+  letter-spacing: 0.16em;
+  color: #fff;
+}
+
+/* Autoria: fica no papel do polaroid, então usa a cor do papel, não a do fundo. */
+.work-viewer__author {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  color: var(--surface-warm-text);
+}
+
+.work-viewer__year {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  color: var(--surface-warm-text-muted);
+}
+
+.work-viewer__course {
+  color: color-mix(in srgb, #fff 62%, transparent);
+}
+
+.work-viewer__close,
+.work-viewer__nav {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, #fff 22%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, #171310 70%, transparent);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background var(--duration-medium) ease,
+    border-color var(--duration-medium) ease,
+    transform var(--duration-medium) ease;
+}
+
+.work-viewer__close:hover,
+.work-viewer__nav:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.work-viewer__close {
+  top: clamp(var(--spacing-4), 4vw, var(--spacing-8));
+  right: clamp(var(--spacing-4), 4vw, var(--spacing-8));
+}
+
+.work-viewer__nav {
+  top: 50%;
+  margin-top: -22px;
+}
+
+.work-viewer__nav--prev {
+  left: clamp(var(--spacing-3), 3vw, var(--spacing-8));
+}
+
+.work-viewer__nav--next {
+  right: clamp(var(--spacing-3), 3vw, var(--spacing-8));
+}
+
+.work-viewer__nav--prev:hover {
+  transform: translateX(-3px);
+}
+
+.work-viewer__nav--next:hover {
+  transform: translateX(3px);
+}
+
+@keyframes work-viewer-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes work-viewer-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(10px);
+  }
+}
+
+/* Em telas estreitas as setas ficariam por cima da obra: vão para o rodapé. */
+@media (max-width: 640px) {
+  /* O respiro extra embaixo é a faixa onde as setas passam a ficar. */
+  .work-viewer {
+    padding-bottom: 96px;
+  }
+
+  /* Sobra a faixa das setas no rodapé, então o polaroid ganha menos altura. */
+  .work-viewer__polaroid {
+    width: min(
+      720px,
+      100%,
+      calc(
+        (62dvh - var(--polaroid-caption-h) - 2 * var(--viewer-border)) * 4 / 3
+      )
+    );
+  }
+
+  .work-viewer__nav {
+    top: auto;
+    bottom: var(--spacing-6);
+    margin-top: 0;
+  }
+
+  .work-viewer__nav--prev {
+    left: calc(50% - 56px);
+  }
+
+  .work-viewer__nav--next {
+    right: calc(50% - 56px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-viewer__backdrop,
+  .work-viewer__polaroid {
+    animation: none;
+  }
+}
+
 /* ---------- Página de curso ---------- */
 
 /*
@@ -2010,7 +2678,19 @@ body {
  */
 .course-deck {
   position: relative;
-  overflow: hidden;
+  /*
+   * `clip`, e não `hidden`: as cartas vazam de propósito pela borda de baixo,
+   * e `hidden` faria desta faixa um contêiner rolável. Como as cartas são
+   * botões, clicar numa delas dá foco, e o navegador rolaria a seção por
+   * dentro para "revelar" a carta cortada, jogando o título para trás do
+   * header e desfazendo o corte. `clip` recorta igual, sem poder rolar.
+   *
+   * O `flow-root` repõe o contexto de formatação de bloco que vinha de graça
+   * com `hidden`: é ele que segura a margem negativa de .course-deck__cards
+   * aqui dentro, e portanto o quanto as cartas são cortadas pela borda.
+   */
+  display: flow-root;
+  overflow: clip;
   /* O piso (88px) garante espaço para o header fixo (overlay) nesta dobra,
      que em telas estreitas passa dos 40px que o clamp usava antes. */
   padding-top: clamp(88px, 7vw, 96px);
@@ -2030,6 +2710,18 @@ body {
 
 .course-deck--institucional {
   --category-color: var(--color-category-institucional);
+}
+
+/*
+ * Curso sem galeria ainda: não há baralho para vazar pela borda de baixo,
+ * então a faixa precisa do próprio respiro inferior.
+ */
+.course-deck--bare {
+  padding-bottom: clamp(var(--spacing-10), 6vw, 72px);
+}
+
+.course-deck--bare .course-deck__header {
+  margin-bottom: 0;
 }
 
 .course-deck__header {
@@ -2105,11 +2797,15 @@ body {
   --card-rotate: 0deg;
   --card-lift: 0rem;
   flex: 1 1 0;
+  /* Botão: cada carta abre o trabalho no visor (ver WorkLightbox.tsx). */
+  padding: 0;
   max-width: 288px;
   aspect-ratio: 1 / 1.25;
   border: 8px solid var(--surface-warm-card);
   border-radius: var(--radius-container);
   overflow: hidden;
+  background: var(--surface-warm-card);
+  cursor: zoom-in;
   transform: translate(var(--card-x), calc(var(--card-y) + var(--card-lift)))
     rotate(var(--card-rotate));
   transition: transform var(--duration-medium) ease;
@@ -2149,8 +2845,15 @@ body {
 }
 
 /* Hover: a carta sobe um pouco e vem para a frente do baralho. */
-.course-deck__card:hover {
+.course-deck__card:hover,
+.course-deck__card:focus-visible {
   --card-lift: -1.5rem;
+}
+
+/* Com o visor aberto a marquee para: a carta precisa continuar onde estava
+   para a imagem voltar em cima dela ao fechar. */
+.has-work-viewer .course-deck__track {
+  animation-play-state: paused;
 }
 
 @media (max-width: 900px) {
@@ -2291,6 +2994,15 @@ body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-container);
   overflow: hidden;
+}
+
+/* Cursos sem todos os dados preenchidos mostram menos cartas (ver CursoDetalhe). */
+.course-facts--cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.course-facts--cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .course-facts--desenho {

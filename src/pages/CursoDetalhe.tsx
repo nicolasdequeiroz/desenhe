@@ -1,4 +1,10 @@
-import {useEffect, useRef, useState, type CSSProperties} from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
 import {Link} from 'react-router-dom';
 import {
   CalendarCheck,
@@ -13,6 +19,8 @@ import {
 import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
+import {CourseGallery} from '../components/CourseGallery';
+import {useWorkLightbox} from '../components/WorkLightbox';
 import {WhatsCta} from '../components/WhatsCta';
 import {
   PRICING,
@@ -142,6 +150,23 @@ export function CursoDetalhe({slug}: {slug: string}) {
   const [timelineRef, timelineProgress] = useScrollProgress<HTMLOListElement>();
   const stickyHeader = useStickyColumn<HTMLDivElement, HTMLDivElement>(96);
 
+  const galleryCaption =
+    course.galleryCaption ?? `Trabalhos do curso de ${course.shortTitle}`;
+  // As cartas do baralho abrem o mesmo visor da galeria lá embaixo, e o
+  // visitante navega dali por toda a série sem precisar rolar a página.
+  const deckCardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const deckLightbox = useWorkLightbox({
+    images: course.gallery,
+    caption: galleryCaption,
+    credits: course.galleryCredits,
+    getOrigin: useCallback((index: number) => deckCardRefs.current[index], []),
+    onClosed: useCallback((index: number) => {
+      deckCardRefs.current[index]?.focus();
+    }, []),
+  });
+
+  // Cursos recém-abertos ainda não têm todos os dados (duração, valores):
+  // as cartas sem conteúdo saem da faixa em vez de ficarem vazias.
   const factCards = [
     {
       icon: Users,
@@ -170,9 +195,9 @@ export function CursoDetalhe({slug}: {slug: string}) {
       title: 'Mensalidade',
       items: pricing
         ? [`A partir de ${formatBRL(pricing.plans[0].monthly)}/mês`]
-        : [],
+        : (course.priceNotes ?? []),
     },
-  ];
+  ].filter((card) => card.items.length > 0);
 
   return (
     <div className={`course-page course-page--${course.category}`}>
@@ -183,7 +208,11 @@ export function CursoDetalhe({slug}: {slug: string}) {
         image={course.cover}
       />
 
-      <section className={`course-deck course-deck--${course.category}`}>
+      <section
+        className={`course-deck course-deck--${course.category}${
+          course.gallery.length === 0 ? ' course-deck--bare' : ''
+        }`}
+      >
         <div className="container">
           <div className="course-deck__header">
             <div className="course-deck__heading">
@@ -196,6 +225,9 @@ export function CursoDetalhe({slug}: {slug: string}) {
             <p className="course-deck__lead">{course.excerpt}</p>
           </div>
 
+          {/* Cursos novos podem entrar no ar antes das fotos: sem galeria,
+              a primeira dobra fica só com o título e a chamada. */}
+          {course.gallery.length > 0 && (
           <div className="course-deck__cards">
             {/*
               Uma trilha só, com o conjunto de cartas duplicado dentro dela
@@ -210,26 +242,49 @@ export function CursoDetalhe({slug}: {slug: string}) {
             */}
             <div className="course-deck__track">
               {course.gallery.slice(0, 4).map((img, i) => (
-                <div key={img} className={`course-deck__card course-deck__card--${i + 1}`}>
+                <button
+                  key={img}
+                  type="button"
+                  className={`course-deck__card course-deck__card--${i + 1}`}
+                  ref={(node) => {
+                    deckCardRefs.current[i] = node;
+                  }}
+                  onClick={(event) =>
+                    deckLightbox.openWork(i, event.currentTarget)
+                  }
+                  aria-label={`Ampliar trabalho ${i + 1}`}
+                >
                   <img
                     src={asset(img)}
-                    alt={`${course.galleryCaption ?? `Trabalhos do curso de ${course.shortTitle}`}, imagem ${i + 1}`}
+                    alt={`${galleryCaption}, imagem ${i + 1}`}
                   />
-                </div>
+                </button>
               ))}
+              {/*
+                No marquee do mobile as cópias também são clicáveis: a carta
+                que o dedo alcança pode ser qualquer uma das duas, e o voo sai
+                justamente da que foi tocada (ver openWork).
+              */}
               <div className="course-deck__track-duplicate" aria-hidden="true">
                 {course.gallery.slice(0, 4).map((img, i) => (
-                  <div
+                  <button
                     key={`dup-${img}`}
+                    type="button"
+                    tabIndex={-1}
                     className={`course-deck__card course-deck__card--${i + 1} course-deck__card--duplicate`}
+                    onClick={(event) =>
+                      deckLightbox.openWork(i, event.currentTarget)
+                    }
                   >
                     <img src={asset(img)} alt="" />
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           </div>
+          )}
         </div>
+        {deckLightbox.lightbox}
       </section>
 
       <div className="container course-intro">
@@ -239,7 +294,9 @@ export function CursoDetalhe({slug}: {slug: string}) {
           ))}
         </div>
 
-        <div className={`course-facts course-facts--${course.category}`}>
+        <div
+          className={`course-facts course-facts--${course.category} course-facts--cols-${factCards.length}`}
+        >
           {factCards.map(({icon: Icon, title, items}) => (
             <div key={title} className="course-facts__card">
               <span className="course-facts__icon-badge">
@@ -393,18 +450,14 @@ export function CursoDetalhe({slug}: {slug: string}) {
         <Section
           kicker="Galeria"
           title={course.galleryCaption ?? 'Trabalhos de alunos'}
+          lead="Abra qualquer imagem para ver de perto."
           muted
         >
-          <div className="masonry">
-            {course.gallery.map((img, i) => (
-              <img
-                key={img}
-                src={asset(img)}
-                alt={`${course.galleryCaption ?? course.shortTitle}, imagem ${i + 1}`}
-                loading="lazy"
-              />
-            ))}
-          </div>
+          <CourseGallery
+            images={course.gallery}
+            caption={galleryCaption}
+            credits={course.galleryCredits}
+          />
         </Section>
       )}
 

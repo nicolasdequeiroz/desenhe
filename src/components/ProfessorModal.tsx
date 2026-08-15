@@ -1,6 +1,7 @@
 import {useEffect, useRef} from 'react';
 import {X} from '@phosphor-icons/react';
 import {asset, type Teacher} from '../data';
+import {useScrollLock} from './useScrollLock';
 
 const FOCUSABLE_SELECTOR =
   'button:not(:disabled), [href], input:not(:disabled), select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -14,13 +15,7 @@ interface Props {
 export function ProfessorModal({teacher, onClose}: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, []);
+  useScrollLock();
 
   useEffect(() => {
     const panel = panelRef.current;
