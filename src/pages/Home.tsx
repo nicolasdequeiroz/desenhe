@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {Button} from '../ui';
+import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {ColoniaPromoBar} from '../components/ColoniaPromoBar';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
@@ -80,6 +80,30 @@ export function Home() {
       <SpaceShowcaseSection />
 
       <TestimonialsSection />
+
+      {/* Fecha a home na mesma faixa colorida das páginas de curso e de /sobre. */}
+      <section className="course-cta course-cta--desenho">
+        <div className="container course-cta__inner">
+          <div className="course-cta__copy">
+            <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
+            <Heading level={2} className="course-cta__headline">
+              Comece <span className="course-cta__highlight">pelo primeiro traço</span>.
+            </Heading>
+            <Text type="large" color="inherit" display="block" className="course-cta__lead">
+              Turmas de no máximo 8 alunos, cronograma no seu ritmo e uma aula
+              experimental para você sentir como é.
+            </Text>
+            <div className="course-cta__action">
+              <WhatsCta
+                message="Olá! Quero agendar uma aula experimental na Desenhe."
+                label="Agendar aula experimental"
+                size="sm"
+                variant="secondary"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

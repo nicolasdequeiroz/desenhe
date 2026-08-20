@@ -1221,6 +1221,13 @@ body {
   gap: var(--spacing-4);
 }
 
+.featured-courses__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
 .featured-courses__footnote {
   max-width: 32rem;
   margin: 0;
@@ -1268,44 +1275,79 @@ body {
 .course-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spacing-5);
+  /* Mais respiro entre linhas do que entre colunas: os polaroids tortos e a
+     sombra deles precisam de folga vertical para não parecer amontoado. */
+  column-gap: var(--spacing-5);
+  row-gap: var(--spacing-12);
 }
 
 .course-card {
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-container);
-  overflow: hidden;
-  background: var(--color-background-card);
   text-decoration: none;
   color: inherit;
-  transition:
-    transform var(--duration-medium),
-    box-shadow var(--duration-medium);
 }
 
-.course-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-med);
+/* Alturas e tortos alternados, em ciclo de 3, como na parede de trabalhos. */
+.course-card:nth-child(3n + 1) {
+  --card-tilt: -1.1deg;
+}
+
+.course-card:nth-child(3n + 2) {
+  --card-tilt: 0.9deg;
+}
+
+.course-card:nth-child(3n) {
+  --card-tilt: -0.6deg;
+}
+
+.course-card__frame {
+  position: relative;
+  /* Mesma moldura de papel do baralho da primeira dobra e da parede de trabalhos. */
+  border: 8px solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  /*
+   * Sombra fixa, sem participar de transição nenhuma: animá-la junto de um
+   * `rotate()` num elemento com borda + overflow recortado força um repaint
+   * da máscara a cada quadro, fora de sincronia com o transform do
+   * compositor (é o que fazia a borda branca piscar na galeria do curso).
+   */
+  box-shadow: 0 16px 34px color-mix(in srgb, #000 42%, transparent);
+  transform: rotate(var(--card-tilt, 0deg));
+  transition: transform var(--duration-medium) ease;
+  will-change: transform;
+}
+
+.course-card:hover .course-card__frame,
+.course-card:focus-visible .course-card__frame {
+  transform: rotate(0deg) translateY(-8px);
 }
 
 .course-card:hover .course-card__cover img {
   transform: scale(1.06);
 }
 
-.course-card:hover .course-card__cta {
-  color: var(--color-text-primary);
+.course-card:hover .course-card__cta,
+.course-card:focus-visible .course-card__cta {
+  opacity: 1;
+  transform: none;
 }
 
-.course-card:hover .course-card__cta-arrow {
+.course-card:hover .course-card__cta-arrow,
+.course-card:focus-visible .course-card__cta-arrow {
   transform: translateX(3px);
 }
 
 .course-card__cover {
+  position: relative;
   overflow: hidden;
+  /* Concêntrico ao raio da moldura, descontada a espessura da borda. */
+  border-radius: calc(var(--radius-container) - 8px);
 }
 
 .course-card__cover img {
+  display: block;
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
@@ -1317,7 +1359,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-2);
-  padding: var(--spacing-5) var(--spacing-4) var(--spacing-4);
+  padding-top: var(--spacing-4);
   flex: 1;
 }
 
@@ -1384,26 +1426,10 @@ body {
   aspect-ratio: 16 / 10;
 }
 
-.course-card__cover {
-  position: relative;
-}
-
 .course-card__cover .category-tag {
   position: absolute;
   top: var(--spacing-3);
   left: var(--spacing-3);
-}
-
-.course-card__age-badge {
-  position: absolute;
-  top: var(--spacing-3);
-  right: var(--spacing-3);
-}
-
-.course-card__age-badge .badge {
-  background: rgba(23, 19, 16, 0.65);
-  backdrop-filter: blur(2px);
-  color: #fff;
 }
 
 .course-card__title {
@@ -1422,7 +1448,12 @@ body {
   color: var(--color-accent);
   font-weight: 600;
   font-size: var(--font-size-sm);
-  transition: color var(--duration-medium);
+  /* Só aparece no hover/foco do card (ver .course-card:hover acima). */
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--duration-medium),
+    transform var(--duration-medium);
 }
 
 .course-card__cta-arrow {
@@ -1458,7 +1489,16 @@ body {
   text-align: left;
 }
 
-.course-philosophy__eyebrow {
+/*
+ * Grade de notas curtas (ver NoteGrid.tsx): proposta pedagógica em /cursos,
+ * observações de /precos e princípios em /sobre usam todas este formato.
+ */
+.note-grid {
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.note-grid__eyebrow {
   display: block;
   margin-bottom: var(--spacing-6);
   color: var(--color-accent);
@@ -1469,17 +1509,74 @@ body {
   text-transform: uppercase;
 }
 
-.course-philosophy__grid {
+.note-grid__items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   column-gap: var(--spacing-8);
   row-gap: var(--spacing-8);
-  padding-top: var(--spacing-6);
-  border-top: 1px solid var(--color-border);
 }
 
-.course-philosophy__item h3 {
+.note-grid__items--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.note-grid__items--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 860px) {
+  .note-grid__items--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .note-grid__items--3,
+  .note-grid__items--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.note-grid__item h3 {
   margin: 0 0 var(--spacing-3);
+}
+
+/*
+ * Em /precos as notas viram cartas, no mesmo desenho dos planos logo acima:
+ * os textos têm comprimentos bem diferentes, e soltos na página eles deixam
+ * as linhas da grade irregulares. Nas outras páginas (/cursos, /sobre) a
+ * grade continua sem moldura, que é o tom editorial delas.
+ */
+.pricing-notes .note-grid__items {
+  /* Todas as cartas da mesma linha com a mesma altura. */
+  grid-auto-rows: 1fr;
+  gap: var(--spacing-4);
+}
+
+.pricing-notes .note-grid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+}
+
+.pricing-notes .note-grid__item h3 {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* A chamada ocupa a célula que sobra na última linha, marcada pelo tom de
+   destaque, com o botão empurrado para a base para alinhar com as vizinhas. */
+.pricing-notes .note-grid__item--cta {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-background-card));
+}
+
+.pricing-notes .note-grid__item--cta .btn {
+  margin-top: auto;
 }
 
 @media (max-width: 640px) {
@@ -2007,16 +2104,171 @@ body {
 
 /* ---------- Galeria de imagens ---------- */
 
-.masonry {
-  columns: 3 260px;
-  column-gap: var(--spacing-3);
+/*
+ * Grade de ambientes em /sobre. Cada foto é um card com a mesma tarja de
+ * legenda da galeria da home (ver .space-showcase__gallery-badge). A
+ * proporção é fixa de propósito: as fotos entram com `loading="lazy"`, e sem
+ * ela a página só descobriria a altura de cada linha quando a imagem
+ * chegasse, empurrando o conteúdo abaixo (e o scroll junto).
+ */
+.space-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-3);
 }
 
-.masonry img {
-  width: 100%;
-  margin-bottom: var(--spacing-3);
+.space-grid__figure {
+  margin: 0;
+}
+
+.space-grid .space-showcase__gallery-card {
+  aspect-ratio: 4 / 3;
   border-radius: var(--radius-container);
-  break-inside: avoid;
+}
+
+@media (max-width: 860px) {
+  .space-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .space-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Sobre a escola ---------- */
+
+/* O header do site é sticky: as âncoras precisam parar abaixo dele. */
+.about-page :where(.section, .course-timeline)[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Respiro entre o header e a primeira dobra. Escopado à página porque
+   .course-hero também abre a Colônia de Férias, com outro ritmo. */
+.about-page .course-hero {
+  padding-top: clamp(var(--spacing-10), 7vw, 88px);
+  padding-bottom: clamp(var(--spacing-10), 6vw, 72px);
+  column-gap: clamp(var(--spacing-8), 5vw, 80px);
+}
+
+/*
+ * Primeira dobra no mesmo ritmo da das páginas de curso (ver
+ * .course-deck__heading): kicker, título e texto empilhados com um respiro
+ * declarado entre eles, em vez de dependerem das margens zeradas do reset.
+ */
+.about-page .course-hero__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+/* O fio de 80px do kicker é o separador das aberturas de seção centralizadas.
+   Aqui ele ficava solto entre o rótulo e o título, encostado no h1. */
+.about-page .course-hero .section__eyebrow::after {
+  content: none;
+}
+
+.about-page .course-hero h1 {
+  margin: 0;
+  font-size: clamp(1.875rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+}
+
+.about-page .course-hero .prose {
+  margin-top: var(--spacing-2);
+}
+
+/*
+ * A foto passa um pouco da altura do texto, em vez de ficar mais curta que
+ * ele: quem define a altura da linha é a imagem, pelo min-height abaixo. O
+ * texto não estica junto, fica centrado no eixo dela.
+ */
+.about-page .course-hero {
+  align-items: stretch;
+}
+
+.about-page .course-hero__intro {
+  align-self: center;
+}
+
+.about-page .course-hero img {
+  height: 100%;
+  min-height: clamp(280px, 30vw, 480px);
+  /* Com altura imposta, sem isto a foto esticaria: o padrão do site é fill. */
+  object-fit: cover;
+}
+
+/* Índice da página, logo abaixo da primeira dobra, separado dela por um fio. */
+.about-index {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  padding-block: clamp(var(--spacing-8), 4.5vw, 64px);
+}
+
+/*
+ * O fio vive num pseudo-elemento, e não num border-top: como o próprio
+ * .about-index é o .container, a borda correria também por dentro do
+ * padding lateral dele e ficaria mais larga que o texto da dobra acima.
+ */
+.about-index::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--spacing-6);
+  right: var(--spacing-6);
+  height: 1px;
+  background: var(--color-border);
+}
+
+.about-index__link {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.about-index__link:hover,
+.about-index__link:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.about-facts {
+  padding-bottom: clamp(var(--spacing-10), 6vw, 72px);
+}
+
+.about-quote {
+  max-width: 720px;
+  margin: clamp(var(--spacing-10), 6vw, 72px) auto 0;
+  text-align: center;
+}
+
+.about-timeline__action {
+  margin-top: var(--spacing-2);
+}
+
+/* Botões de fecho de seção: centralizados, com respiro acima da grade. */
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-10);
 }
 
 /* ---------- Galeria do curso: parede de trabalhos ---------- */
@@ -2312,15 +2564,54 @@ body {
   }
 }
 
+/*
+ * Abaixo de 560px a parede vira um slider horizontal: uma fileira que sangra
+ * até a borda da tela, com o próximo polaroid espiando pela direita para
+ * convidar a arrastar (o mesmo truque das fileiras da Netflix). Sem cursor
+ * para dar hover, um card inteiro por linha não deixava claro que havia mais
+ * trabalhos ao lado; a espiada resolve isso sem precisar de nenhum texto.
+ */
 @media (max-width: 560px) {
   .work-wall,
   .work-wall--1,
   .work-wall--2 {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    gap: var(--spacing-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--spacing-4);
+    /* Cancela o padding-inline do .container pai, mesmo truque do baralho da
+       primeira dobra: a fileira ocupa a largura cheia da tela. */
+    margin-inline: calc(-1 * var(--spacing-4));
+    padding-inline: var(--spacing-4);
+    /*
+     * `overflow-x: auto` força o eixo Y a virar 'auto' também (regra da spec
+     * de Overflow para combinar um eixo não-visível com 'visible'), o que
+     * cortaria a sombra e o leve tombo dos polaroids em cima/embaixo. Este
+     * respiro dá espaço para esse corte não aparecer; a margem negativa
+     * cancela a altura extra que ele adicionaria à seção.
+     */
+    padding-block: var(--spacing-4);
+    margin-block: calc(-1 * var(--spacing-4));
+    scrollbar-width: none;
   }
 
-  .work-wall__item:nth-child(2n) {
+  .work-wall::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work-wall__item {
+    flex: 0 0 80%;
+    max-width: 360px;
+    scroll-snap-align: start;
     margin-top: 0;
+    /*
+     * Sem bob vertical: numa fileira horizontal os cards precisam ficar
+     * todos na mesma linha de base. --wall-depth só existe para o
+     * deslocamento vertical conforme a PÁGINA rola (ver CourseGallery.tsx),
+     * que não tem relação com o slider e ficaria descoordenado dele.
+     */
+    --wall-depth: 0px;
   }
 
   /* Muda só a variável: a borda e o raio da foto acompanham juntos. */
@@ -2389,6 +2680,14 @@ body {
   background: var(--surface-warm-card);
   box-shadow: 0 30px 70px color-mix(in srgb, #000 55%, transparent);
   pointer-events: none;
+}
+
+/* A cópia em voo acompanha o visor: sem moldura, sem tarja. */
+.work-ghost--bare {
+  --ghost-border: 0px;
+  border: none;
+  background: none;
+  overflow: hidden;
 }
 
 .work-ghost__photo {
@@ -2481,6 +2780,19 @@ body {
   background: var(--surface-warm-card);
   box-shadow: 0 30px 70px color-mix(in srgb, #000 55%, transparent);
   animation: work-viewer-in var(--duration-medium) ease both;
+}
+
+/*
+ * Sem moldura: só o desenho. A largura perde da conta a tarja de autoria e a
+ * borda, que deixam de existir, então a imagem pode ocupar toda a altura
+ * disponível.
+ */
+.work-viewer__polaroid--bare {
+  --viewer-border: 0px;
+  width: min(720px, 100%, calc(78dvh * 4 / 3));
+  border: none;
+  background: none;
+  overflow: hidden;
 }
 
 .work-viewer__photo {
@@ -2983,6 +3295,14 @@ body {
   max-width: 720px;
 }
 
+/* Convite discreto para tirar dúvidas, logo depois dos fatos do curso. */
+.course-intro__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
 /*
  * Baralho de "fatos" do curso (para quem, duração...), no estilo do
  * componente de referência: uma faixa dividida em colunas por bordas
@@ -3266,6 +3586,131 @@ body {
   .course-timeline__header {
     position: static;
   }
+}
+
+/*
+ * Faixa final da página de curso: fecha no mesmo tom em que a primeira
+ * dobra abriu (mesma fórmula de cor, --category-color escurecida contra o
+ * fundo do site). Layout inspirado em
+ * https://www.flowbase.co/preview/cycle-cta-03: chamada grande à esquerda,
+ * com um trecho em destaque, CTA ao lado.
+ */
+/* Altura do trecho, no fim da seção anterior, que já vai virando a cor da categoria. */
+:root {
+  --course-cta-fade: 320px;
+}
+
+/*
+ * A transição mora no `background` da seção que vem logo antes da faixa
+ * final (a galeria, ou a linha do tempo dos módulos quando o curso não tem
+ * galeria ainda): o próprio fundo dela passa de --color-background-muted
+ * para a cor da categoria perto do fim. `background` pinta atrás de todo o
+ * conteúdo da seção (sempre foi assim), então isso nunca esconde nada, só
+ * troca a cor por trás dos cards, do texto etc. `:has(+ .course-cta)`
+ * seleciona só a seção que efetivamente precede a faixa, sem precisar saber
+ * de antemão se é a galeria ou a linha do tempo.
+ */
+.course-page .section--muted:has(+ .course-cta) {
+  background: linear-gradient(
+    to bottom,
+    var(--color-background-muted) 0,
+    var(--color-background-muted) calc(100% - var(--course-cta-fade)),
+    color-mix(in srgb, var(--category-color) 82%, #171310) 100%
+  );
+}
+
+/*
+ * Mesma transição na home e em /sobre, onde quem precede a faixa é a seção
+ * de depoimentos. A diferença é o ponto de partida: ela é transparente de
+ * propósito (ver .section.testimonials.section--muted), então o gradiente
+ * sai da cor do corpo, e não de --color-background-muted. E como essas
+ * páginas não têm o wrapper .course-page--X que carrega --category-color,
+ * a cor de chegada é declarada aqui, a partir da variante da faixa.
+ */
+.section.testimonials:has(+ .course-cta) {
+  background: linear-gradient(
+    to bottom,
+    var(--color-background-body) 0,
+    var(--color-background-body) calc(100% - var(--course-cta-fade)),
+    var(--cta-fade-color) 100%
+  );
+}
+
+.section.testimonials:has(+ .course-cta--desenho) {
+  --cta-fade-color: color-mix(in srgb, var(--color-category-desenho) 82%, #171310);
+}
+
+.section.testimonials:has(+ .course-cta--pintura) {
+  --cta-fade-color: color-mix(in srgb, var(--color-category-pintura) 82%, #171310);
+}
+
+.section.testimonials:has(+ .course-cta--institucional) {
+  --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, #171310);
+}
+
+.course-cta {
+  padding-block: clamp(56px, 8vw, 96px);
+  /* Continua exatamente da cor em que o gradiente acima termina. */
+  background: color-mix(in srgb, var(--category-color) 82%, #171310);
+  color: #fff;
+}
+
+.course-cta--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.course-cta--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.course-cta--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.course-cta__copy {
+  max-width: 640px;
+}
+
+.course-cta__eyebrow {
+  display: inline-block;
+  margin-bottom: var(--spacing-3);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.course-cta__headline {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-family-heading);
+  font-size: clamp(1.875rem, 4vw, 3rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Trecho em destaque dentro do título, como a caixa escura da referência. */
+.course-cta__highlight {
+  display: inline-block;
+  padding-inline: 0.2em;
+  background: color-mix(in srgb, #171310 78%, transparent);
+  border-radius: var(--radius-inner);
+}
+
+.course-cta__lead {
+  margin-top: var(--spacing-4);
+  max-width: 460px;
+  opacity: 0.85;
+}
+
+/* O botão vem logo abaixo do texto, dentro do próprio bloco de cópia. */
+.course-cta__action {
+  margin-top: var(--spacing-6);
 }
 
 .course-hero {
@@ -4087,6 +4532,19 @@ body {
     min-height: 44px;
   }
 
+  /*
+   * Exceção: no header mobile, o CTA nesse tamanho competia demais com a
+   * logo e o menu hambúrguer num espaço estreito. Reduz a fonte e o
+   * preenchimento lateral (herdados do .btn.sm acima); a altura ainda cede
+   * um pouco o alvo de toque recomendado, mas o botão continua fácil de
+   * tocar por não ter mais nada colado nele no header.
+   */
+  .btn.sm.site-header__cta {
+    min-height: 32px;
+    padding-inline: var(--spacing-2) calc(var(--spacing-2) - 0.04em);
+    font-size: 0.6875rem;
+  }
+
   .site-footer__social-btn {
     width: 2.75rem;
     height: 2.75rem;
@@ -4271,18 +4729,429 @@ body {
 }
 
 .pricing-notes {
-  margin-top: var(--spacing-12);
-  max-width: 720px;
-  margin-inline: auto;
+  margin-top: clamp(var(--spacing-10), 8vw, 96px);
+}
+
+/* ---------- Rio de trabalhos em arco (ver WorksArc.tsx) ---------- */
+
+.works-arc-section {
+  padding-block: clamp(var(--spacing-10), 8vw, 88px) 0;
+}
+
+/*
+ * Mesmo peso visual dos títulos centralizados abertos por `Section` (ver
+ * .section__head--centered): sem essas regras o h2 aqui herdava só o
+ * tamanho base de h2, bem menor que "Nosso espaço" ou "Nossa proposta" logo
+ * abaixo, e a seção toda parecia desalinhada com o resto da página.
+ */
+.works-arc-section__head {
+  max-width: 640px;
+  margin: 0 auto var(--spacing-12);
   text-align: center;
 }
 
-.pricing-notes__list {
-  list-style: none;
+.works-arc-section__head .section__eyebrow {
+  margin-bottom: var(--spacing-3);
+}
+
+.works-arc-section__head .section__eyebrow::after {
+  margin-inline: auto;
+}
+
+.works-arc-section__head h2 {
   margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.works-arc-section__head p {
+  margin-top: var(--spacing-2);
+}
+
+
+/*
+ * Recorte da seção. A altura é fixada aqui porque o arco empurra as peças
+ * das pontas bem para baixo: sem isso a seção cresceria e encolheria junto
+ * com a curva a cada quadro.
+ */
+.works-arc {
+  --arc-item: 30vw;
+  position: relative;
+  overflow: hidden;
+  /* Só o que a curva pede: a queda das pontas ainda visíveis, mais a altura
+     extra que a peça ganha ao girar. Qualquer folga além disso vira um vão
+     escuro entre esta seção e a próxima. */
+  height: calc(var(--arc-item) + 104px);
+  cursor: grab;
+  /* O gesto horizontal arrasta a trilha; o vertical continua rolando a
+     página, senão a seção viraria uma armadilha de scroll no celular. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.works-arc--dragging,
+.works-arc--dragging .works-arc__inner {
+  cursor: grabbing;
+}
+
+/* Mesma etiqueta que segue o cursor no trilho de depoimentos. */
+.works-arc__hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transform: translate(-50%, 1.1rem) translateY(-0.25rem);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-background-card) 88%, transparent);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-shadow) 55%, transparent);
+  font-family: var(--font-family-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  will-change: left, top;
+}
+
+.works-arc:hover .works-arc__hint {
+  opacity: 1;
+  transform: translate(-50%, 1.1rem);
+}
+
+.works-arc--dragging .works-arc__hint {
+  opacity: 0;
+}
+
+/*
+ * O palco é 150% da largura da tela e recuado em 25%: as pontas do arco,
+ * onde a curvatura aperta, caem fora do recorte acima. A leve angulação do
+ * conjunto é o que tira a curva da simetria perfeita.
+ */
+.works-arc__stage {
+  position: absolute;
+  top: 12px;
+  left: -25%;
+  width: 150%;
+  rotate: -1.5deg;
+}
+
+/* A posição da trilha é escrita a cada quadro pelo JS (ver WorksArc.tsx):
+   é o que permite arrastar, e não só assistir. */
+.works-arc__track {
+  display: flex;
+  gap: 40px;
+  width: max-content;
+  /* Mantém a trilha inteira numa camada composta: sem isso o segundo
+     conjunto só é pintado ao entrar na área visível, e isso "pipoca". */
+  will-change: transform;
+}
+
+.works-arc__item {
+  flex: 0 0 var(--arc-item);
+  margin: 0;
+}
+
+/* A distorção vive aqui, e não no item: ver o comentário em WorksArc.tsx. */
+.works-arc__inner {
+  display: block;
+  width: 100%;
   padding: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  /* Mesma moldura de papel das cartas de curso (ver .course-deck__card). */
+  border: 8px solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  /* Botão: cada peça abre o trabalho no visor (ver WorkLightbox.tsx). */
+  cursor: zoom-in;
+  will-change: transform;
+}
+
+.works-arc__inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* A imagem não pode virar um arrasto nativo do navegador: isso roubaria o
+     gesto do carrossel no meio do caminho. */
+  -webkit-user-drag: none;
+}
+
+@media (max-width: 760px) {
+  /* Mesma proporção da referência no mobile: a peça passa de 20% para 45%
+     da largura do palco, e o gap cai de 40px para 16px. */
+  .works-arc {
+    --arc-item: 67.5vw;
+    height: calc(var(--arc-item) + 64px);
+  }
+
+  .works-arc__stage {
+    top: 8px;
+  }
+
+  .works-arc__track {
+    gap: 16px;
+  }
+
+  .works-arc__inner {
+    border-width: 4px;
+  }
+}
+
+/* ---------- Contato (layout Helio Contact 03) ---------- */
+
+/*
+ * Moldura única em volta dos canais e do mapa. Cada célula da grade desenha
+ * só a borda de cima e a da esquerda, e a moldura fecha a direita e a base:
+ * assim os fios internos não dobram de espessura onde as células se
+ * encontram, sem precisar de border-collapse.
+ */
+.contact-frame {
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+}
+
+.contact-grid {
   display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-10);
+  padding: var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  background: var(--color-background-card);
+}
+
+.contact-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-element);
+  background: var(--color-background-surface);
+  color: var(--color-accent);
+}
+
+.contact-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  align-items: flex-start;
+}
+
+.contact-card__title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.contact-card__link {
+  margin-top: var(--spacing-2);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-fast) ease;
+}
+
+.contact-card__link:hover,
+.contact-card__link:focus-visible {
+  color: var(--color-accent);
+}
+
+.contact-map {
+  position: relative;
+  display: flex;
+  height: clamp(360px, 45vw, 480px);
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.contact-map__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* O mapa é claro e a página é escura: sem isso ele "acende" a moldura. */
+  filter: grayscale(0.4) brightness(0.85);
+}
+
+/* Alfinete no centro do mapa, como na referência: um halo translúcido em
+   volta de um disco claro. É um link para o Google Maps. */
+.contact-map__pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: var(--spacing-8);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-background-body) 25%, transparent);
+  line-height: 0;
+}
+
+.contact-map__pin-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  background: var(--color-background-card);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-med);
+  transition: transform var(--duration-medium) ease;
+}
+
+.contact-map__pin:hover .contact-map__pin-inner,
+.contact-map__pin:focus-visible .contact-map__pin-inner {
+  transform: scale(1.06);
+}
+
+.contact-map__detail {
+  position: absolute;
+  bottom: var(--spacing-3);
+  left: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  width: min(384px, calc(100% - var(--spacing-6)));
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+}
+
+.contact-map__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-card {
+    gap: var(--spacing-6);
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sem espaço para o cartão flutuar sobre o mapa: ele desce para baixo dele. */
+  .contact-map {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .contact-map__frame {
+    height: 320px;
+  }
+
+  .contact-map__pin {
+    top: 160px;
+  }
+
+  .contact-map__detail {
+    position: static;
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+  }
+}
+
+/* ---------- Colônia de Férias ---------- */
+
+.colonia-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-3);
+}
+
+.colonia-gallery__item {
+  margin: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--radius-container);
+}
+
+.colonia-gallery__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 760px) {
+  .colonia-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.colonia-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--spacing-8);
+  row-gap: var(--spacing-6);
+  margin-top: clamp(var(--spacing-10), 6vw, 72px);
+  padding-top: var(--spacing-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.colonia-highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+}
+
+.colonia-highlight__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border-radius: 50%;
+  color: var(--color-accent);
+}
+
+@media (max-width: 760px) {
+  .colonia-highlights {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+  }
+}
+
+/* Pacote em destaque no meio da grade de preços: mesmo tratamento do card
+   de dúvidas em /precos (ver .note-grid__item--cta), borda e fundo na cor
+   de realce em vez do outline neutro dos outros dois cards. */
+.pricing-card--highlight {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-background-card));
 }
 
 /* ---------- Horários (grade semanal única, períodos x dias) ---------- */
@@ -4559,7 +5428,7 @@ body {
 }
 
 .professors-content {
-  max-width: 960px;
+  max-width: 1100px;
   margin-inline: auto;
 }
 
@@ -4578,16 +5447,10 @@ body {
 }
 
 .professors-grid .professor-card {
-  flex: 0 1 calc((100% - 3 * var(--spacing-5)) / 4);
+  flex: 0 1 calc((100% - 2 * var(--spacing-5)) / 3);
 }
 
 @media (max-width: 860px) {
-  .professors-grid .professor-card {
-    flex-basis: calc((100% - 2 * var(--spacing-5)) / 3);
-  }
-}
-
-@media (max-width: 640px) {
   .professors-grid .professor-card {
     flex-basis: calc((100% - var(--spacing-5)) / 2);
   }

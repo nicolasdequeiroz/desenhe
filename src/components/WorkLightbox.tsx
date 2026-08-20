@@ -8,6 +8,8 @@ interface LightboxOptions {
   caption: string;
   /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
+  /** Moldura de papel em volta da imagem aberta. Ver WorkViewer. */
+  framed?: boolean;
   /**
    * Elemento visual correspondente a cada imagem na página: é de onde a peça
    * voa ao abrir e para onde ela volta ao fechar. Usado quando o índice muda
@@ -28,6 +30,7 @@ export function useWorkLightbox({
   images,
   caption,
   credits,
+  framed,
   getOrigin,
   onClosed,
 }: LightboxOptions) {
@@ -74,6 +77,7 @@ export function useWorkLightbox({
         images={images}
         caption={caption}
         credits={credits}
+        framed={framed}
         index={index}
         resolveOrigin={resolveOrigin}
         onClose={handleClosed}

@@ -1,6 +1,7 @@
 import type {ReactElement} from 'react';
 import {UsersThree, ChartLineUp} from '@phosphor-icons/react';
 import {Button} from '../ui';
+import {WhatsCta} from './WhatsCta';
 import {asset} from '../data';
 
 interface GalleryItem {
@@ -127,6 +128,11 @@ export function SpaceShowcaseSection() {
               </p>
             </div>
             <div className="space-showcase__actions">
+              <WhatsCta
+                message="Olá! Gostaria de agendar uma visita para conhecer a Desenhe."
+                label="Agendar uma visita"
+                size="sm"
+              />
               <Button
                 label="Conheça a escola"
                 href="/sobre"

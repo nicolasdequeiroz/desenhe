@@ -55,10 +55,32 @@ export const PRICING: PricingTier[] = [
   },
 ];
 
-export const PRICING_NOTES = [
-  'Ensino individualizado, com turmas de no máximo 8 alunos.',
-  'Calendário adaptado para 4 semanas por mês, de janeiro a dezembro, com recessos programados.',
-  'Crianças a partir de 6 anos podem se matricular nos cursos de desenho e pintura; óleo/acrílica requer conhecimento prévio de desenho.',
+export interface PricingNote {
+  title: string;
+  text: string;
+}
+
+export const PRICING_NOTES: PricingNote[] = [
+  {
+    title: 'Turmas pequenas',
+    text: 'Ensino individualizado, com turmas de no máximo 8 alunos.',
+  },
+  {
+    title: 'Calendário anual',
+    text: 'Adaptado para 4 semanas por mês, de janeiro a dezembro, com recessos programados.',
+  },
+  {
+    title: 'Idade mínima',
+    text: 'A partir de 6 anos nos cursos de desenho e pintura; óleo/acrílica requer conhecimento prévio de desenho.',
+  },
+  {
+    title: 'História da Arte',
+    text: 'Mensalidade de R$ 460, à vista ou parcelada, mais taxa de matrícula de R$ 120. Alunos e ex-alunos da escola têm condições especiais.',
+  },
+  {
+    title: 'Valores sob consulta',
+    text: 'Desenho de Moda, Desenho de Figura Humana e Ilustração de Livros Infantis têm valores informados pelo WhatsApp.',
+  },
 ];
 
 export function formatBRL(value: number): string {

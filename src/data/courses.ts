@@ -38,6 +38,8 @@ export interface Course {
   title: string;
   /** Título curto para cards e navegação. */
   shortTitle: string;
+  /** Título ainda mais resumido, só para a lista do carrossel de cursos em destaque da home. */
+  featuredTitle?: string;
   /** Subtítulo pequeno exibido ao lado do título no carrossel de cursos em destaque da home. */
   featuredSubtitle?: string;
   /** Categoria usada para colorir badges/tags nos cards e na página do curso. */
@@ -84,12 +86,11 @@ export const COURSES: Course[] = [
     category: 'desenho',
     shortTitle: 'Desenho Artístico',
     excerpt:
-      'Os fundamentos do desenho: formas bidimensionais e tridimensionais, escala tonal, textura, perspectiva, estudos da cor, sombreamento e composição.',
+      'Fundamentos da forma, perspectiva, luz e sombra e teoria das cores, no seu ritmo, até criar suas próprias obras autorais.',
     description: [
-      'O curso aborda os principais fundamentos do desenho: o aluno estuda formas bidimensionais e tridimensionais e chega a níveis avançados de sombreamento e composição, experimentando técnicas como estudos de perspectiva, desenho de observação e ensino das cores.',
-      'Ao longo das aulas práticas são explorados materiais variados, que garantem uma experiência rica: grafite, nanquim, sanguínea, sépia, lápis branco 6B, giz pastel seco e lápis de cor.',
-      'O conteúdo pode ser personalizado de acordo com os objetivos de cada aluno, com espaço para temas específicos como figura humana, retrato ou desenho arquitetônico. O foco é o resultado: a cada etapa concluída pelo aluno, o professor avança para o próximo passo.',
-      'É também a base sólida para quem quer seguir adiante, seja na criação de obras autorais, seja no aprofundamento em áreas relacionadas, como as técnicas de pintura.',
+      'O curso de Desenho Artístico aborda os fundamentos da forma, perspectiva, luz e sombra e teoria das cores. O avanço do conteúdo respeita o seu ritmo, e você alcança os resultados através da prática.',
+      'Durante as aulas, você desenvolverá sua expressão autoral experimentando materiais tradicionais do desenho, podendo se aperfeiçoar em técnicas específicas.',
+      'É a formação ideal para construir uma base técnica segura e para começar a criar suas próprias obras originais.',
     ],
     audience: 'Adultos, adolescentes e crianças a partir dos 9 anos',
     ageBadge: 'A partir de 9 anos',
@@ -134,18 +135,64 @@ export const COURSES: Course[] = [
     galleryCaption: 'Trabalhos de alunos do curso de Desenho Artístico',
   },
   {
+    slug: 'desenho-de-figura-humana',
+    tagline: 'Do gesto à anatomia: o corpo desenhado com precisão e sensibilidade.',
+    title: 'Desenho de Figura Humana',
+    category: 'desenho',
+    shortTitle: 'Desenho de Figura Humana',
+    excerpt:
+      'Proporção, volume e escorço: a mecânica do corpo estudada da observação à anatomia, com aulas de modelo vivo.',
+    description: [
+      'O curso de Desenho de Figura Humana aborda a representação do corpo unindo observação e estudo anatômico. Você aprenderá a desenvolver proporções, volumes e escorços, compreendendo a mecânica dos músculos e ossos para desenhar a figura em diferentes movimentos.',
+      'O programa explora materiais tradicionais, como carvão, sanguínea e nanquim, e inclui quatro aulas fundamentais de observação com modelo vivo. É a vivência ideal para dominar a figuração humana e criar trabalhos finalizados com segurança e técnica.',
+    ],
+    audience: 'Adultos e adolescentes (consulte a idade mínima com a escola)',
+    ageBadge: 'Consultar',
+    enrollment: 'Curso presencial: consulte as próximas turmas',
+    modules: [
+      {
+        title: 'Módulo 1',
+        heading: 'Gesto e estrutura',
+        description:
+          'O gesto e a organização geral da figura como ponto de partida, com os primeiros estudos de proporção, eixos, massas, articulações e relações espaciais.',
+      },
+      {
+        title: 'Módulo 2',
+        heading: 'Anatomia aplicada',
+        description:
+          'Ossos, articulações e massas musculares viram ferramenta para construir a figura em diferentes posições, com o volume e o escorço ganhando precisão.',
+      },
+      {
+        title: 'Módulo 3',
+        heading: 'Luz, detalhes e movimento',
+        description:
+          'Luz e sombra sobre o corpo, mãos, pés, cabeça, vestuário e movimento se somam à composição, ampliando o repertório de materiais como carvão, sanguínea e nanquim.',
+      },
+      {
+        title: 'Módulo 4',
+        heading: 'Modelo vivo e estudos finalizados',
+        description:
+          'Quatro aulas de observação com modelo vivo consolidam construção, anatomia e técnica em estudos finalizados de figura humana.',
+      },
+    ],
+    pricingTier: 'consultar',
+    priceNotes: ['Valores e condições sob consulta'],
+    gallery: [],
+  },
+  {
     slug: 'quadrinhos-hq-manga-cartoon',
     tagline: 'Personagens e histórias que nascem na ponta do seu lápis.',
-    title: 'Quadrinhos - HQ | Mangá | Cartoon',
+    title: 'Quadrinhos - Mangá, HQ e Cartoon',
     category: 'desenho',
-    shortTitle: 'Quadrinhos',
-    featuredSubtitle: 'HQ, Mangá e Cartoon',
+    shortTitle: 'Quadrinhos - Mangá, HQ e Cartoon',
+    featuredTitle: 'Quadrinhos',
+    featuredSubtitle: 'Mangá, HQ e Cartoon',
     excerpt:
-      'Construção de personagens, cenários e narrativas visuais seguindo as estéticas do universo dos quadrinhos.',
+      'Mangá, HQ e Cartoon: personagens, cenários e narrativas visuais, das formas básicas à arte-final.',
     description: [
-      'O objetivo do curso é desenvolver histórias em quadrinhos, personagens (character design), cenários e cenas, narrativas textuais e visuais.',
-      'Os alunos aprendem a construção de personagens seguindo as estéticas características do universo dos quadrinhos, partindo de formas básicas até chegar em trabalhos finalizados.',
-      'A partir daí, tornam-se capazes de construir cenários, desenvolver histórias e criar situações de interação entre personagens, explorando movimentos e aperfeiçoando o uso da luz e da sombra nas narrativas visuais.',
+      'O curso de Mangá foca na criação de personagens e narrativas visuais com a estética marcante dos quadrinhos japoneses. Partindo das formas básicas até a arte-final, você aprenderá a desenhar expressões características e cenas de movimento dinâmico. O programa prepara o aluno para desenvolver histórias completas, estruturar cenários detalhados e aplicar luz e sombra para dar vida às interações e ao enredo.',
+      'O curso de História em Quadrinhos ensina a construir personagens e universos inspirados na linguagem das HQs e graphic novels. Você estudará o processo desde o rascunho até o acabamento, desenvolvendo a anatomia, os cenários e a interação em cena. Com foco na narrativa sequencial, as aulas exploram o enquadramento, o movimento e o uso estratégico da luz e sombra para transformar suas ideias em narrativas não textuais.',
+      'O curso de Cartoon é voltado para a simplificação das formas e o exagero expressivo, criando personagens dinâmicos e cheios de personalidade. Você aprenderá a desenvolver uma estética flexível, partindo dos traços básicos até o projeto finalizado. Durante as aulas, trabalhamos a construção de cenários, a interação fluida entre as figuras e os acabamentos tradicionais para contar histórias visuais com humor e leveza.',
     ],
     audience: 'Todas as idades',
     ageBadge: 'Todas as idades',
@@ -189,12 +236,10 @@ export const COURSES: Course[] = [
     category: 'desenho',
     shortTitle: 'Desenho de Moda',
     excerpt:
-      'Croquis de moda funcionais e toda a metodologia de desenvolvimento de coleção da indústria da moda, até o book final.',
+      'Croquis funcionais e a metodologia de desenvolvimento de coleção, do painel de tendências ao book final.',
     description: [
-      'No Curso de Desenho de Moda, você aprende a desenvolver croquis de moda funcionais, passando por toda a metodologia de desenvolvimento de coleção da indústria da moda.',
-      'Ao longo do curso você desenvolve painéis de tendências, inspiração, público-alvo, estampas e materiais, e entende o conceito de mix de produtos no desenvolvimento de uma coleção.',
-      'Você aprende a desenhar croquis de vários formatos, com vários biotipos e gêneros, e a tirar da cabeça as ideias de peças de vestuário que deseja, através do uso de referências e da criação autoral.',
-      'Ao final, desenvolve uma coleção de moda tendo como produto um book de coleção com croquis e desenhos planificados.',
+      'O curso de Desenho de Moda ensina a criar croquis e a vivenciar a metodologia do desenvolvimento de coleções. Durante as aulas, você estruturará painéis de tendências, materiais e público-alvo, compreendendo na prática o conceito de mix de produtos.',
+      'O aprendizado envolve o desenho de diversos biotipos e gêneros, capacitando você a transformar suas ideias em peças autênticas. Ao final, você construirá um book de coleção, unindo a expressão dos croquis aos desenhos planificados.',
     ],
     audience: 'Adultos e adolescentes',
     ageBadge: 'Adultos e adolescentes',
@@ -230,18 +275,118 @@ export const COURSES: Course[] = [
     gallery: [],
   },
   {
+    slug: 'ilustracao-de-livros-infantis',
+    tagline: 'Onde o desenho encontra a narrativa para contar histórias.',
+    title: 'Ilustração de Livros Infantis',
+    category: 'desenho',
+    shortTitle: 'Ilustração de Livros Infantis',
+    featuredTitle: 'Ilustração Infantil',
+    excerpt:
+      'Narrativas visuais para o universo da infância: personagens, cenários e a relação entre texto e imagem.',
+    description: [
+      'O curso de Ilustração de Livros Infantis aborda a criação de narrativas visuais focadas no universo da infância, articulando desenho, personagens e projeto gráfico. Você aprenderá a desenvolver figuras e cenários, explorando a relação direta entre texto e imagem na composição das páginas.',
+      'O programa permite a experimentação com diferentes técnicas, como aquarela e lápis de cor, adequando o material à intenção da obra. Ao final, você construirá um projeto editorial completo, transformando esboços e storyboards em sequências narrativas finalizadas.',
+    ],
+    audience: 'Adultos e adolescentes',
+    ageBadge: 'Adultos e adolescentes',
+    enrollment: 'Curso presencial: consulte as próximas turmas',
+    modules: [
+      {
+        title: 'Módulo 1',
+        heading: 'Pesquisa e personagens',
+        description:
+          'Pesquisa e geração de ideias como ponto de partida, seguidas da construção e caracterização dos personagens que vão habitar a história.',
+      },
+      {
+        title: 'Módulo 2',
+        heading: 'Ambientes e composição',
+        description:
+          'Criação de ambientes, composição, enquadramento e sequência visual, organizando o ritmo da narrativa página a página.',
+      },
+      {
+        title: 'Módulo 3',
+        heading: 'Técnicas e materiais',
+        description:
+          'Experimentação com grafite, aquarela, guache, lápis de cor e outros materiais, sempre em diálogo com a relação entre texto e imagem.',
+      },
+      {
+        title: 'Módulo 4',
+        heading: 'Projeto editorial',
+        description:
+          'De esboços e storyboards à arte final, o projeto é preparado para reprodução e reunido numa proposta de sequência editorial.',
+      },
+    ],
+    pricingTier: 'consultar',
+    priceNotes: ['Valores e condições sob consulta'],
+    gallery: [],
+  },
+  {
+    slug: 'pintura-em-aquarela-ou-guache',
+    tagline: 'Transparências e camadas até a cor virar seu jeito de ver.',
+    title: 'Técnicas de Pintura a Base d’Água: Tinta Aquarela e Guache',
+    category: 'pintura',
+    shortTitle: 'Técnicas de Pintura a Base d’Água: Tinta Aquarela e Guache',
+    featuredTitle: 'Aquarela e Guache',
+    excerpt:
+      'Aquarela: fluidez e transparência em aguadas suaves. Guache: opacidade e cobertura em composições de forte impacto.',
+    description: [
+      'O curso de Aquarela oferece a oportunidade de explorar as possibilidades criativas dessa técnica valorizada por sua fluidez e transparência. Com foco no aprofundamento da teoria da cor, você aprenderá a controlar a água para construir aguadas suaves e sobreposições luminosas. É a escolha ideal para expandir seu repertório técnico e criar composições expressivas, aproveitando ao máximo a leveza característica da pintura à base d’água.',
+      'O curso de Guache é voltado para quem deseja dominar a versatilidade e a força da opacidade característica deste material. Durante as aulas, você aprofundará seus conhecimentos em teoria da cor trabalhando com diferentes diluições, construindo desde camadas densas até acabamentos suaves. É uma técnica de forte impacto visual que expande suas ferramentas no universo artístico, permitindo a criação de composições vibrantes e com excelente cobertura.',
+    ],
+    audience: 'Adultos, adolescentes e crianças a partir de 9 anos',
+    ageBadge: 'A partir de 9 anos',
+    classLength: '2 horas por aula',
+    totalHours: 'Conteúdo programado para 112 horas de aula',
+    enrollment: 'Curso presencial: matrículas abertas o ano todo',
+    modules: [
+      {
+        title: 'Módulo 1',
+        heading: 'Círculo cromático',
+        description:
+          'Introdução às cores e aos materiais: círculo cromático, isocromia, monocromia, policromia e harmonia das cores como base para toda a pintura.',
+      },
+      {
+        title: 'Módulo 2',
+        heading: 'Texturas e diluição',
+        description:
+          'Estudos de superfícies e diluição, com experimentação de texturas, máscaras e técnicas de aguada, ampliando o controle sobre a água e a tinta.',
+      },
+      {
+        title: 'Módulo 3',
+        heading: 'Técnica mista',
+        description:
+          'Técnica mista combinando aquarela ou guache com grafite, nanquim e texturas, para composições mais ricas e pessoais.',
+      },
+      {
+        title: 'Módulo 4',
+        heading: 'Projeto autoral',
+        description:
+          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido, para o aluno amadurecer o próprio estilo.',
+      },
+    ],
+    pricingTier: 'desenho-2h',
+    cover: '/images/cursos/aquarela-guache/capa.webp',
+    gallery: [
+      '/images/cursos/aquarela-guache/galeria-1.webp',
+      '/images/cursos/aquarela-guache/galeria-2.webp',
+      '/images/cursos/aquarela-guache/galeria-3.webp',
+      '/images/cursos/aquarela-guache/galeria-4.webp',
+      '/images/cursos/aquarela-guache/galeria-5.webp',
+    ],
+    galleryCaption: 'Trabalhos de alunos do curso de Aquarela e Guache',
+  },
+  {
     slug: 'pintura-a-oleo-ou-acrilica',
     tagline: 'Da tinta pura à composição que carrega um olhar.',
-    title: 'Pintura a Óleo e Acrílica',
+    title: 'Técnicas de Pintura II: Tinta a Óleo e Acrílica',
     category: 'pintura',
-    shortTitle: 'Óleo e Acrílica',
+    shortTitle: 'Técnicas de Pintura II: Tinta a Óleo e Acrílica',
+    featuredTitle: 'Óleo e Acrílica',
     excerpt:
-      'Da teoria das cores à pintura em camadas e velaturas, em papel, cartão, madeira e tela.',
+      'Óleo: textura e secagem lenta para misturas perfeitas. Acrílica: secagem rápida para sobreposições e texturas ousadas.',
     description: [
-      'No curso, os alunos aprofundam os estudos em teoria da cor, com base no uso de paletas restritas e na experimentação de técnicas com tinta a óleo e acrílica.',
-      'Você amplia o conhecimento sobre suportes como papel, cartão, madeira e tela, além dos materiais e das ferramentas de quem se dedica à pintura.',
-      'O curso traz uma visão geral dos gêneros tradicionais da pintura, com o objetivo de aumentar o seu repertório sobre a História da Arte, e abre espaço para o desenvolvimento de trabalhos autorais de acordo com o gosto estético de cada aluno.',
-      'A metodologia da escola valoriza a progressão natural do desenho para a pintura: é necessária uma base em desenho, que oferece fundamentos essenciais como perspectiva e luz e sombra. Quem ainda não tem esses conhecimentos pode começar pelas aulas de desenho e migrar depois para a pintura.',
+      'O curso de Pintura a Óleo te convida a explorar essa técnica clássica, valorizada por sua textura e secagem lenta, ideal para criar misturas e esfumados com perfeição. Aplicando seus conhecimentos prévios de desenho, você estudará a teoria da cor com paletas restritas em suportes como madeira e tela. Ao conectar a prática aos gêneros tradicionais da pintura, o curso oferece ferramentas e repertório histórico fundamentais para a criação de suas próprias obras autorais.',
+      'No curso de Pintura Acrílica, você dominará a versatilidade e a secagem rápida desse material, excelente para trabalhar com sobreposições e texturas, como o espatulado ou o impasto. Com sua base prévia em desenho, você aprofundará a teoria da cor usando paletas restritas e experimentará suportes variados, como papel, cartão e tela. O curso traz referências da História da Arte para embasar a sua expressão estética e incentivar o desenvolvimento contínuo de trabalhos originais.',
     ],
     audience: 'Adultos e adolescentes a partir de 13 anos',
     ageBadge: 'A partir de 13 anos',
@@ -287,73 +432,17 @@ export const COURSES: Course[] = [
     galleryCaption: 'Trabalhos de alunos do curso de Pintura',
   },
   {
-    slug: 'pintura-em-aquarela-ou-guache',
-    tagline: 'Transparências e camadas até a cor virar seu jeito de ver.',
-    title: 'Pintura Aquarela ou Guache',
-    category: 'pintura',
-    shortTitle: 'Aquarela ou Guache',
-    excerpt:
-      'Transparências, sobreposições e gradientes na aquarela; camadas densas e acabamentos suaves no guache.',
-    description: [
-      'O curso de técnicas à base d’água é a oportunidade de aprofundar os conhecimentos em teoria da cor por meio da experimentação com aquarela ou guache.',
-      'Na aquarela, o aluno aprende diferentes formas de diluição, explorando transparências, sobreposições e gradientes delicados, que proporcionam efeitos etéreos e dinâmicos.',
-      'No guache, trabalha a versatilidade de uma tinta opaca, com diluições que variam de camadas densas a acabamentos suaves, ideais para criar composições vibrantes e de forte impacto visual.',
-      'É um curso voltado para quem deseja explorar a versatilidade das tintas à base d’água, expandindo as próprias possibilidades criativas e técnicas no universo artístico.',
-    ],
-    audience: 'Adultos, adolescentes e crianças a partir de 9 anos',
-    ageBadge: 'A partir de 9 anos',
-    classLength: '2 horas por aula',
-    totalHours: 'Conteúdo programado para 112 horas de aula',
-    enrollment: 'Curso presencial: matrículas abertas o ano todo',
-    modules: [
-      {
-        title: 'Módulo 1',
-        heading: 'Círculo cromático',
-        description:
-          'Introdução às cores e aos materiais: círculo cromático, isocromia, monocromia, policromia e harmonia das cores como base para toda a pintura.',
-      },
-      {
-        title: 'Módulo 2',
-        heading: 'Texturas e diluição',
-        description:
-          'Estudos de superfícies e diluição, com experimentação de texturas, máscaras e técnicas de aguada, ampliando o controle sobre a água e a tinta.',
-      },
-      {
-        title: 'Módulo 3',
-        heading: 'Técnica mista',
-        description:
-          'Técnica mista combinando aquarela ou guache com grafite, nanquim e texturas, para composições mais ricas e pessoais.',
-      },
-      {
-        title: 'Módulo 4',
-        heading: 'Projeto autoral',
-        description:
-          'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido, para o aluno amadurecer o próprio estilo.',
-      },
-    ],
-    pricingTier: 'desenho-2h',
-    cover: '/images/cursos/aquarela-guache/capa.webp',
-    gallery: [
-      '/images/cursos/aquarela-guache/galeria-1.webp',
-      '/images/cursos/aquarela-guache/galeria-2.webp',
-      '/images/cursos/aquarela-guache/galeria-3.webp',
-      '/images/cursos/aquarela-guache/galeria-4.webp',
-      '/images/cursos/aquarela-guache/galeria-5.webp',
-    ],
-    galleryCaption: 'Trabalhos de alunos do curso de Aquarela e Guache',
-  },
-  {
     slug: 'desenho-infantil',
     tagline: 'Mãos pequenas, primeiros traços, uma vida inteira desenhando.',
-    title: 'Desenho Infantil',
+    title: 'Laboratório de Desenho Infantil',
     category: 'desenho',
-    shortTitle: 'Desenho Infantil',
+    shortTitle: 'Laboratório de Desenho Infantil',
+    featuredTitle: 'Desenho Infantil',
     excerpt:
-      'Habilidades manuais e percepção espacial para crianças a partir dos 6 anos, com muita experimentação de materiais e um portfólio construído de forma lúdica.',
+      'Um espaço lúdico para descobrir e desenvolver a expressão criativa, com os fundamentos do desenho no ritmo de cada criança.',
     description: [
-      'No Curso de Desenho Infantil são desenvolvidas as habilidades manuais e de percepção espacial das crianças, com base em experimentações de materiais, estudos iniciais de ponto, linha e forma, estudos de cores e composição.',
-      'O curso é pensado para que a criança possa se expressar livremente, e cada módulo oferece a possibilidade de construir, de forma lúdica, um pequeno portfólio de desenho.',
-      'As aulas acompanham o nível e o ritmo de cada criança, seja iniciante ou avançada, com registro contínuo do progresso individual.',
+      'O Laboratório de Desenho Infantil é um espaço lúdico para a descoberta e o desenvolvimento da expressão criativa. O aprendizado dos fundamentos do desenho (linhas, formas, volumes e cores) acontece no ritmo de cada criança, por meio da experimentação prática com diversos materiais.',
+      'Inspirado na metodologia da Desenhe Escola de Arte, o laboratório estimula a imaginação, a observação e a criação autoral, construindo uma base sólida para futuros estudos em técnicas mais avançadas de desenho e pintura.',
     ],
     audience: 'Crianças a partir dos 6 anos',
     ageBadge: 'A partir de 6 anos',

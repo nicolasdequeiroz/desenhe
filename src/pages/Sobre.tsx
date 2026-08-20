@@ -1,34 +1,169 @@
-import {Heading, Text} from '../ui';
-import {Blockquote} from '../ui';
+import {
+  CalendarCheck,
+  ChatCircleText,
+  Compass,
+  Eye,
+  MapPin,
+  PencilSimple,
+  UsersThree,
+} from '@phosphor-icons/react';
+import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
+import {NoteGrid, type Note} from '../components/NoteGrid';
+import {Timeline, type TimelineItem} from '../components/Timeline';
+import {WorksArc} from '../components/WorksArc';
+import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
-import {asset} from '../data';
+import {SITE, asset} from '../data';
 
+/** Índice da página: âncoras para as seções, logo abaixo da primeira dobra. */
+const INDEX = [
+  {href: '#principios', label: 'Princípios'},
+  {href: '#percurso', label: 'Percurso do aluno'},
+  {href: '#espaco', label: 'Nosso espaço'},
+];
+
+/**
+ * Os fatos que valem para a escola inteira, e que se repetem em /cursos,
+ * /precos e nas páginas de curso. Aqui eles aparecem juntos, uma vez só.
+ */
+const FATOS = [
+  {
+    icon: UsersThree,
+    title: 'Turmas pequenas',
+    items: ['No máximo 8 alunos por turma', 'Crianças, adolescentes e adultos'],
+  },
+  {
+    icon: Compass,
+    title: 'Ensino individualizado',
+    items: ['Cronograma adaptado a cada aluno', 'Do iniciante ao avançado'],
+  },
+  {
+    icon: CalendarCheck,
+    title: 'O ano todo',
+    items: ['Matrículas abertas de janeiro a dezembro', '4 semanas de aula por mês'],
+  },
+  {
+    icon: MapPin,
+    title: 'Presencial em Curitiba',
+    items: [
+      `${SITE.address.street}, ${SITE.address.neighborhood}`,
+      'Ateliês, galeria e biblioteca',
+    ],
+  },
+];
+
+const PRINCIPIOS: Note[] = [
+  {
+    title: 'Técnica e criatividade, juntas',
+    text: 'O ensino das técnicas do desenho artístico, aliado ao desenvolvimento criativo, são os alicerces da arte de alto nível. Uma coisa não vem antes da outra: elas crescem no mesmo trabalho.',
+  },
+  {
+    title: 'Formação, não passatempo',
+    text: 'As aulas são leves e o processo é prazeroso, mas o compromisso por trás delas é sério: desenvolver técnica, repertório e critério próprio, até o aluno conseguir evoluir sozinho.',
+  },
+  {
+    title: 'Quem vive de arte ensinando arte',
+    text: 'A equipe é formada por artistas-professores que fazem uma leitura crítica do seu trabalho a cada encontro, com o rigor de quem ensina e a experiência de quem produz fora da sala de aula.',
+  },
+];
+
+const PERCURSO: TimelineItem[] = [
+  {
+    label: 'Etapa 1',
+    heading: 'Uma conversa antes de tudo',
+    description:
+      'Cada matrícula começa com uma conversa sobre o seu nível, seus interesses e onde você quer chegar. Dá para começar por uma aula experimental avulsa, sem compromisso com o curso inteiro.',
+  },
+  {
+    label: 'Etapa 2',
+    heading: 'Um plano de estudos sob medida',
+    description:
+      'A partir dessa conversa, o conteúdo e o ritmo são ajustados à sua trajetória. Você não entra numa turma padrão com um cronograma fixo: entra num plano pensado para o seu momento como artista.',
+  },
+  {
+    label: 'Etapa 3',
+    heading: 'Prática acompanhada de perto',
+    description:
+      'Os resultados vêm da prática, e em turmas de no máximo 8 alunos o professor acompanha cada trabalho enquanto ele acontece, corrigindo o traço e ampliando o repertório de materiais.',
+  },
+  {
+    label: 'Etapa 4',
+    heading: 'O trabalho que é só seu',
+    description:
+      'Com a base consolidada, a técnica passa a servir à sua expressão autoral. É aqui que o curso deixa de ser sobre aprender a desenhar e passa a ser sobre o que você tem para dizer.',
+  },
+];
+
+/** Um ambiente por card: a grade fecha em duas linhas de três (ver CSS). */
 const ESPACO = [
-  {src: '/images/espaco/atelie-galeria.webp', alt: 'Galeria de exposições da escola'},
-  {src: '/images/espaco/sala-01-mesas.webp', alt: 'Ateliê 01 com mesas de desenho'},
-  {src: '/images/espaco/sala-01-parede.webp', alt: 'Parede de trabalhos do ateliê 01'},
-  {src: '/images/espaco/sala-02.webp', alt: 'Ateliê 02'},
-  {src: '/images/espaco/sala-03.webp', alt: 'Ateliê 03'},
-  {src: '/images/espaco/biblioteca.webp', alt: 'Biblioteca de arte'},
-  {src: '/images/espaco/cozinha.webp', alt: 'Cozinha e café da escola'},
+  {
+    src: '/images/espaco/atelie-galeria.webp',
+    alt: 'Galeria de exposições da escola',
+    label: 'Galeria',
+  },
+  {
+    src: '/images/espaco/sala-01-mesas.webp',
+    alt: 'Ateliê 01 com mesas de desenho',
+    label: 'Ateliê 01',
+  },
+  {
+    src: '/images/espaco/sala-02.webp',
+    alt: 'Ateliê 02',
+    label: 'Ateliê 02',
+  },
+  {
+    src: '/images/espaco/sala-03.webp',
+    alt: 'Ateliê 03',
+    label: 'Ateliê 03',
+  },
+  {
+    src: '/images/espaco/biblioteca.webp',
+    alt: 'Biblioteca de arte da escola',
+    label: 'Biblioteca',
+  },
+  {
+    src: '/images/espaco/cozinha.webp',
+    alt: 'Cozinha e café da escola',
+    label: 'Café',
+  },
+];
+
+const PERCURSO_ICONS = [ChatCircleText, Compass, PencilSimple, Eye];
+
+/**
+ * Desenhos que atravessam o arco. Saem das galerias dos próprios cursos
+ * (ver courses.ts), alternando de curso em curso para o rio não passar dois
+ * trabalhos da mesma técnica em seguida.
+ */
+const TRABALHOS = [
+  '/images/cursos/desenho-artistico/galeria-1.webp',
+  '/images/cursos/aquarela-guache/galeria-2.webp',
+  '/images/cursos/quadrinhos/galeria-1.webp',
+  '/images/cursos/pintura-oleo-acrilica/galeria-3.webp',
+  '/images/trabalhos/retrato-carvao.webp',
+  '/images/cursos/desenho-infantil/galeria-2.webp',
+  '/images/cursos/desenho-artistico/galeria-4.webp',
+  '/images/cursos/aquarela-guache/galeria-5.webp',
+  '/images/trabalhos/koi.webp',
+  '/images/cursos/pintura-oleo-acrilica/galeria-1.webp',
 ];
 
 export function Sobre() {
   return (
-    <>
+    <div className="about-page">
       <Seo
         title="Sobre a escola"
-        description="A Desenhe ensina desenho e pintura em Curitiba desde 1988. Conheça a história da escola fundada por Oscar Pedroso, nossa filosofia de ensino e o nosso espaço."
+        description="A Desenhe ensina desenho e pintura em Curitiba desde 1988. Conheça a história da escola fundada por Oscar Pedroso, como o ensino individualizado funciona, o nosso espaço e a equipe de professores."
         path="/sobre"
       />
 
       <div className="container course-hero">
-        <div>
+        <div className="course-hero__intro">
           <span className="section__eyebrow">Desde 1988</span>
           <Heading level={1}>38 anos formando artistas em Curitiba</Heading>
-          <div className="prose" style={{marginTop: 20}}>
+          <div className="prose">
             <p>
               A Desenhe nasceu em 1988, fundada pelo professor e artista Oscar
               Pedroso, licenciado em Educação Artística pela FAP, com passagem
@@ -36,11 +171,11 @@ export function Sobre() {
               Paraná.
             </p>
             <p>
-              Acreditamos que o ensino das técnicas do desenho artístico,
-              aliado ao desenvolvimento criativo, são as bases da arte de alto
-              nível. Por isso o ensino é individualizado: turmas de no máximo 8
-              alunos, com cronogramas adaptados aos objetivos e ao ritmo de
-              cada um.
+              De lá para cá, a escola manteve a mesma convicção: técnica e
+              criatividade se ensinam juntas, e ninguém aprende as duas num
+              cronograma de prateleira. Por isso o ensino é individualizado, em
+              turmas de no máximo 8 alunos, com o conteúdo adaptado aos
+              objetivos e ao ritmo de cada um.
             </p>
             <p>
               Hoje somos uma equipe de artistas-professores atendendo crianças,
@@ -54,71 +189,135 @@ export function Sobre() {
         />
       </div>
 
-      <Section muted>
-        <div style={{maxWidth: 720, marginInline: 'auto'}} className="text-center">
-          <Blockquote>
-            Procuramos alunos apaixonados por arte, curiosos e dispostos a
-            compartilhar experiências para avançar no domínio da própria
-            expressão artística.
-          </Blockquote>
-        </div>
-      </Section>
+      {/* Índice: a página é longa, e daqui se chega direto a qualquer seção. */}
+      <nav className="container about-index" aria-label="Nesta página">
+        {INDEX.map((entry) => (
+          <a key={entry.href} href={entry.href} className="about-index__link">
+            {entry.label}
+          </a>
+        ))}
+      </nav>
 
-      <Section
-        kicker="Nosso espaço"
-        title="Ateliês, galeria e biblioteca"
-        lead="Salas de aula equipadas, uma galeria para expor os trabalhos dos alunos, biblioteca de arte e um café para os intervalos, no bairro Mercês, em Curitiba."
-      >
-        <div className="masonry">
-          {ESPACO.map((img) => (
-            <img key={img.src} src={asset(img.src)} alt={img.alt} loading="lazy" />
+      <div className="container about-facts">
+        <div className="course-facts course-facts--institucional">
+          {FATOS.map(({icon: Icon, title, items}) => (
+            <div key={title} className="course-facts__card">
+              <span className="course-facts__icon-badge">
+                <Icon size={22} weight="light" className="course-facts__icon" />
+              </span>
+              <div className="course-facts__title">{title}</div>
+              <ul className="course-facts__list">
+                {items.map((item) => (
+                  <li key={item} className="course-facts__item">
+                    <span className="course-facts__bullet" aria-hidden="true" />
+                    <Text>{item}</Text>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
-        <div style={{marginTop: 32}} className="text-center">
+      </div>
+
+      <Section
+        id="principios"
+        kicker="No que acreditamos"
+        title="O que sustenta o jeito de ensinar daqui"
+        lead="Três convicções que aparecem em cada curso, da primeira aula experimental ao trabalho autoral."
+      >
+        <NoteGrid items={PRINCIPIOS} />
+      </Section>
+
+      <Timeline
+        id="percurso"
+        kicker="Percurso"
+        title="Como funciona a sua formação"
+        lead="Da primeira conversa ao trabalho autoral, o caminho é o mesmo para todos os cursos: só o conteúdo e o ritmo mudam de aluno para aluno."
+        items={PERCURSO}
+        icons={PERCURSO_ICONS}
+        tone="institucional"
+        headerExtra={
+          <div className="about-timeline__action">
+            <Button label="Ver todos os cursos" href="/cursos" variant="secondary" size="sm" />
+          </div>
+        }
+      />
+
+      {/*
+        Fecho da linha do tempo: ela termina em "o trabalho que é só seu", e
+        logo abaixo vêm justamente os trabalhos, atravessando a página inteira.
+      */}
+      <section className="works-arc-section">
+        <div className="container">
+          <div className="works-arc-section__head">
+            <span className="section__eyebrow">Trabalhos de alunos</span>
+            <Heading level={2}>Foi tudo feito aqui</Heading>
+            <Text as="p" type="large" color="secondary">
+              Um retrato do que sai das mesas da escola, do primeiro traço ao
+              trabalho autoral.
+            </Text>
+          </div>
+        </div>
+        <WorksArc images={TRABALHOS} caption="Trabalho de aluno da Desenhe" />
+      </section>
+
+      <Section
+        id="espaco"
+        kicker="Nosso espaço"
+        title="Ateliês, galeria e biblioteca"
+        lead={`Salas equipadas, uma galeria para expor os trabalhos dos alunos, biblioteca de arte e um café para os intervalos, no bairro ${SITE.address.neighborhood}, em Curitiba.`}
+      >
+        <div className="space-grid">
+          {ESPACO.map((img) => (
+            <figure key={img.src} className="space-grid__figure">
+              <div className="space-showcase__gallery-card">
+                <div className="space-showcase__gallery-badge">
+                  <span>{img.label}</span>
+                </div>
+                <img src={asset(img.src)} alt={img.alt} loading="lazy" />
+              </div>
+            </figure>
+          ))}
+        </div>
+        <div className="about-actions">
           <WhatsCta
             message="Olá! Gostaria de agendar uma visita para conhecer a Desenhe."
             label="Agendar uma visita"
           />
+          <Button
+            label="Como chegar"
+            variant="ghost"
+            href={SITE.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
         </div>
       </Section>
 
-      <Section kicker="Nossa filosofia" title="Técnica e criatividade, juntas" muted>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 32,
-          }}
-        >
-          <div>
-            <Heading level={3}>Turmas pequenas</Heading>
-            <div style={{marginTop: 8}}>
-              <Text color="secondary">
-                No máximo 8 alunos por turma, garantindo atenção individual em
-                um ambiente acolhedor que incentiva a expressão de cada um.
-              </Text>
-            </div>
-          </div>
-          <div>
-            <Heading level={3}>Ensino individualizado</Heading>
-            <div style={{marginTop: 8}}>
-              <Text color="secondary">
-                Cronogramas adaptáveis e personalizados: o curso acompanha o
-                nível e o ritmo de cada aluno, seja iniciante ou avançado.
-              </Text>
-            </div>
-          </div>
-          <div>
-            <Heading level={3}>O ano todo</Heading>
-            <div style={{marginTop: 8}}>
-              <Text color="secondary">
-                Matrículas abertas de janeiro a dezembro, com calendário
-                adaptado para 4 semanas de aula por mês e recessos programados.
-              </Text>
+      <TestimonialsSection />
+
+      <section className="course-cta course-cta--institucional">
+        <div className="container course-cta__inner">
+          <div className="course-cta__copy">
+            <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
+            <Heading level={2} className="course-cta__headline">
+              Venha <span className="course-cta__highlight">conhecer a escola</span>.
+            </Heading>
+            <Text type="large" color="inherit" display="block" className="course-cta__lead">
+              Agende uma aula experimental ou uma visita ao ateliê: é o jeito
+              mais rápido de descobrir se a Desenhe é o seu lugar.
+            </Text>
+            <div className="course-cta__action">
+              <WhatsCta
+                message="Olá! Gostaria de conhecer a Desenhe e agendar uma aula experimental."
+                label="Entre em contato"
+                size="sm"
+                variant="secondary"
+              />
             </div>
           </div>
         </div>
-      </Section>
-    </>
+      </section>
+    </div>
   );
 }

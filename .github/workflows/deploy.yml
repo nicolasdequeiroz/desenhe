@@ -32,10 +32,12 @@ jobs:
 
       - name: Build (SSG)
         run: npm run build
-        # Sem domínio próprio configurado, descomente e ajuste para o nome
-        # do repositório, ex.: BASE_PATH=/desenhe-site/
-        # env:
-        #   BASE_PATH: /${{ github.event.repository.name }}/
+        # Publicado em nicolasdequeiroz.github.io/desenhe/ (repositório
+        # "desenhe", sem domínio próprio): usa o nome do próprio repositório
+        # como subcaminho, então funciona sem editar isto de novo se o repo
+        # for renomeado.
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Fallback 404 para rotas do SPA
         run: cp dist/index.html dist/404.html

@@ -2,10 +2,11 @@ import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {CourseCard} from '../components/CourseCard';
+import {NoteGrid, type Note} from '../components/NoteGrid';
 import {WhatsCta} from '../components/WhatsCta';
 import {COURSES} from '../data';
 
-const PROPOSTA = [
+const PROPOSTA: Note[] = [
   {
     title: 'Um plano de estudos sob medida',
     text: 'Cada matrícula parte de uma conversa sobre o seu nível, seus interesses e onde você quer chegar. O conteúdo e o ritmo das aulas são ajustados a essa trajetória: você não entra numa turma padrão, entra num plano pensado para o seu momento como artista.',
@@ -25,7 +26,7 @@ export function Cursos() {
     <>
       <Seo
         title="Cursos de desenho e pintura"
-        description="Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache, desenho infantil e história da arte em Curitiba. Matrículas abertas o ano todo."
+        description="Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache, laboratório de desenho infantil e história da arte em Curitiba. Matrículas abertas o ano todo."
         path="/cursos"
       />
       <Section
@@ -60,17 +61,7 @@ export function Cursos() {
               genérico repetido de turma em turma.
             </Text>
           </div>
-          <div className="course-philosophy__body">
-            <span className="course-philosophy__eyebrow">Como ensinamos</span>
-            <div className="course-philosophy__grid">
-              {PROPOSTA.map((item) => (
-                <div className="course-philosophy__item" key={item.title}>
-                  <Heading level={3}>{item.title}</Heading>
-                  <Text color="secondary">{item.text}</Text>
-                </div>
-              ))}
-            </div>
-          </div>
+          <NoteGrid eyebrow="Como ensinamos" items={PROPOSTA} />
         </div>
       </section>
     </>

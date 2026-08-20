@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react';
+import {useCallback, useRef} from 'react';
 import {Link} from 'react-router-dom';
 import {
   CalendarCheck,
@@ -20,6 +14,7 @@ import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {CourseGallery} from '../components/CourseGallery';
+import {Timeline} from '../components/Timeline';
 import {useWorkLightbox} from '../components/WorkLightbox';
 import {WhatsCta} from '../components/WhatsCta';
 import {
@@ -35,111 +30,6 @@ import {
 /** Ícones dos módulos, em rodízio pelo índice: não há categoria própria por módulo. */
 const MODULE_ICONS = [PencilSimple, Compass, PaintBrush, Eye];
 
-/**
- * Progresso (0 a 1) de rolagem por dentro de um elemento: 0 quando o topo
- * dele encosta na base da viewport, 1 quando a base dele encosta no topo.
- * Usado para o rastro colorido que cresce dentro da linha do tempo.
- */
-function useScrollProgress<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    let frame = 0;
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const value = (vh - rect.top) / (vh + rect.height);
-      setProgress(Math.min(1, Math.max(0, value)));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener('scroll', onScroll, {passive: true});
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
-
-  return [ref, progress] as const;
-}
-
-/**
- * "Sticky" manual: o header da linha do tempo precisa grudar no topo
- * enquanto a lista de módulos, ao lado, rola. `position: sticky` não
- * funciona aqui porque o `.site-shell` (ver RootLayout.tsx) usa
- * `overflow: hidden` para recortar os cantos arredondados e para o efeito de
- * gaveta do rodapé, o que impede qualquer sticky nativo dentro dele. O
- * wrapper (`boundsRef`) fica no fluxo normal, esticado pela grid até a
- * altura da lista de módulos; o conteúdo (`innerRef`) alterna entre estático
- * (antes de alcançar o topo), fixo (colado no topo enquanto o wrapper ainda
- * "sobra" espaço abaixo) e absoluto no fim do wrapper (parado quando a lista
- * termina), replicando sticky com um fallback para o fim do contêiner.
- */
-function useStickyColumn<B extends HTMLElement, I extends HTMLElement>(
-  topOffset: number,
-) {
-  const boundsRef = useRef<B>(null);
-  const innerRef = useRef<I>(null);
-  const [style, setStyle] = useState<CSSProperties>({});
-
-  useEffect(() => {
-    const bounds = boundsRef.current;
-    const inner = innerRef.current;
-    if (!bounds || !inner) return;
-
-    let frame = 0;
-    const update = () => {
-      // Abaixo de 760px a grid empilha em 1 coluna (ver media query no CSS):
-      // o header some do "bounds" wrapper e volta ao fluxo normal.
-      if (window.innerWidth <= 760) {
-        setStyle({});
-        return;
-      }
-
-      const boundsRect = bounds.getBoundingClientRect();
-      const innerHeight = inner.offsetHeight;
-
-      if (boundsRect.top > topOffset) {
-        setStyle({});
-      } else if (boundsRect.bottom < topOffset + innerHeight) {
-        setStyle({position: 'absolute', bottom: 0, left: 0, width: '100%'});
-      } else {
-        setStyle({
-          position: 'fixed',
-          top: topOffset,
-          left: boundsRect.left,
-          width: boundsRect.width,
-        });
-      }
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener('scroll', onScroll, {passive: true});
-    window.addEventListener('resize', onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [topOffset]);
-
-  return {boundsRef, innerRef, style};
-}
-
 /** Página de detalhe de curso: descrição, módulos, horários, preço e CTA. */
 export function CursoDetalhe({slug}: {slug: string}) {
   const course = getCourse(slug);
@@ -147,8 +37,6 @@ export function CursoDetalhe({slug}: {slug: string}) {
   const schedule = SCHEDULE.find((s) => s.courseSlug === course.slug);
   const weeklyRows = schedule ? weeklyRowsForCourse(schedule) : [];
   const enrollMessage = `Olá! Tenho interesse no curso de ${course.shortTitle} e gostaria de mais informações.`;
-  const [timelineRef, timelineProgress] = useScrollProgress<HTMLOListElement>();
-  const stickyHeader = useStickyColumn<HTMLDivElement, HTMLDivElement>(96);
 
   const galleryCaption =
     course.galleryCaption ?? `Trabalhos do curso de ${course.shortTitle}`;
@@ -324,70 +212,27 @@ export function CursoDetalhe({slug}: {slug: string}) {
             </div>
           ))}
         </div>
+
+        <div className="course-intro__cta">
+          <Text color="secondary">
+            Ficou com alguma dúvida sobre o curso de {course.shortTitle}?
+          </Text>
+          <WhatsCta message={enrollMessage} label="Fale com a gente" size="sm" variant="ghost" />
+        </div>
       </div>
 
-      <section
-        className={`section section--muted course-timeline course-timeline--${course.category}`}
-      >
-        <div className="container course-timeline__layout">
-          {/*
-            "Sticky" manual (ver useStickyColumn): o wrapper abaixo fica no
-            fluxo normal da grid, esticado até a altura da lista de módulos;
-            o header dentro dele é quem recebe a posição calculada.
-          */}
-          <div className="course-timeline__header-bounds" ref={stickyHeader.boundsRef}>
-            <div
-              className="course-timeline__header"
-              ref={stickyHeader.innerRef}
-              style={stickyHeader.style}
-            >
-              <span className="section__eyebrow">Conteúdo</span>
-              <Heading level={2}>Como o curso é estruturado</Heading>
-              <Text as="p" color="secondary">
-                Ensino individualizado: os cronogramas são adaptáveis e
-                personalizados para alinhar com os objetivos e interesses de
-                cada aluno, seja iniciante ou avançado.
-              </Text>
-            </div>
-          </div>
-
-          {/*
-            Trilha central: fica numa coluna própria, exatamente entre as
-            outras duas (que têm a mesma largura, 1fr cada), então cai no
-            centro horizontal do .container, o mesmo eixo em que a logo
-            DESENHE do header se centraliza. Um rastro colorido cresce dentro
-            dela conforme a lista de módulos é rolada (ver useScrollProgress).
-          */}
-          <div className="course-timeline__track" aria-hidden="true">
-            <div
-              className="course-timeline__track-fill"
-              style={{height: `${timelineProgress * 100}%`}}
-            />
-          </div>
-
-          <ol className="course-timeline__list" ref={timelineRef}>
-            {course.modules.map((mod, i) => {
-              const Icon = MODULE_ICONS[i % MODULE_ICONS.length];
-              return (
-                <li key={mod.title} className="course-timeline__item">
-                  <div className="course-timeline__meta">
-                    <Icon
-                      size={20}
-                      weight="light"
-                      className="course-timeline__icon"
-                    />
-                    <span className="course-timeline__label">{mod.title}</span>
-                  </div>
-                  <Heading level={3} className="course-timeline__heading">
-                    {mod.heading}
-                  </Heading>
-                  <Text color="secondary">{mod.description}</Text>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
+      <Timeline
+        kicker="Conteúdo"
+        title="Como o curso é estruturado"
+        lead="Ensino individualizado: os cronogramas são adaptáveis e personalizados para alinhar com os objetivos e interesses de cada aluno, seja iniciante ou avançado."
+        items={course.modules.map((mod) => ({
+          label: mod.title,
+          heading: mod.heading,
+          description: mod.description,
+        }))}
+        icons={MODULE_ICONS}
+        tone={course.category}
+      />
 
       {schedule && (
         <Section kicker="Horários" title="Turmas desta modalidade">
@@ -437,11 +282,17 @@ export function CursoDetalhe({slug}: {slug: string}) {
               <Text type="supporting">{schedule.note}</Text>
             </div>
           )}
-          <div style={{marginTop: 16}}>
-            <Text type="supporting">
-              Confirme a disponibilidade de vagas pelo WhatsApp:{' '}
-              <Link to="/horarios">ver grade completa</Link>.
-            </Text>
+          <div style={{marginTop: 24}} className="text-center">
+            <WhatsCta
+              message={`Olá! Gostaria de confirmar a disponibilidade de vagas no curso de ${course.shortTitle}.`}
+              label="Confirmar vaga pelo WhatsApp"
+              size="sm"
+            />
+            <div style={{marginTop: 12}}>
+              <Text type="supporting">
+                Ou <Link to="/horarios">veja a grade completa</Link> antes de decidir.
+              </Text>
+            </div>
           </div>
         </Section>
       )}
@@ -461,18 +312,39 @@ export function CursoDetalhe({slug}: {slug: string}) {
         </Section>
       )}
 
-      <Section>
-        <div className="text-center" style={{maxWidth: 560, marginInline: 'auto'}}>
-          <Heading level={2}>Comece quando quiser</Heading>
-          <div style={{marginTop: 12, marginBottom: 24}}>
-            <Text type="large" color="secondary">
-              As matrículas ficam abertas o ano todo e o curso acompanha o seu
-              ritmo. Venha fazer uma aula experimental.
+      {/*
+        Faixa final na cor da categoria do curso, como a primeira dobra:
+        fecha a página no mesmo tom em que ela abriu. Layout inspirado em
+        https://www.flowbase.co/preview/cycle-cta-03 (chamada grande à
+        esquerda, com um trecho em destaque).
+      */}
+      <section className={`course-cta course-cta--${course.category}`}>
+        <div className="container course-cta__inner">
+          <div className="course-cta__copy">
+            <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
+            <Heading level={2} className="course-cta__headline">
+              Comece <span className="course-cta__highlight">quando quiser</span>.
+            </Heading>
+            <Text
+              type="large"
+              color="inherit"
+              display="block"
+              className="course-cta__lead"
+            >
+              O curso acompanha o seu ritmo, do primeiro traço à técnica
+              avançada. Venha fazer uma aula experimental.
             </Text>
+            <div className="course-cta__action">
+              <WhatsCta
+                message={enrollMessage}
+                label="Entre em contato"
+                size="sm"
+                variant="secondary"
+              />
+            </div>
           </div>
-          <WhatsCta message={enrollMessage} label="Falar com a escola" size="lg" />
         </div>
-      </Section>
+      </section>
     </div>
   );
 }

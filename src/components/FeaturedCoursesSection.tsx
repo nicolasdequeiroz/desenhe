@@ -1,6 +1,7 @@
 import {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 import {Button} from '../ui';
+import {WhatsCta} from './WhatsCta';
 import {COURSES, asset} from '../data';
 
 /**
@@ -228,7 +229,7 @@ export function FeaturedCoursesSection() {
                       index === 0 ? ' is-active' : ''
                     }`}
                   >
-                    <span>{course.shortTitle}</span>
+                    <span>{course.featuredTitle ?? course.shortTitle}</span>
                   </div>
                 ),
               )}
@@ -242,7 +243,7 @@ export function FeaturedCoursesSection() {
                   className={`featured-courses__link${index === 0 ? ' is-active' : ''}`}
                 >
                   <span className="featured-courses__link-title">
-                    {course.shortTitle}
+                    {course.featuredTitle ?? course.shortTitle}
                     {course.featuredSubtitle ? (
                       <span className="featured-courses__link-subtitle">
                         {course.featuredSubtitle}
@@ -266,7 +267,14 @@ export function FeaturedCoursesSection() {
               Todos os cursos têm matrículas abertas o ano inteiro e acompanham
               o nível e o ritmo de cada aluno.
             </p>
-            <Button label="Todos os cursos" href="/cursos" variant="primary" />
+            <div className="featured-courses__actions">
+              <WhatsCta
+                message="Olá! Quero agendar uma aula experimental na Desenhe."
+                label="Agendar aula experimental"
+                variant="secondary"
+              />
+              <Button label="Todos os cursos" href="/cursos" variant="primary" />
+            </div>
           </div>
         </div>
       </div>

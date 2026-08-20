@@ -4,6 +4,7 @@ import {Heading, Text} from '../ui';
 import {Divider} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
+import {NoteGrid} from '../components/NoteGrid';
 import {WhatsCta} from '../components/WhatsCta';
 import {PRICING, PRICING_NOTES, formatBRL} from '../data';
 
@@ -78,33 +79,28 @@ export function Precos() {
         </div>
 
         <div className="pricing-notes">
-          <ul className="pricing-notes__list" role="list">
-            {PRICING_NOTES.map((note) => (
-              <li key={note.slice(0, 24)} className="pricing-notes__item">
-                <Text color="secondary">{note}</Text>
-              </li>
-            ))}
-          </ul>
-          <div style={{marginTop: 16}}>
-            <Text color="secondary" display="block">
-              O curso de História da Arte tem valores próprios: mensalidade de
-              R$ 460, à vista ou parcelada, mais taxa de matrícula de R$ 120.
-              Alunos e ex-alunos da escola têm condições especiais.
-            </Text>
-          </div>
-          <div style={{marginTop: 8}}>
-            <Text color="secondary">
-              Os valores do curso de Desenho de Moda são informados pelo
-              WhatsApp.
-            </Text>
-          </div>
-        </div>
-
-        <div style={{marginTop: 40}} className="text-center">
-          <WhatsCta
-            message="Olá! Gostaria de saber mais sobre os planos e valores dos cursos da Desenhe."
-            label="Tirar dúvidas sobre planos"
-            size="lg"
+          {/*
+            As observações somam 5 e a grade tem 3 colunas: a célula que sobra
+            na última linha recebe a chamada de dúvidas, em vez de deixar um
+            vão e repetir o botão logo abaixo da seção.
+          */}
+          <NoteGrid
+            eyebrow="Antes de matricular"
+            items={PRICING_NOTES}
+            footerCard={
+              <div className="note-grid__item note-grid__item--cta">
+                <Heading level={3}>Ficou com alguma dúvida?</Heading>
+                <Text color="secondary">
+                  A gente ajuda a escolher o plano e o horário que combinam com
+                  a sua rotina.
+                </Text>
+                <WhatsCta
+                  message="Olá! Gostaria de saber mais sobre os planos e valores dos cursos da Desenhe."
+                  label="Falar sobre os planos"
+                  size="sm"
+                />
+              </div>
+            }
           />
         </div>
       </Section>

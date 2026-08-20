@@ -60,9 +60,13 @@ export function CourseGallery({images, caption, credits}: Props) {
      * Sem cursor não existe hover, e a parede ficaria parada justamente onde o
      * visitante mais rola. Nessas telas o destaque passa a ser dado pela
      * rolagem: o trabalho que chega ao centro se endireita e sai da parede,
-     * como faria sob o cursor no desktop.
+     * como faria sob o cursor no desktop. Abaixo de 560px a parede vira um
+     * slider horizontal (ver CSS): a posição vertical na página deixa de
+     * distinguir os cards (todos estão na mesma linha), então esse cálculo
+     * fica de fora e cada card permanece no seu leve tombo de repouso.
      */
     const byScroll = window.matchMedia('(hover: none), (max-width: 900px)');
+    const isSlider = window.matchMedia('(max-width: 560px)');
     let perItemApplied = false;
 
     let frame = 0;
@@ -78,7 +82,7 @@ export function CourseGallery({images, caption, credits}: Props) {
       const progress = (viewport / 2 - center) / ((viewport + rect.height) / 2);
       wall.style.setProperty('--wall-progress', clamp(progress, -1, 1).toFixed(3));
 
-      if (byScroll.matches) {
+      if (byScroll.matches && !isSlider.matches) {
         for (const item of itemRefs.current) {
           if (!item) continue;
           const box = item.getBoundingClientRect();

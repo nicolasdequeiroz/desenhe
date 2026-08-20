@@ -5,7 +5,7 @@ export const SITE = {
   shortName: 'Desenhe',
   tagline: 'Escola de desenho e pintura em Curitiba há 38 anos',
   description:
-    'Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache e desenho infantil em Curitiba. Turmas pequenas e ensino individualizado, para todas as idades.',
+    'Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache e laboratório de desenho infantil em Curitiba. Turmas pequenas e ensino individualizado, para todas as idades.',
   url: 'https://www.desenhe.com.br',
   address: {
     street: 'Rua Padre Anchieta, 265A',
@@ -13,6 +13,8 @@ export const SITE = {
     city: 'Curitiba',
     state: 'PR',
   },
+  /** Coordenadas da escola, para centrar o mapa embutido em /contato. */
+  coordinates: '-25.4265516,-49.2826804',
   whatsapp: '5541987121371',
   whatsappDisplay: '(41) 98712-1371',
   instagram: 'https://www.instagram.com/desenheestudio/',

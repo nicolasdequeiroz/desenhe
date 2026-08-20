@@ -72,9 +72,14 @@ function readRotation(element: HTMLElement): number {
  * `object-fit: cover`, crescer vai revelando mais do trabalho em vez de
  * deformá-lo, e o texto nunca é escalado (ficaria borrado).
  */
-function createGhost(src: string, author: string, year?: string): HTMLElement {
+function createGhost(
+  src: string,
+  author: string,
+  year?: string,
+  framed = true,
+): HTMLElement {
   const ghost = document.createElement('div');
-  ghost.className = 'work-ghost';
+  ghost.className = framed ? 'work-ghost' : 'work-ghost work-ghost--bare';
 
   const photo = document.createElement('div');
   photo.className = 'work-ghost__photo';
@@ -82,23 +87,28 @@ function createGhost(src: string, author: string, year?: string): HTMLElement {
   image.src = src;
   image.alt = '';
   photo.append(image);
+  ghost.append(photo);
 
-  // Mesma estrutura da legenda na parede e no visor, para as pontas do
-  // crossfade coincidirem em vez de trocar de layout no meio do caminho.
-  const caption = document.createElement('div');
-  caption.className = 'work-ghost__caption';
-  const authorLine = document.createElement('span');
-  authorLine.className = 'work-ghost__author';
-  authorLine.textContent = author;
-  caption.append(authorLine);
-  if (year) {
-    const yearLine = document.createElement('span');
-    yearLine.className = 'work-ghost__year';
-    yearLine.textContent = year;
-    caption.append(yearLine);
+  // Sem moldura não há tarja de autoria, nem no voo nem no visor: as duas
+  // pontas do crossfade precisam ter a mesma estrutura.
+  if (framed) {
+    // Mesma estrutura da legenda na parede e no visor, para as pontas do
+    // crossfade coincidirem em vez de trocar de layout no meio do caminho.
+    const caption = document.createElement('div');
+    caption.className = 'work-ghost__caption';
+    const authorLine = document.createElement('span');
+    authorLine.className = 'work-ghost__author';
+    authorLine.textContent = author;
+    caption.append(authorLine);
+    if (year) {
+      const yearLine = document.createElement('span');
+      yearLine.className = 'work-ghost__year';
+      yearLine.textContent = year;
+      caption.append(yearLine);
+    }
+    ghost.append(caption);
   }
 
-  ghost.append(photo, caption);
   document.body.append(ghost);
   return ghost;
 }
@@ -133,6 +143,11 @@ export interface ViewerProps {
   /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
   index: number;
+  /**
+   * Moldura de papel com a tarja de autoria em volta da imagem. Desligada
+   * onde a peça não é um polaroid na página (ver o arco de /sobre).
+   */
+  framed?: boolean;
   resolveOrigin: (index: number) => HTMLElement | null;
   onClose: (index: number) => void;
   onNavigate: (step: number) => void;
@@ -148,6 +163,7 @@ export function WorkViewer({
   caption,
   credits,
   index,
+  framed = true,
   resolveOrigin,
   onClose,
   onNavigate,
@@ -209,7 +225,7 @@ export function WorkViewer({
       if (!to.width || !from.width) return;
 
       polaroid.style.opacity = '0';
-      ghost = createGhost(image.currentSrc || image.src, author, year);
+      ghost = createGhost(image.currentSrc || image.src, author, year, framed);
       fades = crossFade(ghost, origin, 'in');
       ghost
         .animate(flightFrames(from, readRotation(origin), to, 0), {
@@ -242,7 +258,7 @@ export function WorkViewer({
       ghost?.remove();
       polaroid.style.opacity = '';
     };
-  }, [resolveOrigin, author, year]);
+  }, [resolveOrigin, author, year, framed]);
 
   // Fechar é o voo inverso: a imagem volta a ser a peça, no lugar dela.
   const requestClose = useCallback(() => {
@@ -276,7 +292,7 @@ export function WorkViewer({
     panelRef.current?.classList.add('is-closing');
     polaroid.style.opacity = '0';
 
-    const ghost = createGhost(image.currentSrc || image.src, author, year);
+    const ghost = createGhost(image.currentSrc || image.src, author, year, framed);
     // A peça na página reaparece no fim do percurso, por baixo da cópia que
     // some: é a troca inversa da abertura.
     const fades = crossFade(ghost, origin, 'out');
@@ -293,7 +309,7 @@ export function WorkViewer({
         ghost.remove();
         onClose(current);
       });
-  }, [resolveOrigin, onClose, author, year]);
+  }, [resolveOrigin, onClose, author, year, framed]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -398,7 +414,10 @@ export function WorkViewer({
           imagem a cada troca, e é o que faz a animação de entrada rodar de
           novo em vez de a nova imagem simplesmente aparecer.
         */}
-        <div className="work-viewer__polaroid" ref={polaroidRef}>
+        <div
+          className={`work-viewer__polaroid${framed ? '' : ' work-viewer__polaroid--bare'}`}
+          ref={polaroidRef}
+        >
           <div className="work-viewer__photo">
             <img
               key={images[index]}
@@ -407,12 +426,14 @@ export function WorkViewer({
               alt={`${caption}, imagem ${index + 1}`}
             />
           </div>
-          <div className="work-viewer__credit">
-            <span className="work-viewer__author">{author}</span>
-            {credit?.year && (
-              <span className="work-viewer__year">{credit.year}</span>
-            )}
-          </div>
+          {framed && (
+            <div className="work-viewer__credit">
+              <span className="work-viewer__author">{author}</span>
+              {credit?.year && (
+                <span className="work-viewer__year">{credit.year}</span>
+              )}
+            </div>
+          )}
         </div>
         <figcaption className="work-viewer__caption">
           <span className="work-viewer__count">
