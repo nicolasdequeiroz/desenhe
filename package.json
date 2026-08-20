@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite-react-ssg build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:pages": "rm -rf docs && tsc -b && BASE_PATH=/desenhe/ BUILD_OUT_DIR=docs vite-react-ssg build && cp docs/index.html docs/404.html && touch docs/.nojekyll"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
