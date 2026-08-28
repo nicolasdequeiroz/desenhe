@@ -1,22 +1,22 @@
 {
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/invariant/browser.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/matter-js/build/matter.js?commonjs-es-import": [
-    "/desenhe/assets/matter-BBHsYdzQ.js"
+    "/desenhe/assets/matter-pX5zmq4o.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/matter-js/build/matter.js?commonjs-module": [
-    "/desenhe/assets/matter-BBHsYdzQ.js"
+    "/desenhe/assets/matter-pX5zmq4o.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/prop-types/index.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/prop-types/index.js?commonjs-module": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/cjs/react-dom-client.production.js?commonjs-exports": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/cjs/react-dom.production.js?commonjs-exports": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/client.js?commonjs-es-import": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/client.js?commonjs-module": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/index.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/index.js?commonjs-module": [],
@@ -28,10 +28,10 @@
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react/jsx-runtime.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react/jsx-runtime.js?commonjs-module": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/scheduler/cjs/scheduler.production.js?commonjs-exports": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/scheduler/index.js?commonjs-module": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/shallowequal/index.js?commonjs-es-import": [],
   "\u0000commonjsHelpers.js": [],
@@ -41,18 +41,21 @@
   "node_modules/@phosphor-icons/react/dist/csr/ArrowLeft.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ArrowRight.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ArrowUUpLeft.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
+  "node_modules/@phosphor-icons/react/dist/csr/Baby.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Backpack.es.js": [],
+  "node_modules/@phosphor-icons/react/dist/csr/CalendarBlank.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/CalendarCheck.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/CaretDown.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ChartLineUp.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ChatCircleText.es.js": [],
+  "node_modules/@phosphor-icons/react/dist/csr/Check.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Clock.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Compass.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/CurrencyDollar.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Eraser.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
   "node_modules/@phosphor-icons/react/dist/csr/Eye.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/FacebookLogo.es.js": [],
@@ -66,7 +69,7 @@
   "node_modules/@phosphor-icons/react/dist/csr/Quotes.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Star.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Trash.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
   "node_modules/@phosphor-icons/react/dist/csr/Users.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/UsersThree.es.js": [],
@@ -75,18 +78,21 @@
   "node_modules/@phosphor-icons/react/dist/defs/ArrowLeft.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ArrowRight.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ArrowUUpLeft.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
+  "node_modules/@phosphor-icons/react/dist/defs/Baby.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Backpack.es.js": [],
+  "node_modules/@phosphor-icons/react/dist/defs/CalendarBlank.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/CalendarCheck.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/CaretDown.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ChartLineUp.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ChatCircleText.es.js": [],
+  "node_modules/@phosphor-icons/react/dist/defs/Check.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Clock.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Compass.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/CurrencyDollar.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Eraser.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
   "node_modules/@phosphor-icons/react/dist/defs/Eye.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/FacebookLogo.es.js": [],
@@ -100,7 +106,7 @@
   "node_modules/@phosphor-icons/react/dist/defs/Quotes.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Star.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Trash.es.js": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
   "node_modules/@phosphor-icons/react/dist/defs/Users.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/UsersThree.es.js": [],
@@ -111,17 +117,17 @@
   "node_modules/@remix-run/router/dist/router.js": [],
   "node_modules/invariant/browser.js": [],
   "node_modules/matter-js/build/matter.js": [
-    "/desenhe/assets/matter-BBHsYdzQ.js"
+    "/desenhe/assets/matter-pX5zmq4o.js"
   ],
   "node_modules/prop-types/factoryWithThrowingShims.js": [],
   "node_modules/prop-types/index.js": [],
   "node_modules/prop-types/lib/ReactPropTypesSecret.js": [],
   "node_modules/react-dom/cjs/react-dom-client.production.js": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "node_modules/react-dom/cjs/react-dom.production.js": [],
   "node_modules/react-dom/client.js": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "node_modules/react-dom/index.js": [],
   "node_modules/react-fast-compare/index.js": [],
@@ -132,10 +138,10 @@
   "node_modules/react/index.js": [],
   "node_modules/react/jsx-runtime.js": [],
   "node_modules/scheduler/cjs/scheduler.production.js": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "node_modules/scheduler/index.js": [
-    "/desenhe/assets/client-BvG_BIcB.js"
+    "/desenhe/assets/client-DuJcX1N3.js"
   ],
   "node_modules/shallowequal/index.js": [],
   "node_modules/vite-react-ssg/dist/index.mjs": [],
@@ -152,7 +158,7 @@
   "src/components/FeaturedCoursesSection.tsx": [],
   "src/components/Guestbook.tsx": [],
   "src/components/GuestbookPanel.tsx": [
-    "/desenhe/assets/GuestbookPanel-dEDuEYQH.js"
+    "/desenhe/assets/GuestbookPanel-pV_Kfjj-.js"
   ],
   "src/components/NavCoursesDropdown.tsx": [],
   "src/components/NoteGrid.tsx": [],
@@ -164,6 +170,7 @@
   "src/components/SiteFooter.tsx": [],
   "src/components/SiteHeader.tsx": [],
   "src/components/SpaceShowcaseSection.tsx": [],
+  "src/components/StrandAccordions.tsx": [],
   "src/components/TestimonialsSection.tsx": [],
   "src/components/Timeline.tsx": [],
   "src/components/WhatsCta.tsx": [],
