@@ -1,14 +1,14 @@
 {
-  "_client-CDlEBNbu.js": {
-    "file": "assets/client-CDlEBNbu.js",
+  "_client-UwyXCw9j.js": {
+    "file": "assets/client-UwyXCw9j.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
       "index.html"
     ]
   },
-  "_matter-Dy7fFJbw.js": {
-    "file": "assets/matter-Dy7fFJbw.js",
+  "_matter-DdfXpCuY.js": {
+    "file": "assets/matter-DdfXpCuY.js",
     "name": "matter",
     "isDynamicEntry": true,
     "imports": [
@@ -16,21 +16,21 @@
     ]
   },
   "index.html": {
-    "file": "assets/app-M9ZgFODy.js",
+    "file": "assets/app-hXhJ4B2A.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
-      "_client-CDlEBNbu.js",
-      "_matter-Dy7fFJbw.js",
+      "_client-UwyXCw9j.js",
+      "_matter-DdfXpCuY.js",
       "src/components/GuestbookPanel.tsx"
     ],
     "css": [
-      "assets/app-B5iA4ks4.css"
+      "assets/app-CtXmqMDC.css"
     ]
   },
   "src/components/GuestbookPanel.tsx": {
-    "file": "assets/GuestbookPanel-BYJbhHUt.js",
+    "file": "assets/GuestbookPanel-DroycZbp.js",
     "name": "GuestbookPanel",
     "src": "src/components/GuestbookPanel.tsx",
     "isDynamicEntry": true,

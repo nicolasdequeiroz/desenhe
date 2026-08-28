@@ -186,11 +186,35 @@ export function CursoDetalhe({slug}: {slug: string}) {
         {deckLightbox.lightbox}
       </section>
 
+      {/*
+        A seção é uma pilha de blocos nomeados: a descrição (com o convite
+        para tirar dúvidas ao lado, preenchendo a coluna que sobrava), as
+        linguagens do curso e o resumo em fatos. Cada bloco tem um rótulo
+        próprio, para a leitura não virar três caixas soltas na mesma cor.
+      */}
       <div className="container course-intro">
-        <div className="prose course-intro__prose">
-          {course.description.map((p) => (
-            <p key={p.slice(0, 24)}>{p}</p>
-          ))}
+        <div className="course-intro__top">
+          <div className="prose course-intro__prose">
+            {course.description.map((p) => (
+              <p key={p.slice(0, 24)}>{p}</p>
+            ))}
+          </div>
+
+          <aside className="course-intro__aside">
+            <span className="course-intro__label">Ainda em dúvida?</span>
+            <Text as="p" type="supporting">
+              Conte para a gente o que você quer aprender e a gente indica o
+              melhor caminho dentro do curso de {course.shortTitle}.
+            </Text>
+            {/* Ação de apoio: a conversão principal da página é o CTA do fim
+                e o "Matricule-se" do header, ambos primários. */}
+            <WhatsCta
+              message={enrollMessage}
+              label="Fale com a gente"
+              size="sm"
+              variant="secondary"
+            />
+          </aside>
         </div>
 
         {/*
@@ -198,44 +222,47 @@ export function CursoDetalhe({slug}: {slug: string}) {
           um com título próprio (ex.: Mangá, HQ e Cartoon). Cards lado a lado
           no desktop; accordions no mobile (ver StrandAccordions).
         */}
-        {course.strands && <StrandAccordions strands={course.strands} />}
+        {course.strands && (
+          <div className="course-intro__block">
+            <span className="course-intro__label">
+              As {course.strands.length} linguagens deste curso
+            </span>
+            <StrandAccordions strands={course.strands} />
+          </div>
+        )}
 
-        <div
-          className={`course-facts course-facts--${course.category} course-facts--cols-${factCards.length}`}
-        >
-          {factCards.map(({icon: Icon, title, items}) => (
-            <div key={title} className="course-facts__card">
-              <span className="course-facts__icon-badge">
-                <Icon size={22} weight="light" className="course-facts__icon" />
-              </span>
-              <div className="course-facts__title">{title}</div>
-              {items.length > 0 && (
-                <ul className="course-facts__list">
-                  {items.map((item) => (
-                    <li key={item} className="course-facts__item">
-                      <span className="course-facts__bullet" aria-hidden="true" />
-                      <Text>{item}</Text>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {title === 'Mensalidade' && pricing && (
-                <Link to="/precos" className="course-facts__link">
-                  Ver planos completos
-                  <span className="course-facts__link-arrow" aria-hidden="true">
-                    →
-                  </span>
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="course-intro__cta">
-          <Text color="secondary">
-            Ficou com alguma dúvida sobre o curso de {course.shortTitle}?
-          </Text>
-          <WhatsCta message={enrollMessage} label="Fale com a gente" size="sm" variant="ghost" />
+        <div className="course-intro__block">
+          <span className="course-intro__label">O curso em resumo</span>
+          <div
+            className={`course-facts course-facts--${course.category} course-facts--cols-${factCards.length}`}
+          >
+            {factCards.map(({icon: Icon, title, items}) => (
+              <div key={title} className="course-facts__card">
+                <span className="course-facts__icon-badge">
+                  <Icon size={22} weight="light" className="course-facts__icon" />
+                </span>
+                <div className="course-facts__title">{title}</div>
+                {items.length > 0 && (
+                  <ul className="course-facts__list">
+                    {items.map((item) => (
+                      <li key={item} className="course-facts__item">
+                        <span className="course-facts__bullet" aria-hidden="true" />
+                        <Text>{item}</Text>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {title === 'Mensalidade' && pricing && (
+                  <Link to="/precos" className="course-facts__link">
+                    Ver planos completos
+                    <span className="course-facts__link-arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

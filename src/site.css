@@ -3603,15 +3603,74 @@ body {
   }
 }
 
+/*
+ * Corpo da página de curso: uma pilha de blocos nomeados (descrição,
+ * linguagens, resumo em fatos), com o mesmo respiro entre eles. O rótulo
+ * de cada bloco é o que separa um do outro: sem ele os três viravam
+ * caixas escuras iguais empilhadas, sem hierarquia de leitura.
+ */
 .course-intro {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: clamp(var(--spacing-8), 4vw, 64px);
   padding-block: clamp(var(--spacing-10), 6vw, 72px);
 }
 
+/*
+ * Primeira faixa: a descrição não passa da medida confortável de leitura
+ * (~65 caracteres) e a coluna que sobrava à direita, antes vazia, recebe o
+ * convite para tirar dúvidas, que antes ficava órfão no fim da seção.
+ */
+.course-intro__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(var(--spacing-6), 4vw, 64px);
+}
+
 .course-intro__prose {
-  max-width: 720px;
+  max-width: 68ch;
+}
+
+.course-intro__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+}
+
+.course-intro__aside .course-intro__label {
+  margin-bottom: 0;
+}
+
+.course-intro__block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Rótulo de bloco, no mesmo tom dos kickers de seção mas sem o fio: aqui
+   ele nomeia um bloco dentro da seção, não abre uma seção nova. */
+.course-intro__label {
+  display: block;
+  margin-bottom: var(--spacing-4);
+  color: var(--category-color, var(--color-accent));
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+  /* Uma coluna só: o convite passa a vir logo depois da descrição, ainda
+     antes das linguagens e do resumo, na ordem natural do DOM. */
+  .course-intro__top {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /*
@@ -3786,14 +3845,6 @@ body {
   .course-strand-card__chevron {
     transition: none;
   }
-}
-
-/* Convite discreto para tirar dúvidas, logo depois dos fatos do curso. */
-.course-intro__cta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-4);
 }
 
 /*
