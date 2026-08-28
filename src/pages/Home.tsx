@@ -18,7 +18,7 @@ export function Home() {
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
           <img
-            src={asset('/images/espaco/professor-biblioteca.avif')}
+            src={asset('/images/espaco/fachada-desenhe.webp')}
             alt=""
             className="hero__background-image"
           />

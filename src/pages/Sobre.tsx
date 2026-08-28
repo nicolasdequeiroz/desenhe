@@ -184,8 +184,8 @@ export function Sobre() {
           </div>
         </div>
         <img
-          src={asset('/images/espaco/fachada-desenhe.webp')}
-          alt="Fachada da Desenhe, na Rua Padre Anchieta, Mercês, Curitiba"
+          src={asset('/images/espaco/professor-biblioteca.avif')}
+          alt="Professor da Desenhe desenhando à mesa, com a biblioteca de arte ao fundo"
         />
       </div>
 
