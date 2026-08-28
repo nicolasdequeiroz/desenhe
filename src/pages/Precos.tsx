@@ -8,6 +8,7 @@ import {WhatsCta} from '../components/WhatsCta';
 import {
   COWORKING,
   FIRST_CLASS_PRICES,
+  HISTORY_OF_ART,
   PLAN_INFO,
   PLAN_MONTHS,
   PRICING,
@@ -120,33 +121,34 @@ export function Precos() {
             );
           })}
 
-          {/* Coworking artístico: mesma diagramação, mas com valor por hora
-              (fora do seletor de duração). */}
+          {/* História da Arte: curso teórico com mensalidade fixa (não
+              acompanha o seletor de duração dos cursos de ateliê). */}
           <Card padding={6} className="pricing-card">
             <div className="pricing-card__head">
-              <Heading level={3}>{COWORKING.title}</Heading>
+              <Heading level={3}>{HISTORY_OF_ART.title}</Heading>
               <Text type="supporting" display="block">
-                {COWORKING.intro}
+                {HISTORY_OF_ART.subtitle}
               </Text>
             </div>
 
             <div className="pricing-card__hero">
+              <Badge label="Valor fixo" variant="neutral" />
               <div className="pricing-card__price">
                 <span className="pricing-card__price-value">
-                  {formatBRL(COWORKING.hourly)}
+                  {formatBRL(HISTORY_OF_ART.monthly)}
                 </span>
-                <span className="pricing-card__price-unit">/hora</span>
+                <span className="pricing-card__price-unit">/mês</span>
               </div>
               <Text type="supporting" display="block">
-                Aluguel por hora, sem plano mensal. Alunos e ex-alunos têm
-                condições especiais.
+                Mais taxa de matrícula única de{' '}
+                {formatBRL(HISTORY_OF_ART.enrollmentFee)}, à vista ou parcelada.
               </Text>
             </div>
 
             <div className="pricing-card__cta">
               <WhatsCta
-                message="Olá! Quero saber sobre o coworking artístico (aluguel de sala por hora) da Desenhe."
-                label="Consultar disponibilidade"
+                message={`Olá! Quero saber mais sobre o curso de ${HISTORY_OF_ART.title}.`}
+                label="Falar sobre o curso"
                 size="sm"
               />
             </div>
@@ -157,8 +159,8 @@ export function Precos() {
               <span className="pricing-card__includes-label">
                 O que está incluso
               </span>
-              <CheckList items={COWORKING.features} />
-              <p className="pricing-card__fineprint">{COWORKING.note}</p>
+              <CheckList items={HISTORY_OF_ART.features} />
+              <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
             </div>
           </Card>
         </div>
@@ -186,6 +188,59 @@ export function Precos() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/*
+          Fim da parte "escolar" (planos e primeira aula). O coworking é
+          outra coisa: aluguel de sala por hora, sem vínculo com curso. Um
+          fio separa as duas.
+        */}
+        <div className="pricing-break" role="presentation">
+          <Divider />
+        </div>
+
+        <div className="pricing-solo">
+          <div className="pricing-solo__head">
+            <span className="pricing-solo__label">Fora das aulas</span>
+            <Heading level={2} className="pricing-solo__title">
+              {COWORKING.title}
+            </Heading>
+            <Text as="p" color="secondary" className="pricing-solo__lead">
+              {COWORKING.intro}
+            </Text>
+          </div>
+
+          <Card padding={6} className="pricing-card pricing-card--solo">
+            <div className="pricing-card__hero">
+              <div className="pricing-card__price">
+                <span className="pricing-card__price-value">
+                  {formatBRL(COWORKING.hourly)}
+                </span>
+                <span className="pricing-card__price-unit">/hora</span>
+              </div>
+              <Text type="supporting" display="block">
+                Aluguel por hora, sem plano mensal.
+              </Text>
+            </div>
+
+            <div className="pricing-card__cta">
+              <WhatsCta
+                message="Olá! Quero saber sobre o coworking artístico (aluguel de sala por hora) da Desenhe."
+                label="Consultar disponibilidade"
+                size="sm"
+              />
+            </div>
+
+            <Divider />
+
+            <div className="pricing-card__includes">
+              <span className="pricing-card__includes-label">
+                O que está incluso
+              </span>
+              <CheckList items={COWORKING.features} />
+              <p className="pricing-card__fineprint">{COWORKING.note}</p>
+            </div>
+          </Card>
         </div>
 
         <div className="pricing-notes">

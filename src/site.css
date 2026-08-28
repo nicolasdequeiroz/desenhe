@@ -5556,6 +5556,82 @@ body {
   color: var(--color-text-primary);
 }
 
+/*
+ * Fio entre a parte escolar (planos + primeira aula) e o coworking, que é
+ * um serviço à parte. Alinhado à mesma largura da grade de planos.
+ */
+.pricing-break {
+  max-width: 1120px;
+  margin: clamp(var(--spacing-10), 8vw, 88px) auto;
+}
+
+/*
+ * Coworking em versão solo: um card só, então em vez de ficar estreito e
+ * perdido no centro, ele se abre em duas colunas no desktop (preço + CTA de
+ * um lado, "o que está incluso" do outro). No mobile volta a ser a pilha
+ * vertical padrão de .pricing-card.
+ */
+.pricing-solo {
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.pricing-solo__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+}
+
+.pricing-solo__label {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.pricing-solo__title {
+  margin: 0;
+}
+
+.pricing-solo__lead {
+  margin: 0;
+  max-width: 46ch;
+}
+
+@media (min-width: 761px) {
+  .pricing-card--solo {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: clamp(var(--spacing-6), 5vw, 64px);
+    row-gap: var(--spacing-4);
+    align-items: start;
+  }
+
+  .pricing-card--solo > .pricing-card__hero {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .pricing-card--solo > .pricing-card__cta {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* Sem o fio horizontal: quem separa as colunas é o próprio gap. */
+  .pricing-card--solo > .divider {
+    display: none;
+  }
+
+  .pricing-card--solo > .pricing-card__includes {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}
+
 /* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */
 .pricing-card__features {
   list-style: none;

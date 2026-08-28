@@ -48,6 +48,35 @@ export const PRICING: PricingTier[] = [
 ];
 
 /**
+ * História da Arte: curso teórico com mensalidade fixa. Não entra no
+ * seletor de duração (que vale só para os cursos de ateliê), então é
+ * modelado à parte, como o coworking.
+ */
+export interface FixedCourse {
+  title: string;
+  subtitle: string;
+  monthly: number;
+  /** Taxa de matrícula única, cobrada além das mensalidades. */
+  enrollmentFee: number;
+  features: string[];
+  note: string;
+}
+
+export const HISTORY_OF_ART: FixedCourse = {
+  title: 'História da Arte',
+  subtitle: 'Curso teórico, encontro de 2h30 por semana',
+  monthly: 460,
+  enrollmentFee: 120,
+  features: [
+    '90 horas no total, em 3 módulos de 30 horas',
+    'Aulas expositivas e dialogadas, com estudos de caso',
+    'Presencial em Curitiba',
+    'Turmas conforme o calendário: consulte as próximas',
+  ],
+  note: 'Mensalidade fixa, sem seletor de duração. Alunos e ex-alunos da escola têm condições especiais.',
+};
+
+/**
  * Coworking artístico: aluguel de sala por hora para o aluno trabalhar por
  * conta própria. Não segue plano mensal, então fica fora do seletor de
  * duração.
@@ -123,12 +152,6 @@ export const PRICING_NOTES: PricingNote[] = [
     text: 'A partir de 6 anos nos cursos de desenho e pintura; óleo/acrílica requer conhecimento prévio de desenho.',
     href: '/cursos',
     linkLabel: 'Ver os cursos',
-  },
-  {
-    title: 'História da Arte',
-    text: 'Mensalidade de R$ 460, à vista ou parcelada, mais taxa de matrícula de R$ 120. Alunos e ex-alunos da escola têm condições especiais.',
-    href: '/cursos/historia-da-arte',
-    linkLabel: 'Ver o curso',
   },
   {
     title: 'Valores sob consulta',
