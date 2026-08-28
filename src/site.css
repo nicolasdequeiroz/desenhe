@@ -798,6 +798,21 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+}
+
+/*
+ * É um vídeo decorativo, sem controles. Quando o iOS barra o autoplay
+ * (ex.: Modo de Baixo Consumo) ele desenha um botão de play gigante por
+ * cima: escondemos os controles nativos pra ficar só o poster.
+ */
+.hero__background-video::-webkit-media-controls,
+.hero__background-video::-webkit-media-controls-start-playback-button,
+.hero__background-video::-webkit-media-controls-panel,
+.hero__background-video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .hero__background-overlay {

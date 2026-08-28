@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
@@ -41,6 +41,57 @@ function useHeroVideo(): boolean {
   return enabled;
 }
 
+/**
+ * Vídeo de fundo do hero no mobile. O atributo `muted` do JSX não basta:
+ * o React nem sempre reflete isso na propriedade do elemento, e sem
+ * `video.muted === true` o iOS bloqueia o autoplay e desenha aquele botão
+ * de play gigante no meio. Aqui forçamos `muted` na marra e chamamos
+ * `play()` (inclusive ao voltar pra aba). Se o autoplay for barrado
+ * mesmo assim (ex.: Modo de Baixo Consumo do iOS), o CSS esconde os
+ * controles nativos e sobra só o poster, sem botão nenhum.
+ */
+function HeroBackgroundVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+
+    const play = () => {
+      const attempt = video.play();
+      if (attempt && typeof attempt.catch === 'function') {
+        attempt.catch(() => {});
+      }
+    };
+
+    play();
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') play();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      className="hero__background-video"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster={asset('/images/espaco/hero-mobile-poster.webp')}
+    >
+      <source src={asset('/videos/hero-mobile.webm')} type="video/webm" />
+      <source src={asset('/videos/hero-mobile.mp4')} type="video/mp4" />
+    </video>
+  );
+}
+
 export function Home() {
   const heroVideo = useHeroVideo();
 
@@ -57,20 +108,7 @@ export function Home() {
             alt=""
             className="hero__background-image"
           />
-          {heroVideo && (
-            <video
-              className="hero__background-video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              poster={asset('/images/espaco/hero-mobile-poster.webp')}
-            >
-              <source src={asset('/videos/hero-mobile.webm')} type="video/webm" />
-              <source src={asset('/videos/hero-mobile.mp4')} type="video/mp4" />
-            </video>
-          )}
+          {heroVideo && <HeroBackgroundVideo />}
           <div className="hero__background-overlay" />
         </div>
 
