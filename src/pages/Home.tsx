@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
@@ -9,18 +10,45 @@ import {WhatsCta} from '../components/WhatsCta';
 import {asset} from '../data';
 
 /**
- * Liga/desliga o card "Em destaque" da primeira dobra (hoje: Colônia de
- * Férias). Deixe `true` para mostrar de novo quando a próxima edição
- * estiver no ar; o layout do hero se ajusta sozinho quando está `false`.
+ * Liga/desliga a divulgação da Colônia de Férias na home: o card "Em
+ * destaque" da primeira dobra e a faixa (`ColoniaPromoBar`) no topo.
+ * Deixe `true` para mostrar de novo quando a próxima edição estiver no
+ * ar; o layout do hero se ajusta sozinho quando está `false`.
  */
 const SHOW_HERO_FEATURED = false;
 
+/**
+ * No mobile o fundo do hero vira um vídeo curto em loop (a versão desktop
+ * segue com a foto). O vídeo só é montado quando a tela é estreita e o
+ * usuário não pediu "menos movimento", pra não baixar os ~4 MB à toa.
+ */
+function useHeroVideo(): boolean {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const narrow = window.matchMedia('(max-width: 900px)');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setEnabled(narrow.matches && !calm.matches);
+    update();
+    narrow.addEventListener('change', update);
+    calm.addEventListener('change', update);
+    return () => {
+      narrow.removeEventListener('change', update);
+      calm.removeEventListener('change', update);
+    };
+  }, []);
+
+  return enabled;
+}
+
 export function Home() {
+  const heroVideo = useHeroVideo();
+
   return (
     <>
       <Seo path="/" />
 
-      <ColoniaPromoBar />
+      {SHOW_HERO_FEATURED && <ColoniaPromoBar />}
 
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
@@ -29,6 +57,20 @@ export function Home() {
             alt=""
             className="hero__background-image"
           />
+          {heroVideo && (
+            <video
+              className="hero__background-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={asset('/images/espaco/hero-mobile-poster.webp')}
+            >
+              <source src={asset('/videos/hero-mobile.webm')} type="video/webm" />
+              <source src={asset('/videos/hero-mobile.mp4')} type="video/mp4" />
+            </video>
+          )}
           <div className="hero__background-overlay" />
         </div>
 
