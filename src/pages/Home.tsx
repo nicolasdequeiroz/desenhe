@@ -8,6 +8,13 @@ import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
 import {asset} from '../data';
 
+/**
+ * Liga/desliga o card "Em destaque" da primeira dobra (hoje: Colônia de
+ * Férias). Deixe `true` para mostrar de novo quando a próxima edição
+ * estiver no ar; o layout do hero se ajusta sozinho quando está `false`.
+ */
+const SHOW_HERO_FEATURED = false;
+
 export function Home() {
   return (
     <>
@@ -61,15 +68,17 @@ export function Home() {
                 </div>
               </div>
 
-              <div className="hero__gallery">
-                <span className="hero__gallery-badge">Em destaque</span>
-                <Link to="/colonia-de-ferias" className="hero__featured-card">
-                  <img
-                    src={asset('/images/colonia/poster-hero.jpg')}
-                    alt="Colônia de Férias de Inverno 2026, Desenhe, Curitiba"
-                  />
-                </Link>
-              </div>
+              {SHOW_HERO_FEATURED && (
+                <div className="hero__gallery">
+                  <span className="hero__gallery-badge">Em destaque</span>
+                  <Link to="/colonia-de-ferias" className="hero__featured-card">
+                    <img
+                      src={asset('/images/colonia/poster-hero.jpg')}
+                      alt="Colônia de Férias de Inverno 2026, Desenhe, Curitiba"
+                    />
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
