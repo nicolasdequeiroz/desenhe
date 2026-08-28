@@ -38,6 +38,19 @@ export function CourseCard({course}: {course: Course}) {
         <Text type="body" color="secondary">
           {course.excerpt}
         </Text>
+        {/*
+          Curso guarda-chuva: os nomes das linguagens reunidas no curso,
+          para deixar claro na lista que não é tudo a mesma coisa.
+        */}
+        {course.strands && (
+          <ul className="course-card__strands" aria-label="Modalidades deste curso">
+            {course.strands.map((strand) => (
+              <li key={strand.name} className="course-card__strand">
+                {strand.name}
+              </li>
+            ))}
+          </ul>
+        )}
         {/* Só aparece no hover/foco: ver .course-card__cta no CSS. */}
         <span className="course-card__cta">
           Conhecer o curso <span className="course-card__cta-arrow">→</span>

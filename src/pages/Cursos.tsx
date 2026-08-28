@@ -12,8 +12,8 @@ const PROPOSTA: Note[] = [
     text: 'Cada matrícula parte de uma conversa sobre o seu nível, seus interesses e onde você quer chegar. O conteúdo e o ritmo das aulas são ajustados a essa trajetória: você não entra numa turma padrão, entra num plano pensado para o seu momento como artista.',
   },
   {
-    title: 'Formação, não só passatempo',
-    text: 'As aulas são leves e o processo é prazeroso, mas o compromisso por trás delas é sério: desenvolver técnica, repertório e critério próprio. O objetivo é formar artistas capazes de evoluir sozinhos, não só preencher uma tarde livre.',
+    title: 'Formação ou hobby, sempre com evolução',
+    text: 'As aulas são leves, mas têm compromisso: desenvolver técnica, repertório e critério próprio, em aulas regulares. Serve para quem quer uma formação e para quem desenha por prazer, com evolução constante nos dois casos.',
   },
   {
     title: 'Orientação de quem vive de arte',
@@ -32,7 +32,7 @@ export function Cursos() {
       <Section
         kicker="Cursos"
         title="Encontre o seu caminho na arte"
-        lead="Turmas de no máximo 8 alunos, cronogramas personalizados e matrículas abertas o ano inteiro: aulas presenciais em Curitiba."
+        lead="Turmas de no máximo 8 alunos, cronogramas personalizados e matrículas abertas o ano inteiro. Aulas presenciais em Curitiba ou online ao vivo."
       >
         <div className="course-grid">
           {COURSES.map((course) => (

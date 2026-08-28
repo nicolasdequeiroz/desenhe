@@ -13,11 +13,14 @@ import {
 import {Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
+import {CourseCard} from '../components/CourseCard';
 import {CourseGallery} from '../components/CourseGallery';
+import {StrandAccordions} from '../components/StrandAccordions';
 import {Timeline} from '../components/Timeline';
 import {useWorkLightbox} from '../components/WorkLightbox';
 import {WhatsCta} from '../components/WhatsCta';
 import {
+  COURSES,
   PRICING,
   SCHEDULE,
   SCHEDULE_DAYS,
@@ -37,6 +40,17 @@ export function CursoDetalhe({slug}: {slug: string}) {
   const schedule = SCHEDULE.find((s) => s.courseSlug === course.slug);
   const weeklyRows = schedule ? weeklyRowsForCourse(schedule) : [];
   const enrollMessage = `Olá! Tenho interesse no curso de ${course.shortTitle} e gostaria de mais informações.`;
+
+  // Cursos relacionados: primeiro os da mesma categoria, completando com os
+  // demais até três, para nunca deixar a faixa curta.
+  const relatedCourses = [
+    ...COURSES.filter(
+      (c) => c.slug !== course.slug && c.category === course.category,
+    ),
+    ...COURSES.filter(
+      (c) => c.slug !== course.slug && c.category !== course.category,
+    ),
+  ].slice(0, 3);
 
   const galleryCaption =
     course.galleryCaption ?? `Trabalhos do curso de ${course.shortTitle}`;
@@ -104,10 +118,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
         <div className="container">
           <div className="course-deck__header">
             <div className="course-deck__heading">
-              <span className="course-deck__eyebrow">
-                {course.shortTitle}
-                {course.featuredSubtitle ? `: ${course.featuredSubtitle}` : ''}
-              </span>
+              <span className="course-deck__eyebrow">{course.shortTitle}</span>
               <Heading level={1}>{course.tagline}</Heading>
             </div>
             <p className="course-deck__lead">{course.excerpt}</p>
@@ -181,6 +192,13 @@ export function CursoDetalhe({slug}: {slug: string}) {
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
         </div>
+
+        {/*
+          Curso guarda-chuva: um bloco por linguagem reunida no curso, cada
+          um com título próprio (ex.: Mangá, HQ e Cartoon). Cards lado a lado
+          no desktop; accordions no mobile (ver StrandAccordions).
+        */}
+        {course.strands && <StrandAccordions strands={course.strands} />}
 
         <div
           className={`course-facts course-facts--${course.category} course-facts--cols-${factCards.length}`}
@@ -312,6 +330,21 @@ export function CursoDetalhe({slug}: {slug: string}) {
         </Section>
       )}
 
+      {relatedCourses.length > 0 && (
+        <Section
+          kicker="Continue explorando"
+          title="Cursos relacionados"
+          lead="Outros caminhos para seguir dentro da escola."
+          muted
+        >
+          <div className="course-grid">
+            {relatedCourses.map((related) => (
+              <CourseCard key={related.slug} course={related} />
+            ))}
+          </div>
+        </Section>
+      )}
+
       {/*
         Faixa final na cor da categoria do curso, como a primeira dobra:
         fecha a página no mesmo tom em que ela abriu. Layout inspirado em
@@ -332,7 +365,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
               className="course-cta__lead"
             >
               O curso acompanha o seu ritmo, do primeiro traço à técnica
-              avançada. Venha fazer uma aula experimental.
+              avançada. Venha fazer a primeira aula (experimental).
             </Text>
             <div className="course-cta__action">
               <WhatsCta

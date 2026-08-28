@@ -27,6 +27,8 @@
   --color-category-desenho: #d55415;
   --color-category-pintura: #cd3e28;
   --color-category-institucional: #df7400;
+  /* Cursos voltados ao público infantil (ex.: Laboratório de Desenho Infantil). */
+  --color-category-infantil: #e6b450;
 
   /* Tons esverdeados usados nos cartões de professores */
   --color-teacher-tone-1: #6baaa1;
@@ -114,22 +116,22 @@
 :where(h1) {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.3793;
+  line-height: 1.14;
 }
 :where(h2) {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.3913;
+  line-height: 1.18;
 }
 :where(h3) {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.4737;
+  line-height: 1.28;
 }
 :where(h4) {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.6;
+  line-height: 1.4;
 }
 :where(h5) {
   font-size: var(--font-size-sm);

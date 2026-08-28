@@ -48,7 +48,7 @@ export function Home() {
                 </div>
                 <div className="hero__actions">
                   <WhatsCta
-                    message="Olá! Quero agendar uma aula experimental na Desenhe."
+                    message="Olá! Quero agendar a primeira aula na Desenhe."
                     label="Agende sua primeira aula"
                     size="sm"
                   />
@@ -90,13 +90,13 @@ export function Home() {
               Comece <span className="course-cta__highlight">pelo primeiro traço</span>.
             </Heading>
             <Text type="large" color="inherit" display="block" className="course-cta__lead">
-              Turmas de no máximo 8 alunos, cronograma no seu ritmo e uma aula
-              experimental para você sentir como é.
+              Turmas de no máximo 8 alunos, cronograma no seu ritmo e uma
+              primeira aula (experimental) para você sentir como é.
             </Text>
             <div className="course-cta__action">
               <WhatsCta
-                message="Olá! Quero agendar uma aula experimental na Desenhe."
-                label="Agendar aula experimental"
+                message="Olá! Quero agendar a primeira aula na Desenhe."
+                label="Agendar primeira aula"
                 size="sm"
                 variant="secondary"
               />

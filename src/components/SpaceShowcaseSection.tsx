@@ -23,8 +23,8 @@ const GALLERY: GalleryItem[] = [
   },
   {
     src: '/images/espaco/sala-01-mesas.webp',
-    alt: 'Ateliê 01 com mesas de desenho',
-    label: 'Ateliê',
+    alt: 'Sala de aula com mesas de desenho',
+    label: 'Sala de aula',
     number: '02',
   },
   {
@@ -37,8 +37,8 @@ const GALLERY: GalleryItem[] = [
   },
   {
     src: '/images/espaco/sala-02.webp',
-    alt: 'Ateliê 02',
-    label: 'Ateliê',
+    alt: 'Sala de aula ampla com luz natural',
+    label: 'Sala de aula',
     number: '04',
     caption:
       'Salas amplas e luz natural, pensadas para turmas pequenas trabalharem lado a lado sem perder a atenção individual.',
@@ -111,7 +111,7 @@ export function SpaceShowcaseSection() {
         <div className="space-showcase__top">
           <div className="space-showcase__content">
             <span className="section__eyebrow">Nosso espaço</span>
-            <h2 className="space-showcase__title">Um ateliê feito para criar</h2>
+            <h2 className="space-showcase__title">Um lugar feito para criar</h2>
             <div className="space-showcase__body">
               <p className="space-showcase__lead">
                 Por mais de 30 anos temos ajudado profissionais do mercado e
@@ -159,7 +159,7 @@ export function SpaceShowcaseSection() {
           </div>
         </div>
 
-        <div className="space-showcase__gallery" aria-label="Imagens do ateliê">
+        <div className="space-showcase__gallery" aria-label="Imagens do espaço">
           <div className="space-showcase__gallery-col">
             <GalleryFigure
               item={g1}

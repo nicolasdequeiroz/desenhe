@@ -46,10 +46,10 @@ const FATOS = [
   },
   {
     icon: MapPin,
-    title: 'Presencial em Curitiba',
+    title: 'Presencial ou online ao vivo',
     items: [
-      `${SITE.address.street}, ${SITE.address.neighborhood}`,
-      'Ateliês, galeria e biblioteca',
+      `No espaço da escola, na ${SITE.address.neighborhood}, em Curitiba`,
+      'Ou online ao vivo, junto com a turma na sala e o professor por videochamada',
     ],
   },
 ];
@@ -60,8 +60,8 @@ const PRINCIPIOS: Note[] = [
     text: 'O ensino das técnicas do desenho artístico, aliado ao desenvolvimento criativo, são os alicerces da arte de alto nível. Uma coisa não vem antes da outra: elas crescem no mesmo trabalho.',
   },
   {
-    title: 'Formação, não passatempo',
-    text: 'As aulas são leves e o processo é prazeroso, mas o compromisso por trás delas é sério: desenvolver técnica, repertório e critério próprio, até o aluno conseguir evoluir sozinho.',
+    title: 'Formação ou hobby, com evolução constante',
+    text: 'O curso serve tanto para quem quer uma formação quanto para quem desenha por prazer. Em qualquer caso, o compromisso é o mesmo: aulas regulares e desenvolvimento contínuo, com técnica, repertório e critério próprio crescendo a cada encontro.',
   },
   {
     title: 'Quem vive de arte ensinando arte',
@@ -74,7 +74,7 @@ const PERCURSO: TimelineItem[] = [
     label: 'Etapa 1',
     heading: 'Uma conversa antes de tudo',
     description:
-      'Cada matrícula começa com uma conversa sobre o seu nível, seus interesses e onde você quer chegar. Dá para começar por uma aula experimental avulsa, sem compromisso com o curso inteiro.',
+      'Cada matrícula começa com uma conversa sobre o seu nível, seus interesses e onde você quer chegar. Dá para começar pela primeira aula (experimental), sem compromisso com o curso inteiro.',
   },
   {
     label: 'Etapa 2',
@@ -105,18 +105,18 @@ const ESPACO = [
   },
   {
     src: '/images/espaco/sala-01-mesas.webp',
-    alt: 'Ateliê 01 com mesas de desenho',
-    label: 'Ateliê 01',
+    alt: 'Sala de aula 01 com mesas de desenho',
+    label: 'Sala 01',
   },
   {
     src: '/images/espaco/sala-02.webp',
-    alt: 'Ateliê 02',
-    label: 'Ateliê 02',
+    alt: 'Sala de aula 02',
+    label: 'Sala 02',
   },
   {
     src: '/images/espaco/sala-03.webp',
-    alt: 'Ateliê 03',
-    label: 'Ateliê 03',
+    alt: 'Sala de aula 03',
+    label: 'Sala 03',
   },
   {
     src: '/images/espaco/biblioteca.webp',
@@ -184,8 +184,8 @@ export function Sobre() {
           </div>
         </div>
         <img
-          src={asset('/images/professores/oscar-pedroso.webp')}
-          alt="Oscar Pedroso, fundador da Desenhe, trabalhando no ateliê"
+          src={asset('/images/espaco/fachada-desenhe.webp')}
+          alt="Fachada da Desenhe, na Rua Padre Anchieta, Mercês, Curitiba"
         />
       </div>
 
@@ -223,7 +223,7 @@ export function Sobre() {
         id="principios"
         kicker="No que acreditamos"
         title="O que sustenta o jeito de ensinar daqui"
-        lead="Três convicções que aparecem em cada curso, da primeira aula experimental ao trabalho autoral."
+        lead="Três convicções que aparecem em cada curso, da primeira aula ao trabalho autoral."
       >
         <NoteGrid items={PRINCIPIOS} />
       </Section>
@@ -264,7 +264,7 @@ export function Sobre() {
       <Section
         id="espaco"
         kicker="Nosso espaço"
-        title="Ateliês, galeria e biblioteca"
+        title="Salas, galeria e biblioteca"
         lead={`Salas equipadas, uma galeria para expor os trabalhos dos alunos, biblioteca de arte e um café para os intervalos, no bairro ${SITE.address.neighborhood}, em Curitiba.`}
       >
         <div className="space-grid">
@@ -304,12 +304,12 @@ export function Sobre() {
               Venha <span className="course-cta__highlight">conhecer a escola</span>.
             </Heading>
             <Text type="large" color="inherit" display="block" className="course-cta__lead">
-              Agende uma aula experimental ou uma visita ao ateliê: é o jeito
-              mais rápido de descobrir se a Desenhe é o seu lugar.
+              Agende a primeira aula (experimental) ou uma visita à escola: é o
+              jeito mais rápido de descobrir se a Desenhe é o seu lugar.
             </Text>
             <div className="course-cta__action">
               <WhatsCta
-                message="Olá! Gostaria de conhecer a Desenhe e agendar uma aula experimental."
+                message="Olá! Gostaria de conhecer a Desenhe e agendar a primeira aula."
                 label="Entre em contato"
                 size="sm"
                 variant="secondary"

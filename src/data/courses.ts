@@ -25,12 +25,25 @@ export interface GalleryCredit {
  */
 export const UNCREDITED_AUTHOR = 'Aluno(a) da Desenhe';
 
-export type CourseCategory = 'desenho' | 'pintura' | 'institucional';
+/**
+ * Submodalidade de um curso "guarda-chuva": um mesmo curso que reúne
+ * linguagens distintas (ex.: Mangá, HQ e Cartoon). Cada uma tem nome
+ * próprio, usado como título em destaque, e um texto curto que a
+ * diferencia das demais.
+ */
+export interface CourseStrand {
+  /** Nome da linguagem, sem o prefixo "Curso de". Ex.: "Mangá". */
+  name: string;
+  description: string;
+}
+
+export type CourseCategory = 'desenho' | 'pintura' | 'institucional' | 'infantil';
 
 export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
   desenho: 'Desenho',
   pintura: 'Pintura',
   institucional: 'Curso teórico',
+  infantil: 'Infantil',
 };
 
 export interface Course {
@@ -58,6 +71,13 @@ export interface Course {
   totalHours?: string;
   enrollment: string;
   requiresDrawing?: boolean;
+  /**
+   * Quando presente, o curso reúne linguagens distintas sob o mesmo
+   * título. A página do curso mostra um bloco com título próprio para
+   * cada uma, no lugar dos parágrafos de `description`, e o card na lista
+   * de cursos exibe os nomes como etiquetas.
+   */
+  strands?: CourseStrand[];
   modules: CourseModule[];
   /** Chave da tabela de preços correspondente (ver pricing.ts). */
   pricingTier: 'desenho-2h' | 'oleo-3h' | 'consultar';
@@ -190,9 +210,25 @@ export const COURSES: Course[] = [
     excerpt:
       'Mangá, HQ e Cartoon: personagens, cenários e narrativas visuais, das formas básicas à arte-final.',
     description: [
-      'O curso de Mangá foca na criação de personagens e narrativas visuais com a estética marcante dos quadrinhos japoneses. Partindo das formas básicas até a arte-final, você aprenderá a desenhar expressões características e cenas de movimento dinâmico. O programa prepara o aluno para desenvolver histórias completas, estruturar cenários detalhados e aplicar luz e sombra para dar vida às interações e ao enredo.',
-      'O curso de História em Quadrinhos ensina a construir personagens e universos inspirados na linguagem das HQs e graphic novels. Você estudará o processo desde o rascunho até o acabamento, desenvolvendo a anatomia, os cenários e a interação em cena. Com foco na narrativa sequencial, as aulas exploram o enquadramento, o movimento e o uso estratégico da luz e sombra para transformar suas ideias em narrativas não textuais.',
-      'O curso de Cartoon é voltado para a simplificação das formas e o exagero expressivo, criando personagens dinâmicos e cheios de personalidade. Você aprenderá a desenvolver uma estética flexível, partindo dos traços básicos até o projeto finalizado. Durante as aulas, trabalhamos a construção de cenários, a interação fluida entre as figuras e os acabamentos tradicionais para contar histórias visuais com humor e leveza.',
+      'O curso de Quadrinhos reúne três linguagens dentro do mesmo programa: mangá, história em quadrinhos e cartoon. Em todas elas o caminho vai das formas básicas até a arte-final, passando pela criação de personagens, pela construção de cenários e pelo uso da luz e da sombra na narrativa visual.',
+      'Como o ensino é individualizado, o cronograma se ajusta ao seu interesse: dá para mergulhar em uma das três linguagens ou transitar entre elas ao longo do curso. Veja abaixo o foco de cada uma.',
+    ],
+    strands: [
+      {
+        name: 'Mangá',
+        description:
+          'O curso de Mangá foca na criação de personagens e narrativas visuais com a estética marcante dos quadrinhos japoneses. Partindo das formas básicas até a arte-final, você aprenderá a desenhar expressões características e cenas de movimento dinâmico. O programa prepara o aluno para desenvolver histórias completas, estruturar cenários detalhados e aplicar luz e sombra para dar vida às interações e ao enredo.',
+      },
+      {
+        name: 'História em Quadrinhos',
+        description:
+          'O curso de História em Quadrinhos ensina a construir personagens e universos inspirados na linguagem das HQs e graphic novels. Você estudará o processo desde o rascunho até o acabamento, desenvolvendo a anatomia, os cenários e a interação em cena. Com foco na narrativa sequencial, as aulas exploram o enquadramento, o movimento e o uso estratégico da luz e sombra para transformar suas ideias em narrativas não textuais.',
+      },
+      {
+        name: 'Cartoon',
+        description:
+          'O curso de Cartoon é voltado para a simplificação das formas e o exagero expressivo, criando personagens dinâmicos e cheios de personalidade. Você aprenderá a desenvolver uma estética flexível, partindo dos traços básicos até o projeto finalizado. Durante as aulas, trabalhamos a construção de cenários, a interação fluida entre as figuras e os acabamentos tradicionais para contar histórias visuais com humor e leveza.',
+      },
     ],
     audience: 'Todas as idades',
     ageBadge: 'Todas as idades',
@@ -330,8 +366,20 @@ export const COURSES: Course[] = [
     excerpt:
       'Aquarela: fluidez e transparência em aguadas suaves. Guache: opacidade e cobertura em composições de forte impacto.',
     description: [
-      'O curso de Aquarela oferece a oportunidade de explorar as possibilidades criativas dessa técnica valorizada por sua fluidez e transparência. Com foco no aprofundamento da teoria da cor, você aprenderá a controlar a água para construir aguadas suaves e sobreposições luminosas. É a escolha ideal para expandir seu repertório técnico e criar composições expressivas, aproveitando ao máximo a leveza característica da pintura à base d’água.',
-      'O curso de Guache é voltado para quem deseja dominar a versatilidade e a força da opacidade característica deste material. Durante as aulas, você aprofundará seus conhecimentos em teoria da cor trabalhando com diferentes diluições, construindo desde camadas densas até acabamentos suaves. É uma técnica de forte impacto visual que expande suas ferramentas no universo artístico, permitindo a criação de composições vibrantes e com excelente cobertura.',
+      'Este curso reúne duas tintas a base d’água com personalidades opostas: a aquarela, valorizada pela fluidez e pela transparência, e o guache, de opacidade densa e forte cobertura. Nos dois casos, o estudo se apoia no aprofundamento da teoria da cor e no controle da diluição.',
+      'O cronograma é individualizado e se ajusta ao seu interesse: você pode se dedicar a uma das técnicas ou trabalhar as duas ao longo do curso. Veja abaixo o foco de cada uma.',
+    ],
+    strands: [
+      {
+        name: 'Aquarela',
+        description:
+          'O curso de Aquarela oferece a oportunidade de explorar as possibilidades criativas dessa técnica valorizada por sua fluidez e transparência. Com foco no aprofundamento da teoria da cor, você aprenderá a controlar a água para construir aguadas suaves e sobreposições luminosas. É a escolha ideal para expandir seu repertório técnico e criar composições expressivas, aproveitando ao máximo a leveza característica da pintura à base d’água.',
+      },
+      {
+        name: 'Guache',
+        description:
+          'O curso de Guache é voltado para quem deseja dominar a versatilidade e a força da opacidade característica deste material. Durante as aulas, você aprofundará seus conhecimentos em teoria da cor trabalhando com diferentes diluições, construindo desde camadas densas até acabamentos suaves. É uma técnica de forte impacto visual que expande suas ferramentas no universo artístico, permitindo a criação de composições vibrantes e com excelente cobertura.',
+      },
     ],
     audience: 'Adultos, adolescentes e crianças a partir de 9 anos',
     ageBadge: 'A partir de 9 anos',
@@ -385,8 +433,20 @@ export const COURSES: Course[] = [
     excerpt:
       'Óleo: textura e secagem lenta para misturas perfeitas. Acrílica: secagem rápida para sobreposições e texturas ousadas.',
     description: [
-      'O curso de Pintura a Óleo te convida a explorar essa técnica clássica, valorizada por sua textura e secagem lenta, ideal para criar misturas e esfumados com perfeição. Aplicando seus conhecimentos prévios de desenho, você estudará a teoria da cor com paletas restritas em suportes como madeira e tela. Ao conectar a prática aos gêneros tradicionais da pintura, o curso oferece ferramentas e repertório histórico fundamentais para a criação de suas próprias obras autorais.',
-      'No curso de Pintura Acrílica, você dominará a versatilidade e a secagem rápida desse material, excelente para trabalhar com sobreposições e texturas, como o espatulado ou o impasto. Com sua base prévia em desenho, você aprofundará a teoria da cor usando paletas restritas e experimentará suportes variados, como papel, cartão e tela. O curso traz referências da História da Arte para embasar a sua expressão estética e incentivar o desenvolvimento contínuo de trabalhos originais.',
+      'Este curso reúne duas tintas com tempos muito diferentes: o óleo, de secagem lenta, ideal para misturas e esfumados, e a acrílica, de secagem rápida, feita para sobreposições e texturas como o espatulado e o impasto. Os dois caminhos partem da sua base em desenho e se aprofundam na teoria da cor com paletas restritas, apoiados em referências da História da Arte.',
+      'O ensino é individualizado: o cronograma se ajusta ao seu interesse, seja para focar em uma das tintas ou experimentar as duas. Veja abaixo o foco de cada uma.',
+    ],
+    strands: [
+      {
+        name: 'Pintura a Óleo',
+        description:
+          'O curso de Pintura a Óleo te convida a explorar essa técnica clássica, valorizada por sua textura e secagem lenta, ideal para criar misturas e esfumados com perfeição. Aplicando seus conhecimentos prévios de desenho, você estudará a teoria da cor com paletas restritas em suportes como madeira e tela. Ao conectar a prática aos gêneros tradicionais da pintura, o curso oferece ferramentas e repertório histórico fundamentais para a criação de suas próprias obras autorais.',
+      },
+      {
+        name: 'Pintura Acrílica',
+        description:
+          'No curso de Pintura Acrílica, você dominará a versatilidade e a secagem rápida desse material, excelente para trabalhar com sobreposições e texturas, como o espatulado ou o impasto. Com sua base prévia em desenho, você aprofundará a teoria da cor usando paletas restritas e experimentará suportes variados, como papel, cartão e tela. O curso traz referências da História da Arte para embasar a sua expressão estética e incentivar o desenvolvimento contínuo de trabalhos originais.',
+      },
     ],
     audience: 'Adultos e adolescentes a partir de 13 anos',
     ageBadge: 'A partir de 13 anos',
@@ -435,7 +495,7 @@ export const COURSES: Course[] = [
     slug: 'desenho-infantil',
     tagline: 'Mãos pequenas, primeiros traços, uma vida inteira desenhando.',
     title: 'Laboratório de Desenho Infantil',
-    category: 'desenho',
+    category: 'infantil',
     shortTitle: 'Laboratório de Desenho Infantil',
     featuredTitle: 'Desenho Infantil',
     excerpt:

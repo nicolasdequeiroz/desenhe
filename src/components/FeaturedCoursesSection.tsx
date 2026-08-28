@@ -250,10 +250,8 @@ export function FeaturedCoursesSection() {
                       </span>
                     ) : null}
                   </span>
-                  <span className="featured-courses__count" aria-hidden="true">
-                    <span>/</span>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <span>/</span>
+                  <span className="featured-courses__link-arrow" aria-hidden="true">
+                    →
                   </span>
                 </Link>
               ))}
@@ -269,8 +267,8 @@ export function FeaturedCoursesSection() {
             </p>
             <div className="featured-courses__actions">
               <WhatsCta
-                message="Olá! Quero agendar uma aula experimental na Desenhe."
-                label="Agendar aula experimental"
+                message="Olá! Quero agendar a primeira aula na Desenhe."
+                label="Agendar primeira aula"
                 variant="secondary"
               />
               <Button label="Todos os cursos" href="/cursos" variant="primary" />

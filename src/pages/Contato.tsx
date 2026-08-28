@@ -34,7 +34,7 @@ const CHANNELS: Channel[] = [
   {
     icon: () => <MapPin size={24} weight="light" aria-hidden="true" />,
     title: 'Visite a escola',
-    description: 'Ateliês, galeria e biblioteca',
+    description: 'Salas de aula, galeria e biblioteca',
     linkLabel: `${SITE.address.street}, ${SITE.address.neighborhood}`,
     href: SITE.mapsUrl,
     external: true,
@@ -60,8 +60,8 @@ const CHANNELS: Channel[] = [
 /**
  * Página de contato no layout "Helio Contact 03": cabeçalho centralizado,
  * uma faixa de quatro canais dividida por fios internos e, logo abaixo e
- * dentro da mesma moldura, o mapa com o alfinete no centro e um cartão de
- * endereço apoiado no canto inferior esquerdo.
+ * dentro da mesma moldura, o mapa com um cartão de endereço apoiado no
+ * canto inferior esquerdo.
  */
 export function Contato() {
   return (
@@ -130,18 +130,6 @@ export function Contato() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-
-            <a
-              className="contact-map__pin"
-              href={SITE.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Abrir a localização da Desenhe no Google Maps"
-            >
-              <span className="contact-map__pin-inner">
-                <MapPin size={40} weight="fill" aria-hidden="true" />
-              </span>
-            </a>
 
             <div className="contact-map__detail">
               <div>

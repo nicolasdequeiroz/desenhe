@@ -9,18 +9,6 @@ export interface Teacher {
 
 export const TEACHERS: Teacher[] = [
   {
-    name: 'Dafheny Pacheco',
-    role: 'Ilustradora e professora',
-    bio: 'Ilustradora e designer formada pela UTFPR (2018). Artista desde os quatro anos de idade, descobriu a docência durante a pandemia, ministrando aulas online.',
-    photo: '/images/professores/dafheny-pacheco.webp',
-  },
-  {
-    name: 'Douglas Cruz',
-    role: 'Artista visual e professor',
-    bio: 'Artista visual e professor de desenho e pintura, com pesquisa voltada aos elementos do corpo na prática artística.',
-    photo: '/images/professores/douglas-cruz.webp',
-  },
-  {
     name: 'Efigênio Pavei',
     role: 'Artista visual e professor',
     bio: 'Artista visual e professor de desenho e pintura. Sua pesquisa artística tem o corpo humano como centro do trabalho criativo.',

@@ -35,7 +35,7 @@ export const SCHEDULE: CourseSchedule[] = [
     course: 'Laboratório de Desenho Infantil (6 a 12 anos)',
     courseSlug: 'desenho-infantil',
     shortLabel: 'Infantil',
-    category: 'desenho' as const,
+    category: 'infantil' as const,
     slots: [
       {day: 'Segunda', times: ['14h–16h']},
       {day: 'Terça', times: ['14h–16h', '16h–18h']},

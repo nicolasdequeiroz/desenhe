@@ -405,6 +405,38 @@ body {
   font-weight: 600;
 }
 
+/*
+ * Header flutuando sobre a primeira dobra colorida de uma página de curso
+ * (overlay, ainda sem a pílula escura do estado rolado): o laranja de
+ * --color-accent do item "ativo" some no fundo laranja/vermelho da
+ * categoria. Enquanto está por cima do hero, o texto fica branco sólido e
+ * o item ativo troca o laranja por branco. Ao rolar, o header ganha a
+ * pílula escura e as cores normais voltam. Vale para a home também (hero
+ * em imagem), onde nenhum item fica ativo e o efeito é só um branco mais
+ * neutro.
+ */
+.site-header--overlay:not(.site-header--scrolled) .site-nav > a,
+.site-header--overlay:not(.site-header--scrolled) .site-header__nav-link,
+.site-header--overlay:not(.site-header--scrolled) .site-nav-dropdown__trigger {
+  color: color-mix(in srgb, #fff 82%, transparent);
+}
+
+.site-header--overlay:not(.site-header--scrolled) .site-nav > a[aria-current='page'],
+.site-header--overlay:not(.site-header--scrolled) .site-header__nav-link[aria-current='page'],
+.site-header--overlay:not(.site-header--scrolled)
+  .site-nav-dropdown.is-active
+  .site-nav-dropdown__trigger {
+  color: #fff;
+}
+
+/* O CTA laranja também encosta no laranja/vermelho da categoria: um anel
+   claro o separa do hero enquanto o header está por cima dele. */
+.site-header--overlay:not(.site-header--scrolled) .site-header__cta {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #fff 55%, transparent),
+    var(--site-button-shadow);
+}
+
 .site-nav-dropdown__chevron {
   transition: transform var(--duration-fast);
 }
@@ -976,6 +1008,14 @@ body {
   padding-block: calc(var(--spacing-10) * 2);
 }
 
+/* No celular a folga de 80px de topo e base de cada seção soma rápido e
+   deixa a página cheia de vazio: cai para 48px. */
+@media (max-width: 640px) {
+  .section {
+    padding-block: var(--spacing-12);
+  }
+}
+
 .section--muted {
   background: var(--color-background-muted);
 }
@@ -1178,6 +1218,14 @@ body {
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: inherit;
+  transition: transform var(--duration-medium) ease;
+}
+
+/* Deixa claro que a linha inteira é um link: o título anda um pouco e uma
+   seta em laranja aparece no hover, no foco e na linha ativa. */
+.featured-courses__link:hover .featured-courses__link-title,
+.featured-courses__link:focus-visible .featured-courses__link-title {
+  transform: translateX(6px);
 }
 
 .featured-courses__link-subtitle {
@@ -1192,20 +1240,24 @@ body {
   color: inherit;
 }
 
-.featured-courses__count {
-  display: flex;
-  gap: var(--spacing-1);
+/* A seta é o único indicador de que a linha é um link: fica sempre visível,
+   discreta, e ganha a cor de acento com um leve avanço no hover/foco/ativo. */
+.featured-courses__link-arrow {
   flex-shrink: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  line-height: 1.6;
+  font-size: var(--font-size-xl);
+  line-height: 1;
   color: var(--color-text-secondary);
-  transition: color var(--duration-medium) ease;
+  transition:
+    color var(--duration-medium) ease,
+    transform var(--duration-medium) ease;
 }
 
-.featured-courses__link:hover .featured-courses__count,
-.featured-courses__link:focus-visible .featured-courses__count {
+.featured-courses__link:hover .featured-courses__link-arrow,
+.featured-courses__link:focus-visible .featured-courses__link-arrow,
+.featured-courses__link.is-active .featured-courses__link-arrow {
   color: var(--color-accent);
+  transform: translateX(4px);
 }
 
 .featured-courses__divider {
@@ -1259,8 +1311,15 @@ body {
     font-size: clamp(1.25rem, 5.5vw, 2rem);
   }
 
-  .featured-courses__count {
-    font-size: var(--font-size-xs);
+  /* No mobile o subtítulo em 0.5em ficava ilegível: cai para a linha de
+     baixo, com tamanho próprio. */
+  .featured-courses__link-subtitle {
+    display: block;
+    margin-left: 0;
+    margin-top: 6px;
+    font-size: var(--font-size-base);
+    letter-spacing: 0.02em;
+    color: var(--color-text-secondary);
   }
 
   .featured-courses__footer {
@@ -1279,6 +1338,46 @@ body {
      sombra deles precisam de folga vertical para não parecer amontoado. */
   column-gap: var(--spacing-5);
   row-gap: var(--spacing-12);
+}
+
+/*
+ * "Cursos relacionados" na página de curso: no celular vira um carrossel
+ * horizontal com snap (um card e um pedaço do próximo), full bleed até as
+ * bordas da tela como a marquee da galeria logo acima. Mesmo truque do
+ * .course-deck__cards: margem negativa cancela o padding do .container e o
+ * padding-inline recompõe o recuo do conteúdo. Escopado a .course-page
+ * para não mexer na lista completa de /cursos.
+ */
+@media (max-width: 640px) {
+  .course-page .course-grid {
+    display: flex;
+    grid-template-columns: none;
+    row-gap: 0;
+    /* Um respiro extra na direita para o último card não colar na borda e
+       o scroll ter onde parar sem "puxão". */
+    gap: var(--spacing-4);
+    margin-inline: calc(-1 * var(--spacing-4));
+    padding: var(--spacing-3) var(--spacing-4);
+    overflow-x: auto;
+    /* `proximity`, não `mandatory`: os cards são polaroids levemente tortos
+       e com o snap obrigatório o scroll ficava "grudento" e tremido. */
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--spacing-4);
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .course-page .course-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .course-page .course-grid > .course-card {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+    /* Sem o torto no carrossel: com ele o card parecia cortado na borda. */
+    --card-tilt: 0deg;
+  }
 }
 
 .course-card {
@@ -1394,6 +1493,11 @@ body {
   --category-color: var(--color-category-institucional);
 }
 
+.category-tag--infantil,
+.category-tint--infantil {
+  --category-color: var(--color-category-infantil);
+}
+
 /*
  * Substituto da capa enquanto um curso novo ainda não tem fotos: um painel
  * na cor da categoria com o nome do curso, no lugar de uma imagem quebrada.
@@ -1437,6 +1541,30 @@ body {
   font-size: var(--font-size-lg);
   font-weight: 600;
   margin: 0;
+}
+
+/*
+ * Cursos guarda-chuva: os nomes das linguagens reunidas no curso, como
+ * etiquetas logo abaixo da chamada do card, para diferenciar que não é
+ * tudo a mesma coisa (ex.: Mangá, HQ e Cartoon).
+ */
+.course-card__strands {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.course-card__strand {
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
 }
 
 .course-card__cta {
@@ -1579,6 +1707,68 @@ body {
   margin-top: auto;
 }
 
+/* Nota clicável: a carta inteira é um link interno. */
+.note-grid__item--link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-medium) ease,
+    background var(--duration-medium) ease,
+    transform var(--duration-medium) ease;
+}
+
+.note-grid__item--link:hover,
+.note-grid__item--link:focus-visible {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.note-grid__item--link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.note-grid__item-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin-top: var(--spacing-3);
+  color: var(--color-accent);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Nas cartas de /precos (flex column) o link fica colado na base. */
+.pricing-notes .note-grid__item-link {
+  margin-top: auto;
+}
+
+.note-grid__item-arrow {
+  display: inline-block;
+  transition: transform var(--duration-medium) ease;
+}
+
+.note-grid__item--link:hover .note-grid__item-arrow,
+.note-grid__item--link:focus-visible .note-grid__item-arrow {
+  transform: translateX(3px);
+}
+
+/* Em coluna única (mobile) não há linha para igualar: cada carta fica do
+   tamanho do seu conteúdo e o link acompanha o texto, sem ser empurrado
+   para a base. Vem depois das regras acima de propósito, para vencer o
+   `grid-auto-rows: 1fr` e o `margin-top: auto` de mesma especificidade. */
+@media (max-width: 560px) {
+  .pricing-notes .note-grid__items {
+    grid-auto-rows: auto;
+  }
+
+  .pricing-notes .note-grid__item-link {
+    margin-top: var(--spacing-3);
+  }
+}
+
 @media (max-width: 640px) {
   .course-philosophy__lead {
     margin-left: 0;
@@ -1615,6 +1805,16 @@ body {
   align-items: center;
   gap: var(--spacing-5);
   max-width: 44rem;
+}
+
+/* O conteúdo é centralizado, mas o fio do kicker herda o alinhamento à
+   esquerda de fora de .section__head--centered: centraliza aqui também. */
+.space-showcase__content .section__eyebrow {
+  text-align: center;
+}
+
+.space-showcase__content .section__eyebrow::after {
+  margin-inline: auto;
 }
 
 .space-showcase__highlights {
@@ -2979,8 +3179,22 @@ body {
   --category-color: var(--color-category-institucional);
 }
 
+.course-page--infantil {
+  --category-color: var(--color-category-infantil);
+}
+
 .course-page .section__eyebrow {
   color: var(--category-color, var(--color-accent));
+}
+
+/*
+ * Botões da página de curso na cor da categoria: a página gira toda em
+ * torno de --category-color (primeira dobra, faixa de fatos, CTA final),
+ * então trocamos --color-accent só nos botões e todas as variantes
+ * (primary, secondary, ghost, foco) acompanham sem duplicar regra.
+ */
+.course-page .btn {
+  --color-accent: var(--category-color, var(--color-category-desenho));
 }
 
 /*
@@ -3022,6 +3236,10 @@ body {
 
 .course-deck--institucional {
   --category-color: var(--color-category-institucional);
+}
+
+.course-deck--infantil {
+  --category-color: var(--color-category-infantil);
 }
 
 /*
@@ -3295,6 +3513,138 @@ body {
   max-width: 720px;
 }
 
+/*
+ * Página de curso guarda-chuva: logo abaixo da descrição, um card por
+ * linguagem reunida no curso (Mangá, HQ, Cartoon...), cada um com título
+ * próprio, para diferenciar que não é tudo a mesma coisa.
+ */
+.course-strands {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-strands__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+.course-strands__grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 860px) {
+  .course-strands__grid,
+  .course-strands__grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+ * Fica em `display: block` de propósito: com `display: flex/grid` num
+ * <details>, o navegador para de esconder o conteúdo quando ele está
+ * fechado, e o accordion do mobile não colapsaria.
+ */
+.course-strand-card {
+  padding: var(--spacing-6);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--category-color, var(--color-accent));
+  border-radius: var(--radius-container);
+  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 6%, transparent);
+}
+
+.course-strand-card__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  list-style: none;
+}
+
+.course-strand-card__summary::-webkit-details-marker {
+  display: none;
+}
+
+.course-strand-card__title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0;
+}
+
+.course-strand-card__chevron {
+  display: none;
+}
+
+.course-strand-card__text {
+  margin: var(--spacing-3) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6667;
+}
+
+/*
+ * Desktop: os três blocos ficam sempre abertos (o JS mantém o atributo
+ * `open`), então funcionam como cards lado a lado. O summary não é
+ * clicável aqui e não mostra marcador.
+ */
+@media (min-width: 861px) {
+  .course-strand-card__summary {
+    pointer-events: none;
+  }
+}
+
+/*
+ * Mobile: viram accordions de verdade. Começam fechados; o summary é
+ * clicável e mostra um "+" que vira "−" quando aberto. O padding do card
+ * encolhe para o cabeçalho respirar sem ocupar tela demais fechado.
+ */
+@media (max-width: 860px) {
+  .course-strand-card {
+    padding: var(--spacing-4) var(--spacing-5);
+  }
+
+  .course-strand-card__text {
+    margin-top: var(--spacing-4);
+  }
+
+  .course-strand-card__summary {
+    cursor: pointer;
+  }
+
+  .course-strand-card__chevron {
+    display: block;
+    position: relative;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .course-strand-card__chevron::before,
+  .course-strand-card__chevron::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: var(--category-color, var(--color-accent));
+  }
+
+  .course-strand-card__chevron::before {
+    width: 100%;
+    height: 2px;
+  }
+
+  .course-strand-card__chevron::after {
+    width: 2px;
+    height: 100%;
+    transition: transform var(--duration-fast) ease;
+  }
+
+  .course-strand-card[open] .course-strand-card__chevron::after {
+    transform: scaleY(0);
+  }
+}
+
 /* Convite discreto para tirar dúvidas, logo depois dos fatos do curso. */
 .course-intro__cta {
   display: flex;
@@ -3335,6 +3685,10 @@ body {
 
 .course-facts--institucional {
   --category-color: var(--color-category-institucional);
+}
+
+.course-facts--infantil {
+  --category-color: var(--color-category-infantil);
 }
 
 .course-facts__card {
@@ -3476,6 +3830,10 @@ body {
   --category-color: var(--color-category-institucional);
 }
 
+.course-timeline--infantil {
+  --category-color: var(--color-category-infantil);
+}
+
 .course-timeline {
   padding-block: 96px;
 }
@@ -3574,9 +3932,13 @@ body {
 }
 
 @media (max-width: 760px) {
+  .course-timeline {
+    padding-block: clamp(var(--spacing-10), 12vw, 64px);
+  }
+
   .course-timeline__layout {
     grid-template-columns: 1fr;
-    row-gap: var(--spacing-6);
+    row-gap: var(--spacing-5);
   }
 
   .course-timeline__track {
@@ -3585,6 +3947,50 @@ body {
 
   .course-timeline__header {
     position: static;
+    max-width: none;
+    align-items: center;
+    text-align: center;
+  }
+
+  .course-timeline__header .section__eyebrow::after {
+    margin-inline: auto;
+  }
+
+  /*
+   * Os módulos deixam de ser uma pilha vertical alta e viram um carrossel
+   * horizontal com snap: um cartão por passo, com um pedaço do próximo
+   * aparecendo para indicar que há mais.
+   */
+  .course-timeline__list {
+    flex-direction: row;
+    gap: var(--spacing-4);
+    margin-inline: calc(-1 * var(--spacing-4));
+    padding-inline: var(--spacing-4);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--spacing-4);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .course-timeline__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .course-timeline__item,
+  .course-timeline__item:first-child,
+  .course-timeline__item:last-child {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-container);
+    background: var(--color-background-card);
+  }
+
+  .course-timeline__heading {
+    font-size: var(--font-size-xl);
   }
 }
 
@@ -3648,11 +4054,21 @@ body {
   --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, #171310);
 }
 
+.section.testimonials:has(+ .course-cta--infantil) {
+  --cta-fade-color: color-mix(in srgb, var(--color-category-infantil) 82%, #171310);
+}
+
 .course-cta {
   padding-block: clamp(56px, 8vw, 96px);
   /* Continua exatamente da cor em que o gradiente acima termina. */
   background: color-mix(in srgb, var(--category-color) 82%, #171310);
   color: #fff;
+}
+
+/* A faixa de cursos relacionados encosta na CTA final: sem a folga cheia
+   de fim de seção entre as duas. */
+.course-page .section:has(+ .course-cta) {
+  padding-bottom: var(--spacing-8);
 }
 
 .course-cta--desenho {
@@ -3665,6 +4081,10 @@ body {
 
 .course-cta--institucional {
   --category-color: var(--color-category-institucional);
+}
+
+.course-cta--infantil {
+  --category-color: var(--color-category-infantil);
 }
 
 .course-cta__copy {
@@ -4525,22 +4945,13 @@ body {
 /* ---------- Touch targets (telas de toque) ---------- */
 
 @media (pointer: coarse) {
-  /* WCAG 2.5.8 / guidelines móveis: alvos de toque com no mínimo 44px. */
-  .btn,
-  .btn.sm,
-  .btn.lg {
-    min-height: 44px;
-  }
-
   /*
-   * Exceção: no header mobile, o CTA nesse tamanho competia demais com a
-   * logo e o menu hambúrguer num espaço estreito. Reduz a fonte e o
-   * preenchimento lateral (herdados do .btn.sm acima); a altura ainda cede
-   * um pouco o alvo de toque recomendado, mas o botão continua fácil de
-   * tocar por não ter mais nada colado nele no header.
+   * Os botões mantêm a mesma proporção fina do desktop no toque (.btn 34px,
+   * .btn.sm 30px, .btn.lg 38px): o alvo de toque confortável vem do
+   * preenchimento lateral generoso e do espaço em volta, não de esticar a
+   * altura. Só o CTA fixo no header, num espaço apertado, encolhe um pouco.
    */
   .btn.sm.site-header__cta {
-    min-height: 32px;
     padding-inline: var(--spacing-2) calc(var(--spacing-2) - 0.04em);
     font-size: 0.6875rem;
   }
@@ -4661,38 +5072,129 @@ body {
   }
 }
 
-/* ---------- Preços (cards inspirados no componente Klarheit Pricing) ---------- */
+/* ---------- Preços ---------- */
+
+/*
+ * Seletor de duração no estilo do seletor de período do Webflow: uma pílula
+ * segmentada, centralizada acima da grade, que troca os valores dos dois
+ * cards ao mesmo tempo.
+ */
+.pricing-toggle-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(var(--spacing-8), 5vw, 56px);
+}
+
+.pricing-toggle {
+  display: inline-flex;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background: var(--color-background-card);
+}
+
+.pricing-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  border: none;
+  border-radius: 9999px;
+  background: none;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast),
+    background var(--duration-fast);
+}
+
+.pricing-toggle__option:hover {
+  color: var(--color-text-primary);
+}
+
+.pricing-toggle__option.is-active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* No celular o seletor empilha e ocupa a largura toda: cada duração vira
+   uma faixa fácil de tocar, com espaço de sobra. */
+@media (max-width: 640px) {
+  .pricing-toggle-wrap {
+    display: block;
+  }
+
+  .pricing-toggle {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: var(--radius-container);
+  }
+
+  .pricing-toggle__option {
+    justify-content: center;
+    border-radius: var(--radius-element);
+  }
+}
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--spacing-6);
-  margin-top: var(--spacing-4);
+  /*
+   * Três cards lado a lado no desktop (dois cursos + coworking), no modelo
+   * de página de planos. `min(...100%)` evita o card estourar a tela no
+   * mobile; abaixo de ~1050px cai para 2 colunas e depois para 1.
+   */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--spacing-5);
+  max-width: 1120px;
+  margin-inline: auto;
 }
 
 .pricing-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
   border: 1px solid var(--color-border);
   transition: border-color var(--duration-medium) ease;
 }
 
 .pricing-card:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-border-emphasized);
 }
 
 .pricing-card .divider {
-  margin-block: var(--spacing-6);
+  margin: 0;
+}
+
+.pricing-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.pricing-card__hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  align-items: flex-start;
 }
 
 .pricing-card__price {
   display: flex;
   align-items: baseline;
   gap: var(--spacing-2);
-  margin-top: var(--spacing-5);
 }
 
 .pricing-card__price-value {
   font-family: var(--font-family-body);
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-size: clamp(2.25rem, 5vw, 2.75rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
@@ -4704,10 +5206,132 @@ body {
   color: var(--color-text-secondary);
 }
 
+/* CTA de largura cheia, como nas páginas de planos de referência. */
 .pricing-card__cta {
-  margin-top: var(--spacing-5);
+  align-self: stretch;
 }
 
+.pricing-card__cta .btn {
+  width: 100%;
+}
+
+/* Bloco "o que está incluso": rótulo pequeno e checklist com marcadores. */
+.pricing-card__includes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.pricing-card__includes-label {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.pricing-check-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.pricing-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.pricing-check__icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-accent);
+}
+
+.pricing-card__fineprint {
+  margin: var(--spacing-1) 0 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * Primeira aula (experimental): bloco avulso, centralizado abaixo da grade
+ * de planos. Não pertence a nenhum card porque o valor é por duração da
+ * aula, não por curso.
+ */
+.pricing-first {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+  max-width: 520px;
+  margin: clamp(var(--spacing-8), 6vw, 56px) auto 0;
+  text-align: center;
+}
+
+.pricing-first__eyebrow {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.pricing-first__paren {
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  text-transform: none;
+}
+
+.pricing-first__text {
+  margin: 0;
+}
+
+.pricing-first__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+.pricing-first__option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-element);
+  background: var(--color-background-card);
+}
+
+.pricing-first__hours {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.pricing-first__price {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */
 .pricing-card__features {
   list-style: none;
   margin: 0;
@@ -4719,13 +5343,6 @@ body {
 .pricing-card__feature {
   display: flex;
   align-items: flex-start;
-}
-
-.pricing-card__trial {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-3);
 }
 
 .pricing-notes {
@@ -4994,37 +5611,6 @@ body {
   filter: grayscale(0.4) brightness(0.85);
 }
 
-/* Alfinete no centro do mapa, como na referência: um halo translúcido em
-   volta de um disco claro. É um link para o Google Maps. */
-.contact-map__pin {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  padding: var(--spacing-8);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-background-body) 25%, transparent);
-  line-height: 0;
-}
-
-.contact-map__pin-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 999px;
-  background: var(--color-background-card);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-med);
-  transition: transform var(--duration-medium) ease;
-}
-
-.contact-map__pin:hover .contact-map__pin-inner,
-.contact-map__pin:focus-visible .contact-map__pin-inner {
-  transform: scale(1.06);
-}
-
 .contact-map__detail {
   position: absolute;
   bottom: var(--spacing-3);
@@ -5070,10 +5656,6 @@ body {
     height: 320px;
   }
 
-  .contact-map__pin {
-    top: 160px;
-  }
-
   .contact-map__detail {
     position: static;
     width: 100%;
@@ -5085,6 +5667,164 @@ body {
 
 /* ---------- Colônia de Férias ---------- */
 
+/*
+ * A colônia é um curso infantil: a página inteira gira em torno do amarelo
+ * da categoria (etiqueta de data, ícones dos destaques, faixa de fechamento).
+ */
+.colonia-page {
+  --colonia-color: var(--color-category-infantil);
+}
+
+/* Primeira dobra: mesmo respiro do header sticky adotado em /sobre, com a
+   coluna de texto centrada no eixo do cartaz. */
+.colonia-page .course-hero {
+  align-items: center;
+  padding-top: clamp(var(--spacing-10), 7vw, 88px);
+  padding-bottom: clamp(var(--spacing-10), 7vw, 88px);
+  column-gap: clamp(var(--spacing-8), 5vw, 72px);
+}
+
+.colonia-page .course-hero__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+.colonia-page .course-hero__intro h1 {
+  margin: 0;
+  font-size: clamp(1.875rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+
+.colonia-page .course-hero__intro .prose {
+  margin: 0;
+}
+
+/* Cartaz do evento: proporção 4/5 do arquivo (sem corte), emoldurado por um
+   fio e uma sombra para não flutuar solto no fundo escuro. */
+.colonia-hero__poster {
+  align-self: center;
+  aspect-ratio: 4 / 5;
+  max-height: 600px;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 24px 60px color-mix(in srgb, #000 45%, transparent);
+}
+
+/* Etiqueta de data no lugar do kicker de texto puro: pílula com um ponto na
+   cor da colônia. */
+.colonia-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 1px solid color-mix(in srgb, var(--colonia-color) 55%, var(--color-border));
+  border-radius: 9999px;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.colonia-hero__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--colonia-color);
+}
+
+/* Painel de informações essenciais: moldura de fios internos como
+   .course-facts / .contact-frame, com um ícone e o rótulo na cor da
+   colônia por linha. */
+.colonia-facts {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: var(--spacing-2) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--colonia-color) 5%, transparent);
+}
+
+.colonia-facts__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.colonia-facts__item:nth-child(-n + 2) {
+  border-top: none;
+}
+
+.colonia-facts__item:nth-child(odd) {
+  border-left: none;
+}
+
+.colonia-facts__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--colonia-color);
+}
+
+.colonia-facts__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.colonia-facts__label {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--colonia-color);
+}
+
+.colonia-facts__value {
+  margin: 0;
+  font-family: var(--font-family-body);
+  line-height: 1.45;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 900px) {
+  .colonia-page .course-hero {
+    align-items: start;
+  }
+
+  /* Empilhado, o cartaz vem antes do texto. */
+  .colonia-hero__poster {
+    order: -1;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 420px;
+  }
+}
+
+@media (max-width: 520px) {
+  .colonia-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .colonia-facts__item {
+    border-left: none;
+  }
+
+  .colonia-facts__item:nth-child(2) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
 .colonia-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -5095,6 +5835,7 @@ body {
   margin: 0;
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-container);
 }
 
@@ -5103,6 +5844,11 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform var(--duration-slow) ease;
+}
+
+.colonia-gallery__item:hover img {
+  transform: scale(1.03);
 }
 
 @media (max-width: 760px) {
@@ -5114,11 +5860,8 @@ body {
 .colonia-highlights {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: var(--spacing-8);
-  row-gap: var(--spacing-6);
-  margin-top: clamp(var(--spacing-10), 6vw, 72px);
-  padding-top: var(--spacing-8);
-  border-top: 1px solid var(--color-border);
+  gap: var(--spacing-5);
+  margin-top: clamp(var(--spacing-8), 5vw, 56px);
 }
 
 .colonia-highlight {
@@ -5126,23 +5869,26 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-3);
+  padding: var(--spacing-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
 }
 
 .colonia-highlight__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
-  border-radius: 50%;
-  color: var(--color-accent);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-element);
+  background: color-mix(in srgb, var(--colonia-color) 16%, transparent);
+  color: var(--colonia-color);
 }
 
 @media (max-width: 760px) {
   .colonia-highlights {
     grid-template-columns: 1fr;
-    gap: var(--spacing-8);
   }
 }
 
@@ -5154,6 +5900,114 @@ body {
   background: color-mix(in srgb, var(--color-accent) 7%, var(--color-background-card));
 }
 
+/*
+ * Faixa de fechamento da página, na linha da .course-cta das páginas de
+ * curso: cor da colônia escurecida contra o fundo, título grande, cartão
+ * de fatos e um único CTA forte.
+ */
+.colonia-cta {
+  padding-block: clamp(56px, 8vw, 96px);
+  background: color-mix(in srgb, var(--colonia-color) 82%, #171310);
+  color: #fff;
+}
+
+.colonia-cta__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: clamp(var(--spacing-6), 5vw, 64px);
+  align-items: center;
+}
+
+.colonia-cta__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-container);
+  border: 1px solid color-mix(in srgb, #fff 22%, transparent);
+}
+
+.colonia-cta__copy {
+  max-width: 560px;
+}
+
+.colonia-cta__eyebrow {
+  display: inline-block;
+  margin-bottom: var(--spacing-3);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.colonia-cta__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-family-heading);
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.colonia-cta__lead {
+  margin-top: var(--spacing-4);
+  max-width: 460px;
+  opacity: 0.88;
+}
+
+.colonia-cta__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-5) var(--spacing-8);
+  margin: var(--spacing-6) 0 0;
+  padding-top: var(--spacing-5);
+  border-top: 1px solid color-mix(in srgb, #fff 22%, transparent);
+}
+
+.colonia-cta__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.colonia-cta__fact dt {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.colonia-cta__fact dd {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+}
+
+.colonia-cta__action {
+  margin-top: var(--spacing-6);
+}
+
+@media (max-width: 860px) {
+  .colonia-cta__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .colonia-cta__media {
+    order: 2;
+  }
+
+  .colonia-cta__media img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
 /* ---------- Horários (grade semanal única, períodos x dias) ---------- */
 
 .timetable {
@@ -5163,11 +6017,16 @@ body {
 }
 
 /* Cor por categoria (mesmas cores usadas nos cards de curso): repete entre
-   cursos da mesma categoria, ex. Desenho Artístico, Infantil e Quadrinhos
-   compartilham o tom laranja de "desenho". */
+   cursos da mesma categoria, ex. Desenho Artístico e Quadrinhos compartilham
+   o tom laranja de "desenho". Os cursos infantis usam o amarelo próprio. */
 .timetable__tag--desenho,
 .timetable__filter--desenho {
   --course-tone: var(--color-category-desenho);
+}
+
+.timetable__tag--infantil,
+.timetable__filter--infantil {
+  --course-tone: var(--color-category-infantil);
 }
 
 .timetable__tag--pintura,
@@ -5381,8 +6240,29 @@ body {
     color: var(--color-accent);
   }
 
+  /*
+   * Na página de curso a grade só tem horários (sem etiquetas de curso),
+   * então os dias com aula cabem em duas colunas, cortando quase pela
+   * metade a altura da seção. A grade completa de /horarios continua em
+   * coluna única porque as etiquetas de curso não cabem lado a lado.
+   */
+  .course-page .timetable__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .course-page .timetable__period {
+    grid-column: 1 / -1;
+  }
+
   .timetable__cell.is-empty {
     display: none;
+  }
+
+  /* Cartão de dia mais compacto: sem o piso de 64px da grade do desktop. */
+  .timetable__cell {
+    gap: 4px;
+    min-height: 0;
+    padding: var(--spacing-3);
   }
 
   .timetable__cell-day {
@@ -5393,10 +6273,6 @@ body {
     flex-direction: row;
     align-items: baseline;
     gap: var(--spacing-3);
-  }
-
-  .timetable__time {
-    min-width: 76px;
   }
 }
 
