@@ -174,9 +174,6 @@ export function Sobre() {
         </div>
 
         <div className="container hero__inner">
-          <div className="hero__top">
-            <span className="section__eyebrow hero__top-eyebrow">Desde 1988</span>
-          </div>
           <div className="hero__main">
             <div className="hero__bottom">
               <div className="hero__subheading">

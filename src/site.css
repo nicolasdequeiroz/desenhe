@@ -1082,6 +1082,14 @@ body {
   margin-bottom: var(--spacing-12);
 }
 
+.section__head-copy {
+  max-width: 640px;
+}
+
+.section__head--centered .section__head-copy {
+  margin-inline: auto;
+}
+
 .section__head--centered .section__eyebrow {
   margin-bottom: var(--spacing-3);
 }
@@ -2405,6 +2413,34 @@ body {
 
 .hero--about .hero__lead p {
   margin: 0;
+}
+
+/* O bloco de texto respira numa largura maior que a da home (36rem), que
+   apertava demais os três parágrafos. */
+.hero--about .hero__subheading,
+.hero--about .hero__heading {
+  max-width: 44rem;
+}
+
+/* As aberturas de seção do /sobre acompanham o hero: alinhadas à esquerda,
+   não centralizadas. */
+.about-page .section__head--centered {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.about-page .section__head--centered .section__head-copy {
+  margin-inline: 0;
+}
+
+.about-page .section__head--centered .section__eyebrow::after {
+  margin-inline: 0;
+}
+
+/* Todos os títulos dos princípios reservam duas linhas, para os parágrafos
+   abaixo começarem na mesma altura em todas as cartas. */
+.about-page .note-grid__item h3 {
+  min-height: 2lh;
 }
 
 /* Índice da página, logo abaixo da primeira dobra, separado dela por um fio. */
@@ -3815,12 +3851,35 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /*
+   * Uma coluna só de cartas empilhadas gastava scroll demais (ícone em cima
+   * do texto, quatro vezes). Aqui a carta vira uma grade de duas colunas: o
+   * ícone ocupa a coluna estreita nas duas linhas, título e lista correm ao
+   * lado. Cada carta fica bem mais baixa e o padding aperta.
+   */
   .course-facts__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--spacing-3);
+    row-gap: var(--spacing-1);
+    padding: var(--spacing-4) var(--spacing-5);
     border-left: none;
   }
 
   .course-facts__card:not(:first-child) {
     border-top: 1px solid var(--color-border);
+  }
+
+  .course-facts__icon-badge {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 38px;
+    height: 38px;
+  }
+
+  .course-facts__title {
+    align-self: center;
   }
 }
 

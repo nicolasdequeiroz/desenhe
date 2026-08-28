@@ -38,7 +38,7 @@ export function Section({
               centered ? 'section__head section__head--centered' : 'section__head'
             }
           >
-            <div style={{maxWidth: 640, marginInline: centered ? 'auto' : undefined}}>
+            <div className="section__head-copy">
               {kicker && <span className="section__eyebrow">{kicker}</span>}
               {title && <Heading level={2}>{title}</Heading>}
               {lead && (
