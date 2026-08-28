@@ -55,7 +55,6 @@ export function WorksArc({images, caption}: Props) {
   const positionRef = useRef(0);
   const draggingRef = useRef(false);
   const movedRef = useRef(false);
-  const hoveringRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartPositionRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -120,14 +119,15 @@ export function WorksArc({images, caption}: Props) {
       lastTime = time;
 
       /*
-       * A trilha para com o cursor em cima (as peças são clicáveis, e mirar
-       * um alvo em movimento é ruim), enquanto o visor está aberto (a peça
-       * precisa continuar onde estava para o voo de volta aterrissar nela) e
-       * durante o arraste, quando quem manda é o dedo.
+       * A trilha só para durante o arraste (quem manda é o dedo), enquanto
+       * o visor está aberto (a peça precisa continuar onde estava para o voo
+       * de volta aterrissar nela) e no modo "menos movimento". Passar o
+       * mouse por cima não pausa: é o mesmo comportamento do trilho de
+       * depoimentos, e no celular um toque de rolagem não pode congelar o
+       * desfile sem querer.
        */
       const held =
         draggingRef.current ||
-        hoveringRef.current ||
         reduceMotion ||
         document.body.classList.contains('has-work-viewer');
 
@@ -221,18 +221,12 @@ export function WorksArc({images, caption}: Props) {
     <div
       className={`works-arc${isDragging ? ' works-arc--dragging' : ''}`}
       ref={viewportRef}
-      onPointerEnter={(event) => {
-        hoveringRef.current = true;
-        moveHint(event);
-      }}
+      onPointerEnter={moveHint}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={stopDragging}
       onPointerCancel={stopDragging}
-      onPointerLeave={(event) => {
-        hoveringRef.current = false;
-        stopDragging(event);
-      }}
+      onPointerLeave={stopDragging}
     >
       <span ref={hintRef} className="works-arc__hint" aria-hidden="true">
         Clique e arraste

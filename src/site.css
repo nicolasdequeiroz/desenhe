@@ -3452,8 +3452,16 @@ body {
     will-change: transform;
   }
 
-  .course-deck__cards:hover .course-deck__track {
-    animation-play-state: paused;
+  /*
+   * Pausa no hover só onde existe um mouse de verdade. Numa tela de toque
+   * o `:hover` dispara com o dedo encostado, então um simples gesto de
+   * rolagem congelava o marquee sem querer. O toque que abre o visor é
+   * `onClick` em JS e continua funcionando.
+   */
+  @media (hover: hover) {
+    .course-deck__cards:hover .course-deck__track {
+      animation-play-state: paused;
+    }
   }
 
   .course-deck__card {
