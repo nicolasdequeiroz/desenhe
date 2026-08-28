@@ -3941,25 +3941,16 @@ body {
   gap: var(--spacing-2);
 }
 
-/*
- * No mobile as cartas ficam estreitas e os valores (que são frases, não
- * uma palavra) quebram em várias linhas. Uma fonte um pouco menor as
- * acomoda sem descer a leitura para um tamanho desconfortável. O
- * `!important` é para vencer o `font-size` inline do componente <Text>.
- */
-@media (max-width: 760px) {
-  .course-facts__value {
-    font-size: 0.8125rem !important;
-  }
-}
-
+/* Marcador discreto: um ponto pequeno e neutro, só para separar itens
+   quando a carta tem mais de um. Não precisa puxar a cor da categoria. */
 .course-facts__bullet {
   flex-shrink: 0;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: var(--category-color, var(--color-accent));
-  transform: translateY(-2px);
+  background: var(--color-text-secondary);
+  opacity: 0.5;
+  transform: translateY(-3px);
 }
 
 .course-facts__link {
@@ -3997,9 +3988,28 @@ body {
   transform: translateX(3px);
 }
 
+/*
+ * No mobile a faixa de fatos abre mão dos ícones: sem eles a carta é só o
+ * rótulo e a lista, empilhados, e cabe uma fonte um pouco menor nos
+ * valores (que são frases e quebravam demais). O `!important` vence o
+ * `font-size` inline do componente <Text>.
+ */
 @media (max-width: 760px) {
   .course-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .course-facts__icon-badge {
+    display: none;
+  }
+
+  .course-facts__card {
+    gap: var(--spacing-3);
+    padding: var(--spacing-5);
+  }
+
+  .course-facts__value {
+    font-size: 0.8125rem !important;
   }
 
   .course-facts__card:nth-child(3) {
@@ -4012,46 +4022,17 @@ body {
 }
 
 @media (max-width: 460px) {
+  /* Numa coluna só: as frases dos valores não cabem em meia largura. */
   .course-facts {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /*
-   * Uma coluna só de cartas empilhadas gastava scroll demais (ícone em cima
-   * do texto, quatro vezes). Aqui a carta vira uma grade de duas colunas: o
-   * ícone ocupa a coluna estreita nas duas linhas, título e lista correm ao
-   * lado. Cada carta fica bem mais baixa e o padding aperta.
-   */
   .course-facts__card {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    column-gap: var(--spacing-3);
-    row-gap: var(--spacing-1);
-    padding: var(--spacing-4) var(--spacing-5);
     border-left: none;
   }
 
   .course-facts__card:not(:first-child) {
     border-top: 1px solid var(--color-border);
-  }
-
-  .course-facts__icon-badge {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    width: 38px;
-    height: 38px;
-  }
-
-  .course-facts__title {
-    align-self: center;
-  }
-
-  /* O botão "Ver planos" (só na carta de mensalidade) atravessa as duas
-     colunas embaixo, em vez de espremer na coluna do ícone e alargá-la. */
-  .course-facts__link {
-    grid-column: 1 / -1;
-    margin-top: var(--spacing-3);
   }
 }
 
