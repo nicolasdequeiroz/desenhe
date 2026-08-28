@@ -842,6 +842,13 @@ body {
   font-weight: 700;
 }
 
+/* Sobre a foto do hero o fio marrom de .section__eyebrow some: usa a
+   própria cor do kicker, esmaecida. */
+.section__eyebrow.hero__top-eyebrow::after {
+  background: currentColor;
+  opacity: 0.5;
+}
+
 .hero__title {
   font-family: var(--font-family-heading);
   font-size: clamp(1.875rem, 4vw, 3rem);
