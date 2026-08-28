@@ -70,3 +70,26 @@ As URLs do site Wix redirecionam client-side (ver `LEGACY_REDIRECTS` em
 `src/routes.tsx`): `/precos-mensalidades` → `/precos`,
 `/pintura-a-oleo-ou-acrilica` → `/cursos/pintura-a-oleo-ou-acrilica`,
 `/cursos/para-alem-do-canone` → `/cursos/historia-da-arte`, `/blog` → `/`.
+
+## Chaves de conteúdo
+
+Alguns blocos sazonais são ligados/desligados por uma constante `boolean` no
+topo do arquivo da página, sem mexer no JSX:
+
+### Card "Em destaque" do hero da home
+
+Em `src/pages/Home.tsx`:
+
+```ts
+const SHOW_HERO_FEATURED = false;
+```
+
+- `false` (atual): a primeira dobra mostra só o texto e os botões; o layout
+  do hero se ajusta sozinho.
+- `true`: reaparece o card "Em destaque" ao lado do texto, apontando para
+  `/colonia-de-ferias` (pôster em `public/images/colonia/poster-hero.jpg`).
+
+Para trocar a edição em destaque no futuro, ajuste também o `to=` do `Link`,
+o `src`/`alt` da imagem e, se for o caso, o rótulo `Em destaque`.
+
+Basta trocar o valor e fazer push; o deploy é automático.
