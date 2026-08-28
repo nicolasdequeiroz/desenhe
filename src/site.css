@@ -2391,61 +2391,20 @@ body {
   scroll-margin-top: 88px;
 }
 
-/* Respiro entre o header e a primeira dobra. Escopado à página porque
-   .course-hero também abre a Colônia de Férias, com outro ritmo. */
-.about-page .course-hero {
-  padding-top: clamp(var(--spacing-10), 7vw, 88px);
-  padding-bottom: clamp(var(--spacing-10), 6vw, 72px);
-  column-gap: clamp(var(--spacing-8), 5vw, 80px);
-}
-
 /*
- * Primeira dobra no mesmo ritmo da das páginas de curso (ver
- * .course-deck__heading): kicker, título e texto empilhados com um respiro
- * declarado entre eles, em vez de dependerem das margens zeradas do reset.
+ * Primeira dobra do Sobre: reaproveita o hero da home (.hero e filhos), com
+ * a foto sangrando no bloco inteiro e o header sobrevoando. O texto de
+ * abertura tem três parágrafos, então o .hero__lead vira uma pilha com
+ * respiro próprio, em vez do parágrafo único da home.
  */
-.about-page .course-hero__intro {
+.hero--about .hero__lead {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
 }
 
-/* O fio de 80px do kicker é o separador das aberturas de seção centralizadas.
-   Aqui ele ficava solto entre o rótulo e o título, encostado no h1. */
-.about-page .course-hero .section__eyebrow::after {
-  content: none;
-}
-
-.about-page .course-hero h1 {
+.hero--about .hero__lead p {
   margin: 0;
-  font-size: clamp(1.875rem, 4vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: 0.03em;
-}
-
-.about-page .course-hero .prose {
-  margin-top: var(--spacing-2);
-}
-
-/*
- * A foto passa um pouco da altura do texto, em vez de ficar mais curta que
- * ele: quem define a altura da linha é a imagem, pelo min-height abaixo. O
- * texto não estica junto, fica centrado no eixo dela.
- */
-.about-page .course-hero {
-  align-items: stretch;
-}
-
-.about-page .course-hero__intro {
-  align-self: center;
-}
-
-.about-page .course-hero img {
-  height: 100%;
-  min-height: clamp(280px, 30vw, 480px);
-  /* Com altura imposta, sem isto a foto esticaria: o padrão do site é fill. */
-  object-fit: cover;
 }
 
 /* Índice da página, logo abaixo da primeira dobra, separado dela por um fio. */

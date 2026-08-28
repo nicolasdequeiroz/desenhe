@@ -159,35 +159,70 @@ export function Sobre() {
         path="/sobre"
       />
 
-      <div className="container course-hero">
-        <div className="course-hero__intro">
-          <span className="section__eyebrow">Desde 1988</span>
-          <Heading level={1}>38 anos formando artistas em Curitiba</Heading>
-          <div className="prose">
-            <p>
-              A Desenhe nasceu em 1988, fundada pelo professor e artista Oscar
-              Pedroso, licenciado em Educação Artística pela FAP, com passagem
-              pela Editora Abril e autor de manuais de desenho para o SENAC
-              Paraná.
-            </p>
-            <p>
-              De lá para cá, a escola manteve a mesma convicção: técnica e
-              criatividade se ensinam juntas, e ninguém aprende as duas num
-              cronograma de prateleira. Por isso o ensino é individualizado, em
-              turmas de no máximo 8 alunos, com o conteúdo adaptado aos
-              objetivos e ao ritmo de cada um.
-            </p>
-            <p>
-              Hoje somos uma equipe de artistas-professores atendendo crianças,
-              adolescentes e adultos, do primeiro traço ao trabalho autoral.
-            </p>
+      {/*
+        Primeira dobra no mesmo formato da home: a foto sangra no bloco
+        inteiro e o header sobrevoa a seção (ver `overlay` em SiteHeader).
+      */}
+      <section className="hero hero--about">
+        <div className="hero__background" aria-hidden="true">
+          <img
+            src={asset('/images/espaco/professor-biblioteca.avif')}
+            alt=""
+            className="hero__background-image"
+          />
+          <div className="hero__background-overlay" />
+        </div>
+
+        <div className="container hero__inner">
+          <div className="hero__top">
+            <span className="section__eyebrow hero__top-eyebrow">Desde 1988</span>
+          </div>
+          <div className="hero__main">
+            <div className="hero__bottom">
+              <div className="hero__subheading">
+                <div className="hero__heading">
+                  <h1 className="hero__title">
+                    38 anos formando artistas em Curitiba
+                  </h1>
+                  <div className="hero__lead">
+                    <p>
+                      A Desenhe nasceu em 1988, fundada pelo professor e artista
+                      Oscar Pedroso, licenciado em Educação Artística pela FAP,
+                      com passagem pela Editora Abril e autor de manuais de
+                      desenho para o SENAC Paraná.
+                    </p>
+                    <p>
+                      De lá para cá, a escola manteve a mesma convicção: técnica
+                      e criatividade se ensinam juntas, e ninguém aprende as duas
+                      num cronograma de prateleira. Por isso o ensino é
+                      individualizado, em turmas de no máximo 8 alunos, com o
+                      conteúdo adaptado aos objetivos e ao ritmo de cada um.
+                    </p>
+                    <p>
+                      Hoje somos uma equipe de artistas-professores atendendo
+                      crianças, adolescentes e adultos, do primeiro traço ao
+                      trabalho autoral.
+                    </p>
+                  </div>
+                </div>
+                <div className="hero__actions">
+                  <WhatsCta
+                    message="Olá! Quero agendar a primeira aula na Desenhe."
+                    label="Agende sua primeira aula"
+                    size="sm"
+                  />
+                  <Button
+                    label="Ver cursos"
+                    href="/cursos"
+                    variant="secondary"
+                    size="sm"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <img
-          src={asset('/images/espaco/professor-biblioteca.avif')}
-          alt="Professor da Desenhe desenhando à mesa, com a biblioteca de arte ao fundo"
-        />
-      </div>
+      </section>
 
       {/* Índice: a página é longa, e daqui se chega direto a qualquer seção. */}
       <nav className="container about-index" aria-label="Nesta página">
