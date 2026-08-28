@@ -1,22 +1,22 @@
 {
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/invariant/browser.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/matter-js/build/matter.js?commonjs-es-import": [
-    "/desenhe/assets/matter-D0ekdt7c.js"
+    "/desenhe/assets/matter-Dy7fFJbw.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/matter-js/build/matter.js?commonjs-module": [
-    "/desenhe/assets/matter-D0ekdt7c.js"
+    "/desenhe/assets/matter-Dy7fFJbw.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/prop-types/index.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/prop-types/index.js?commonjs-module": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/cjs/react-dom-client.production.js?commonjs-exports": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/cjs/react-dom.production.js?commonjs-exports": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/client.js?commonjs-es-import": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/client.js?commonjs-module": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/index.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react-dom/index.js?commonjs-module": [],
@@ -28,10 +28,10 @@
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react/jsx-runtime.js?commonjs-es-import": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/react/jsx-runtime.js?commonjs-module": [],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/scheduler/cjs/scheduler.production.js?commonjs-exports": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/scheduler/index.js?commonjs-module": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "\u0000/Users/nicolasazevedo/Documents/GitHub/desenhe/node_modules/shallowequal/index.js?commonjs-es-import": [],
   "\u0000commonjsHelpers.js": [],
@@ -41,7 +41,7 @@
   "node_modules/@phosphor-icons/react/dist/csr/ArrowLeft.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ArrowRight.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/ArrowUUpLeft.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/csr/Baby.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Backpack.es.js": [],
@@ -55,7 +55,7 @@
   "node_modules/@phosphor-icons/react/dist/csr/Compass.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/CurrencyDollar.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Eraser.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/csr/Eye.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/FacebookLogo.es.js": [],
@@ -69,7 +69,7 @@
   "node_modules/@phosphor-icons/react/dist/csr/Quotes.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Star.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/Trash.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/csr/Users.es.js": [],
   "node_modules/@phosphor-icons/react/dist/csr/UsersThree.es.js": [],
@@ -78,7 +78,7 @@
   "node_modules/@phosphor-icons/react/dist/defs/ArrowLeft.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ArrowRight.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/ArrowUUpLeft.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/defs/Baby.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Backpack.es.js": [],
@@ -92,7 +92,7 @@
   "node_modules/@phosphor-icons/react/dist/defs/Compass.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/CurrencyDollar.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Eraser.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/defs/Eye.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/FacebookLogo.es.js": [],
@@ -106,7 +106,7 @@
   "node_modules/@phosphor-icons/react/dist/defs/Quotes.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Star.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/Trash.es.js": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "node_modules/@phosphor-icons/react/dist/defs/Users.es.js": [],
   "node_modules/@phosphor-icons/react/dist/defs/UsersThree.es.js": [],
@@ -117,17 +117,17 @@
   "node_modules/@remix-run/router/dist/router.js": [],
   "node_modules/invariant/browser.js": [],
   "node_modules/matter-js/build/matter.js": [
-    "/desenhe/assets/matter-D0ekdt7c.js"
+    "/desenhe/assets/matter-Dy7fFJbw.js"
   ],
   "node_modules/prop-types/factoryWithThrowingShims.js": [],
   "node_modules/prop-types/index.js": [],
   "node_modules/prop-types/lib/ReactPropTypesSecret.js": [],
   "node_modules/react-dom/cjs/react-dom-client.production.js": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "node_modules/react-dom/cjs/react-dom.production.js": [],
   "node_modules/react-dom/client.js": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "node_modules/react-dom/index.js": [],
   "node_modules/react-fast-compare/index.js": [],
@@ -138,10 +138,10 @@
   "node_modules/react/index.js": [],
   "node_modules/react/jsx-runtime.js": [],
   "node_modules/scheduler/cjs/scheduler.production.js": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "node_modules/scheduler/index.js": [
-    "/desenhe/assets/client-Bil89c-3.js"
+    "/desenhe/assets/client-CDlEBNbu.js"
   ],
   "node_modules/shallowequal/index.js": [],
   "node_modules/vite-react-ssg/dist/index.mjs": [],
@@ -157,7 +157,7 @@
   "src/components/FeaturedCoursesSection.tsx": [],
   "src/components/Guestbook.tsx": [],
   "src/components/GuestbookPanel.tsx": [
-    "/desenhe/assets/GuestbookPanel-LQrfh4Cf.js"
+    "/desenhe/assets/GuestbookPanel-BYJbhHUt.js"
   ],
   "src/components/NavCoursesDropdown.tsx": [],
   "src/components/NoteGrid.tsx": [],

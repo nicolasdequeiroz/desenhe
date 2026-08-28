@@ -56,7 +56,7 @@ const FATOS = [
 
 const PRINCIPIOS: Note[] = [
   {
-    title: 'Técnica e criatividade, juntas',
+    title: 'Técnica e criatividade crescem no mesmo trabalho',
     text: 'O ensino das técnicas do desenho artístico, aliado ao desenvolvimento criativo, são os alicerces da arte de alto nível. Uma coisa não vem antes da outra: elas crescem no mesmo trabalho.',
   },
   {
@@ -64,7 +64,7 @@ const PRINCIPIOS: Note[] = [
     text: 'O curso serve tanto para quem quer uma formação quanto para quem desenha por prazer. Em qualquer caso, o compromisso é o mesmo: aulas regulares e desenvolvimento contínuo, com técnica, repertório e critério próprio crescendo a cada encontro.',
   },
   {
-    title: 'Quem vive de arte ensinando arte',
+    title: 'Quem ensina aqui também vive de produzir arte',
     text: 'A equipe é formada por artistas-professores que fazem uma leitura crítica do seu trabalho a cada encontro, com o rigor de quem ensina e a experiência de quem produz fora da sala de aula.',
   },
 ];

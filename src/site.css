@@ -2438,6 +2438,12 @@ body {
       clamp(520px, 72vh, 720px) - var(--hero-pad-top) - var(--hero-pad-bottom)
     );
   }
+
+  /* Com a foto sangrando e o hero mais baixo, o texto pode se espalhar mais. */
+  .hero--about .hero__subheading,
+  .hero--about .hero__heading {
+    max-width: 54rem;
+  }
 }
 
 /*
@@ -2451,9 +2457,9 @@ body {
 
   .hero--about .hero__background {
     bottom: auto;
-    height: clamp(320px, 56vh, 480px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
-    mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
+    height: clamp(260px, 46vh, 400px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 22%, transparent 72%);
+    mask-image: linear-gradient(to bottom, #000 22%, transparent 72%);
   }
 
   /* Com o fade da máscara cuidando da base, o overlay só precisa escurecer
@@ -3756,15 +3762,17 @@ body {
     margin-top: var(--spacing-4);
   }
 
+  /* Centrada no cabeçalho pelo `align-items: center` do summary, sem
+     deslocamento próprio: fica alinhada com o título, tenha ele 1 ou 2
+     linhas. */
   .course-strand-card__chevron {
     display: block;
     flex-shrink: 0;
     width: 9px;
     height: 9px;
-    margin-top: 0.35em;
+    transform: rotate(45deg);
     border-right: 2px solid var(--category-color, var(--color-accent));
     border-bottom: 2px solid var(--category-color, var(--color-accent));
-    transform: rotate(45deg);
     transition: transform var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -3966,6 +3974,13 @@ body {
 
   .course-facts__title {
     align-self: center;
+  }
+
+  /* O botão "Ver planos" (só na carta de mensalidade) atravessa as duas
+     colunas embaixo, em vez de espremer na coluna do ícone e alargá-la. */
+  .course-facts__link {
+    grid-column: 1 / -1;
+    margin-top: var(--spacing-3);
   }
 }
 
