@@ -3652,6 +3652,14 @@ body {
   flex-direction: column;
 }
 
+/* Fio entre blocos consecutivos (linguagens -> resumo), no mesmo desenho
+   do separador de .note-grid. Só aparece quando há um bloco antes: se o
+   curso não tem linguagens, o resumo é o primeiro e não ganha fio. */
+.course-intro__block + .course-intro__block {
+  padding-top: clamp(var(--spacing-6), 3vw, var(--spacing-8));
+  border-top: 1px solid var(--color-border);
+}
+
 /* Rótulo de bloco, no mesmo tom dos kickers de seção mas sem o fio: aqui
    ele nomeia um bloco dentro da seção, não abre uma seção nova. */
 .course-intro__label {
@@ -3931,6 +3939,18 @@ body {
   display: flex;
   align-items: baseline;
   gap: var(--spacing-2);
+}
+
+/*
+ * No mobile as cartas ficam estreitas e os valores (que são frases, não
+ * uma palavra) quebram em várias linhas. Uma fonte um pouco menor as
+ * acomoda sem descer a leitura para um tamanho desconfortável. O
+ * `!important` é para vencer o `font-size` inline do componente <Text>.
+ */
+@media (max-width: 760px) {
+  .course-facts__value {
+    font-size: 0.8125rem !important;
+  }
 }
 
 .course-facts__bullet {

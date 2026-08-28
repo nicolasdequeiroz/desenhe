@@ -247,7 +247,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
                     {items.map((item) => (
                       <li key={item} className="course-facts__item">
                         <span className="course-facts__bullet" aria-hidden="true" />
-                        <Text>{item}</Text>
+                        <Text className="course-facts__value">{item}</Text>
                       </li>
                     ))}
                   </ul>
