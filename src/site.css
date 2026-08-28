@@ -2422,6 +2422,52 @@ body {
   max-width: 44rem;
 }
 
+/*
+ * Desktop: o hero do /sobre não precisa encher a viewport. Fica mais curto
+ * que 100vh, então a próxima seção já espia e fica claro que há rolagem.
+ */
+@media (min-width: 901px) {
+  .hero--about {
+    min-height: clamp(520px, 72vh, 720px);
+  }
+
+  /* Acompanha a altura reduzida do hero: o .hero__main (flex: 1) preenche
+     essa caixa e o texto continua ancorado embaixo, como na home. */
+  .hero--about .hero__inner {
+    min-height: calc(
+      clamp(520px, 72vh, 720px) - var(--hero-pad-top) - var(--hero-pad-bottom)
+    );
+  }
+}
+
+/*
+ * Mobile: o texto é longo, então a foto ocupa só o topo e se dissolve num
+ * fade antes de chegar no texto, em vez de ficar por baixo do hero inteiro.
+ */
+@media (max-width: 900px) {
+  .hero--about {
+    --hero-gap: clamp(150px, 24vh, 240px);
+  }
+
+  .hero--about .hero__background {
+    bottom: auto;
+    height: clamp(320px, 56vh, 480px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
+    mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
+  }
+
+  /* Com o fade da máscara cuidando da base, o overlay só precisa escurecer
+     o topo o suficiente para o header continuar legível sobre a foto. */
+  .hero--about .hero__background-overlay {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, #000 55%, transparent) 0,
+      color-mix(in srgb, #000 18%, transparent) 120px,
+      transparent 240px
+    );
+  }
+}
+
 /* As aberturas de seção do /sobre acompanham o hero: alinhadas à esquerda,
    não centralizadas. */
 .about-page .section__head--centered {
@@ -3592,19 +3638,20 @@ body {
 /*
  * Fica em `display: block` de propósito: com `display: flex/grid` num
  * <details>, o navegador para de esconder o conteúdo quando ele está
- * fechado, e o accordion do mobile não colapsaria.
+ * fechado. (No mobile quem esconde o painel é o CSS de `data-open`, mas o
+ * bloco continua block pra não depender disso.)
  */
 .course-strand-card {
   padding: var(--spacing-6);
   border: 1px solid var(--color-border);
-  border-top: 3px solid var(--category-color, var(--color-accent));
   border-radius: var(--radius-container);
-  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 6%, transparent);
+  background: var(--color-background-card);
+  transition: border-color var(--duration-medium) ease;
 }
 
 .course-strand-card__summary {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-3);
   list-style: none;
@@ -3615,10 +3662,26 @@ body {
 }
 
 .course-strand-card__title {
+  position: relative;
+  margin: 0;
+  padding-left: var(--spacing-4);
   font-family: var(--font-family-heading);
   font-size: var(--font-size-lg);
   font-weight: 600;
-  margin: 0;
+  line-height: 1.3;
+}
+
+/* Marca da categoria: um traço curto colado no título, no lugar da antiga
+   borda no topo do card. */
+.course-strand-card__title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--category-color, var(--color-accent));
 }
 
 .course-strand-card__chevron {
@@ -3629,7 +3692,7 @@ body {
   margin: var(--spacing-3) 0 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
-  line-height: 1.6667;
+  line-height: 1.7;
 }
 
 /*
@@ -3644,53 +3707,76 @@ body {
 }
 
 /*
- * Mobile: viram accordions de verdade. Começam fechados; o summary é
- * clicável e mostra um "+" que vira "−" quando aberto. O padding do card
- * encolhe para o cabeçalho respirar sem ocupar tela demais fechado.
+ * Mobile: viram accordions. Começam fechados; o summary é clicável e mostra
+ * um chevron que gira. O painel abre interpolando `grid-template-rows` de
+ * 0fr a 1fr, o que dá uma altura animada suave sem medir nada em JS.
  */
 @media (max-width: 860px) {
   .course-strand-card {
-    padding: var(--spacing-4) var(--spacing-5);
+    padding: var(--spacing-5);
+  }
+
+  .course-strand-card__summary {
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .course-strand-card__title {
+    font-size: var(--font-size-base);
+  }
+
+  .course-strand-card__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  .course-strands--ready .course-strand-card__panel {
+    transition:
+      grid-template-rows var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1),
+      opacity var(--duration-fast) ease;
+  }
+
+  .course-strand-card[data-open='true'] .course-strand-card__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /*
+   * O invólucro interno é quem recorta o conteúdo enquanto a linha do grid
+   * tem 0fr. `overflow: hidden` também cria um BFC, então a `margin-top` do
+   * parágrafo fica contida aqui dentro e some junto quando fecha.
+   */
+  .course-strand-card__panel-inner {
+    min-height: 0;
+    overflow: hidden;
   }
 
   .course-strand-card__text {
     margin-top: var(--spacing-4);
   }
 
-  .course-strand-card__summary {
-    cursor: pointer;
-  }
-
   .course-strand-card__chevron {
     display: block;
-    position: relative;
     flex-shrink: 0;
-    width: 16px;
-    height: 16px;
+    width: 9px;
+    height: 9px;
+    margin-top: 0.35em;
+    border-right: 2px solid var(--category-color, var(--color-accent));
+    border-bottom: 2px solid var(--category-color, var(--color-accent));
+    transform: rotate(45deg);
+    transition: transform var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .course-strand-card__chevron::before,
-  .course-strand-card__chevron::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    background: var(--category-color, var(--color-accent));
+  .course-strand-card[data-open='true'] .course-strand-card__chevron {
+    transform: rotate(-135deg);
   }
+}
 
-  .course-strand-card__chevron::before {
-    width: 100%;
-    height: 2px;
-  }
-
-  .course-strand-card__chevron::after {
-    width: 2px;
-    height: 100%;
-    transition: transform var(--duration-fast) ease;
-  }
-
-  .course-strand-card[open] .course-strand-card__chevron::after {
-    transform: scaleY(0);
+@media (prefers-reduced-motion: reduce) {
+  .course-strands--ready .course-strand-card__panel,
+  .course-strand-card__chevron {
+    transition: none;
   }
 }
 
