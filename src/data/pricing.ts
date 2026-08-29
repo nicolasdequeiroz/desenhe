@@ -33,7 +33,7 @@ const COMMON_FEATURES: Feature[] = [
     short: 'Cronograma personalizado, no seu ritmo',
   },
   'Presencial em Curitiba ou online ao vivo',
-  {label: 'Certificação ao concluir', minMonths: 12},
+  {label: 'Certificação ao concluir', minMonths: 6},
 ];
 
 export const PRICING: PricingTier[] = [

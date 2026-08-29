@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Check, X} from '@phosphor-icons/react';
-import {Badge, Card, Divider, Heading, Text} from '../ui';
+import {Badge, Button, Card, Divider, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
 import {NoteGrid} from '../components/NoteGrid';
@@ -175,6 +175,12 @@ export function Precos() {
                       label="Falar sobre esse plano"
                       size="sm"
                     />
+                    <Button
+                      label="Ver cursos"
+                      href="/cursos"
+                      variant="tint"
+                      size="sm"
+                    />
                   </div>
 
                   <Divider />
@@ -268,6 +274,12 @@ export function Precos() {
                 label="Entrar na lista de espera"
                 size="sm"
               />
+              <Button
+                label="Saiba mais"
+                href="/cursos/historia-da-arte"
+                variant="tint"
+                size="sm"
+              />
             </div>
 
             <Divider />
@@ -322,6 +334,12 @@ export function Precos() {
                   <WhatsCta
                     message="Olá! Quero saber sobre o coworking artístico (aluguel de sala por hora) da Desenhe."
                     label="Consultar disponibilidade"
+                    size="sm"
+                  />
+                  <Button
+                    label="Saiba mais"
+                    href="/sobre#espaco"
+                    variant="tint"
                     size="sm"
                   />
                 </div>

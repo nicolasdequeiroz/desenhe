@@ -1,7 +1,7 @@
 import type {MouseEventHandler, ReactNode} from 'react';
 import {Link} from 'react-router-dom';
 
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'tint';
 type Size = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps {
