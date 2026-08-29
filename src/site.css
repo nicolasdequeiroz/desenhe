@@ -5695,10 +5695,13 @@ body {
 
 /*
  * Fio entre a parte escolar (cursos + primeira aula) e o coworking, que é
- * um serviço à parte.
+ * um serviço à parte. Fica colado no rótulo "Infraestrutura" logo abaixo
+ * (mesma folga do fio de "Antes de matricular", que é o border-top do
+ * .note-grid), com o respiro grande só por cima.
  */
 .pricing-break {
-  margin: clamp(var(--spacing-10), 8vw, 88px) 0;
+  margin-top: clamp(var(--spacing-10), 8vw, 88px);
+  margin-bottom: var(--spacing-6);
 }
 
 /*
