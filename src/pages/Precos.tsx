@@ -99,9 +99,7 @@ export function Precos() {
           troca os valores dos dois cards ao mesmo tempo e só deles.
         */}
         <div className="pricing-block">
-          <span className="pricing-block__label">
-            Cursos de desenho e pintura
-          </span>
+          <span className="pricing-block__label">Cursos práticos</span>
 
           <Toggle
             label="Duração do plano dos cursos de ateliê"
@@ -159,6 +157,31 @@ export function Precos() {
                 </Card>
               );
             })}
+          </div>
+
+          {/*
+            A primeira aula é avulsa, não pertence a nenhum plano: fecha o
+            bloco dos cursos práticos, abaixo da grade. O valor é só por
+            duração da aula, não por curso.
+          */}
+          <div className="pricing-first">
+            <span className="pricing-first__eyebrow">
+              Primeira aula{' '}
+              <span className="pricing-first__paren">(experimental)</span>
+            </span>
+            <Text as="p" color="secondary" className="pricing-first__text">
+              Uma aula avulsa para conhecer a escola e o professor antes de
+              fechar um plano. O valor depende só da duração da aula, não do
+              curso escolhido.
+            </Text>
+            <div className="pricing-first__options">
+              {FIRST_CLASS_PRICES.map(({hours, price}) => (
+                <div key={hours} className="pricing-first__option">
+                  <span className="pricing-first__hours">Aula de {hours}h</span>
+                  <span className="pricing-first__price">{formatBRL(price)}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -230,32 +253,7 @@ export function Precos() {
         </div>
 
         {/*
-          A primeira aula é avulsa e não pertence a nenhum plano: fica num
-          bloco próprio, centralizado abaixo da grade. O valor é só por
-          duração da aula, não por curso.
-        */}
-        <div className="pricing-first">
-          <span className="pricing-first__eyebrow">
-            Primeira aula{' '}
-            <span className="pricing-first__paren">(experimental)</span>
-          </span>
-          <Text as="p" color="secondary" className="pricing-first__text">
-            Uma aula avulsa para conhecer a escola e o professor antes de fechar
-            um plano. O valor depende só da duração da aula, não do curso
-            escolhido.
-          </Text>
-          <div className="pricing-first__options">
-            {FIRST_CLASS_PRICES.map(({hours, price}) => (
-              <div key={hours} className="pricing-first__option">
-                <span className="pricing-first__hours">Aula de {hours}h</span>
-                <span className="pricing-first__price">{formatBRL(price)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/*
-          Fim da parte "escolar" (planos e primeira aula). O coworking é
+          Fim da parte "escolar" (cursos e primeira aula). O coworking é
           outra coisa: aluguel de sala por hora, sem vínculo com curso. Um
           fio separa as duas.
         */}

@@ -5496,9 +5496,9 @@ body {
 }
 
 /*
- * Primeira aula (experimental): bloco avulso, centralizado abaixo da grade
- * de planos. Não pertence a nenhum card porque o valor é por duração da
- * aula, não por curso.
+ * Primeira aula (experimental): fecha o bloco dos cursos práticos, abaixo
+ * da grade. Centralizada e sem card porque o valor é por duração da aula,
+ * não por curso.
  */
 .pricing-first {
   display: flex;
