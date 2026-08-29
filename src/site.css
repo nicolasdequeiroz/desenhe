@@ -1831,6 +1831,17 @@ body {
   outline-offset: 3px;
 }
 
+/* Em /precos as cartas de nota são quase transparentes e só ganham o fundo
+   cheio no hover/foco. */
+.pricing-notes .note-grid__item--link {
+  background: color-mix(in srgb, var(--color-background-card) 10%, transparent);
+}
+
+.pricing-notes .note-grid__item--link:hover,
+.pricing-notes .note-grid__item--link:focus-visible {
+  background: var(--color-background-card);
+}
+
 .note-grid__item-link {
   display: inline-flex;
   align-items: center;
@@ -5689,6 +5700,11 @@ body {
   color: var(--color-text-primary);
 }
 
+/* Botão discreto do bloco: largura natural e sem o brilho dos CTAs. */
+.pricing-first .btn {
+  margin-top: var(--spacing-1);
+}
+
 /* Em /precos a abertura da seção acompanha os blocos: alinhada à esquerda,
    não centralizada (mantém o tamanho do título centralizado). */
 .section--pricing .section__head--centered {
@@ -5755,6 +5771,16 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
+}
+
+/*
+ * Bloco do curso teórico: o terracota aparece também fora do card (rótulo
+ * e seletor). Como o rótulo e o anel do seletor são pequenos sobre o fundo
+ * escuro, o `--color-accent` aqui é um terracota clareado; o card lá
+ * dentro volta ao terracota cheio para o botão.
+ */
+.pricing-block--theory {
+  --color-accent: color-mix(in srgb, var(--color-category-teorico) 55%, #fdece2);
 }
 
 .pricing-block__head {
@@ -5874,6 +5900,12 @@ body {
   background-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
   box-shadow: inset 0 0 0 1px
     color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+
+/* Selo "História da Arte": no tom terracota, não neutro. */
+.pricing-card--theory .pricing-card__head .badge {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: color-mix(in srgb, var(--color-accent) 45%, #fdece2);
 }
 
 /* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */

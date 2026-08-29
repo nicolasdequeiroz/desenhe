@@ -220,6 +220,12 @@ export function Precos() {
                 </div>
               ))}
             </div>
+            <WhatsCta
+              message="Olá! Quero agendar a primeira aula (experimental) na Desenhe."
+              label="Agendar primeira aula"
+              variant="ghost"
+              size="sm"
+            />
           </div>
         </div>
 
@@ -229,7 +235,7 @@ export function Precos() {
           cor própria, seletor próprio (9/3 meses) e o texto deixando
           claro que a turma abre em janelas ao longo do ano.
         */}
-        <div className="pricing-block">
+        <div className="pricing-block pricing-block--theory">
           <span className="pricing-block__label">Curso teórico</span>
 
           <Toggle
