@@ -197,7 +197,13 @@ export const PRICING_NOTES: PricingNote[] = [
   },
   {
     title: 'Idade mínima',
-    text: 'A partir de 6 anos nos cursos de desenho e pintura; óleo/acrílica requer conhecimento prévio de desenho.',
+    text: 'A partir de 6 anos nos cursos de desenho e pintura.',
+    href: '/cursos',
+    linkLabel: 'Ver os cursos',
+  },
+  {
+    title: 'Experiência prévia',
+    text: 'Óleo e acrílica pedem conhecimento prévio de desenho; os outros cursos começam do zero.',
     href: '/cursos',
     linkLabel: 'Ver os cursos',
   },

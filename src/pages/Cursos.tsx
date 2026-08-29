@@ -36,7 +36,7 @@ export function Cursos() {
       >
         <div className="course-grid">
           {COURSES.map((course) => (
-            <CourseCard key={course.slug} course={course} />
+            <CourseCard key={course.slug} course={course} fullTitle />
           ))}
         </div>
         <div style={{marginTop: 40}} className="text-center">

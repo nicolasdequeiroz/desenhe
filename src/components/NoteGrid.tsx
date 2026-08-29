@@ -16,7 +16,7 @@ interface Props {
   eyebrow?: string;
   items: Note[];
   /** Colunas no desktop; abaixo de 860px cai para 2 e abaixo de 560px para 1. */
-  columns?: 2 | 3;
+  columns?: 2 | 3 | 4;
   /**
    * Card livre no fim da grade, para ocupar a célula que sobra quando os
    * itens não fecham a última linha (ver a chamada de dúvidas em /precos).

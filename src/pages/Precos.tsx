@@ -366,7 +366,11 @@ export function Precos() {
         </div>
 
         <div className="pricing-notes">
-          <NoteGrid eyebrow="Antes de matricular" items={PRICING_NOTES} />
+          <NoteGrid
+            eyebrow="Antes de matricular"
+            items={PRICING_NOTES}
+            columns={4}
+          />
         </div>
       </Section>
 

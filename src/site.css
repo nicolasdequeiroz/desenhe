@@ -1745,12 +1745,22 @@ body {
   row-gap: var(--spacing-8);
 }
 
+.note-grid__items--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .note-grid__items--3 {
   grid-template-columns: repeat(3, 1fr);
 }
 
 .note-grid__items--2 {
   grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 1000px) {
+  .note-grid__items--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 860px) {
@@ -1760,6 +1770,7 @@ body {
 }
 
 @media (max-width: 560px) {
+  .note-grid__items--4,
   .note-grid__items--3,
   .note-grid__items--2 {
     grid-template-columns: 1fr;

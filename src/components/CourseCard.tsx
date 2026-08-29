@@ -2,7 +2,15 @@ import {Link} from 'react-router-dom';
 import {Text} from '../ui';
 import {asset, COURSE_CATEGORY_LABELS, type Course} from '../data';
 
-export function CourseCard({course}: {course: Course}) {
+export function CourseCard({
+  course,
+  fullTitle = false,
+}: {
+  course: Course;
+  /** Usa o título completo (só na listagem /cursos); na home e nos
+   *  relacionados fica o nome curto. */
+  fullTitle?: boolean;
+}) {
   return (
     <Link to={`/cursos/${course.slug}`} className="course-card">
       {/*
@@ -34,7 +42,9 @@ export function CourseCard({course}: {course: Course}) {
         </div>
       </div>
       <div className="course-card__body">
-        <h3 className="course-card__title">{course.shortTitle}</h3>
+        <h3 className="course-card__title">
+          {fullTitle ? course.title : course.shortTitle}
+        </h3>
         <Text type="body" color="secondary">
           {course.excerpt}
         </Text>
