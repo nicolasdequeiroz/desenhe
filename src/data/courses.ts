@@ -49,7 +49,9 @@ export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
   pintura: 'Pintura',
   institucional: 'Institucional',
   infantil: 'Infantil',
-  teorico: 'Curso teórico',
+  // Categoria com um curso só: o selo mostra o nome dele, não o rótulo
+  // genérico "Curso teórico".
+  teorico: 'História da Arte',
 };
 
 export interface Course {
