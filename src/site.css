@@ -2567,6 +2567,12 @@ body {
   .testimonials__actions {
     justify-content: flex-start;
   }
+
+  /* Sem o fade das pontas: o trilho vai de ponta a ponta da tela. */
+  .testimonials__carousel {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 }
 
 @media (max-width: 900px) {

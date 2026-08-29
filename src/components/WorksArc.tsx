@@ -57,6 +57,19 @@ export function WorksArc({images, caption}: Props) {
   const movedRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartPositionRef = useRef(0);
+  /*
+   * No toque, capturar o ponteiro logo no `pointerdown` faz o navegador
+   * disparar `pointercancel` enquanto ainda decide se o gesto é rolagem
+   * vertical: o arraste morre antes de comecar. Entao o toque fica
+   * "pendente" e so vira arraste (captura + flag) quando o movimento se
+   * confirma mais horizontal que vertical. Mouse trava na hora.
+   */
+  const pendingRef = useRef<{
+    x: number;
+    y: number;
+    pointerId: number;
+    position: number;
+  } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   /*
@@ -187,29 +200,65 @@ export function WorksArc({images, caption}: Props) {
     hint.style.top = `${event.clientY - rect.top}px`;
   };
 
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  const lockDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const pending = pendingRef.current;
+    if (!pending) return;
     draggingRef.current = true;
-    movedRef.current = false;
-    dragStartXRef.current = event.clientX;
-    dragStartPositionRef.current = positionRef.current;
+    dragStartXRef.current = pending.x;
+    dragStartPositionRef.current = pending.position;
     setIsDragging(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(pending.pointerId);
+    } catch {
+      /* ponteiro ja solto */
+    }
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    movedRef.current = false;
+    pendingRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+      position: positionRef.current,
+    };
+    if (event.pointerType === 'mouse') lockDrag(event);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     moveHint(event);
+
+    const pending = pendingRef.current;
+    if (pending && !draggingRef.current) {
+      const dx = event.clientX - pending.x;
+      const dy = event.clientY - pending.y;
+      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+      // Gesto mais vertical que horizontal: e rolagem da pagina, desiste.
+      if (Math.abs(dy) > Math.abs(dx)) {
+        pendingRef.current = null;
+        return;
+      }
+      lockDrag(event);
+    }
+
     if (!draggingRef.current) return;
+    if (event.cancelable) event.preventDefault();
     const delta = event.clientX - dragStartXRef.current;
     if (Math.abs(delta) > DRAG_THRESHOLD) movedRef.current = true;
     positionRef.current = dragStartPositionRef.current + delta;
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    pendingRef.current = null;
     if (!draggingRef.current) return;
     draggingRef.current = false;
     setIsDragging(false);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      /* ponteiro ja solto */
     }
   };
 
@@ -229,7 +278,7 @@ export function WorksArc({images, caption}: Props) {
       onPointerLeave={stopDragging}
     >
       <span ref={hintRef} className="works-arc__hint" aria-hidden="true">
-        Clique e arraste
+        Arraste para ver mais
       </span>
 
       <div className="works-arc__stage" ref={stageRef}>
