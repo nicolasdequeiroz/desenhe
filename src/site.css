@@ -5369,8 +5369,8 @@ body {
   }
 }
 
-/* No celular o seletor empilha e ocupa a largura toda: cada duração vira
-   uma faixa fácil de tocar, com espaço de sobra. */
+/* No celular o seletor continua horizontal, ocupando a largura toda: as
+   três durações dividem o espaço em partes iguais. */
 @media (max-width: 640px) {
   .pricing-toggle-wrap {
     display: block;
@@ -5378,14 +5378,14 @@ body {
 
   .pricing-toggle {
     display: flex;
-    flex-direction: column;
     width: 100%;
-    border-radius: var(--radius-container);
   }
 
   .pricing-toggle__option {
-    padding: var(--spacing-3) var(--spacing-4);
-    border-radius: var(--radius-element);
+    flex: 1;
+    padding-inline: var(--spacing-2);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
   }
 }
 
