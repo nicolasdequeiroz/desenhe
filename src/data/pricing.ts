@@ -98,7 +98,7 @@ export const HISTORY_OF_ART: HistoryCourse = {
   ],
   availability: 'Vagas sob consulta',
   intake:
-    'A turma não tem entrada contínua. Ela abre em datas definidas ao longo do ano, quando reúne alunos interessados o suficiente. Deixe seu contato para a lista de espera e a gente avisa assim que a próxima turma tiver data.',
+    'Sem entrada contínua: a turma abre em datas específicas ao longo do ano, conforme o número de interessados. Entre na lista de espera para saber da próxima.',
   features: [
     'Encontro semanal de 2h30, presencial em Curitiba',
     'Aulas expositivas e dialogadas, com estudos de caso',
