@@ -6013,6 +6013,12 @@ body {
   gap: var(--spacing-3);
 }
 
+/* O título é caixa-alta (sem descendentes): o centro óptico das letras fica
+   acima do centro da caixa de linha. Sobe o selo um fio para casar com ele. */
+.pricing-block__title-row .badge {
+  transform: translateY(-2px);
+}
+
 .pricing-block__lead {
   margin: 0;
   max-width: 52ch;
