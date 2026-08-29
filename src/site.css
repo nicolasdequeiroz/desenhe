@@ -5497,17 +5497,16 @@ body {
 
 /*
  * Primeira aula (experimental): fecha o bloco dos cursos práticos, abaixo
- * da grade. Centralizada e sem card porque o valor é por duração da aula,
- * não por curso.
+ * da grade. Alinhada à esquerda com o resto do bloco, sem card porque o
+ * valor é por duração da aula, não por curso.
  */
 .pricing-first {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-3);
   max-width: 520px;
-  margin: clamp(var(--spacing-8), 6vw, 56px) auto 0;
-  text-align: center;
+  margin-top: clamp(var(--spacing-8), 6vw, 56px);
 }
 
 .pricing-first__eyebrow {
@@ -5531,7 +5530,6 @@ body {
 .pricing-first__options {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: var(--spacing-3);
   margin-top: var(--spacing-2);
 }
@@ -5560,6 +5558,21 @@ body {
   font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text-primary);
+}
+
+/* Em /precos a abertura da seção acompanha os blocos: alinhada à esquerda,
+   não centralizada (mantém o tamanho do título centralizado). */
+.section--pricing .section__head--centered {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.section--pricing .section__head--centered .section__head-copy {
+  margin-inline: 0;
+}
+
+.section--pricing .section__head--centered .section__eyebrow::after {
+  margin-inline: 0;
 }
 
 /*

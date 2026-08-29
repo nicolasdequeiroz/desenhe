@@ -84,6 +84,7 @@ export function Precos() {
         path="/precos"
       />
       <Section
+        className="section--pricing"
         kicker="Investimento"
         title="Planos e mensalidades 2026"
         lead="Uma aula por semana nos cursos de desenho e pintura, presencial em Curitiba ou online ao vivo. A mensalidade depende só da duração do plano: quanto mais longo o compromisso, menor o valor por mês."
@@ -263,7 +264,7 @@ export function Precos() {
 
         <div className="pricing-block">
           <div className="pricing-block__head">
-            <span className="pricing-block__label">Fora das aulas</span>
+            <span className="pricing-block__label">Infraestrutura</span>
             <Heading level={2} className="pricing-block__title">
               {COWORKING.title}
             </Heading>

@@ -10,6 +10,8 @@ interface SectionProps {
   actions?: ReactNode;
   /** Âncora da seção, para índices internos de página (ver /sobre). */
   id?: string;
+  /** Classe extra no <section>, para ajustes escopados por página. */
+  className?: string;
   children: ReactNode;
 }
 
@@ -27,10 +29,16 @@ export function Section({
   centered = true,
   actions,
   id,
+  className,
   children,
 }: SectionProps) {
   return (
-    <section id={id} className={muted ? 'section section--muted' : 'section'}>
+    <section
+      id={id}
+      className={['section', muted && 'section--muted', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <div className="container">
         {(kicker || title) && (
           <div
