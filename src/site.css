@@ -5381,11 +5381,22 @@ body {
   margin-inline: auto;
 }
 
-/* Bloco dos cursos de ateliê: dois cards, numa medida que não os deixa
-   largos demais lado a lado. */
+/*
+ * Bloco dos cursos práticos: dois cards preenchendo a coluna do bloco (sem
+ * max-width nem `margin-inline: auto`, que centralizavam a grade e a
+ * desalinhavam do rótulo/seletor acima). `minmax(0, 1fr)` deixa as
+ * colunas encolherem com o container em vez de estourarem a tela.
+ */
 .pricing-grid--2 {
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  max-width: 760px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: none;
+  margin-inline: 0;
+}
+
+@media (max-width: 620px) {
+  .pricing-grid--2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .pricing-card {
@@ -5513,7 +5524,7 @@ body {
   align-items: flex-start;
   gap: var(--spacing-3);
   max-width: 520px;
-  margin-top: clamp(var(--spacing-8), 6vw, 56px);
+  margin-top: clamp(var(--spacing-5), 4vw, 36px);
 }
 
 .pricing-first__eyebrow {
