@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Check} from '@phosphor-icons/react';
+import {Check, X} from '@phosphor-icons/react';
 import {Badge, Card, Divider, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
@@ -7,6 +7,7 @@ import {NoteGrid} from '../components/NoteGrid';
 import {WhatsCta} from '../components/WhatsCta';
 import {
   COWORKING,
+  type Feature,
   FIRST_CLASS_PRICES,
   HISTORY_OF_ART,
   PLAN_INFO,
@@ -17,20 +18,39 @@ import {
   planTotal,
 } from '../data';
 
-function CheckList({items}: {items: string[]}) {
+function CheckList({items, months}: {items: Feature[]; months?: number}) {
   return (
     <ul className="pricing-check-list">
-      {items.map((item) => (
-        <li key={item} className="pricing-check">
-          <Check
-            size={16}
-            weight="bold"
-            className="pricing-check__icon"
-            aria-hidden="true"
-          />
-          <span>{item}</span>
-        </li>
-      ))}
+      {items.map((item) => {
+        const label = typeof item === 'string' ? item : item.label;
+        const off =
+          typeof item !== 'string' &&
+          months !== undefined &&
+          months < item.minMonths;
+        return (
+          <li
+            key={label}
+            className={`pricing-check${off ? ' pricing-check--off' : ''}`}
+          >
+            {off ? (
+              <X
+                size={16}
+                weight="bold"
+                className="pricing-check__icon"
+                aria-hidden="true"
+              />
+            ) : (
+              <Check
+                size={16}
+                weight="bold"
+                className="pricing-check__icon"
+                aria-hidden="true"
+              />
+            )}
+            <span>{label}</span>
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -153,7 +173,7 @@ export function Precos() {
                     <span className="pricing-card__includes-label">
                       O que está incluso
                     </span>
-                    <CheckList items={tier.features} />
+                    <CheckList items={tier.features} months={active.months} />
                   </div>
                 </Card>
               );

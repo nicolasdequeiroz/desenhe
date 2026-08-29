@@ -5,21 +5,27 @@ export interface Plan {
   monthly: number;
 }
 
+/**
+ * Item do checklist "o que está incluso". Pode ser um texto simples ou,
+ * quando o benefício só vale a partir de certa duração, um objeto com
+ * `minMonths`: nos planos mais curtos o item aparece riscado.
+ */
+export type Feature = string | {label: string; minMonths: number};
+
 export interface PricingTier {
   id: 'desenho-2h' | 'oleo-3h';
   title: string;
   subtitle: string;
   /** Planos ordenados do maior compromisso para o menor (12, 6, 3 meses). */
   plans: Plan[];
-  /** Itens do checklist "o que está incluso" no card. */
-  features: string[];
+  features: Feature[];
 }
 
-const COMMON_FEATURES = [
+const COMMON_FEATURES: Feature[] = [
   'Turmas de no máximo 8 alunos',
   'Cronograma personalizado, do iniciante ao avançado',
   'Presencial em Curitiba ou online ao vivo',
-  'Certificação ao concluir o plano de 12 meses',
+  {label: 'Certificação ao concluir o plano de 12 meses', minMonths: 12},
 ];
 
 export const PRICING: PricingTier[] = [

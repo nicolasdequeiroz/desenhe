@@ -5525,6 +5525,21 @@ body {
   color: var(--color-accent);
 }
 
+/* Benefício que não vale nessa duração (ex.: certificação no plano de 3
+   meses): risca o texto e apaga o ícone, que vira um "x". */
+.pricing-check--off {
+  color: var(--color-text-secondary);
+}
+
+.pricing-check--off span {
+  text-decoration: line-through;
+}
+
+.pricing-check--off .pricing-check__icon {
+  color: var(--color-text-secondary);
+  opacity: 0.65;
+}
+
 .pricing-card__fineprint {
   margin: var(--spacing-1) 0 0;
   font-family: var(--font-family-body);
