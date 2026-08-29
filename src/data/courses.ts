@@ -37,13 +37,19 @@ export interface CourseStrand {
   description: string;
 }
 
-export type CourseCategory = 'desenho' | 'pintura' | 'institucional' | 'infantil';
+export type CourseCategory =
+  | 'desenho'
+  | 'pintura'
+  | 'institucional'
+  | 'infantil'
+  | 'teorico';
 
 export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
   desenho: 'Desenho',
   pintura: 'Pintura',
-  institucional: 'Curso teórico',
+  institucional: 'Institucional',
   infantil: 'Infantil',
+  teorico: 'Curso teórico',
 };
 
 export interface Course {
@@ -543,7 +549,7 @@ export const COURSES: Course[] = [
     slug: 'historia-da-arte',
     tagline: 'A arte contada além do que sempre te disseram sobre ela.',
     title: 'Para Além do Cânone: uma História Conectada da Arte',
-    category: 'institucional',
+    category: 'teorico',
     shortTitle: 'História da Arte',
     excerpt:
       'Um curso teórico que repensa a História da Arte para além de narrativas eurocentradas, da Antiguidade à contemporaneidade.',

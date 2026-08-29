@@ -1575,6 +1575,32 @@ body {
 }
 
 /*
+ * Curso teórico (História da Arte): terracota. Um único bloco para todos
+ * os componentes que carregam a cor da categoria, já que o mapeamento é
+ * sempre o mesmo. Como o terracota é escuro, o texto que fica por cima
+ * dele (botão primário) vai claro, via --color-on-accent.
+ */
+.category-tag--teorico,
+.category-tint--teorico,
+.course-page--teorico,
+.course-deck--teorico,
+.course-facts--teorico,
+.course-timeline--teorico,
+.course-cta--teorico {
+  --category-color: var(--color-category-teorico);
+}
+
+.course-page--teorico,
+.course-cta--teorico,
+.pricing-card--theory {
+  --color-on-accent: #fdece2;
+}
+
+.section.testimonials:has(+ .course-cta--teorico) {
+  --cta-fade-color: color-mix(in srgb, var(--color-category-teorico) 82%, #171310);
+}
+
+/*
  * Substituto da capa enquanto um curso novo ainda não tem fotos: um painel
  * na cor da categoria com o nome do curso, no lugar de uma imagem quebrada.
  */
@@ -5819,30 +5845,35 @@ body {
 }
 
 /*
- * História da Arte: cor própria para se destacar da tabela. Um marrom
- * quente mais claro que os outros cards, com a borda reforçada, deixa
- * claro à primeira vista que é outra coisa, sem sair da paleta.
+ * História da Arte: mesmo fundo dos outros cards, mas com o terracota do
+ * curso no lugar do laranja (botão, checks, aviso da turma). O terracota
+ * é escuro, então o texto do botão primário vai claro (--color-on-accent,
+ * definido junto com a categoria teórica lá em cima).
  */
 .pricing-card--theory {
-  border-color: var(--color-border-emphasized);
-  background: color-mix(
-    in srgb,
-    var(--color-border-emphasized) 16%,
-    var(--color-background-card)
-  );
+  --color-accent: var(--color-category-teorico);
   /* Empilhado (abaixo de 1000px) o bloco ocupa a largura toda; o card não
      precisa acompanhar. No desktop ele já é limitado pela coluna. */
   max-width: 460px;
 }
 
-.pricing-card--theory:hover {
-  border-color: color-mix(in srgb, var(--color-border-emphasized) 70%, #fff);
+/* Elementos pequenos (checks, fio do aviso, botão tint) numa versão
+   clareada do terracota, para não sumirem no fundo escuro do card. */
+.pricing-card--theory .pricing-check__icon {
+  color: color-mix(in srgb, var(--color-accent) 52%, #fdece2);
 }
 
 .pricing-card--theory .pricing-card__intake {
-  border-left-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  border-left-color: color-mix(in srgb, var(--color-accent) 58%, #fdece2);
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
   color: var(--color-text-primary);
+}
+
+.pricing-card--theory .btn.tint {
+  color: color-mix(in srgb, var(--color-accent) 40%, #fdece2);
+  background-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
 /* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */

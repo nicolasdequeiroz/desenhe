@@ -164,10 +164,11 @@ export function Precos() {
                       {formatBRL(planTotal(active))} no total, em {active.months}{' '}
                       parcelas.
                     </Text>
-                    <Text type="supporting" display="block">
-                      {PLAN_INFO[active.months].note}.
-                    </Text>
                   </div>
+
+                  <p className="pricing-card__intake">
+                    {PLAN_INFO[active.months].note}.
+                  </p>
 
                   <div className="pricing-card__cta">
                     <WhatsCta
