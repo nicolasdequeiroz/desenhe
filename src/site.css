@@ -5372,14 +5372,20 @@ body {
 .pricing-grid {
   display: grid;
   /*
-   * Três cards lado a lado no desktop (dois cursos + coworking), no modelo
-   * de página de planos. `min(...100%)` evita o card estourar a tela no
-   * mobile; abaixo de ~1050px cai para 2 colunas e depois para 1.
+   * `min(...100%)` evita o card estourar a tela no mobile; conforme a
+   * largura cai, o auto-fit reduz as colunas sozinho.
    */
   grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: var(--spacing-5);
   max-width: 1120px;
   margin-inline: auto;
+}
+
+/* Bloco dos cursos de ateliê: dois cards, numa medida que não os deixa
+   largos demais lado a lado. */
+.pricing-grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  max-width: 760px;
 }
 
 .pricing-card {
@@ -5557,6 +5563,59 @@ body {
 }
 
 /*
+ * A seção é uma pilha de blocos: cada bloco tem um rótulo próprio e, quando
+ * faz sentido, um seletor de duração que vale só para ele. É o que separa
+ * os cursos de ateliê (mensais, seletor 12/6/3) do curso teórico de
+ * História da Arte (turma fechada, seletor 9/3).
+ */
+.pricing-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-block + .pricing-block {
+  margin-top: clamp(var(--spacing-10), 9vw, 96px);
+}
+
+.pricing-block__label {
+  display: block;
+  margin-bottom: var(--spacing-5);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.pricing-block__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+}
+
+.pricing-block__head .pricing-block__label {
+  margin-bottom: 0;
+}
+
+.pricing-block__title {
+  margin: 0;
+}
+
+.pricing-block__lead {
+  margin: 0;
+  max-width: 52ch;
+}
+
+/* Dentro de um bloco o respiro vem do próprio bloco; o seletor não precisa
+   da margem grande que usa quando aparece sozinho. */
+.pricing-block .pricing-toggle-wrap {
+  margin-bottom: clamp(var(--spacing-6), 4vw, 40px);
+}
+
+/*
  * Fio entre a parte escolar (planos + primeira aula) e o coworking, que é
  * um serviço à parte. Alinhado à mesma largura da grade de planos.
  */
@@ -5566,70 +5625,77 @@ body {
 }
 
 /*
- * Coworking em versão solo: um card só, então em vez de ficar estreito e
- * perdido no centro, ele se abre em duas colunas no desktop (preço + CTA de
- * um lado, "o que está incluso" do outro). No mobile volta a ser a pilha
- * vertical padrão de .pricing-card.
+ * Card sozinho (coworking, História da Arte): em vez de ficar estreito e
+ * perdido no centro, ele se abre em duas colunas no desktop (preço + CTA e,
+ * na História, o texto da turma de um lado; "o que está incluso" do outro).
+ * No mobile volta a ser a pilha vertical padrão de .pricing-card.
  */
 .pricing-solo {
   max-width: 1120px;
   margin-inline: auto;
 }
 
-.pricing-solo__head {
+.pricing-card__main {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-6);
+  gap: var(--spacing-4);
 }
 
-.pricing-solo__label {
+/* Aviso de como a turma abre (só na História da Arte). Fica em destaque,
+   entre o preço e o CTA, porque é o ponto que muda a expectativa: não é
+   "pague e comece", é "entre na fila da próxima turma". */
+.pricing-card__intake {
+  margin: 0;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-left: 2px solid var(--color-border-emphasized);
+  border-radius: var(--radius-inner);
+  background: color-mix(in srgb, var(--color-border-emphasized) 12%, transparent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.pricing-solo__title {
-  margin: 0;
-}
-
-.pricing-solo__lead {
-  margin: 0;
-  max-width: 46ch;
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
 @media (min-width: 761px) {
   .pricing-card--solo {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    column-gap: clamp(var(--spacing-6), 5vw, 64px);
-    row-gap: var(--spacing-4);
-    align-items: start;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: clamp(var(--spacing-6), 5vw, 64px);
   }
 
-  .pricing-card--solo > .pricing-card__hero {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .pricing-card--solo > .pricing-card__cta {
-    grid-column: 1;
-    grid-row: 2;
+  .pricing-card--solo > .pricing-card__main,
+  .pricing-card--solo > .pricing-card__includes {
+    flex: 1 1 0;
   }
 
   /* Sem o fio horizontal: quem separa as colunas é o próprio gap. */
   .pricing-card--solo > .divider {
     display: none;
   }
+}
 
-  .pricing-card--solo > .pricing-card__includes {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
+/*
+ * História da Arte: cor própria para se destacar da tabela. Um marrom
+ * quente mais claro que os outros cards, com a borda reforçada, deixa
+ * claro à primeira vista que é outra coisa, sem sair da paleta.
+ */
+.pricing-card--theory {
+  border-color: var(--color-border-emphasized);
+  background: color-mix(
+    in srgb,
+    var(--color-border-emphasized) 16%,
+    var(--color-background-card)
+  );
+}
+
+.pricing-card--theory:hover {
+  border-color: color-mix(in srgb, var(--color-border-emphasized) 70%, #fff);
+}
+
+.pricing-card--theory .pricing-card__intake {
+  border-left-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  color: var(--color-text-primary);
 }
 
 /* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */

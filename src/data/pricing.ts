@@ -48,32 +48,63 @@ export const PRICING: PricingTier[] = [
 ];
 
 /**
- * História da Arte: curso teórico com mensalidade fixa. Não entra no
- * seletor de duração (que vale só para os cursos de ateliê), então é
- * modelado à parte, como o coworking.
+ * História da Arte: curso teórico em turma fechada. Não tem entrada
+ * contínua nem vaga garantida (as turmas abrem em janelas ao longo do
+ * ano), então é modelado à parte dos cursos de ateliê, com seletor
+ * próprio de duração: versão completa (9 meses, 3 módulos) ou curta
+ * (3 meses, 1 módulo).
  */
-export interface FixedCourse {
+export interface HistoryPlan {
+  months: number;
+  /** Rótulo no seletor. */
+  label: string;
+  monthly: number;
+  /** O que a duração cobre (módulos e carga horária). */
+  scope: string;
+}
+
+export interface HistoryCourse {
   title: string;
   subtitle: string;
-  monthly: number;
-  /** Taxa de matrícula única, cobrada além das mensalidades. */
+  /** Taxa de matrícula única, além das mensalidades. */
   enrollmentFee: number;
+  /** Da versão completa para a curta. */
+  plans: HistoryPlan[];
+  /** Frase de disponibilidade (não há vaga garantida nem preço fechado). */
+  availability: string;
+  /** Como e quando a turma abre. */
+  intake: string;
   features: string[];
   note: string;
 }
 
-export const HISTORY_OF_ART: FixedCourse = {
+export const HISTORY_OF_ART: HistoryCourse = {
   title: 'História da Arte',
-  subtitle: 'Curso teórico, encontro de 2h30 por semana',
-  monthly: 460,
+  subtitle: 'Curso teórico presencial, em turma fechada',
   enrollmentFee: 120,
-  features: [
-    '90 horas no total, em 3 módulos de 30 horas',
-    'Aulas expositivas e dialogadas, com estudos de caso',
-    'Presencial em Curitiba',
-    'Turmas conforme o calendário: consulte as próximas',
+  plans: [
+    {
+      months: 9,
+      label: '9 meses',
+      monthly: 460,
+      scope: 'Versão completa: os 3 módulos, 90 horas no total',
+    },
+    {
+      months: 3,
+      label: '3 meses',
+      monthly: 460,
+      scope: 'Versão curta: 1 módulo, 30 horas',
+    },
   ],
-  note: 'Mensalidade fixa, sem seletor de duração. Alunos e ex-alunos da escola têm condições especiais.',
+  availability: 'Vagas sob consulta',
+  intake:
+    'A turma não tem entrada contínua. Ela abre em datas definidas ao longo do ano, quando reúne alunos interessados o suficiente. Deixe seu contato para a lista de espera e a gente avisa assim que a próxima turma tiver data.',
+  features: [
+    'Encontro semanal de 2h30, presencial em Curitiba',
+    'Aulas expositivas e dialogadas, com estudos de caso',
+    'Turma fechada, com data de início e de término',
+  ],
+  note: 'Alunos e ex-alunos da escola têm condições especiais.',
 };
 
 /**
