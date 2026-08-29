@@ -3369,10 +3369,9 @@ body {
   text-wrap: balance;
 }
 
-/* Título completo/formal do curso, quando difere do nome curto (hoje só
-   História da Arte -> "Para Além do Cânone..."). Vem logo abaixo da
-   chamada, como o subtítulo de um livro. */
-.course-deck__formal-title {
+/* Subtítulo do curso: a chamada (tagline) exibida abaixo do h1 quando o
+   curso tem título próprio (hoje só História da Arte). */
+.course-deck__subtitle {
   margin: calc(-1 * var(--spacing-1)) 0 0;
   font-family: var(--font-family-heading);
   font-size: var(--font-size-lg);
@@ -5542,7 +5541,9 @@ body {
 
 .pricing-check__icon {
   flex-shrink: 0;
-  margin-top: 3px;
+  /* Centra o ícone na primeira linha do texto: (line-height - altura do
+     ícone) / 2. */
+  margin-top: calc((1.5em - 14px) / 2);
   color: var(--color-accent);
 }
 

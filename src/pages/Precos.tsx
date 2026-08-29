@@ -34,14 +34,14 @@ function CheckList({items, months}: {items: Feature[]; months?: number}) {
           >
             {off ? (
               <X
-                size={16}
+                size={14}
                 weight="bold"
                 className="pricing-check__icon"
                 aria-hidden="true"
               />
             ) : (
               <Check
-                size={16}
+                size={14}
                 weight="bold"
                 className="pricing-check__icon"
                 aria-hidden="true"
@@ -335,24 +335,7 @@ export function Precos() {
         </div>
 
         <div className="pricing-notes">
-          <NoteGrid
-            eyebrow="Antes de matricular"
-            items={PRICING_NOTES}
-            footerCard={
-              <div className="note-grid__item note-grid__item--cta">
-                <Heading level={3}>Ficou com alguma dúvida?</Heading>
-                <Text color="secondary">
-                  A gente ajuda a escolher o plano e o horário que combinam com
-                  a sua rotina.
-                </Text>
-                <WhatsCta
-                  message="Olá! Gostaria de saber mais sobre os planos e valores dos cursos da Desenhe."
-                  label="Falar sobre os planos"
-                  size="sm"
-                />
-              </div>
-            }
-          />
+          <NoteGrid eyebrow="Antes de matricular" items={PRICING_NOTES} />
         </div>
       </Section>
     </>

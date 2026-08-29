@@ -119,9 +119,15 @@ export function CursoDetalhe({slug}: {slug: string}) {
           <div className="course-deck__header">
             <div className="course-deck__heading">
               <span className="course-deck__eyebrow">{course.shortTitle}</span>
-              <Heading level={1}>{course.tagline}</Heading>
-              {course.title !== course.shortTitle && (
-                <p className="course-deck__formal-title">{course.title}</p>
+              {course.title === course.shortTitle ? (
+                <Heading level={1}>{course.tagline}</Heading>
+              ) : (
+                <>
+                  {/* Quando o curso tem um título próprio (hoje só História
+                      da Arte), ele é o h1 e a chamada vira o subtítulo. */}
+                  <Heading level={1}>{course.title}</Heading>
+                  <p className="course-deck__subtitle">{course.tagline}</p>
+                </>
               )}
             </div>
             <p className="course-deck__lead">{course.excerpt}</p>

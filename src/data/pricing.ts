@@ -194,12 +194,6 @@ export const PRICING_NOTES: PricingNote[] = [
     href: '/cursos',
     linkLabel: 'Ver os cursos',
   },
-  {
-    title: 'Valores sob consulta',
-    text: 'Desenho de Moda, Desenho de Figura Humana e Ilustração de Livros Infantis têm valores informados pelo WhatsApp.',
-    href: '/cursos',
-    linkLabel: 'Ver os cursos',
-  },
 ];
 
 export function formatBRL(value: number): string {
