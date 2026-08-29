@@ -22,9 +22,16 @@ function CheckList({items, months}: {items: Feature[]; months?: number}) {
   return (
     <ul className="pricing-check-list">
       {items.map((item) => {
-        const label = typeof item === 'string' ? item : item.label;
+        const short =
+          typeof item !== 'string' &&
+          item.short !== undefined &&
+          months !== undefined &&
+          months < 6;
+        const label =
+          typeof item === 'string' ? item : short ? item.short! : item.label;
         const off =
           typeof item !== 'string' &&
+          item.minMonths !== undefined &&
           months !== undefined &&
           months < item.minMonths;
         return (
@@ -137,7 +144,7 @@ export function Precos() {
               return (
                 <Card key={tier.id} padding={6} className="pricing-card">
                   <div className="pricing-card__head">
-                    <Heading level={3}>{tier.title}</Heading>
+                    <Heading level={3}>{tier.cardTitle}</Heading>
                     <Text type="supporting" display="block">
                       {tier.subtitle}
                     </Text>
@@ -241,7 +248,6 @@ export function Precos() {
             </div>
 
             <div className="pricing-card__hero">
-              <Badge label={HISTORY_OF_ART.availability} variant="neutral" />
               <div className="pricing-card__price">
                 <span className="pricing-card__price-value">
                   {formatBRL(historyPlan.monthly)}
@@ -338,6 +344,36 @@ export function Precos() {
           <NoteGrid eyebrow="Antes de matricular" items={PRICING_NOTES} />
         </div>
       </Section>
+
+      <section className="course-cta course-cta--institucional">
+        <div className="container course-cta__inner">
+          <div className="course-cta__copy">
+            <span className="course-cta__eyebrow">Sem letras miúdas</span>
+            <Heading level={2} className="course-cta__headline">
+              Alguma dúvida sobre a{' '}
+              <span className="course-cta__highlight">precificação</span>?
+            </Heading>
+            <Text
+              type="large"
+              color="inherit"
+              display="block"
+              className="course-cta__lead"
+            >
+              A gente explica os planos, a taxa de matrícula e o que muda de
+              uma duração para outra, e ajuda a escolher a que cabe na sua
+              rotina.
+            </Text>
+            <div className="course-cta__action">
+              <WhatsCta
+                message="Olá! Tenho uma dúvida sobre os planos e valores dos cursos da Desenhe."
+                label="Falar sobre valores"
+                size="sm"
+                variant="secondary"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

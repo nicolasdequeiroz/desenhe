@@ -116,22 +116,27 @@ export function CursoDetalhe({slug}: {slug: string}) {
         }`}
       >
         <div className="container">
-          <div className="course-deck__header">
-            <div className="course-deck__heading">
-              <span className="course-deck__eyebrow">{course.shortTitle}</span>
-              {course.title === course.shortTitle ? (
-                <Heading level={1}>{course.tagline}</Heading>
-              ) : (
-                <>
-                  {/* Quando o curso tem um título próprio (hoje só História
-                      da Arte), ele é o h1 e a chamada vira o subtítulo. */}
-                  <Heading level={1}>{course.title}</Heading>
-                  <p className="course-deck__subtitle">{course.tagline}</p>
-                </>
-              )}
-            </div>
-            <p className="course-deck__lead">{course.excerpt}</p>
-          </div>
+          {(() => {
+            // Cursos com título próprio (hoje só História da Arte): o
+            // título vira o h1 e a chamada (tagline) entra no começo do
+            // texto de apoio, sem virar uma linha solta.
+            const named = course.title !== course.shortTitle;
+            return (
+              <div className="course-deck__header">
+                <div className="course-deck__heading">
+                  <span className="course-deck__eyebrow">
+                    {course.shortTitle}
+                  </span>
+                  <Heading level={1}>
+                    {named ? course.title : course.tagline}
+                  </Heading>
+                </div>
+                <p className="course-deck__lead">
+                  {named ? `${course.tagline} ${course.excerpt}` : course.excerpt}
+                </p>
+              </div>
+            );
+          })()}
 
           {/* Cursos novos podem entrar no ar antes das fotos: sem galeria,
               a primeira dobra fica só com o título e a chamada. */}

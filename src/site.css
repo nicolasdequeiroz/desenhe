@@ -3369,19 +3369,6 @@ body {
   text-wrap: balance;
 }
 
-/* Subtítulo do curso: a chamada (tagline) exibida abaixo do h1 quando o
-   curso tem título próprio (hoje só História da Arte). */
-.course-deck__subtitle {
-  margin: calc(-1 * var(--spacing-1)) 0 0;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-style: italic;
-  line-height: 1.35;
-  color: inherit;
-  opacity: 0.8;
-  text-wrap: balance;
-}
-
 .course-deck__eyebrow {
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);

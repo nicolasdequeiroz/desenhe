@@ -6,15 +6,20 @@ export interface Plan {
 }
 
 /**
- * Item do checklist "o que está incluso". Pode ser um texto simples ou,
- * quando o benefício só vale a partir de certa duração, um objeto com
- * `minMonths`: nos planos mais curtos o item aparece riscado.
+ * Item do checklist "o que está incluso". Pode ser um texto simples ou um
+ * objeto:
+ * - `minMonths`: abaixo dessa duração o item aparece riscado (não vale).
+ * - `short`: rótulo alternativo usado nos planos curtos (< 6 meses), com
+ *   um tom menos "formação" e mais "no seu ritmo".
  */
-export type Feature = string | {label: string; minMonths: number};
+export type Feature = string | {label: string; minMonths?: number; short?: string};
 
 export interface PricingTier {
   id: 'desenho-2h' | 'oleo-3h';
+  /** Nome do curso, usado nas mensagens de contato. */
   title: string;
+  /** Título exibido no card de plano. */
+  cardTitle: string;
   subtitle: string;
   /** Planos ordenados do maior compromisso para o menor (12, 6, 3 meses). */
   plans: Plan[];
@@ -23,7 +28,10 @@ export interface PricingTier {
 
 const COMMON_FEATURES: Feature[] = [
   'Turmas de no máximo 8 alunos',
-  'Cronograma personalizado, do iniciante ao avançado',
+  {
+    label: 'Cronograma personalizado, do iniciante ao avançado',
+    short: 'Cronograma personalizado, no seu ritmo',
+  },
   'Presencial em Curitiba ou online ao vivo',
   {label: 'Certificação ao concluir', minMonths: 12},
 ];
@@ -32,6 +40,7 @@ export const PRICING: PricingTier[] = [
   {
     id: 'desenho-2h',
     title: 'Desenho ou Pintura (aquarela/guache)',
+    cardTitle: 'Cursos de Desenho ou Pintura (aquarela/guache)',
     subtitle: 'Aulas de 2 horas, 1x por semana',
     plans: [
       {months: 12, monthly: 330},
@@ -43,6 +52,7 @@ export const PRICING: PricingTier[] = [
   {
     id: 'oleo-3h',
     title: 'Pintura a Óleo e Acrílica',
+    cardTitle: 'Curso de Pintura a Óleo e Acrílica',
     subtitle: 'Aulas de 3 horas, 1x por semana',
     plans: [
       {months: 12, monthly: 478},
@@ -79,8 +89,6 @@ export interface HistoryCourse {
   enrollmentFee: number;
   /** Da versão completa para a curta. */
   plans: HistoryPlan[];
-  /** Frase de disponibilidade (não há vaga garantida nem preço fechado). */
-  availability: string;
   /** Como e quando a turma abre. */
   intake: string;
   features: string[];
@@ -106,7 +114,6 @@ export const HISTORY_OF_ART: HistoryCourse = {
       scope: 'Versão curta: 1 módulo, 30 horas',
     },
   ],
-  availability: 'Vagas sob consulta',
   intake:
     'Sem entrada contínua: a turma abre em datas específicas ao longo do ano, conforme o número de interessados. Entre na lista de espera para saber da próxima.',
   features: [
