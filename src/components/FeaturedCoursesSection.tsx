@@ -1,6 +1,5 @@
 import {useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
-import {Button} from '../ui';
 import {WhatsCta} from './WhatsCta';
 import {COURSES, asset} from '../data';
 
@@ -240,7 +239,7 @@ export function FeaturedCoursesSection() {
                 <Link
                   key={course.slug}
                   to={`/cursos/${course.slug}`}
-                  className={`featured-courses__link${index === 0 ? ' is-active' : ''}`}
+                  className={`featured-courses__link category-tint--${course.category}${index === 0 ? ' is-active' : ''}`}
                 >
                   <span className="featured-courses__link-title">
                     {course.featuredTitle ?? course.shortTitle}
@@ -269,9 +268,8 @@ export function FeaturedCoursesSection() {
               <WhatsCta
                 message="Olá! Quero agendar a primeira aula na Desenhe."
                 label="Agendar primeira aula"
-                variant="secondary"
+                variant="primary"
               />
-              <Button label="Todos os cursos" href="/cursos" variant="primary" />
             </div>
           </div>
         </div>

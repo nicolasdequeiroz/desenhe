@@ -4,15 +4,25 @@ import {List, X} from '@phosphor-icons/react';
 import {WhatsCta} from './WhatsCta';
 import {NavCoursesDropdown} from './NavCoursesDropdown';
 import {BrandLogo} from './BrandLogo';
+import {FEATURED_PROMO} from '../data';
 
 const HORARIOS_ITEM = {to: '/horarios', label: 'Horários'};
 const PROFESSORES_ITEM = {to: '/professores', label: 'Professores'};
-const COLONIA_ITEM = {to: '/colonia-de-ferias', label: 'Colônia de Férias'};
 const PRECOS_ITEM = {to: '/precos', label: 'Preços'};
 const SOBRE_ITEM = {to: '/sobre', label: 'Sobre'};
 const CONTATO_ITEM = {to: '/contato', label: 'Contato'};
 
-const NAV_ITEMS = [HORARIOS_ITEM, PROFESSORES_ITEM, COLONIA_ITEM];
+// A campanha em destaque (Colônia de Férias, Coworking, etc.) entra na nav
+// como um link só enquanto `FEATURED_PROMO` não for `null` (ver src/data/promo.ts).
+const PROMO_ITEM = FEATURED_PROMO
+  ? {to: FEATURED_PROMO.path, label: FEATURED_PROMO.nav.label}
+  : null;
+
+const NAV_ITEMS = [
+  HORARIOS_ITEM,
+  PROFESSORES_ITEM,
+  ...(PROMO_ITEM ? [PROMO_ITEM] : []),
+];
 
 /** Itens auxiliares (Preços, Sobre, Contato) agrupados perto das ações. */
 const AUX_NAV_ITEMS = [PRECOS_ITEM, SOBRE_ITEM, CONTATO_ITEM];
@@ -23,18 +33,24 @@ const MOBILE_NAV_ITEMS = [
   HORARIOS_ITEM,
   PRECOS_ITEM,
   PROFESSORES_ITEM,
-  COLONIA_ITEM,
+  ...(PROMO_ITEM ? [PROMO_ITEM] : []),
   SOBRE_ITEM,
   CONTATO_ITEM,
 ];
 
 export function SiteHeader() {
   const {pathname} = useLocation();
-  // A home, o Sobre e as páginas de curso têm uma dobra colorida/imagem
-  // cheia no topo: o header flutua por cima dela, em vez de empurrar o
-  // conteúdo com uma faixa opaca (só faz sentido nas páginas sem essa dobra).
+  // A home, o Sobre, os Preços e as páginas de curso deixam o header flutuar
+  // por cima do conteúdo (transparente no topo, ganha fundo ao rolar), em vez
+  // de empurrar tudo com uma faixa opaca.
   const overlay =
-    pathname === '/' || pathname === '/sobre' || /^\/cursos\/[^/]+$/.test(pathname);
+    pathname === '/' ||
+    pathname === '/sobre' ||
+    pathname === '/precos' ||
+    /^\/cursos\/[^/]+$/.test(pathname);
+  // /precos flutua como o Sobre, mas já entra com o fundo do estado rolado
+  // (nada de transparência sobre o conteúdo antes do primeiro scroll).
+  const alwaysScrolled = pathname === '/precos';
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -63,7 +79,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
+      className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled || alwaysScrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
     >
       <div className="container site-header__inner">
         <button

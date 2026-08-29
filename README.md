@@ -71,25 +71,42 @@ As URLs do site Wix redirecionam client-side (ver `LEGACY_REDIRECTS` em
 `/pintura-a-oleo-ou-acrilica` → `/cursos/pintura-a-oleo-ou-acrilica`,
 `/cursos/para-alem-do-canone` → `/cursos/historia-da-arte`, `/blog` → `/`.
 
-## Chaves de conteúdo
+## Campanha em destaque (`FEATURED_PROMO`)
 
-Alguns blocos sazonais são ligados/desligados por uma constante `boolean` no
-topo do arquivo da página, sem mexer no JSX:
+O espaço "Em destaque" do site (Colônia de Férias de inverno, Colônia de
+verão, Coworking, o que vier depois) é controlado por um único ponto:
+`src/data/promo.ts`.
 
-### Card "Em destaque" do hero da home
-
-Em `src/pages/Home.tsx`:
+Cada campanha é um objeto `FeaturedPromo` (id, rota, rótulo de nav, imagem do
+card e texto da faixa). A constante `FEATURED_PROMO` aponta para a campanha em
+cartaz, ou é `null` quando não há nenhuma:
 
 ```ts
-const SHOW_HERO_FEATURED = false;
+// src/data/promo.ts
+export const FEATURED_PROMO: FeaturedPromo | null = null;        // nada em cartaz
+// export const FEATURED_PROMO: FeaturedPromo | null = COLONIA_INVERNO_2026;
 ```
 
-- `false` (atual): a primeira dobra mostra só o texto e os botões; o layout
-  do hero se ajusta sozinho.
-- `true`: reaparece o card "Em destaque" ao lado do texto, apontando para
-  `/colonia-de-ferias` (pôster em `public/images/colonia/poster-hero.jpg`).
+O site inteiro lê essa constante:
 
-Para trocar a edição em destaque no futuro, ajuste também o `to=` do `Link`,
-o `src`/`alt` da imagem e, se for o caso, o rótulo `Em destaque`.
+- **`src/components/SiteHeader.tsx`** — com `FEATURED_PROMO` definido, o link
+  `nav.label → path` entra na navegação (desktop e menu mobile), logo depois
+  de "Professores". Com `null`, o link não aparece.
+- **`src/pages/Home.tsx`** — mostra o card "Em destaque" ao lado do hero (desktop)
+  e a faixa `PromoBar` no topo (mobile/tablet), ambos a partir dos campos de
+  `FEATURED_PROMO`. Com `null`, o layout do hero se ajusta sozinho.
 
-Basta trocar o valor e fazer push; o deploy é automático.
+Com `null`, a página promovida (ex.: `/colonia-de-ferias`) continua acessível
+por URL direta; ela só some da divulgação.
+
+### Trocar a campanha
+
+1. Em `src/data/promo.ts`, defina um novo preset `FeaturedPromo` (há um exemplo
+   de `COWORKING` comentado no arquivo) ou ajuste um existente.
+2. Coloque a imagem do card em `public/images/<campanha>/` e aponte
+   `hero.image`/`hero.imageAlt` para ela.
+3. Aponte `FEATURED_PROMO` para o preset (ou `null` para desligar) e faça push;
+   o deploy é automático.
+
+O `id` de cada campanha é a chave do "fechar" da faixa no `sessionStorage`:
+trocar de campanha faz a faixa reaparecer mesmo para quem fechou a anterior.

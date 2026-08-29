@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, type ReactNode} from 'react';
 import {Check, X} from '@phosphor-icons/react';
 import {Badge, Button, Card, Divider, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
@@ -73,7 +73,7 @@ function Toggle<T extends number>({
   options: readonly T[];
   value: T;
   onChange: (value: T) => void;
-  renderLabel: (value: T) => string;
+  renderLabel: (value: T) => ReactNode;
 }) {
   return (
     <div className="pricing-toggle-wrap">
@@ -102,6 +102,28 @@ export function Precos() {
   const historyPlan =
     HISTORY_OF_ART.plans.find((p) => p.months === historyMonths) ??
     HISTORY_OF_ART.plans[0];
+
+  // Quanto a mensalidade do plano mais longo (12 meses) fica abaixo da do
+  // mais curto (3 meses). Usa o menor desconto entre os cursos, pra o selo
+  // "-X%" na opção "12 meses" nunca prometer mais do que qualquer plano dá.
+  const longPlanDiscount = Math.round(
+    Math.min(
+      ...PRICING.map((tier) => {
+        const longest = tier.plans[0];
+        const shortest = tier.plans[tier.plans.length - 1];
+        return 1 - longest.monthly / shortest.monthly;
+      }),
+    ) * 100,
+  );
+
+  // Mesma ideia para História da Arte: a versão completa (9 meses) fica
+  // abaixo da curta (3 meses).
+  const historyLongPlan = HISTORY_OF_ART.plans[0];
+  const historyShortPlan =
+    HISTORY_OF_ART.plans[HISTORY_OF_ART.plans.length - 1];
+  const historyLongPlanDiscount = Math.round(
+    (1 - historyLongPlan.monthly / historyShortPlan.monthly) * 100,
+  );
 
   return (
     <>
@@ -134,7 +156,16 @@ export function Precos() {
             options={PLAN_MONTHS}
             value={months}
             onChange={setMonths}
-            renderLabel={(m) => PLAN_INFO[m].label}
+            renderLabel={(m) => (
+              <>
+                {PLAN_INFO[m].label}
+                {m === 12 && (
+                  <span className="pricing-toggle__badge">
+                    -{longPlanDiscount}%
+                  </span>
+                )}
+              </>
+            )}
           />
 
           <div className="pricing-grid pricing-grid--2">
@@ -150,19 +181,22 @@ export function Precos() {
                     </Text>
                   </div>
 
+                  <Divider />
+
                   <div className="pricing-card__hero">
-                    {active.months === 12 && (
-                      <Badge label="Melhor custo-benefício" variant="orange" />
-                    )}
                     <div className="pricing-card__price">
+                      <span className="pricing-card__price-prefix">
+                        {active.months}x
+                      </span>
                       <span className="pricing-card__price-value">
                         {formatBRL(active.monthly)}
                       </span>
-                      <span className="pricing-card__price-unit">/mês</span>
                     </div>
                     <Text type="supporting" display="block">
-                      {formatBRL(planTotal(active))} no total, em {active.months}{' '}
-                      parcelas.
+                      Total do curso:{' '}
+                      <span className="pricing-card__total-value">
+                        {formatBRL(planTotal(active))}
+                      </span>
                     </Text>
                   </div>
 
@@ -177,8 +211,8 @@ export function Precos() {
                       size="sm"
                     />
                     <Button
-                      label="Ver cursos"
-                      href="/cursos"
+                      label={tier.courseHref ? 'Ver curso' : 'Ver cursos'}
+                      href={tier.courseHref ?? '/cursos'}
                       variant="tint"
                       size="sm"
                     />
@@ -203,30 +237,43 @@ export function Precos() {
             duração da aula, não por curso.
           */}
           <div className="pricing-first">
-            <span className="pricing-first__eyebrow">
-              Primeira aula{' '}
-              <span className="pricing-first__paren">(experimental)</span>
-            </span>
-            <Text as="p" color="secondary" className="pricing-first__text">
-              Uma aula avulsa para conhecer a escola e o professor antes de
-              fechar um plano. O valor depende só da duração da aula, não do
-              curso escolhido.
-            </Text>
-            <div className="pricing-first__options">
-              {FIRST_CLASS_PRICES.map(({hours, price}) => (
-                <div key={hours} className="pricing-first__option">
-                  <span className="pricing-first__hours">Aula de {hours}h</span>
-                  <span className="pricing-first__price">{formatBRL(price)}</span>
-                </div>
-              ))}
+            <div className="pricing-first__intro">
+              <span className="pricing-first__eyebrow">
+                Primeira aula{' '}
+                <span className="pricing-first__paren">(experimental)</span>
+              </span>
+              <Text as="p" color="secondary" className="pricing-first__text">
+                Uma aula avulsa para conhecer a escola e o professor antes de
+                fechar um plano. O valor depende só da duração da aula, não do
+                curso escolhido.
+              </Text>
             </div>
-            <WhatsCta
-              message="Olá! Quero agendar a primeira aula (experimental) na Desenhe."
-              label="Agendar primeira aula"
-              variant="ghost"
-              size="sm"
-            />
+            <div className="pricing-first__offer">
+              <dl className="pricing-first__prices">
+                {FIRST_CLASS_PRICES.map(({hours, price}) => (
+                  <div key={hours} className="pricing-first__price-row">
+                    <dt className="pricing-first__hours">Aula de {hours}h</dt>
+                    <dd className="pricing-first__price">{formatBRL(price)}</dd>
+                  </div>
+                ))}
+              </dl>
+              <WhatsCta
+                message="Olá! Quero agendar a primeira aula (experimental) na Desenhe."
+                label="Agendar primeira aula"
+                variant="ghost"
+                size="sm"
+              />
+            </div>
           </div>
+        </div>
+
+        {/*
+          Empilhado (mobile), o mesmo fio da "Infraestrutura" separa a
+          primeira aula do curso teórico. No desktop some: a separação já
+          é o vão entre as colunas da grade.
+        */}
+        <div className="pricing-break pricing-break--inline" role="presentation">
+          <Divider />
         </div>
 
         {/*
@@ -236,16 +283,25 @@ export function Precos() {
           claro que a turma abre em janelas ao longo do ano.
         */}
         <div className="pricing-block pricing-block--theory">
-          <span className="pricing-block__label">Curso teórico</span>
+          <span className="pricing-block__label">
+            Curso teórico · {HISTORY_OF_ART.name}
+          </span>
 
           <Toggle
             label="Duração do curso de História da Arte"
             options={HISTORY_OF_ART.plans.map((p) => p.months)}
             value={historyMonths}
             onChange={setHistoryMonths}
-            renderLabel={(m) =>
-              HISTORY_OF_ART.plans.find((p) => p.months === m)?.label ?? `${m}`
-            }
+            renderLabel={(m) => (
+              <>
+                {HISTORY_OF_ART.plans.find((p) => p.months === m)?.label ?? `${m}`}
+                {m === historyLongPlan.months && historyLongPlanDiscount > 0 && (
+                  <span className="pricing-toggle__badge">
+                    -{historyLongPlanDiscount}%
+                  </span>
+                )}
+              </>
+            )}
           />
 
           <Card
@@ -253,23 +309,34 @@ export function Precos() {
             className="pricing-card pricing-card--theory"
           >
             <div className="pricing-card__head">
-              <Badge label={HISTORY_OF_ART.name} variant="neutral" />
               <Heading level={3}>{HISTORY_OF_ART.title}</Heading>
               <Text type="supporting" display="block">
                 {HISTORY_OF_ART.subtitle}
               </Text>
             </div>
 
+            <Divider />
+
             <div className="pricing-card__hero">
               <div className="pricing-card__price">
+                <span className="pricing-card__price-prefix">
+                  {historyPlan.months}x
+                </span>
                 <span className="pricing-card__price-value">
                   {formatBRL(historyPlan.monthly)}
                 </span>
-                <span className="pricing-card__price-unit">/mês</span>
               </div>
-              <Text type="supporting" display="block">
-                {historyPlan.scope}. Mais taxa de matrícula única de{' '}
+              <Text
+                type="supporting"
+                display="block"
+                color="primary"
+                weight="medium"
+              >
+                Taxa de matrícula única de{' '}
                 {formatBRL(HISTORY_OF_ART.enrollmentFee)}.
+              </Text>
+              <Text type="supporting" display="block">
+                {historyPlan.scope}.
               </Text>
             </div>
 
@@ -295,7 +362,10 @@ export function Precos() {
               <span className="pricing-card__includes-label">
                 O que está incluso
               </span>
-              <CheckList items={HISTORY_OF_ART.features} />
+              <CheckList
+                items={HISTORY_OF_ART.features}
+                months={historyPlan.months}
+              />
               <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
             </div>
           </Card>
@@ -314,9 +384,12 @@ export function Precos() {
         <div className="pricing-block">
           <div className="pricing-block__head">
             <span className="pricing-block__label">Infraestrutura</span>
-            <Heading level={2} className="pricing-block__title">
-              {COWORKING.title}
-            </Heading>
+            <div className="pricing-block__title-row">
+              <Heading level={2} className="pricing-block__title">
+                {COWORKING.title}
+              </Heading>
+              <Badge label="Novidade" variant="orange" />
+            </div>
             <Text as="p" color="secondary" className="pricing-block__lead">
               {COWORKING.intro}
             </Text>
@@ -395,7 +468,7 @@ export function Precos() {
             <div className="course-cta__action">
               <WhatsCta
                 message="Olá! Tenho uma dúvida sobre os planos e valores dos cursos da Desenhe."
-                label="Falar sobre valores"
+                label="Entre em contato"
                 size="sm"
                 variant="secondary"
               />

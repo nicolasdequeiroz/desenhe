@@ -2,20 +2,12 @@ import {useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
-import {ColoniaPromoBar} from '../components/ColoniaPromoBar';
+import {PromoBar} from '../components/PromoBar';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
 import {SpaceShowcaseSection} from '../components/SpaceShowcaseSection';
 import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
-import {asset} from '../data';
-
-/**
- * Liga/desliga a divulgação da Colônia de Férias na home: o card "Em
- * destaque" da primeira dobra e a faixa (`ColoniaPromoBar`) no topo.
- * Deixe `true` para mostrar de novo quando a próxima edição estiver no
- * ar; o layout do hero se ajusta sozinho quando está `false`.
- */
-const SHOW_HERO_FEATURED = false;
+import {asset, FEATURED_PROMO} from '../data';
 
 /**
  * No mobile o fundo do hero vira um vídeo curto em loop (a versão desktop
@@ -99,7 +91,7 @@ export function Home() {
     <>
       <Seo path="/" />
 
-      {SHOW_HERO_FEATURED && <ColoniaPromoBar />}
+      {FEATURED_PROMO && <PromoBar promo={FEATURED_PROMO} />}
 
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
@@ -148,13 +140,15 @@ export function Home() {
                 </div>
               </div>
 
-              {SHOW_HERO_FEATURED && (
+              {FEATURED_PROMO && (
                 <div className="hero__gallery">
-                  <span className="hero__gallery-badge">Em destaque</span>
-                  <Link to="/colonia-de-ferias" className="hero__featured-card">
+                  <span className="hero__gallery-badge">
+                    {FEATURED_PROMO.hero.badge}
+                  </span>
+                  <Link to={FEATURED_PROMO.path} className="hero__featured-card">
                     <img
-                      src={asset('/images/colonia/poster-hero.jpg')}
-                      alt="Colônia de Férias de Inverno 2026, Desenhe, Curitiba"
+                      src={asset(FEATURED_PROMO.hero.image)}
+                      alt={FEATURED_PROMO.hero.imageAlt}
                     />
                   </Link>
                 </div>
@@ -176,7 +170,8 @@ export function Home() {
           <div className="course-cta__copy">
             <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
             <Heading level={2} className="course-cta__headline">
-              Comece <span className="course-cta__highlight">pelo primeiro traço</span>.
+              Comece{' '}
+              <span className="course-cta__highlight">pelo primeiro traço.</span>
             </Heading>
             <Text type="large" color="inherit" display="block" className="course-cta__lead">
               Turmas de no máximo 8 alunos, cronograma no seu ritmo e uma

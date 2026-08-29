@@ -21,6 +21,12 @@ export interface PricingTier {
   /** Título exibido no card de plano. */
   cardTitle: string;
   subtitle: string;
+  /**
+   * Página de curso para onde o botão "Ver curso" do card aponta. Quando o
+   * card cobre mais de um curso (ex.: desenho + aquarela/guache), deixe
+   * indefinido: o botão vira "Ver cursos" e leva à listagem.
+   */
+  courseHref?: string;
   /** Planos ordenados do maior compromisso para o menor (12, 6, 3 meses). */
   plans: Plan[];
   features: Feature[];
@@ -54,6 +60,7 @@ export const PRICING: PricingTier[] = [
     title: 'Pintura a Óleo e Acrílica',
     cardTitle: 'Curso de Pintura a Óleo e Acrílica',
     subtitle: 'Aulas de 3 horas, 1x por semana',
+    courseHref: '/cursos/pintura-a-oleo-ou-acrilica',
     plans: [
       {months: 12, monthly: 478},
       {months: 6, monthly: 540},
@@ -91,7 +98,9 @@ export interface HistoryCourse {
   plans: HistoryPlan[];
   /** Como e quando a turma abre. */
   intake: string;
-  features: string[];
+  /** `minMonths` risca o item nas durações abaixo do valor (ex.: certificado
+   *  só na versão de 9 meses). */
+  features: Feature[];
   note: string;
 }
 
@@ -100,6 +109,11 @@ export const HISTORY_OF_ART: HistoryCourse = {
   title: 'Para Além do Cânone: uma História Conectada da Arte',
   subtitle: 'Presencial em Curitiba, em turma fechada',
   enrollmentFee: 120,
+  /*
+   * Como nos cursos de ateliê, o compromisso mais longo tem a menor
+   * mensalidade: a versão completa (9 meses) sai ~20% mais barata por mês
+   * que a curta (3 meses). Da mais longa para a mais curta.
+   */
   plans: [
     {
       months: 9,
@@ -110,7 +124,7 @@ export const HISTORY_OF_ART: HistoryCourse = {
     {
       months: 3,
       label: '3 meses',
-      monthly: 460,
+      monthly: 575,
       scope: 'Versão curta: 1 módulo, 30 horas',
     },
   ],
@@ -120,6 +134,7 @@ export const HISTORY_OF_ART: HistoryCourse = {
     'Encontro semanal de 2h30, presencial em Curitiba',
     'Aulas expositivas e dialogadas, com estudos de caso',
     'Turma fechada, com data de início e de término',
+    {label: 'Certificação ao concluir', minMonths: 9},
   ],
   note: 'Alunos e ex-alunos da escola têm condições especiais.',
 };

@@ -246,37 +246,44 @@ export function CursoDetalhe({slug}: {slug: string}) {
         )}
 
         <div className="course-intro__block">
-          <span className="course-intro__label">O curso em resumo</span>
-          <div
-            className={`course-facts course-facts--${course.category} course-facts--cols-${factCards.length}`}
-          >
+          <span className="course-intro__label">Resumo do curso</span>
+          {/*
+            Ficha do curso: uma definição por linha (rótulo à esquerda,
+            valores à direita), separadas por fios finos. É a mesma linguagem
+            editorial do resto da página (fios em vez de caixas), e lê como
+            uma ficha técnica, que é o que este bloco é.
+          */}
+          <dl className="course-summary">
             {factCards.map(({icon: Icon, title, items}) => (
-              <div key={title} className="course-facts__card">
-                <span className="course-facts__icon-badge">
-                  <Icon size={22} weight="light" className="course-facts__icon" />
-                </span>
-                <div className="course-facts__title">{title}</div>
-                {items.length > 0 && (
-                  <ul className="course-facts__list">
-                    {items.map((item) => (
-                      <li key={item} className="course-facts__item">
-                        <span className="course-facts__bullet" aria-hidden="true" />
-                        <Text className="course-facts__value">{item}</Text>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {title === 'Mensalidade' && pricing && (
-                  <Link to="/precos" className="course-facts__link">
-                    Ver planos completos
-                    <span className="course-facts__link-arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </Link>
-                )}
+              <div className="course-summary__row" key={title}>
+                <dt className="course-summary__term">
+                  <Icon
+                    size={18}
+                    weight="light"
+                    className="course-summary__icon"
+                    aria-hidden="true"
+                  />
+                  {title}
+                </dt>
+                <dd className="course-summary__detail">
+                  {items.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                  {title === 'Mensalidade' && pricing && (
+                    <Link to="/precos" className="course-summary__link">
+                      Ver planos completos
+                      <span
+                        className="course-summary__link-arrow"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                    </Link>
+                  )}
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </div>
 

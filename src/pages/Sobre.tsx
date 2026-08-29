@@ -230,25 +230,29 @@ export function Sobre() {
         ))}
       </nav>
 
+      {/* Mesma ficha da página de curso (.course-summary): rótulo + ícone à
+          esquerda, valores à direita, fios finos. */}
       <div className="container about-facts">
-        <div className="course-facts course-facts--institucional">
+        <dl className="course-summary">
           {FATOS.map(({icon: Icon, title, items}) => (
-            <div key={title} className="course-facts__card">
-              <span className="course-facts__icon-badge">
-                <Icon size={22} weight="light" className="course-facts__icon" />
-              </span>
-              <div className="course-facts__title">{title}</div>
-              <ul className="course-facts__list">
+            <div className="course-summary__row" key={title}>
+              <dt className="course-summary__term">
+                <Icon
+                  size={18}
+                  weight="light"
+                  className="course-summary__icon"
+                  aria-hidden="true"
+                />
+                {title}
+              </dt>
+              <dd className="course-summary__detail">
                 {items.map((item) => (
-                  <li key={item} className="course-facts__item">
-                    <span className="course-facts__bullet" aria-hidden="true" />
-                    <Text>{item}</Text>
-                  </li>
+                  <span key={item}>{item}</span>
                 ))}
-              </ul>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
 
       <Section

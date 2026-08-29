@@ -375,7 +375,7 @@ body {
   min-height: 2.125rem;
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-element);
-  color: color-mix(in srgb, var(--surface-warm-bg) 70%, transparent);
+  color: color-mix(in srgb, var(--color-text-primary) 70%, transparent);
   font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: 1.4;
@@ -393,7 +393,7 @@ body {
 
 .site-nav > a:hover,
 .site-header__nav-link:hover {
-  color: var(--surface-warm-bg);
+  color: var(--color-text-primary);
   background: var(--color-background-muted);
   transform: translateY(-1px);
 }
@@ -423,7 +423,7 @@ body {
 
 .site-nav-dropdown__trigger:hover,
 .site-nav-dropdown.is-open .site-nav-dropdown__trigger {
-  color: var(--surface-warm-bg);
+  color: var(--color-text-primary);
   background: var(--color-background-muted);
   transform: translateY(-1px);
 }
@@ -450,7 +450,7 @@ body {
 .site-header--overlay:not(.site-header--scrolled) .site-nav > a,
 .site-header--overlay:not(.site-header--scrolled) .site-header__nav-link,
 .site-header--overlay:not(.site-header--scrolled) .site-nav-dropdown__trigger {
-  color: color-mix(in srgb, #fff 82%, transparent);
+  color: color-mix(in srgb, var(--color-text-primary) 82%, transparent);
 }
 
 .site-header--overlay:not(.site-header--scrolled) .site-nav > a[aria-current='page'],
@@ -458,15 +458,25 @@ body {
 .site-header--overlay:not(.site-header--scrolled)
   .site-nav-dropdown.is-active
   .site-nav-dropdown__trigger {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
-/* O CTA laranja também encosta no laranja/vermelho da categoria: um anel
-   claro o separa do hero enquanto o header está por cima dele. */
+/* O CTA laranja encosta no laranja/vermelho da categoria e some no fundo.
+   Enquanto o header está por cima do hero (full bleed, sem a pílula escura),
+   o botão vira o bege da logo (sólido, texto escuro) para garantir contraste;
+   ao rolar, volta a ser laranja junto com o resto do header. */
 .site-header--overlay:not(.site-header--scrolled) .site-header__cta {
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, #fff 55%, transparent),
-    var(--site-button-shadow);
+  background-color: var(--color-text-primary);
+  color: var(--color-background-body);
+  box-shadow: 0 6px 20px color-mix(in srgb, #000 22%, transparent);
+}
+
+@media (hover: hover) {
+  .site-header--overlay:not(.site-header--scrolled)
+    .site-header__cta:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: color-mix(in srgb, var(--color-text-primary) 90%, #000);
+    color: var(--color-background-body);
+  }
 }
 
 .site-nav-dropdown__chevron {
@@ -797,7 +807,7 @@ body {
   --hero-pad-bottom: calc(var(--spacing-10) + var(--spacing-6));
   padding-top: var(--hero-pad-top);
   padding-bottom: var(--hero-pad-bottom);
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .hero__background {
@@ -899,6 +909,12 @@ body {
   font-weight: 700;
 }
 
+/* Sobre a foto do hero o laranja do kicker some: usa o bege da logo. Precisa
+   do seletor composto pra vencer o `color` de `.section__eyebrow`. */
+.section__eyebrow.hero__top-eyebrow {
+  color: var(--color-text-primary);
+}
+
 /* Sobre a foto do hero o fio marrom de .section__eyebrow some: usa a
    própria cor do kicker, esmaecida. */
 .section__eyebrow.hero__top-eyebrow::after {
@@ -937,7 +953,7 @@ body {
   font-size: var(--font-size-md);
   font-weight: 500;
   line-height: 1.55;
-  color: color-mix(in srgb, #fff 82%, transparent);
+  color: color-mix(in srgb, var(--color-text-primary) 88%, transparent);
 }
 
 .hero__actions {
@@ -1020,18 +1036,24 @@ body {
     --hero-gap: clamp(200px, 36vh, 360px);
     --hero-pad-top: calc(64px + var(--hero-gap));
     --hero-pad-bottom: calc(var(--spacing-8) + var(--spacing-5));
-    /* Altura natural: o gap de cima é garantido pelo padding acima,
-       sem depender de 100dvh. */
-    min-height: 0;
+    /* A dobra ocupa a tela toda: 100svh (a menor altura da viewport, com a
+       barra do navegador aberta) pra nada ser cortado quando ela recolhe. */
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
-  /* Fade mais suave: a foto do ateliê fica coberta demais nesta largura. */
+  /*
+   * Mobile: fade de topo mais denso (destaca a logo e o "Matricule-se" que
+   * flutuam sobre a foto) e fade de base mais forte (a foto some antes de
+   * encontrar o conteúdo).
+   */
   .hero__background-overlay {
     background:
       linear-gradient(
         to bottom,
-        color-mix(in srgb, #000 45%, transparent) 0,
-        transparent 140px
+        color-mix(in srgb, #000 62%, transparent) 0,
+        color-mix(in srgb, #000 22%, transparent) 96px,
+        transparent 180px
       ),
       radial-gradient(
         circle at 50% 100%,
@@ -1040,14 +1062,26 @@ body {
       ),
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--color-background-body) 15%, transparent) 0,
-        color-mix(in srgb, var(--color-background-body) 55%, transparent) 60%,
-        var(--color-background-body) 96%
+        color-mix(in srgb, var(--color-background-body) 22%, transparent) 0,
+        color-mix(in srgb, var(--color-background-body) 70%, transparent) 55%,
+        var(--color-background-body) 92%
       );
   }
 
   .hero__inner {
-    min-height: 0;
+    /* Preenche a dobra de 100svh e joga TODO o conteúdo para o rodapé dela,
+       com a tag "Desde 1988..." logo acima do h1 (no desktop o
+       `.hero__main` cresce e só o texto desce; no mobile a hero é mais
+       cheia e a tag ficava flutuando no meio). Se a janela do gap não
+       couber, o `calc` fica <= 0 e o header cuida do respiro. */
+    min-height: calc(
+      100svh - var(--hero-pad-top) - var(--hero-pad-bottom)
+    );
+    justify-content: flex-end;
+  }
+
+  .hero__main {
+    flex: 0 0 auto;
   }
 
   .hero__title {
@@ -1077,6 +1111,22 @@ body {
 @media (max-width: 640px) {
   .section {
     padding-block: var(--spacing-12);
+  }
+}
+
+/*
+ * Em /precos o header flutua (fixo) e já entra com fundo: a primeira seção
+ * ganha uma folga de topo bem maior pra o kicker "Investimento" não passar
+ * por baixo dele. Depois do override mobile de `.section` acima, senão o
+ * `padding-block` de lá vence.
+ */
+.section--pricing {
+  padding-top: calc(var(--spacing-10) * 2 + var(--spacing-12));
+}
+
+@media (max-width: 640px) {
+  .section--pricing {
+    padding-top: calc(var(--spacing-12) + 72px);
   }
 }
 
@@ -1183,7 +1233,14 @@ body {
   width: 100%;
   height: auto;
   max-height: none;
+  /* Retrato: a capa ocupa melhor a altura da faixa ao lado da lista de cursos
+     (o object-fit recorta a foto original para esse quadro). */
+  aspect-ratio: 4 / 5;
   object-fit: cover;
+  /* Moldura de papel, igual às cartas das páginas de curso (.course-deck__card,
+     .course-card__frame): dá unidade entre a home e o restante do site. */
+  border: 8px solid var(--surface-warm-card);
+  background: var(--surface-warm-card);
   border-radius: var(--radius-container);
   opacity: 0;
   pointer-events: none;
@@ -1199,7 +1256,7 @@ body {
 
 /* Sem imagem não há altura intrínseca: o painel assume a proporção das capas. */
 .featured-courses__image--placeholder {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
 }
 
 .featured-courses__image.is-active {
@@ -1293,11 +1350,37 @@ body {
   transition: transform var(--duration-medium) ease;
 }
 
-/* Deixa claro que a linha inteira é um link: o título anda um pouco e uma
-   seta em laranja aparece no hover, no foco e na linha ativa. */
+/* Bolinha na cor do curso, à frente do título: cresce a partir do zero no
+   hover/foco/linha ativa (nas outras horas fica colapsada, sem recuo). */
+.featured-courses__link-title::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0.42em;
+  margin-right: 0;
+  border-radius: 999px;
+  background: var(--category-color, var(--color-accent));
+  vertical-align: 0.06em;
+  opacity: 0;
+  transition:
+    width var(--duration-medium) ease,
+    margin var(--duration-medium) ease,
+    opacity var(--duration-medium) ease;
+}
+
+/* Deixa claro que a linha inteira é um link: o título anda um pouco, a
+   bolinha aparece e a seta acende, tudo na cor do curso. */
 .featured-courses__link:hover .featured-courses__link-title,
 .featured-courses__link:focus-visible .featured-courses__link-title {
   transform: translateX(6px);
+}
+
+.featured-courses__link:hover .featured-courses__link-title::before,
+.featured-courses__link:focus-visible .featured-courses__link-title::before,
+.featured-courses__link.is-active .featured-courses__link-title::before {
+  width: 0.42em;
+  margin-right: 0.4em;
+  opacity: 1;
 }
 
 .featured-courses__link-subtitle {
@@ -1328,7 +1411,7 @@ body {
 .featured-courses__link:hover .featured-courses__link-arrow,
 .featured-courses__link:focus-visible .featured-courses__link-arrow,
 .featured-courses__link.is-active .featured-courses__link-arrow {
-  color: var(--color-accent);
+  color: var(--category-color, var(--color-accent));
   transform: translateX(4px);
 }
 
@@ -1544,7 +1627,7 @@ body {
   padding: var(--spacing-1) var(--spacing-3);
   border-radius: 9999px;
   background: var(--category-color, var(--color-accent));
-  color: #fff;
+  color: var(--color-text-primary);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
   font-weight: 700;
@@ -1584,7 +1667,6 @@ body {
 .category-tint--teorico,
 .course-page--teorico,
 .course-deck--teorico,
-.course-facts--teorico,
 .course-timeline--teorico,
 .course-cta--teorico {
   --category-color: var(--color-category-teorico);
@@ -1615,7 +1697,7 @@ body {
     color-mix(in srgb, var(--category-color) 70%, #171310),
     color-mix(in srgb, var(--category-color) 28%, #171310)
   );
-  color: #fff;
+  color: var(--color-text-primary);
   text-align: center;
 }
 
@@ -1779,6 +1861,17 @@ body {
 
 .note-grid__item h3 {
   margin: 0 0 var(--spacing-3);
+}
+
+/*
+ * Proposta pedagógica em /cursos: os três títulos têm comprimentos parecidos
+ * mas quebram em pontos diferentes (um em uma linha, outro em três). Um teto
+ * de largura + `balance` força as três a duas linhas equilibradas, alinhando
+ * a altura dos cabeçalhos.
+ */
+.course-philosophy .note-grid__item h3 {
+  max-width: 22ch;
+  text-wrap: balance;
 }
 
 /*
@@ -2042,6 +2135,44 @@ body {
   gap: var(--spacing-3);
 }
 
+/* Mobile: o bloco "Nosso espaço" abandona o centralizado e alinha à
+   esquerda, como o resto do conteúdo da página no celular. */
+@media (max-width: 640px) {
+  .space-showcase__top {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .space-showcase__content {
+    align-items: flex-start;
+  }
+
+  .space-showcase__content .section__eyebrow {
+    text-align: left;
+  }
+
+  .space-showcase__content .section__eyebrow::after {
+    margin-inline: 0;
+  }
+
+  .space-showcase__actions {
+    justify-content: flex-start;
+  }
+
+  .space-showcase__highlights {
+    align-items: flex-start;
+  }
+
+  .space-showcase__highlight {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .space-showcase__highlight-head {
+    align-items: flex-start;
+  }
+}
+
 /*
  * Galeria editorial (inspirada em referência com scroll longo e
  * generoso espaço vazio): duas colunas, cada uma uma PILHA VERTICAL
@@ -2146,7 +2277,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-text-primary);
   background: linear-gradient(to bottom, rgb(0 0 0 / 0.55), transparent);
 }
 
@@ -2404,6 +2535,25 @@ body {
   .testimonials__lead {
     max-width: none;
   }
+}
+
+/* Mobile: cabeçalho dos depoimentos alinhado à esquerda. */
+@media (max-width: 640px) {
+  .testimonials__header {
+    text-align: left;
+    margin-inline: 0;
+  }
+
+  .testimonials__intro {
+    align-items: flex-start;
+  }
+
+  .testimonials__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
 
   .testimonials__carousel {
     margin-top: var(--spacing-8);
@@ -2612,6 +2762,8 @@ body {
 }
 
 .about-facts {
+  /* Contexto institucional: os ícones da ficha usam a cor institucional. */
+  --category-color: var(--color-category-institucional);
   padding-bottom: clamp(var(--spacing-10), 6vw, 72px);
 }
 
@@ -2838,7 +2990,7 @@ body {
    * que o desfoque dava.
    */
   background: color-mix(in srgb, #171310 88%, transparent);
-  color: #fff;
+  color: var(--color-text-primary);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
   font-weight: 700;
@@ -3189,7 +3341,7 @@ body {
   justify-content: center;
   gap: var(--spacing-1);
   text-align: center;
-  color: color-mix(in srgb, #fff 78%, transparent);
+  color: color-mix(in srgb, var(--color-text-primary) 78%, transparent);
   font-family: var(--font-family-body);
   font-size: var(--font-size-base);
 }
@@ -3197,7 +3349,7 @@ body {
 .work-viewer__count {
   font-family: var(--font-family-heading);
   letter-spacing: 0.16em;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 /* Autoria: fica no papel do polaroid, então usa a cor do papel, não a do fundo. */
@@ -3214,7 +3366,7 @@ body {
 }
 
 .work-viewer__course {
-  color: color-mix(in srgb, #fff 62%, transparent);
+  color: color-mix(in srgb, var(--color-text-primary) 62%, transparent);
 }
 
 .work-viewer__close,
@@ -3229,7 +3381,7 @@ body {
   border: 1px solid color-mix(in srgb, #fff 22%, transparent);
   border-radius: 50%;
   background: color-mix(in srgb, #171310 70%, transparent);
-  color: #fff;
+  color: var(--color-text-primary);
   cursor: pointer;
   transition:
     background var(--duration-medium) ease,
@@ -3386,7 +3538,7 @@ body {
   /* A cor da categoria é escurecida contra o fundo do site: mantém o tom do
      curso e garante contraste do texto branco por cima. */
   background: color-mix(in srgb, var(--category-color) 80%, #171310);
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .course-deck--desenho {
@@ -3722,12 +3874,11 @@ body {
   flex-direction: column;
 }
 
-/* Fio entre blocos consecutivos (linguagens -> resumo), no mesmo desenho
-   do separador de .note-grid. Só aparece quando há um bloco antes: se o
-   curso não tem linguagens, o resumo é o primeiro e não ganha fio. */
+/* Bloco seguinte (resumo, depois das linguagens) ganha só um respiro extra;
+   a separação fica por conta do rótulo próprio e do fio da ficha logo
+   abaixo, sem um segundo fio cheio aqui em cima. */
 .course-intro__block + .course-intro__block {
   padding-top: clamp(var(--spacing-6), 3vw, var(--spacing-8));
-  border-top: 1px solid var(--color-border);
 }
 
 /* Rótulo de bloco, no mesmo tom dos kickers de seção mas sem o fio: aqui
@@ -3926,183 +4077,108 @@ body {
 }
 
 /*
- * Baralho de "fatos" do curso (para quem, duração...), no estilo do
- * componente de referência: uma faixa dividida em colunas por bordas
- * internas, cada uma com ícone, rótulo e uma pequena lista.
+ * Ficha técnica em lista de definição: rótulo + ícone à esquerda, valores à
+ * direita, fios finos entre as linhas. É a mesma linguagem editorial dos
+ * outros blocos das páginas (fios em vez de caixas), e lê como uma ficha,
+ * que é o que estes blocos são. Serve o "Resumo do curso" (CursoDetalhe) e
+ * os fatos da escola em /sobre (`.about-facts`).
+ *
+ * Até ~960px é uma coluna só (rótulo | valores, ou empilhado no mobile); no
+ * desktop vira uma matriz 2x2, para os quatro dados ocuparem a largura da
+ * página em vez de deixarem meia página vazia à direita.
  */
-.course-facts {
+.course-summary {
+  margin: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.course-summary__row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-container);
-  overflow: hidden;
+  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(var(--spacing-4), 5vw, var(--spacing-10));
+  padding-block: clamp(var(--spacing-4), 3vw, var(--spacing-5));
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* Cursos sem todos os dados preenchidos mostram menos cartas (ver CursoDetalhe). */
-.course-facts--cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (min-width: 960px) {
+  .course-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(var(--spacing-8), 6vw, var(--spacing-12));
+  }
+
+  .course-summary__row {
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+    gap: var(--spacing-5);
+    /* Célula esticada até a altura do par ao lado: o conteúdo fica no topo e
+       o fio de baixo alinha com o da célula vizinha (régua contínua). */
+    align-content: start;
+  }
+
+  /* Curso com só 3 dados: a última linha ocupa as duas colunas. */
+  .course-summary__row:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
 }
 
-.course-facts--cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.course-summary__term {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
 }
 
-.course-facts--desenho {
-  --category-color: var(--color-category-desenho);
+.course-summary__icon {
+  flex-shrink: 0;
+  color: var(--category-color, var(--color-accent));
 }
 
-.course-facts--pintura {
-  --category-color: var(--color-category-pintura);
-}
-
-.course-facts--institucional {
-  --category-color: var(--color-category-institucional);
-}
-
-.course-facts--infantil {
-  --category-color: var(--color-category-infantil);
-}
-
-.course-facts__card {
+.course-summary__detail {
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
-  padding: var(--spacing-6) var(--spacing-5);
-  border-left: 1px solid var(--color-border);
+  align-items: flex-start;
+  gap: var(--spacing-1);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
 }
 
-.course-facts__card:first-child {
-  border-left: none;
-}
-
-.course-facts__icon-badge {
+.course-summary__link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid color-mix(in srgb, var(--category-color, var(--color-accent)) 45%, transparent);
-  border-radius: 50%;
-}
-
-.course-facts__icon {
-  color: var(--category-color, var(--color-accent));
-}
-
-.course-facts__title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.course-facts__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.course-facts__item {
-  display: flex;
-  align-items: baseline;
-  gap: var(--spacing-2);
-}
-
-/* Marcador discreto: um ponto pequeno e neutro, só para separar itens
-   quando a carta tem mais de um. Não precisa puxar a cor da categoria. */
-.course-facts__bullet {
-  flex-shrink: 0;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-text-secondary);
-  opacity: 0.5;
-  transform: translateY(-3px);
-}
-
-.course-facts__link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  width: 100%;
-  margin-top: auto;
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-element);
-  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 12%, transparent);
-  color: color-mix(in srgb, var(--category-color, var(--color-accent)) 75%, var(--color-text-secondary));
+  gap: 0.45em;
+  margin-top: var(--spacing-2);
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  font-size: var(--font-size-sm);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-align: center;
-  transition:
-    background var(--duration-fast) ease,
-    color var(--duration-fast) ease;
-}
-
-.course-facts__link:hover {
-  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 22%, transparent);
   color: var(--category-color, var(--color-accent));
+  text-decoration: none;
 }
 
-.course-facts__link-arrow {
-  display: inline-block;
+.course-summary__link-arrow {
   transition: transform var(--duration-medium) ease;
 }
 
-.course-facts__link:hover .course-facts__link-arrow {
+.course-summary__link:hover .course-summary__link-arrow,
+.course-summary__link:focus-visible .course-summary__link-arrow {
   transform: translateX(3px);
 }
 
-/*
- * No mobile a faixa de fatos abre mão dos ícones: sem eles a carta é só o
- * rótulo e a lista, empilhados, e cabe uma fonte um pouco menor nos
- * valores (que são frases e quebravam demais). O `!important` vence o
- * `font-size` inline do componente <Text>.
- */
-@media (max-width: 760px) {
-  .course-facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .course-facts__icon-badge {
-    display: none;
-  }
-
-  .course-facts__card {
-    gap: var(--spacing-3);
-    padding: var(--spacing-5);
-  }
-
-  .course-facts__value {
-    font-size: 0.8125rem !important;
-  }
-
-  .course-facts__card:nth-child(3) {
-    border-left: none;
-  }
-
-  .course-facts__card:nth-child(n + 3) {
-    border-top: 1px solid var(--color-border);
-  }
-}
-
-@media (max-width: 460px) {
-  /* Numa coluna só: as frases dos valores não cabem em meia largura. */
-  .course-facts {
+/* Empilha: o rótulo vira uma etiqueta acima dos valores. */
+@media (max-width: 640px) {
+  .course-summary__row {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .course-facts__card {
-    border-left: none;
-  }
-
-  .course-facts__card:not(:first-child) {
-    border-top: 1px solid var(--color-border);
+    gap: var(--spacing-2);
+    padding-block: var(--spacing-4);
   }
 }
 
@@ -4372,7 +4448,7 @@ body {
   padding-block: clamp(56px, 8vw, 96px);
   /* Continua exatamente da cor em que o gradiente acima termina. */
   background: color-mix(in srgb, var(--category-color) 82%, #171310);
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 /* A faixa de cursos relacionados encosta na CTA final: sem a folga cheia
@@ -5306,7 +5382,7 @@ body {
   height: 3.5rem;
   border-radius: 50%;
   background: #25d366;
-  color: #fff;
+  color: var(--color-text-primary);
   text-decoration: none;
   box-shadow:
     0 3px 10px color-mix(in srgb, #25d366 22%, transparent),
@@ -5328,7 +5404,7 @@ body {
 }
 
 .whats-float:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--color-text-primary);
   outline-offset: 3px;
 }
 
@@ -5413,6 +5489,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: var(--spacing-2) var(--spacing-5);
   border: none;
   border-radius: 9999px;
@@ -5448,14 +5525,34 @@ body {
     0 2px 6px color-mix(in srgb, #000 35%, transparent);
 }
 
+/* Selo de economia na opção "12 meses": quanto a mensalidade cai frente ao
+   plano de 3 meses. */
+.pricing-toggle__badge {
+  padding: 2px 6px;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* Com o selo, o respiro à direita do texto já vem do próprio selo: encolhe
+   o padding da opção desse lado pra não sobrar espaço morto. */
+.pricing-toggle__option:has(.pricing-toggle__badge) {
+  padding-inline-end: var(--spacing-3);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pricing-toggle__option {
     transition: none;
   }
 }
 
-/* No celular o seletor continua horizontal, ocupando a largura toda: as
-   três durações dividem o espaço em partes iguais. */
+/* No celular o seletor continua horizontal, ocupando a largura toda. As
+   opções sem selo dividem o espaço em partes iguais; a de "12 meses" abraça
+   o próprio conteúdo (rótulo + selo) e pode ficar um pouco maior. */
 @media (max-width: 640px) {
   .pricing-toggle-wrap {
     display: block;
@@ -5468,9 +5565,16 @@ body {
 
   .pricing-toggle__option {
     flex: 1;
+    gap: 0.3rem;
     padding-inline: var(--spacing-2);
     font-size: 0.75rem;
     letter-spacing: 0.02em;
+  }
+
+  .pricing-toggle__option:has(.pricing-toggle__badge) {
+    flex: 0 0 auto;
+    /* Abraçando o conteúdo, cabe (e pede) mais respiro antes do rótulo. */
+    padding-inline-start: var(--spacing-4);
   }
 }
 
@@ -5527,6 +5631,12 @@ body {
   margin: 0;
 }
 
+/* O fio já abre a pausa abaixo do cabeçalho: o bloco de preço encosta mais
+   nele, sem o respiro cheio do `gap` da carta. */
+.pricing-card .divider + .pricing-card__hero {
+  margin-top: calc(-1 * var(--spacing-2));
+}
+
 .pricing-card__head {
   display: flex;
   flex-direction: column;
@@ -5547,10 +5657,27 @@ body {
   align-items: flex-start;
 }
 
+/* "R$ X no total, em Y parcelas" cola no valor cheio, mais perto que o
+   respiro padrão do bloco. */
+.pricing-card__price + span {
+  margin-top: calc(-1 * var(--spacing-1));
+}
+
 .pricing-card__price {
   display: flex;
   align-items: baseline;
   gap: var(--spacing-2);
+}
+
+/* "12x de" antes do valor mensal: parte do mesmo bloco de destaque do preço
+   (mesma cor e peso), só um degrau menor que o número da parcela. O "/mês"
+   fica implícito no "12x", então nem aparece. */
+.pricing-card__price-prefix {
+  font-family: var(--font-family-body);
+  font-size: clamp(1.5rem, 3.5vw, 1.875rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
 }
 
 .pricing-card__price-value {
@@ -5559,6 +5686,12 @@ body {
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
+}
+
+/* Valor total: mesma cor "acesa" do preço, para não sumir na frase discreta. */
+.pricing-card__total-value {
+  color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 .pricing-card__price-unit {
@@ -5648,16 +5781,29 @@ body {
 
 /*
  * Primeira aula (experimental): fecha o bloco dos cursos práticos, abaixo
- * da grade. Alinhada à esquerda com o resto do bloco, sem card porque o
- * valor é por duração da aula, não por curso.
+ * da grade. Não é um plano, então não repete o card grande: é um painel
+ * horizontal, com a explicação à esquerda e, separado por um fio, o
+ * "cardápio" de preços por duração com o botão logo abaixo. Empilha no
+ * mobile.
  */
 .pricing-first {
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 300px);
+  gap: clamp(var(--spacing-4), 4vw, var(--spacing-6));
+  align-items: start;
+  /* Ocupa toda a largura do bloco de cursos práticos (a grade de cards
+     acima), não uma faixa mais estreita. */
+  margin-top: var(--spacing-6);
+  padding: clamp(var(--spacing-4), 3vw, var(--spacing-6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: color-mix(in srgb, var(--color-background-card) 45%, transparent);
+}
+
+.pricing-first__intro {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-3);
-  max-width: 520px;
-  margin-top: clamp(var(--spacing-5), 4vw, 36px);
+  gap: var(--spacing-2);
 }
 
 .pricing-first__eyebrow {
@@ -5678,21 +5824,31 @@ body {
   margin: 0;
 }
 
-.pricing-first__options {
+/* Coluna direita: fio de separação, lista de preços e botão empilhados. */
+.pricing-first__offer {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--spacing-3);
-  margin-top: var(--spacing-2);
+  padding-left: clamp(var(--spacing-4), 3vw, var(--spacing-6));
+  border-left: 1px solid var(--color-border);
 }
 
-.pricing-first__option {
+.pricing-first__prices {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-first__price-row {
   display: flex;
   align-items: baseline;
-  gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-element);
-  background: var(--color-background-card);
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) 0;
+}
+
+.pricing-first__price-row + .pricing-first__price-row {
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
 }
 
 .pricing-first__hours {
@@ -5705,15 +5861,32 @@ body {
 }
 
 .pricing-first__price {
+  margin: 0;
   font-family: var(--font-family-body);
   font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-/* Botão discreto do bloco: largura natural e sem o brilho dos CTAs. */
-.pricing-first .btn {
-  margin-top: var(--spacing-1);
+.pricing-first__offer .btn {
+  width: 100%;
+}
+
+/* Abaixo de ~700px o painel empilha: o fio vertical vira horizontal. */
+@media (max-width: 700px) {
+  .pricing-first {
+    grid-template-columns: 1fr;
+    /* Empilhado logo abaixo dos cards de plano: mesmo espaçamento que
+       separa os cards entre si (o `gap` da .pricing-grid). */
+    margin-top: var(--spacing-5);
+  }
+
+  .pricing-first__offer {
+    padding-left: 0;
+    padding-top: var(--spacing-4);
+    border-left: 0;
+    border-top: 1px solid var(--color-border);
+  }
 }
 
 /* Em /precos a abertura da seção acompanha os blocos: alinhada à esquerda,
@@ -5794,6 +5967,28 @@ body {
   --color-accent: color-mix(in srgb, var(--color-category-teorico) 55%, #fdece2);
 }
 
+/*
+ * Fio entre a primeira aula e o curso teórico, só quando os blocos empilham
+ * (abaixo de 1000px). Funciona igual ao fio da "Infraestrutura"
+ * (`.pricing-break`): mesmo respiro grande por cima e a folga curta por
+ * baixo, colando no rótulo do bloco seguinte. No desktop some, porque a
+ * separação já é o vão entre as colunas da grade; por isso o `gap` do
+ * `.pricing-blocks` no mobile zera e o espaçamento fica por conta do fio.
+ */
+.pricing-break--inline {
+  display: none;
+}
+
+@media (max-width: 999px) {
+  .pricing-blocks {
+    gap: 0;
+  }
+
+  .pricing-break--inline {
+    display: block;
+  }
+}
+
 .pricing-block__head {
   display: flex;
   flex-direction: column;
@@ -5808,6 +6003,14 @@ body {
 
 .pricing-block__title {
   margin: 0;
+}
+
+/* Título + selo "Novidade" na mesma linha (o selo à direita do título). */
+.pricing-block__title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
 }
 
 .pricing-block__lead {
@@ -5828,7 +6031,8 @@ body {
  * .note-grid), com o respiro grande só por cima.
  */
 .pricing-break {
-  margin-top: clamp(var(--spacing-10), 8vw, 88px);
+  /* Piso de 64px no mobile (onde 8vw fica curto); no desktop segue em 88px. */
+  margin-top: clamp(64px, 8vw, 88px);
   margin-bottom: var(--spacing-6);
 }
 
@@ -6496,7 +6700,7 @@ body {
 .colonia-cta {
   padding-block: clamp(56px, 8vw, 96px);
   background: color-mix(in srgb, var(--colonia-color) 82%, #171310);
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .colonia-cta__inner {
@@ -7067,7 +7271,7 @@ body {
   border-radius: 9999px;
   border: 1px solid color-mix(in srgb, #fff 20%, transparent);
   background: color-mix(in srgb, #000 35%, transparent);
-  color: #fff;
+  color: var(--color-text-primary);
   cursor: pointer;
   transition: background-color var(--duration-fast);
 }
