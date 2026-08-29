@@ -3369,6 +3369,20 @@ body {
   text-wrap: balance;
 }
 
+/* Título completo/formal do curso, quando difere do nome curto (hoje só
+   História da Arte -> "Para Além do Cânone..."). Vem logo abaixo da
+   chamada, como o subtítulo de um livro. */
+.course-deck__formal-title {
+  margin: calc(-1 * var(--spacing-1)) 0 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-style: italic;
+  line-height: 1.35;
+  color: inherit;
+  opacity: 0.8;
+  text-wrap: balance;
+}
+
 .course-deck__eyebrow {
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
@@ -5445,7 +5459,14 @@ body {
 .pricing-card__head {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--spacing-1);
+}
+
+/* Selo com o nome curto do curso (ex.: "História da Arte") acima do
+   título completo. Descola um pouco do título. */
+.pricing-card__head .badge {
+  margin-bottom: var(--spacing-2);
 }
 
 .pricing-card__hero {

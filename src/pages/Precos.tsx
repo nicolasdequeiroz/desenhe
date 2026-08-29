@@ -155,7 +155,10 @@ export function Precos() {
                     </div>
                     <Text type="supporting" display="block">
                       {formatBRL(planTotal(active))} no total, em {active.months}{' '}
-                      parcelas. {PLAN_INFO[active.months].note}.
+                      parcelas.
+                    </Text>
+                    <Text type="supporting" display="block">
+                      {PLAN_INFO[active.months].note}.
                     </Text>
                   </div>
 
@@ -230,6 +233,7 @@ export function Precos() {
             className="pricing-card pricing-card--theory"
           >
             <div className="pricing-card__head">
+              <Badge label={HISTORY_OF_ART.name} variant="neutral" />
               <Heading level={3}>{HISTORY_OF_ART.title}</Heading>
               <Text type="supporting" display="block">
                 {HISTORY_OF_ART.subtitle}
@@ -254,7 +258,7 @@ export function Precos() {
 
             <div className="pricing-card__cta">
               <WhatsCta
-                message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.title} da Desenhe (versão de ${historyPlan.months} meses).`}
+                message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.name} da Desenhe (versão de ${historyPlan.months} meses).`}
                 label="Entrar na lista de espera"
                 size="sm"
               />

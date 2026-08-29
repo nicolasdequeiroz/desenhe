@@ -542,7 +542,7 @@ export const COURSES: Course[] = [
   {
     slug: 'historia-da-arte',
     tagline: 'A arte contada além do que sempre te disseram sobre ela.',
-    title: 'Para Além do Cânone: uma história conectada da arte',
+    title: 'Para Além do Cânone: uma História Conectada da Arte',
     category: 'institucional',
     shortTitle: 'História da Arte',
     excerpt:

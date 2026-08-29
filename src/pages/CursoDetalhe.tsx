@@ -120,6 +120,9 @@ export function CursoDetalhe({slug}: {slug: string}) {
             <div className="course-deck__heading">
               <span className="course-deck__eyebrow">{course.shortTitle}</span>
               <Heading level={1}>{course.tagline}</Heading>
+              {course.title !== course.shortTitle && (
+                <p className="course-deck__formal-title">{course.title}</p>
+              )}
             </div>
             <p className="course-deck__lead">{course.excerpt}</p>
           </div>

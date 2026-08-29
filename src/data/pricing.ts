@@ -25,7 +25,7 @@ const COMMON_FEATURES: Feature[] = [
   'Turmas de no máximo 8 alunos',
   'Cronograma personalizado, do iniciante ao avançado',
   'Presencial em Curitiba ou online ao vivo',
-  {label: 'Certificação ao concluir o plano de 12 meses', minMonths: 12},
+  {label: 'Certificação ao concluir', minMonths: 12},
 ];
 
 export const PRICING: PricingTier[] = [
@@ -70,6 +70,9 @@ export interface HistoryPlan {
 }
 
 export interface HistoryCourse {
+  /** Nome curto do curso (usado como selo e nas mensagens). */
+  name: string;
+  /** Título completo, exibido como título do card e na página do curso. */
   title: string;
   subtitle: string;
   /** Taxa de matrícula única, além das mensalidades. */
@@ -85,8 +88,9 @@ export interface HistoryCourse {
 }
 
 export const HISTORY_OF_ART: HistoryCourse = {
-  title: 'História da Arte',
-  subtitle: 'Curso teórico presencial, em turma fechada',
+  name: 'História da Arte',
+  title: 'Para Além do Cânone: uma História Conectada da Arte',
+  subtitle: 'Presencial em Curitiba, em turma fechada',
   enrollmentFee: 120,
   plans: [
     {
