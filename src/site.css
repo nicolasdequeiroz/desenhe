@@ -5392,8 +5392,15 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
+  min-width: 0;
   border: 1px solid var(--color-border);
   transition: border-color var(--duration-medium) ease;
+}
+
+/* Título longo (ex.: "Desenho ou Pintura (aquarela/guache)") quebra em vez
+   de esticar a carta. */
+.pricing-card__head h3 {
+  overflow-wrap: anywhere;
 }
 
 .pricing-card:hover {
@@ -5584,19 +5591,20 @@ body {
 .pricing-block {
   display: flex;
   flex-direction: column;
+  /* Item de flex/grid: sem isto os títulos longos dos cards (monospace,
+     caixa alta) não quebram e estouram a largura no mobile. */
+  min-width: 0;
 }
 
 /*
  * Os dois blocos de curso ficam lado a lado no desktop (ateliê à esquerda,
- * ocupando o espaço de dois cards; teórico à direita, um card). Abaixo de
- * 1000px empilham, com respiro vertical entre eles.
+ * ocupando o espaço de dois cards; teórico à direita, um card), preenchendo
+ * o container. Abaixo de 1000px empilham, com respiro vertical entre eles.
  */
 .pricing-blocks {
   display: flex;
   flex-direction: column;
   gap: clamp(var(--spacing-10), 9vw, 88px);
-  max-width: 1120px;
-  margin-inline: auto;
 }
 
 @media (min-width: 1000px) {
@@ -5615,7 +5623,7 @@ body {
 
 .pricing-block__label {
   display: block;
-  margin-bottom: var(--spacing-5);
+  margin-bottom: var(--spacing-3);
   font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
   font-weight: 700;
@@ -5648,27 +5656,25 @@ body {
 /* Dentro de um bloco o respiro vem do próprio bloco; o seletor não precisa
    da margem grande que usa quando aparece sozinho. */
 .pricing-block .pricing-toggle-wrap {
-  margin-bottom: clamp(var(--spacing-6), 4vw, 40px);
+  margin-bottom: clamp(var(--spacing-4), 3vw, 28px);
 }
 
 /*
- * Fio entre a parte escolar (planos + primeira aula) e o coworking, que é
- * um serviço à parte. Alinhado à mesma largura da grade de planos.
+ * Fio entre a parte escolar (cursos + primeira aula) e o coworking, que é
+ * um serviço à parte.
  */
 .pricing-break {
-  max-width: 1120px;
-  margin: clamp(var(--spacing-10), 8vw, 88px) auto;
+  margin: clamp(var(--spacing-10), 8vw, 88px) 0;
 }
 
 /*
- * Card sozinho (coworking, História da Arte): em vez de ficar estreito e
- * perdido no centro, ele se abre em duas colunas no desktop (preço + CTA e,
- * na História, o texto da turma de um lado; "o que está incluso" do outro).
- * No mobile volta a ser a pilha vertical padrão de .pricing-card.
+ * Card sozinho (coworking): em vez de ficar estreito e perdido no centro,
+ * ele se abre em duas colunas no desktop (preço + CTA de um lado, "o que
+ * está incluso" do outro). No mobile volta a ser a pilha vertical padrão
+ * de .pricing-card.
  */
 .pricing-solo {
-  max-width: 1120px;
-  margin-inline: auto;
+  width: 100%;
 }
 
 .pricing-card__main {
