@@ -12,26 +12,34 @@
  */
 :root {
   color-scheme: dark;
+  /*
+   * Raio dos cantos de baixo da .site-shell (efeito de gaveta). Vive aqui
+   * porque o rodapé precisa do mesmo valor para preencher o recorte que
+   * esses cantos abrem (ver .site-footer).
+   */
+  --shell-radius: var(--spacing-10);
 }
 
 /*
- * O <body> é bege de propósito (ver abaixo), e sem fundo próprio o <html>
- * herdaria essa cor: é ela que o Safari/Chrome mobile amostram para o
- * "overscroll" (efeito elástico) no topo e no fim da página. Fixamos o
- * <html> na cor escura do site para esse recorte, sem mexer no <body>.
+ * A cor do "overscroll" (o elástico no topo e no fim da página) sai daqui.
+ * Cada motor a calcula de um jeito:
+ *
+ *  - Chrome/Firefox seguem a especificação e usam o fundo do <html>, que é
+ *    propagado para o canvas.
+ *  - O WebKit (Safari, no iPhone e no Mac) mistura os fundos do <html> e do
+ *    <body>: um <body> opaco vence. Enquanto o body era bege (para preencher
+ *    o recorte da gaveta, ver .site-footer), o Safari pintava as duas pontas
+ *    da página de bege.
+ *
+ * Por isso os dois são escuros, e o bege que o recorte precisa é pintado
+ * pelo próprio rodapé, não pelo body.
  */
-html {
+html,
+body {
   background: var(--color-background-body);
 }
 
 body {
-  /*
-   * Aparece de propósito: no scroll máximo, a caixa do rodapé (sticky) termina
-   * exatamente onde a .site-shell termina: não sobra sobreposição para o
-   * canto arredondado da shell revelar. É o body que preenche esse recorte, e
-   * por isso ele usa a cor clara do rodapé, não a escura do resto do site.
-   */
-  background: var(--surface-warm-bg);
   font-family: var(--font-family-body);
   color: var(--color-text-primary);
 }
@@ -271,10 +279,9 @@ body {
    * O `padding-top` acima é o respiro da pill flutuante: .site-header__inner
    * não preenche essa faixa, só o próprio .site-header. Nas páginas internas
    * não há hero nenhum atrás pra revelar, então essa faixa precisa ser opaca
-   * (a cor escura da página), senão vaza a cor clara do body (necessária pro
-   * recorte da gaveta no rodapé: ver comentário no `body`). Trocar sticky
-   * por fixed não mudaria nada aqui: o problema é essa faixa transparente,
-   * não o esquema de posicionamento.
+   * (a cor escura da página), senão a pill flutua sobre uma faixa vazia.
+   * Trocar sticky por fixed não mudaria nada aqui: o problema é essa faixa
+   * transparente, não o esquema de posicionamento.
    */
   background: var(--color-background-body);
 }
@@ -298,9 +305,8 @@ body {
   /*
    * Opaco por padrão: nas páginas internas o header é o primeiro elemento da
    * página (sticky normal, não overlay), então "atrás" dele não tem hero
-   * nenhum: só o body. Ficar transparente ali só expõe a cor do body (que
-   * agora é clara, por causa do recorte da gaveta no rodapé: ver .site-shell
-   * e o comentário no `body`), o que lê como um bug visual.
+   * nenhum para revelar: sem fundo, a barra ficaria sem corpo sobre o
+   * conteúdo que passa por baixo.
    */
   background: color-mix(in srgb, var(--color-background-card) 90%, transparent);
   backdrop-filter: blur(12px);
@@ -4582,7 +4588,7 @@ body {
   position: relative;
   z-index: 1;
   background: var(--color-background-body);
-  border-radius: 0 0 var(--spacing-10) var(--spacing-10);
+  border-radius: 0 0 var(--shell-radius) var(--shell-radius);
   /*
    * Sem isto o raio só existe no fundo da própria div: a última seção
    * (depoimentos) pinta um retângulo reto até a borda e mascara a curva.
@@ -4592,8 +4598,8 @@ body {
 }
 
 @media (max-width: 700px) {
-  .site-shell {
-    border-radius: 0 0 var(--spacing-6) var(--spacing-6);
+  :root {
+    --shell-radius: var(--spacing-6);
   }
 }
 
@@ -4617,6 +4623,15 @@ body {
   padding-top: calc(var(--spacing-10) * 1.2);
   padding-bottom: var(--spacing-6);
   overflow: hidden;
+  /*
+   * No scroll máximo o topo do rodapé encosta exatamente na base da
+   * .site-shell, então os cantos arredondados dela abrem dois recortes que
+   * não têm rodapé por baixo. Esta sombra (sem blur e sem spread) repete o
+   * retângulo do rodapé --shell-radius acima dele e preenche esses recortes.
+   * É desenhada FORA da caixa, então o `overflow: hidden` acima não a corta,
+   * e fica atrás da shell (que tem z-index 1), aparecendo só nas quinas.
+   */
+  box-shadow: 0 calc(-1 * var(--shell-radius)) 0 var(--surface-warm-bg);
 }
 
 @media (max-width: 640px) {
