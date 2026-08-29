@@ -2470,6 +2470,16 @@ body {
   opacity: 1;
 }
 
+/* Sem hover (toque) não dá para "acender" uma carta por vez: mostra todas
+   cheias. O `touch-action: pan-y` continua: rolagem vertical da página passa
+   direto, e o arrasto horizontal do trilho vai para o JS (que solta o gesto
+   quando o movimento é claramente vertical). */
+@media (hover: none) {
+  .testimonials__card {
+    opacity: 1;
+  }
+}
+
 .testimonials__quote-icon {
   position: absolute;
   right: var(--spacing-4);

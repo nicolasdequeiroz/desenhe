@@ -5,6 +5,8 @@ import {Button} from '../ui';
 import {SITE, TESTIMONIALS, type Testimonial} from '../data';
 
 const TICKER_SPEED_PX_PER_SEC = 40;
+/** Movimento necessário para decidir se um toque é arrasto do trilho (px). */
+const DRAG_LOCK_THRESHOLD = 6;
 
 function TestimonialCard({
   item,
@@ -47,6 +49,20 @@ export function TestimonialsSection() {
   const draggingRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartPositionRef = useRef(0);
+  /*
+   * No toque não dá para "capturar" o ponteiro logo no `pointerdown`: o
+   * navegador ainda pode decidir que o gesto é rolagem vertical da página, e
+   * capturar cedo faz o Android/iOS dispararem `pointercancel` e matarem o
+   * arrasto. Então guardamos o toque como "pendente" e só travamos o arrasto
+   * (captura + flag) quando o movimento se confirma mais horizontal que
+   * vertical. Com mouse não há ambiguidade: trava na hora.
+   */
+  const pendingRef = useRef<{
+    x: number;
+    y: number;
+    pointerId: number;
+    position: number;
+  } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
@@ -94,27 +110,66 @@ export function TestimonialsSection() {
     hint.style.top = `${event.clientY - rect.top}px`;
   };
 
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  const lockDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const pending = pendingRef.current;
+    if (!pending) return;
     draggingRef.current = true;
-    dragStartXRef.current = event.clientX;
-    dragStartPositionRef.current = positionRef.current;
+    dragStartXRef.current = pending.x;
+    dragStartPositionRef.current = pending.position;
     setIsDragging(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(pending.pointerId);
+    } catch {
+      /* ponteiro já solto */
+    }
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    pendingRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+      position: positionRef.current,
+    };
+    if (event.pointerType === 'mouse') lockDrag(event);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     updateHintPosition(event);
+
+    const pending = pendingRef.current;
+    if (pending && !draggingRef.current) {
+      const dx = event.clientX - pending.x;
+      const dy = event.clientY - pending.y;
+      if (Math.abs(dx) < DRAG_LOCK_THRESHOLD && Math.abs(dy) < DRAG_LOCK_THRESHOLD) {
+        return;
+      }
+      // Gesto mais vertical que horizontal: é rolagem da página, desiste.
+      if (Math.abs(dy) > Math.abs(dx)) {
+        pendingRef.current = null;
+        return;
+      }
+      lockDrag(event);
+    }
+
     if (!draggingRef.current) return;
+    // Arrasto travado: segura a página parada enquanto o trilho se move.
+    if (event.cancelable) event.preventDefault();
     const delta = event.clientX - dragStartXRef.current;
     positionRef.current = dragStartPositionRef.current + delta;
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    pendingRef.current = null;
     if (!draggingRef.current) return;
     draggingRef.current = false;
     setIsDragging(false);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      /* ponteiro já solto */
     }
   };
 
@@ -163,7 +218,7 @@ export function TestimonialsSection() {
         onPointerLeave={stopDragging}
       >
         <span ref={hintRef} className="testimonials__hint" aria-hidden="true">
-          Clique e arraste
+          Arraste para ver mais
         </span>
         <div className="testimonials__track" ref={trackRef}>
           {tickerItems.map((item, index) => (
