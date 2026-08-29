@@ -5563,18 +5563,41 @@ body {
 }
 
 /*
- * A seção é uma pilha de blocos: cada bloco tem um rótulo próprio e, quando
- * faz sentido, um seletor de duração que vale só para ele. É o que separa
- * os cursos de ateliê (mensais, seletor 12/6/3) do curso teórico de
- * História da Arte (turma fechada, seletor 9/3).
+ * Cada bloco tem um rótulo próprio e, quando faz sentido, um seletor de
+ * duração que vale só para ele. É o que separa os cursos de ateliê
+ * (mensais, seletor 12/6/3) do curso teórico de História da Arte (turma
+ * fechada, seletor 9/3).
  */
 .pricing-block {
   display: flex;
   flex-direction: column;
 }
 
-.pricing-block + .pricing-block {
-  margin-top: clamp(var(--spacing-10), 9vw, 96px);
+/*
+ * Os dois blocos de curso ficam lado a lado no desktop (ateliê à esquerda,
+ * ocupando o espaço de dois cards; teórico à direita, um card). Abaixo de
+ * 1000px empilham, com respiro vertical entre eles.
+ */
+.pricing-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--spacing-10), 9vw, 88px);
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+@media (min-width: 1000px) {
+  .pricing-blocks {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--spacing-5);
+    align-items: start;
+  }
+
+  /* Alinha o seletor ao rótulo do bloco, à esquerda, em vez de centrado. */
+  .pricing-blocks .pricing-toggle-wrap {
+    justify-content: flex-start;
+  }
 }
 
 .pricing-block__label {
@@ -5686,6 +5709,9 @@ body {
     var(--color-border-emphasized) 16%,
     var(--color-background-card)
   );
+  /* Empilhado (abaixo de 1000px) o bloco ocupa a largura toda; o card não
+     precisa acompanhar. No desktop ele já é limitado pela coluna. */
+  max-width: 460px;
 }
 
 .pricing-card--theory:hover {

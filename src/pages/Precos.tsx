@@ -89,6 +89,12 @@ export function Precos() {
         lead="Uma aula por semana nos cursos de desenho e pintura, presencial em Curitiba ou online ao vivo. A mensalidade depende só da duração do plano: quanto mais longo o compromisso, menor o valor por mês."
       >
         {/*
+          Os dois blocos de curso ficam lado a lado no desktop (cursos de
+          ateliê à esquerda, História da Arte à direita) e empilham no
+          mobile. Cada um tem rótulo e seletor de duração próprios.
+        */}
+        <div className="pricing-blocks">
+        {/*
           Bloco 1: os cursos de ateliê (aula semanal). O seletor 12/6/3
           troca os valores dos dois cards ao mesmo tempo e só deles.
         */}
@@ -163,15 +169,7 @@ export function Precos() {
           claro que a turma abre em janelas ao longo do ano.
         */}
         <div className="pricing-block">
-          <div className="pricing-block__head">
-            <span className="pricing-block__label">Curso teórico</span>
-            <Heading level={2} className="pricing-block__title">
-              {HISTORY_OF_ART.title}
-            </Heading>
-            <Text as="p" color="secondary" className="pricing-block__lead">
-              {HISTORY_OF_ART.subtitle}
-            </Text>
-          </div>
+          <span className="pricing-block__label">Curso teórico</span>
 
           <Toggle
             label="Duração do curso de História da Arte"
@@ -183,48 +181,52 @@ export function Precos() {
             }
           />
 
-          <div className="pricing-solo">
-            <Card
-              padding={6}
-              className="pricing-card pricing-card--solo pricing-card--theory"
-            >
-              <div className="pricing-card__main">
-                <div className="pricing-card__hero">
-                  <Badge label={HISTORY_OF_ART.availability} variant="neutral" />
-                  <div className="pricing-card__price">
-                    <span className="pricing-card__price-value">
-                      {formatBRL(historyPlan.monthly)}
-                    </span>
-                    <span className="pricing-card__price-unit">/mês</span>
-                  </div>
-                  <Text type="supporting" display="block">
-                    {historyPlan.scope}. Mais taxa de matrícula única de{' '}
-                    {formatBRL(HISTORY_OF_ART.enrollmentFee)}.
-                  </Text>
-                </div>
+          <Card
+            padding={6}
+            className="pricing-card pricing-card--theory"
+          >
+            <div className="pricing-card__head">
+              <Heading level={3}>{HISTORY_OF_ART.title}</Heading>
+              <Text type="supporting" display="block">
+                {HISTORY_OF_ART.subtitle}
+              </Text>
+            </div>
 
-                <p className="pricing-card__intake">{HISTORY_OF_ART.intake}</p>
-
-                <div className="pricing-card__cta">
-                  <WhatsCta
-                    message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.title} da Desenhe (versão de ${historyPlan.months} meses).`}
-                    label="Entrar na lista de espera"
-                    size="sm"
-                  />
-                </div>
-              </div>
-
-              <Divider />
-
-              <div className="pricing-card__includes">
-                <span className="pricing-card__includes-label">
-                  O que está incluso
+            <div className="pricing-card__hero">
+              <Badge label={HISTORY_OF_ART.availability} variant="neutral" />
+              <div className="pricing-card__price">
+                <span className="pricing-card__price-value">
+                  {formatBRL(historyPlan.monthly)}
                 </span>
-                <CheckList items={HISTORY_OF_ART.features} />
-                <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
+                <span className="pricing-card__price-unit">/mês</span>
               </div>
-            </Card>
-          </div>
+              <Text type="supporting" display="block">
+                {historyPlan.scope}. Mais taxa de matrícula única de{' '}
+                {formatBRL(HISTORY_OF_ART.enrollmentFee)}.
+              </Text>
+            </div>
+
+            <p className="pricing-card__intake">{HISTORY_OF_ART.intake}</p>
+
+            <div className="pricing-card__cta">
+              <WhatsCta
+                message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.title} da Desenhe (versão de ${historyPlan.months} meses).`}
+                label="Entrar na lista de espera"
+                size="sm"
+              />
+            </div>
+
+            <Divider />
+
+            <div className="pricing-card__includes">
+              <span className="pricing-card__includes-label">
+                O que está incluso
+              </span>
+              <CheckList items={HISTORY_OF_ART.features} />
+              <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
+            </div>
+          </Card>
+        </div>
         </div>
 
         {/*
