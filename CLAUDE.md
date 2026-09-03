@@ -13,15 +13,16 @@ Never use em dashes (—) or en dashes as sentence punctuation (–), in site co
 ## Commands
 
 ```bash
-npm run dev        # dev server at http://localhost:5173
-npm run build      # tsc -b && vite-react-ssg build: outputs static HTML for every route into dist/
-npm run preview    # serve the production build
-npm run lint        # oxlint
+npm run dev          # dev server at http://localhost:5173
+npm run build        # tsc -b && vite-react-ssg build: outputs static HTML for every route into dist/
+npm run preview      # serve the production build
+npm run lint         # oxlint
+npm run build:deploy # what CI runs: build + copy 404.html + touch .nojekyll, into dist/
 ```
 
 There is no test suite. `npm run build` is the main correctness check: it runs the full TypeScript compile (`tsc -b`) before the SSG build, so type errors fail the build.
 
-Deploy is automatic on push to `main` via `.github/workflows/deploy.yml` (builds, copies `dist/index.html` to `dist/404.html` for SPA fallback, publishes to GitHub Pages). No manual deploy step.
+Deploy is automatic: every push to `main` runs `.github/workflows/deploy.yml`, which installs, builds, and uploads the result straight to GitHub Pages (Settings > Pages > Source: **GitHub Actions**). Nothing generated is committed. The one knob is `BASE_PATH` in the workflow's `env`: `/desenhe/` while the site is served from `https://<user>.github.io/desenhe/`, `/` once the custom domain is in place. `vite.config.ts` reads it, and `asset()` in `src/data/site.ts` prefixes every image path with it, so getting it wrong breaks every asset and link. There is no `CNAME` file: with workflow-based publishing the custom domain is stored in the Pages settings. An earlier setup published a committed `docs/` folder; that folder is gone and gitignored. The launch checklist (including turning the guestbook on) is in the README.
 
 ## Architecture
 
@@ -33,9 +34,9 @@ Deploy is automatic on push to `main` via `.github/workflows/deploy.yml` (builds
 
 **Design tokens are plain CSS custom properties, cascaded through one entry point.** `src/index.css` imports, in order: `styles/reset.css` → `styles/tokens.css` (all color/spacing/typography/radius tokens as `--variables` on `:root`) → `ui/ui.css` → `site.css` (2000+ lines, all page/section-specific structural CSS, BEM-ish class names like `.space-showcase__gallery-item--sm`). There is no CSS-in-JS, CSS modules, or Tailwind. The site is locked to dark mode (`color-scheme: dark` is forced regardless of OS preference) except the testimonials section and footer, which intentionally use a separate light "warm paper" surface (`--surface-warm-*` tokens) for visual contrast.
 
-**Page composition pattern:** most pages are `<Seo/>` (sets title/description/canonical/OG tags via `vite-react-ssg`'s `<Head>`) followed by a `<Section/>` (generic kicker/title/lead/children wrapper, `src/components/Section.tsx`) or bespoke section components for the home page (`FeaturedCoursesSection`, `SpaceShowcaseSection`, `TestimonialsSection`). Course detail pages (`CursoDetalhe.tsx`) are driven entirely by a `slug` prop looked up against `COURSES`.
+**Page composition pattern:** most pages are `<Seo/>` (sets title/description/canonical/OG/Twitter tags via `vite-react-ssg`'s `<Head>`; it falls back to the school's facade photo for `og:image` since WhatsApp does not preview the site's `.webp` images, and takes a `noindex` prop for pages that stay online but out of search, currently the off-season Colônia de Férias) followed by a `<Section/>` (generic kicker/title/lead/children wrapper, `src/components/Section.tsx`) or bespoke section components for the home page (`FeaturedCoursesSection`, `SpaceShowcaseSection`, `TestimonialsSection`). Course detail pages (`CursoDetalhe.tsx`) are driven entirely by a `slug` prop looked up against `COURSES`.
 
-**Legacy URL redirects.** The old Wix site's URLs are preserved as client-side redirects (`LEGACY_REDIRECTS` in `src/routes.tsx`, rendered via `src/components/Redirect.tsx`) so old inbound links/bookmarks still resolve, e.g. `/precos-mensalidades` → `/precos`. When adding or renaming a route, check whether an old Wix path should redirect to it.
+**Legacy URL redirects.** Every URL from the old Wix site is preserved: `LEGACY_REDIRECTS` in `src/routes.tsx` maps each old page one by one (e.g. `/precos-mensalidades` to `/precos`, `/oscar-pedroso` to `/professores#oscar-pedroso`), and `LEGACY_WILDCARDS` catches the Wix families with no equivalent here (blog posts, blog categories, event pages). Each named redirect is pre-rendered to a real HTML file whose head carries a 0s `meta refresh` plus a `canonical` pointing at the destination (`src/components/Redirect.tsx`): GitHub Pages cannot issue a 301, and a client-only redirect would reach crawlers as an empty page, losing the old URL's search history. Wildcards have no file of their own and redirect through the `404.html` fallback. When adding or renaming a route, add the old path to `LEGACY_REDIRECTS` and keep only the new URL in `public/sitemap.xml`.
 
 **The footer is a drawing guestbook.** Visitors draw in a small canvas panel (`GuestbookPanel.tsx`, opened by the star button) and the drawing drops into a physics pile of polaroid cards at the bottom of the page (`DoodlePile.tsx`, matter-js, dynamically imported, and the only user of that dep). Drawings are stored as **vector strokes with normalized 0..1 coordinates** (`src/data/guestbook.ts`), never as images, so the same record is redrawn crisply at any size and fits in a spreadsheet cell.
 

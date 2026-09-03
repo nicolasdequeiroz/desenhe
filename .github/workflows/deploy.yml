@@ -1,0 +1,72 @@
+# Publica o site a cada push na main.
+#
+# O build acontece aqui, não na máquina de ninguém: o repositório guarda só o
+# código-fonte, e o HTML gerado vai direto para o GitHub Pages. Antes disso o
+# site era a pasta docs/ commitada, o que obrigava a rodar o build à mão e
+# revisar 130 arquivos gerados a cada mudança de texto.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # Permite republicar pelo botão "Run workflow", sem precisar de um commit.
+  workflow_dispatch:
+
+# Permissões mínimas que o deploy do Pages exige.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Um deploy por vez. Dois pushes seguidos entram na fila em vez de um cancelar
+# o outro, para o site nunca ficar com metade de uma publicação.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Caminho em que o site é servido. Enquanto o endereço for
+      # nicolasdequeiroz.github.io/desenhe/, tudo vive dentro de /desenhe/.
+      #
+      # NO DIA DO DOMÍNIO PRÓPRIO: troque esta linha para "/" e faça push.
+      # É o único lugar que precisa mudar (o CNAME não é necessário quando a
+      # publicação vem de um workflow: o domínio fica salvo em Settings > Pages).
+      BASE_PATH: /desenhe/
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # npm ci em vez de npm install: instala exatamente o package-lock.json,
+      # então a versão que sobe é a mesma que roda aqui.
+      - run: npm ci
+
+      # Faz o tsc -b, o pré-render de todas as rotas, copia o 404.html
+      # (fallback do Pages) e cria o .nojekyll.
+      - run: npm run build:deploy
+
+      # enablement: true muda, na primeira execução, Settings > Pages > Source
+      # de "Deploy from a branch" para "GitHub Actions". Depois disso é no-op.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Build antigo: o site era publicado a partir desta pasta commitada. Agora
+# quem publica é .github/workflows/deploy.yml, direto do dist/ gerado no CI.
+docs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

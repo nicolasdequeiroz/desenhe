@@ -1,13 +1,13 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 
-// BASE_PATH permite servir de um subcaminho (ex.: /repo/ no GitHub Pages
-// antes do domínio próprio). Com domínio custom, fica na raiz '/'.
+// BASE_PATH é o caminho em que o site é servido: '/desenhe/' enquanto o
+// endereço for <usuario>.github.io/desenhe/, '/' com o domínio próprio. Quem
+// define isso na publicação é o env do .github/workflows/deploy.yml; o padrão
+// aqui é a raiz, que é o que o dev server e o build local usam.
 //
-// BUILD_OUT_DIR muda a pasta de saída do build: 'dist' no dia a dia,
-// 'docs' quando o build é para o GitHub Pages publicar direto da branch
-// main (ver "npm run build:pages" e Settings > Pages > Deploy from a
-// branch > main > /docs).
+// BUILD_OUT_DIR muda a pasta de saída, útil para gerar um build de teste sem
+// mexer no dist/.
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
   build: {
