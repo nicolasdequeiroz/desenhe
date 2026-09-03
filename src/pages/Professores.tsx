@@ -24,8 +24,8 @@ export function Professores() {
   return (
     <div className="professores-page">
       <Seo
-        title="Professores"
-        description="Conheça os professores da Desenhe: artistas visuais, ilustradores e pesquisadores com formação em belas artes, dedicados ao ensino individualizado de desenho e pintura."
+        title="Professores de Desenho e Pintura"
+        description="Os professores da Desenhe são artistas visuais, ilustradores e pesquisadores formados em belas artes, que acompanham cada aluno de perto em turmas pequenas."
         path="/professores"
       />
       <Section

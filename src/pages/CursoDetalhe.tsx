@@ -104,8 +104,8 @@ export function CursoDetalhe({slug}: {slug: string}) {
   return (
     <div className={`course-page course-page--${course.category}`}>
       <Seo
-        title={`Curso de ${course.shortTitle}`}
-        description={course.excerpt}
+        title={course.metaTitle}
+        description={course.metaDescription}
         path={`/cursos/${course.slug}`}
         image={course.ogImage}
       />

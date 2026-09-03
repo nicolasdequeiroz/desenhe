@@ -71,6 +71,19 @@ export interface Course {
    */
   tagline: string;
   excerpt: string;
+  /**
+   * Título da aba e do resultado de busca. Vem separado do `title` porque o
+   * nome formal de alguns cursos ("Técnicas de Pintura II: Tinta a Óleo e
+   * Acrílica") estoura o limite do Google e é cortado no meio. Regra: até
+   * uns 48 caracteres, já que o <Seo> acrescenta " | Desenhe".
+   */
+  metaTitle: string;
+  /**
+   * Descrição do resultado de busca. Diferente do `excerpt` (que é o resumo
+   * dentro do site): aqui cabe repetir o que a pessoa buscou, incluindo a
+   * cidade. Regra: entre 140 e 160 caracteres, senão o Google corta.
+   */
+  metaDescription: string;
   description: string[];
   audience: string;
   /** Texto curto de faixa etária para badges em cards. */
@@ -115,6 +128,9 @@ export interface Course {
 export const COURSES: Course[] = [
   {
     slug: 'desenho-artistico',
+    metaTitle: 'Curso de Desenho Artístico em Curitiba',
+    metaDescription:
+      'Aprenda forma, perspectiva, luz e sombra e teoria das cores no seu ritmo, em turmas pequenas. Curso de desenho artístico em Curitiba, a partir dos 9 anos.',
     tagline: 'O primeiro traço de uma técnica que dura a vida toda.',
     title: 'Desenho Artístico',
     category: 'desenho',
@@ -171,6 +187,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'desenho-de-figura-humana',
+    metaTitle: 'Curso de Desenho de Figura Humana',
+    metaDescription:
+      'Proporção, volume e escorço com aulas de modelo vivo: estude a mecânica do corpo da observação à anatomia, em Curitiba, com acompanhamento individual.',
     tagline: 'Do gesto à anatomia: o corpo desenhado com precisão e sensibilidade.',
     title: 'Desenho de Figura Humana',
     category: 'desenho',
@@ -216,6 +235,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'quadrinhos-hq-manga-cartoon',
+    metaTitle: 'Curso de Quadrinhos, Mangá e Cartoon',
+    metaDescription:
+      'Crie personagens, cenários e narrativas visuais, das formas básicas à arte-final. Curso de mangá, HQ e cartoon em Curitiba, para todas as idades.',
     tagline: 'Personagens e histórias que nascem na ponta do seu lápis.',
     title: 'Quadrinhos - Mangá, HQ e Cartoon',
     category: 'desenho',
@@ -283,6 +305,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'desenho-de-moda',
+    metaTitle: 'Curso de Desenho de Moda em Curitiba',
+    metaDescription:
+      'Croquis funcionais e a metodologia de desenvolvimento de coleção, do painel de tendências ao book final. Curso de desenho de moda em Curitiba.',
     tagline: 'Da primeira referência ao book de coleção assinado por você.',
     title: 'Desenho de Moda',
     category: 'desenho',
@@ -328,6 +353,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'ilustracao-de-livros-infantis',
+    metaTitle: 'Curso de Ilustração de Livros Infantis',
+    metaDescription:
+      'Narrativas visuais para o universo da infância: personagens, cenários e a relação entre texto e imagem. Curso de ilustração infantil em Curitiba.',
     tagline: 'Onde o desenho encontra a narrativa para contar histórias.',
     title: 'Ilustração de Livros Infantis',
     category: 'desenho',
@@ -374,6 +402,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-em-aquarela-ou-guache',
+    metaTitle: 'Curso de Pintura em Aquarela e Guache',
+    metaDescription:
+      'Aquarela, de fluidez e transparência, e guache, de cobertura densa: teoria da cor e controle da diluição em turmas pequenas, em Curitiba.',
     tagline: 'Transparências e camadas até a cor virar seu jeito de ver.',
     title: 'Técnicas de Pintura a Base d’Água: Tinta Aquarela e Guache',
     category: 'pintura',
@@ -442,6 +473,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'pintura-a-oleo-ou-acrilica',
+    metaTitle: 'Curso de Pintura a Óleo e Acrílica',
+    metaDescription:
+      'Óleo, de secagem lenta para misturas e esfumados, e acrílica, para sobreposições e texturas. Curso de pintura em Curitiba, a partir dos 13 anos.',
     tagline: 'Da tinta pura à composição que carrega um olhar.',
     title: 'Técnicas de Pintura II: Tinta a Óleo e Acrílica',
     category: 'pintura',
@@ -511,6 +545,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'desenho-infantil',
+    metaTitle: 'Curso de Desenho Infantil em Curitiba',
+    metaDescription:
+      'Laboratório de desenho para crianças a partir de 6 anos: linhas, formas, volumes e cores no ritmo de cada uma, com experimentação de materiais.',
     tagline: 'Mãos pequenas, primeiros traços, uma vida inteira desenhando.',
     title: 'Laboratório de Desenho Infantil',
     category: 'infantil',
@@ -560,6 +597,9 @@ export const COURSES: Course[] = [
   },
   {
     slug: 'historia-da-arte',
+    metaTitle: 'Curso de História da Arte em Curitiba',
+    metaDescription:
+      'Curso teórico que repensa a História da Arte para além das narrativas eurocentradas, da Antiguidade à contemporaneidade, em encontros semanais.',
     tagline: 'A arte contada além do que sempre te disseram sobre ela.',
     title: 'Para Além do Cânone: uma História Conectada da Arte',
     category: 'teorico',

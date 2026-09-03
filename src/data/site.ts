@@ -3,11 +3,11 @@
 export const SITE = {
   name: 'Desenhe · Escola de Arte',
   /** Título das páginas sem título próprio (home). */
-  defaultTitle: 'Desenhe · Escola de Arte | Curso de desenho e pintura em Curitiba',
+  defaultTitle: 'Escola de Desenho e Pintura em Curitiba | Desenhe',
   shortName: 'Desenhe',
   tagline: 'Escola de desenho e pintura em Curitiba há 38 anos',
   description:
-    'Cursos de desenho artístico, quadrinhos, desenho de moda, pintura a óleo e acrílica, aquarela e guache e laboratório de desenho infantil em Curitiba. Turmas pequenas e ensino individualizado, para todas as idades.',
+    'Escola de arte em Curitiba há 38 anos. Cursos de desenho, pintura, quadrinhos e ilustração para todas as idades, em turmas pequenas, com ensino individualizado.',
   url: 'https://www.desenhe.com.br',
   address: {
     street: 'Rua Padre Anchieta, 265A',

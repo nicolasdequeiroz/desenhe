@@ -67,8 +67,8 @@ export function Contato() {
   return (
     <div className="section contact-page">
       <Seo
-        title="Contato e localização"
-        description={`Fale com a Desenhe pelo WhatsApp ${SITE.whatsappDisplay} ou visite a escola na ${SITE.address.street}, ${SITE.address.neighborhood}, Curitiba/PR.`}
+        title="Contato e Endereço em Curitiba"
+        description={`Fale com a Desenhe pelo WhatsApp ${SITE.whatsappDisplay} ou visite a escola na ${SITE.address.street}, ${SITE.address.neighborhood}, Curitiba. Agende a sua primeira aula.`}
         path="/contato"
       />
 

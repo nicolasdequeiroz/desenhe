@@ -154,8 +154,8 @@ export function Sobre() {
   return (
     <div className="about-page">
       <Seo
-        title="Sobre a escola"
-        description="A Desenhe ensina desenho e pintura em Curitiba desde 1988. Conheça a história da escola fundada por Oscar Pedroso, como o ensino individualizado funciona, o nosso espaço e a equipe de professores."
+        title="Sobre a Desenhe, Escola de Arte desde 1988"
+        description="A Desenhe ensina desenho e pintura em Curitiba desde 1988. Conheça a história da escola, o ensino individualizado, o espaço com galeria e os professores."
         path="/sobre"
       />
 

@@ -128,8 +128,8 @@ export function Precos() {
   return (
     <>
       <Seo
-        title="Preços e planos 2026"
-        description="Planos de 3, 6 e 12 meses para os cursos de desenho e pintura da Desenhe, com aulas semanais, e aluguel de sala por hora no coworking artístico."
+        title="Preços e Mensalidades dos Cursos"
+        description="Mensalidades dos cursos de desenho e pintura da Desenhe, em planos de 3, 6 e 12 meses com aulas semanais, e aluguel de sala por hora no coworking de arte."
         path="/precos"
       />
       <Section

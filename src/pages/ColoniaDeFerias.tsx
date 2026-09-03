@@ -137,8 +137,8 @@ export function ColoniaDeFerias() {
   return (
     <div className="colonia-page">
       <Seo
-        title="Colônia de Férias · Inverno 2026"
-        description="Colônia de férias de arte em Curitiba: de 13 a 17 de julho de 2026, para crianças de 6 a 12 anos. Desenho à mão livre, guache, lápis de cor e colagem, com materiais e lanche inclusos."
+        title="Colônia de Férias de Arte para Crianças"
+        description="Colônia de férias de arte em Curitiba para crianças de 6 a 12 anos: desenho à mão livre, guache, lápis de cor e colagem, com materiais e lanche inclusos."
         path="/colonia-de-ferias"
         /*
          * Fora de temporada a página fica escondida: sai do sitemap e do

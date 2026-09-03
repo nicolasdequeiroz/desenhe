@@ -34,8 +34,8 @@ export function Horarios() {
   return (
     <>
       <Seo
-        title="Horários das turmas"
-        description="Grade semanal de horários dos cursos de desenho e pintura da Desenhe, de segunda a sábado, manhã, tarde e noite."
+        title="Horários das Turmas de Desenho e Pintura"
+        description="Grade semanal das turmas da Desenhe em Curitiba: aulas de segunda a sábado, de manhã, à tarde e à noite. Escolha o horário que cabe na sua rotina."
         path="/horarios"
       />
       <Section
