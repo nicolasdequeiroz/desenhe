@@ -96,6 +96,12 @@ export interface Course {
   priceNotes?: string[];
   /** Opcional: cursos novos podem entrar no ar antes das fotos. */
   cover?: string;
+  /**
+   * Versão JPEG da capa, usada só em og:image (o preview do link no
+   * WhatsApp e em parte dos leitores de link não abre .webp). Os arquivos
+   * ficam em public/images/og/ e saem da própria capa.
+   */
+  ogImage?: string;
   gallery: string[];
   galleryCaption?: string;
   /**
@@ -153,6 +159,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/desenho-artistico/capa.webp',
+    ogImage: '/images/og/desenho-artistico.jpg',
     gallery: [
       '/images/cursos/desenho-artistico/galeria-1.webp',
       '/images/cursos/desenho-artistico/galeria-2.webp',
@@ -265,6 +272,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/quadrinhos/capa.webp',
+    ogImage: '/images/og/quadrinhos.jpg',
     gallery: [
       '/images/cursos/quadrinhos/galeria-1.webp',
       '/images/cursos/quadrinhos/galeria-2.webp',
@@ -422,6 +430,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/aquarela-guache/capa.webp',
+    ogImage: '/images/og/aquarela-guache.jpg',
     gallery: [
       '/images/cursos/aquarela-guache/galeria-1.webp',
       '/images/cursos/aquarela-guache/galeria-2.webp',
@@ -490,6 +499,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'oleo-3h',
     cover: '/images/cursos/pintura-oleo-acrilica/capa.webp',
+    ogImage: '/images/og/pintura-oleo-acrilica.jpg',
     gallery: [
       '/images/cursos/pintura-oleo-acrilica/galeria-1.webp',
       '/images/cursos/pintura-oleo-acrilica/galeria-2.webp',
@@ -538,6 +548,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/desenho-infantil/capa.webp',
+    ogImage: '/images/og/desenho-infantil.jpg',
     gallery: [
       '/images/cursos/desenho-infantil/galeria-1.webp',
       '/images/cursos/desenho-infantil/galeria-2.webp',
@@ -592,6 +603,7 @@ export const COURSES: Course[] = [
       'Taxa de matrícula de R$ 120',
     ],
     cover: '/images/cursos/historia-da-arte/galeria-1.webp',
+    ogImage: '/images/og/historia-da-arte.jpg',
     gallery: [
       '/images/cursos/historia-da-arte/galeria-2.webp',
       '/images/cursos/historia-da-arte/galeria-3.webp',

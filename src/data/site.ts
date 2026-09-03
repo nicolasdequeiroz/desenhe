@@ -2,6 +2,8 @@
 
 export const SITE = {
   name: 'Desenhe · Escola de Arte',
+  /** Título das páginas sem título próprio (home). */
+  defaultTitle: 'Desenhe · Escola de Arte | Curso de desenho e pintura em Curitiba',
   shortName: 'Desenhe',
   tagline: 'Escola de desenho e pintura em Curitiba há 38 anos',
   description:
@@ -13,6 +15,12 @@ export const SITE = {
     city: 'Curitiba',
     state: 'PR',
   },
+  /**
+   * Imagem padrão do preview de link (og:image): a fachada da escola, em
+   * JPEG 1200x630. Páginas com imagem própria passam a delas pelo <Seo>.
+   */
+  ogImage: '/images/brand/og-desenhe.jpg',
+  ogImageAlt: 'Fachada da Desenhe, escola de arte na Rua Padre Anchieta, em Curitiba',
   /** Coordenadas da escola, para centrar o mapa embutido em /contato. */
   coordinates: '-25.4265516,-49.2826804',
   whatsapp: '5541987121371',

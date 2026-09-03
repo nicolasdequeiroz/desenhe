@@ -107,7 +107,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
         title={`Curso de ${course.shortTitle}`}
         description={course.excerpt}
         path={`/cursos/${course.slug}`}
-        image={course.cover}
+        image={course.ogImage}
       />
 
       <section

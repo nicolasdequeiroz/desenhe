@@ -7363,3 +7363,23 @@ body {
     padding: var(--spacing-5);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Aviso de redirect (URLs antigas do Wix)
+
+   O visitante só vê isto por uma fração de segundo, ou nem isso: o meta
+   refresh do HTML já mandou o navegador para a página nova. Existe para o
+   caso do refresh bloqueado, e para o crawler encontrar um link de verdade
+   em vez de uma página em branco.
+--------------------------------------------------------------------------- */
+.redirect-notice {
+  padding: var(--spacing-12) var(--spacing-6);
+  text-align: center;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+.redirect-notice a {
+  color: var(--color-accent);
+}

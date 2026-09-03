@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {useLocation} from 'react-router-dom';
 import {Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
@@ -7,6 +8,18 @@ import {TEACHERS, asset, type Teacher} from '../data';
 
 export function Professores() {
   const [selected, setSelected] = useState<Teacher | null>(null);
+  const {hash} = useLocation();
+
+  /**
+   * As páginas individuais de professor do site antigo (ex.: /oscar-pedroso)
+   * redirecionam para /professores#<slug>: quem chega por esses links cai
+   * direto na bio da pessoa que procurava, não numa lista genérica.
+   */
+  useEffect(() => {
+    const slug = decodeURIComponent(hash.replace('#', ''));
+    const teacher = TEACHERS.find((candidate) => candidate.slug === slug);
+    if (teacher) setSelected(teacher);
+  }, [hash]);
 
   return (
     <div className="professores-page">
@@ -27,7 +40,8 @@ export function Professores() {
           <div className="professors-grid">
             {TEACHERS.map((teacher) => (
               <button
-                key={teacher.name}
+                key={teacher.slug}
+                id={teacher.slug}
                 type="button"
                 className="professor-card"
                 onClick={() => setSelected(teacher)}

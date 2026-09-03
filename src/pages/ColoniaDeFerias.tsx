@@ -140,6 +140,14 @@ export function ColoniaDeFerias() {
         title="Colônia de Férias · Inverno 2026"
         description="Colônia de férias de arte em Curitiba: de 13 a 17 de julho de 2026, para crianças de 6 a 12 anos. Desenho à mão livre, guache, lápis de cor e colagem, com materiais e lanche inclusos."
         path="/colonia-de-ferias"
+        /*
+         * Fora de temporada a página fica escondida: sai do sitemap e do
+         * índice de busca, mas continua no ar por link direto (inclusive
+         * pelos links antigos do Wix). Para divulgar a próxima edição,
+         * atualize as datas, tire este noindex e aponte FEATURED_PROMO
+         * (src/data/promo.ts) de volta para a colônia.
+         */
+        noindex
       />
 
       <div className="container course-hero colonia-hero">
