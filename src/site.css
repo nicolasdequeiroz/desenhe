@@ -5104,11 +5104,14 @@ body {
     transform: translateY(0) rotate(0deg);
     opacity: 0;
   }
-  10% {
+  8% {
+    opacity: 0.9;
+  }
+  70% {
     opacity: 0.9;
   }
   100% {
-    transform: translateY(200px) rotate(var(--footer-confetti-rot, 180deg));
+    transform: translateY(340px) rotate(var(--footer-confetti-rot, 180deg));
     opacity: 0;
   }
 }

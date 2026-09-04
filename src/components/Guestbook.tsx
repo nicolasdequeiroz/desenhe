@@ -12,9 +12,11 @@ const GuestbookPanel = lazy(() =>
 /** Confete sutil: tons de laranja da própria paleta do quadro. */
 const CONFETTI_COLORS = ['#f67800', '#e0a52b', '#ffb15c', '#df7400'];
 /** Tempo total do toast na tela, do surgimento ao sumiço. */
-const TOAST_DURATION_MS = 3000;
+const TOAST_DURATION_MS = 5500;
 /** Janela final em que o toast desliza pra fora antes de sumir de vez. */
-const TOAST_EXIT_MS = 300;
+const TOAST_EXIT_MS = 350;
+/** Maior atraso + maior duração possíveis de uma peça: baliza a limpeza do confete. */
+const CONFETTI_MAX_LIFETIME_MS = 300 + 2600;
 
 interface ConfettiPiece {
   left: number;
@@ -30,8 +32,8 @@ function makeConfetti(): ConfettiPiece[] {
     left: Math.random() * 100,
     size: 5 + Math.random() * 4,
     color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-    delay: Math.random() * 200,
-    duration: 800 + Math.random() * 500,
+    delay: Math.random() * 300,
+    duration: 1800 + Math.random() * 800,
     rot: (Math.random() - 0.5) * 300,
   }));
 }
@@ -123,7 +125,7 @@ export function Guestbook() {
     if (stored === 'remote') {
       setConfetti(makeConfetti());
       if (confettiTimer.current !== null) window.clearTimeout(confettiTimer.current);
-      confettiTimer.current = window.setTimeout(() => setConfetti(null), 1400);
+      confettiTimer.current = window.setTimeout(() => setConfetti(null), CONFETTI_MAX_LIFETIME_MS);
       setToast({id: Date.now(), message: 'Pronto! Seu desenho entrou na pilha 😊', tone: 'ok'});
     } else {
       setToast({
