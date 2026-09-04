@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {renderStrokes, DOODLE_RATIO, type Doodle} from '../data/guestbook';
 
 /** Quantos desenhos ficam empilhados no rodapé (os mais recentes). */
@@ -36,12 +36,32 @@ export function DoodleThumb({doodle, width = 116}: {doodle: Doodle; width?: numb
   );
 }
 
+/** Embaralha uma cópia do array (Fisher-Yates), sem mexer no original. */
+function shuffled<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+interface Props {
+  doodles: Doodle[];
+  /**
+   * Ids que sempre entram na pilha, mesmo quando o resto é sorteado (ver
+   * `visible` abaixo): os desenhos enviados nesta sessão, pra quem desenhou
+   * sempre ver o próprio traço.
+   */
+  pinnedIds?: string[];
+}
+
 /**
  * Pilha de desenhos no pé da página: os cartões caem e se acomodam com física
  * (matter-js, como no site de referência) e podem ser arrastados. Com
  * `prefers-reduced-motion` a simulação não roda e os cartões ficam enfileirados.
  */
-export function DoodlePile({doodles}: {doodles: Doodle[]}) {
+export function DoodlePile({doodles, pinnedIds = []}: Props) {
   // Padrão desktop no primeiro render (server e cliente têm que bater); o
   // efeito abaixo ajusta para mobile assim que o viewport real é conhecido.
   const [isMobile, setIsMobile] = useState(false);
@@ -56,7 +76,27 @@ export function DoodlePile({doodles}: {doodles: Doodle[]}) {
 
   const maxVisible = isMobile ? MAX_VISIBLE_MOBILE : MAX_VISIBLE_DESKTOP;
   const thumbWidth = isMobile ? THUMB_WIDTH_MOBILE : THUMB_WIDTH_DESKTOP;
-  const visible = doodles.slice(-maxVisible);
+  const poolSignature = doodles.map((d) => d.id).join(',');
+  const pinnedSignature = pinnedIds.join(',');
+
+  /*
+   * Até o limite, mostra tudo. Acima disso, sorteia quem aparece em vez de
+   * sempre travar nos últimos N: com a planilha cheia (ex.: 50+ aprovados),
+   * a pilha varia a cada visita em vez de estagnar sempre nos mesmos. Os
+   * `pinnedIds` (desenhados nesta sessão) furam a fila e entram sempre.
+   */
+  const visible = useMemo(() => {
+    if (doodles.length <= maxVisible) return doodles;
+
+    const pinnedSet = new Set(pinnedIds);
+    const pinned = doodles.filter((d) => pinnedSet.has(d.id));
+    const rest = doodles.filter((d) => !pinnedSet.has(d.id));
+    const remainingSlots = Math.max(0, maxVisible - pinned.length);
+
+    return [...pinned, ...shuffled(rest).slice(0, remainingSlots)];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolSignature, pinnedSignature, maxVisible]);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const signature = visible.map((d) => d.id).join(',');

@@ -5070,6 +5070,50 @@ body {
   }
 }
 
+/*
+ * Confete sutil ao enviar: um punhado de quadradinhos caindo do topo do
+ * painel, recortados pelo `overflow: hidden` dele. Nada de canvas nem lib:
+ * cada peça é um <span> com posição/cor/atraso sorteados em JS e a queda é
+ * só CSS.
+ */
+.guestbook-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.guestbook-confetti__piece {
+  position: absolute;
+  top: -10px;
+  border-radius: 1px;
+  opacity: 0;
+  animation-name: guestbook-confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes guestbook-confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(160px) rotate(var(--guestbook-confetti-rot, 180deg));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guestbook-confetti {
+    display: none;
+  }
+}
+
 .guestbook-panel__hdr {
   display: flex;
   align-items: flex-start;

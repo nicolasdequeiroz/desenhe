@@ -19,6 +19,10 @@ export function Guestbook() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
+  // Desenhos enviados nesta sessão: sempre visíveis na pilha (mesmo quando a
+  // seleção do resto vira sorteio, ver DoodlePile), já que quem desenhou
+  // espera ver o próprio traço na hora, aprovado ou não.
+  const [pinnedIds, setPinnedIds] = useState<string[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -75,7 +79,10 @@ export function Guestbook() {
           <GuestbookPanel
             doodles={doodles}
             onClose={() => setOpen(false)}
-            onSubmitted={(doodle) => setDoodles((prev) => [...prev, doodle])}
+            onSubmitted={(doodle) => {
+              setDoodles((prev) => [...prev, doodle]);
+              setPinnedIds((prev) => [...prev, doodle.id]);
+            }}
           />
         </Suspense>
       )}
@@ -84,7 +91,7 @@ export function Guestbook() {
 
   return (
     <>
-      <DoodlePile doodles={doodles} />
+      <DoodlePile doodles={doodles} pinnedIds={pinnedIds} />
       {mounted && createPortal(floating, document.body)}
     </>
   );

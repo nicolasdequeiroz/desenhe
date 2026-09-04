@@ -27,6 +27,32 @@ const COLORS = [
 /** Cor do papel: a borracha pinta com ela. */
 const PAPER = '#fffbf7';
 
+/** Tempo com a mensagem de sucesso na tela antes do painel fechar sozinho. */
+const AUTO_CLOSE_MS = 1500;
+
+/** Confete sutil: tons de laranja da própria paleta do quadro. */
+const CONFETTI_COLORS = ['#f67800', '#e0a52b', '#ffb15c', '#df7400'];
+
+interface ConfettiPiece {
+  left: number;
+  size: number;
+  color: string;
+  delay: number;
+  duration: number;
+  rot: number;
+}
+
+function makeConfetti(): ConfettiPiece[] {
+  return Array.from({length: 16}, () => ({
+    left: Math.random() * 100,
+    size: 5 + Math.random() * 4,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    delay: Math.random() * 150,
+    duration: 700 + Math.random() * 450,
+    rot: (Math.random() - 0.5) * 300,
+  }));
+}
+
 const MIN_W = 0.004;
 const MAX_W = 0.03;
 /** Faixa em px da bolinha de prévia da espessura. */
@@ -50,10 +76,20 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
   const [erasing, setErasing] = useState(false);
   const [name, setName] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'local'>('idle');
+  const [confetti, setConfetti] = useState<ConfettiPiece[] | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const drawingRef = useRef<Stroke | null>(null);
+  const closeTimerRef = useRef<number | null>(null);
+
+  // Some se o painel for desmontado antes do fechamento automático disparar
+  // (ex.: usuário clicou em fechar durante a janela de "Pronto!").
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   // Fecha com Escape e trava o foco dentro do painel: padrão de diálogo modal.
   useEffect(() => {
@@ -156,7 +192,9 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
     if (!strokes.length || status === 'sending') return;
     setStatus('sending');
     const result = await submitDoodle(name, strokes);
-    setStatus(result.stored === 'remote' ? 'done' : 'local');
+    const stored = result.stored;
+    setStatus(stored === 'remote' ? 'done' : 'local');
+    if (stored === 'remote') setConfetti(makeConfetti());
     onSubmitted({
       id: `${Date.now().toString(36)}-local`,
       name: name.trim().slice(0, 24) || 'Anônimo',
@@ -165,6 +203,8 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
     });
     setStrokes([]);
     setName('');
+    // Deixa a mensagem de sucesso visível um instante antes de fechar sozinho.
+    closeTimerRef.current = window.setTimeout(onClose, AUTO_CLOSE_MS);
   };
 
   const previewPx =
@@ -180,6 +220,26 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
         aria-label="Deixe um desenho"
         ref={panelRef}
       >
+        {confetti && (
+          <div className="guestbook-confetti" aria-hidden="true">
+            {confetti.map((piece, index) => (
+              <span
+                key={index}
+                className="guestbook-confetti__piece"
+                style={{
+                  left: `${piece.left}%`,
+                  width: `${piece.size}px`,
+                  height: `${piece.size}px`,
+                  background: piece.color,
+                  animationDelay: `${piece.delay}ms`,
+                  animationDuration: `${piece.duration}ms`,
+                  '--guestbook-confetti-rot': `${piece.rot}deg`,
+                } as React.CSSProperties}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="guestbook-panel__hdr">
           <p className="guestbook-panel__title">Deixe um desenho</p>
           <button
@@ -321,7 +381,7 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
 
             {status === 'done' && (
               <p className="guestbook-panel__msg guestbook-panel__msg--ok">
-                Pronto! Seu desenho entrou na pilha ✦
+                Pronto! Seu desenho entrou na pilha 😊
               </p>
             )}
             {status === 'local' && (
