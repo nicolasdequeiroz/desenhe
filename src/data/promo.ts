@@ -62,26 +62,24 @@ export const COLONIA_INVERNO_2026: FeaturedPromo = {
   },
 };
 
+/** Coworking artístico: aluguel de ateliê por hora. */
+export const COWORKING_PROMO: FeaturedPromo = {
+  id: 'coworking-2026',
+  path: '/coworking-artistico',
+  nav: {label: 'Coworking'},
+  hero: {
+    badge: 'Novidade',
+    image: '/images/espaco/sala-01-mesas.webp',
+    imageAlt: 'Coworking artístico da Desenhe, Curitiba',
+  },
+  bar: {
+    text: 'Coworking artístico: conheça o espaço',
+    closeLabel: 'Fechar aviso do Coworking',
+  },
+};
+
 /**
- * Campanha em cartaz agora, ou `null` para não divulgar nenhuma.
- *
- * Exemplos de troca futura (basta descomentar/definir e apontar aqui):
- *
- *   export const COWORKING: FeaturedPromo = {
- *     id: 'coworking-2026',
- *     path: '/coworking',
- *     nav: {label: 'Coworking'},
- *     hero: {
- *       badge: 'Novidade',
- *       image: '/images/coworking/poster-hero.jpg',
- *       imageAlt: 'Coworking de arte da Desenhe, Curitiba',
- *     },
- *     bar: {
- *       text: 'Coworking de arte: conheça o espaço',
- *       closeLabel: 'Fechar aviso do Coworking',
- *     },
- *   };
- *
- * e então `export const FEATURED_PROMO: FeaturedPromo | null = COWORKING;`
+ * Campanha em cartaz agora, ou `null` para não divulgar nenhuma. Para trocar
+ * de campanha, aponte para outro preset (ver `COLONIA_INVERNO_2026` acima).
  */
-export const FEATURED_PROMO: FeaturedPromo | null = null;
+export const FEATURED_PROMO: FeaturedPromo | null = COWORKING_PROMO;

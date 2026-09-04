@@ -418,7 +418,7 @@ export function Precos() {
                   />
                   <Button
                     label="Saiba mais"
-                    href="/sobre#espaco"
+                    href="/coworking-artistico"
                     variant="tint"
                     size="sm"
                   />

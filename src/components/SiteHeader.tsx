@@ -47,6 +47,7 @@ export function SiteHeader() {
     pathname === '/' ||
     pathname === '/sobre' ||
     pathname === '/precos' ||
+    pathname === '/coworking-artistico' ||
     /^\/cursos\/[^/]+$/.test(pathname);
   // /precos flutua como o Sobre, mas já entra com o fundo do estado rolado
   // (nada de transparência sobre o conteúdo antes do primeiro scroll).

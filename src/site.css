@@ -2642,40 +2642,46 @@ body {
 }
 
 /*
- * Primeira dobra do Sobre: reaproveita o hero da home (.hero e filhos), com
- * a foto sangrando no bloco inteiro e o header sobrevoando. O texto de
- * abertura tem três parágrafos, então o .hero__lead vira uma pilha com
- * respiro próprio, em vez do parágrafo único da home.
+ * Primeira dobra do Sobre (e do Coworking, que reaproveita o mesmo
+ * tratamento): a foto sangra no bloco inteiro e o header sobrevoa. O texto
+ * de abertura do Sobre tem três parágrafos, então o .hero__lead vira uma
+ * pilha com respiro próprio, em vez do parágrafo único da home.
  */
-.hero--about .hero__lead {
+.hero--about .hero__lead,
+.hero--coworking .hero__lead {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
 }
 
-.hero--about .hero__lead p {
+.hero--about .hero__lead p,
+.hero--coworking .hero__lead p {
   margin: 0;
 }
 
 /* O bloco de texto respira numa largura maior que a da home (36rem), que
    apertava demais os três parágrafos. */
 .hero--about .hero__subheading,
-.hero--about .hero__heading {
+.hero--about .hero__heading,
+.hero--coworking .hero__subheading,
+.hero--coworking .hero__heading {
   max-width: 44rem;
 }
 
 /*
- * Desktop: o hero do /sobre não precisa encher a viewport. Fica mais curto
+ * Desktop: esses heróis não precisam encher a viewport. Ficam mais curtos
  * que 100vh, então a próxima seção já espia e fica claro que há rolagem.
  */
 @media (min-width: 901px) {
-  .hero--about {
+  .hero--about,
+  .hero--coworking {
     min-height: clamp(520px, 72vh, 720px);
   }
 
   /* Acompanha a altura reduzida do hero: o .hero__main (flex: 1) preenche
      essa caixa e o texto continua ancorado embaixo, como na home. */
-  .hero--about .hero__inner {
+  .hero--about .hero__inner,
+  .hero--coworking .hero__inner {
     min-height: calc(
       clamp(520px, 72vh, 720px) - var(--hero-pad-top) - var(--hero-pad-bottom)
     );
@@ -2683,7 +2689,9 @@ body {
 
   /* Com a foto sangrando e o hero mais baixo, o texto pode se espalhar mais. */
   .hero--about .hero__subheading,
-  .hero--about .hero__heading {
+  .hero--about .hero__heading,
+  .hero--coworking .hero__subheading,
+  .hero--coworking .hero__heading {
     max-width: 54rem;
   }
 }
@@ -2693,11 +2701,13 @@ body {
  * fade antes de chegar no texto, em vez de ficar por baixo do hero inteiro.
  */
 @media (max-width: 900px) {
-  .hero--about {
+  .hero--about,
+  .hero--coworking {
     --hero-gap: clamp(150px, 24vh, 240px);
   }
 
-  .hero--about .hero__background {
+  .hero--about .hero__background,
+  .hero--coworking .hero__background {
     bottom: auto;
     height: clamp(260px, 46vh, 400px);
     -webkit-mask-image: linear-gradient(to bottom, #000 22%, transparent 72%);
@@ -2706,7 +2716,8 @@ body {
 
   /* Com o fade da máscara cuidando da base, o overlay só precisa escurecer
      o topo o suficiente para o header continuar legível sobre a foto. */
-  .hero--about .hero__background-overlay {
+  .hero--about .hero__background-overlay,
+  .hero--coworking .hero__background-overlay {
     background: linear-gradient(
       to bottom,
       color-mix(in srgb, #000 55%, transparent) 0,
@@ -7382,4 +7393,137 @@ body {
 
 .redirect-notice a {
   color: var(--color-accent);
+}
+
+/* ---------- Coworking artístico ----------------------------------------- */
+
+/* Primeira dobra: mesmo hero de foto sangrando usado no /sobre (ver
+   .hero--about), com um único bloco de texto em vez de três parágrafos. */
+.coworking-page :where(.section)[id] {
+  scroll-margin-top: 88px;
+}
+
+/*
+ * Fecho da página: mesmo fade de cor usado no fim das páginas de curso e do
+ * /sobre (ver --course-cta-fade) entre a seção que antecede a faixa final e
+ * a própria faixa, que aqui é sempre --color-category-institucional. O FAQ é
+ * bem mais baixo que a galeria/timeline das outras páginas, então o fade
+ * padrão (320px) tomava a seção quase inteira: aqui ele fica bem mais curto,
+ * só o suficiente pra anunciar a faixa que vem a seguir.
+ */
+.coworking-page .section:has(+ .course-cta) {
+  --course-cta-fade: 140px;
+  padding-bottom: var(--spacing-8);
+  background: linear-gradient(
+    to bottom,
+    var(--color-background-body) 0,
+    var(--color-background-body) calc(100% - var(--course-cta-fade)),
+    color-mix(in srgb, var(--color-category-institucional) 82%, #171310) 100%
+  );
+}
+
+/* Arco de fotos do espaço: em /sobre a seção termina no arco (o próximo
+   bloco, depoimentos, tem sua própria folga de topo); aqui um botão vem
+   logo abaixo, então a seção precisa da própria folga de fechamento. */
+.works-arc-section--coworking {
+  padding-bottom: clamp(var(--spacing-10), 8vw, 88px);
+}
+
+/*
+ * Accordion de perguntas frequentes. O painel abre interpolando
+ * `grid-template-rows` de 0fr a 1fr (mesma técnica do accordion mobile das
+ * linguagens de curso, ver StrandAccordions.tsx): altura animada suave sem
+ * medir nada em JS, e sem o corte seco do `<details>` nativo.
+ */
+.coworking-faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.coworking-faq__item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+  overflow: hidden;
+}
+
+.coworking-faq__summary {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.coworking-faq__icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.coworking-faq__icon::before,
+.coworking-faq__icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--color-text-secondary);
+  transition: transform var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.coworking-faq__icon::before {
+  width: 100%;
+  height: 2px;
+}
+
+.coworking-faq__icon::after {
+  width: 2px;
+  height: 100%;
+}
+
+.coworking-faq__item.is-open .coworking-faq__icon::after {
+  transform: rotate(90deg);
+}
+
+.coworking-faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.coworking-faq__item.is-open .coworking-faq__panel {
+  grid-template-rows: 1fr;
+}
+
+.coworking-faq__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.coworking-faq__panel-inner p {
+  margin: 0;
+  padding: 0 var(--spacing-5) var(--spacing-4);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coworking-faq__panel,
+  .coworking-faq__icon::before,
+  .coworking-faq__icon::after {
+    transition: none;
+  }
 }

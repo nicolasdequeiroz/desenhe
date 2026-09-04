@@ -7,6 +7,7 @@ import {Professores} from './pages/Professores';
 import {Precos} from './pages/Precos';
 import {Horarios} from './pages/Horarios';
 import {ColoniaDeFerias} from './pages/ColoniaDeFerias';
+import {CoworkingArtistico} from './pages/CoworkingArtistico';
 import {Sobre} from './pages/Sobre';
 import {Contato} from './pages/Contato';
 import {NotFound} from './pages/NotFound';
@@ -73,6 +74,7 @@ export const routes: RouteRecord[] = [
       {path: 'precos', element: <Precos />},
       {path: 'horarios', element: <Horarios />},
       {path: 'colonia-de-ferias', element: <ColoniaDeFerias />},
+      {path: 'coworking-artistico', element: <CoworkingArtistico />},
       {path: 'sobre', element: <Sobre />},
       {path: 'contato', element: <Contato />},
       ...[...LEGACY_REDIRECTS, ...LEGACY_WILDCARDS].map(([from, to]) => ({
