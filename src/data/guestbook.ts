@@ -13,7 +13,8 @@
  */
 
 /** Cole aqui a URL /exec publicada pelo Apps Script para ativar o modo remoto. */
-export const GUESTBOOK_ENDPOINT = '';
+export const GUESTBOOK_ENDPOINT =
+  'https://script.google.com/macros/s/AKfycbyBGFgO5nmZaVDC5eQI52ZcDUeAjdJw7knpmgsHm_pi1Q9Fl1ZVLwqDKLJnQF5W5Jr-mg/exec';
 
 /** Um traço: cor, espessura (fração da largura) e pontos [x0,y0,x1,y1,...]. */
 export interface Stroke {
