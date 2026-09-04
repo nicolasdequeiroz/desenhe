@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactElement,
-  type RefObject,
-} from 'react';
+import {useEffect, useRef, useState, type RefObject} from 'react';
 import {
   CalendarCheck,
   ChatCircleText,
@@ -14,6 +8,7 @@ import {
   Sun,
   SpeakerSimpleSlash,
   UsersThree,
+  type Icon,
 } from '@phosphor-icons/react';
 import {Button, Card, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
@@ -26,26 +21,24 @@ import {SITE, asset} from '../data';
 
 const MESSAGE = 'Olá! Quero reservar uma sala no coworking artístico da Desenhe.';
 
-const FACTS: {icon: () => ReactElement; title: string; items: string[]}[] = [
+const FACTS: {icon: Icon; title: string; items: string[]}[] = [
   {
-    icon: () => <Clock size={18} weight="light" aria-hidden="true" />,
+    icon: Clock,
     title: 'Reserva',
     items: ['Mínimo de 2 horas por reserva'],
   },
   {
-    icon: () => <UsersThree size={18} weight="light" aria-hidden="true" />,
+    icon: UsersThree,
     title: 'Capacidade',
     items: ['Até 3 pessoas na mesma sala'],
   },
   {
-    icon: () => <CalendarCheck size={18} weight="light" aria-hidden="true" />,
+    icon: CalendarCheck,
     title: 'Horários',
-    items: [
-      'Fora do intervalo de almoço da escola, consulte pelo WhatsApp',
-    ],
+    items: ['Consulte pelo WhatsApp'],
   },
   {
-    icon: () => <MapPin size={18} weight="light" aria-hidden="true" />,
+    icon: MapPin,
     title: 'Onde',
     items: [`${SITE.address.street}, ${SITE.address.neighborhood}, ${SITE.address.city}`],
   },
@@ -354,9 +347,9 @@ export function CoworkingArtistico() {
                   <div className="hero__lead">
                     <p>Um espaço só seu para criar, no seu ritmo.</p>
                     <p>
-                      Alugue nosso ateliê por hora e tenha luz natural,
-                      estrutura completa e silêncio para dar forma às suas
-                      ideias.
+                      Alugue nosso ateliê por hora em Curitiba e tenha luz
+                      natural, estrutura completa e silêncio para dar forma
+                      às suas ideias.
                     </p>
                   </div>
                 </div>
@@ -375,7 +368,12 @@ export function CoworkingArtistico() {
           {FACTS.map(({icon: Icon, title, items}) => (
             <div className="course-summary__row" key={title}>
               <dt className="course-summary__term">
-                <Icon />
+                <Icon
+                  size={18}
+                  weight="light"
+                  className="course-summary__icon"
+                  aria-hidden="true"
+                />
                 {title}
               </dt>
               <dd className="course-summary__detail">
@@ -456,7 +454,7 @@ export function CoworkingArtistico() {
         com fotos da infraestrutura em vez de trabalhos de alunos: dá pra
         sentir o espaço sem sair da página, antes de decidir pela visita.
       */}
-      <section className="works-arc-section works-arc-section--coworking">
+      <section className="works-arc-section">
         <div className="container">
           <div className="works-arc-section__head">
             <span className="section__eyebrow">Conheça a Desenhe</span>
@@ -467,16 +465,13 @@ export function CoworkingArtistico() {
               quiser entrar de vez, é só perguntar sobre nossas turmas: vai
               ser um prazer te receber.
             </Text>
+            <div className="about-actions">
+              <Button label="Conhecer as turmas da Desenhe" href="/cursos" size="sm" />
+            </div>
           </div>
         </div>
 
         <WorksArc images={SPACE_PHOTOS} caption="Espaço da Desenhe" />
-
-        <div className="container">
-          <div className="about-actions">
-            <Button label="Conhecer as turmas da Desenhe" href="/cursos" size="sm" />
-          </div>
-        </div>
       </section>
 
       <Section kicker="Dúvidas" title="Perguntas frequentes">
@@ -506,7 +501,7 @@ export function CoworkingArtistico() {
               <WhatsCta message={MESSAGE} label="Falar no WhatsApp" size="sm" variant="secondary" />
               <Button
                 label="Como chegar"
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 href={SITE.mapsUrl}
                 target="_blank"

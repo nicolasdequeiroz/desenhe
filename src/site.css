@@ -2739,6 +2739,11 @@ body {
   .hero--coworking .hero__inner {
     min-height: auto;
   }
+
+  /* Vídeo em vez de foto: vale a pena mostrar mais dele antes do fade. */
+  .hero--coworking .hero__background {
+    height: 55svh;
+  }
 }
 
 /* As aberturas de seção do /sobre acompanham o hero: alinhadas à esquerda,
@@ -7426,21 +7431,20 @@ body {
  * só o suficiente pra anunciar a faixa que vem a seguir.
  */
 .coworking-page .section:has(+ .course-cta) {
-  --course-cta-fade: 140px;
+  --course-cta-fade: 280px;
   padding-bottom: var(--spacing-8);
   background: linear-gradient(
     to bottom,
     var(--color-background-body) 0,
     var(--color-background-body) calc(100% - var(--course-cta-fade)),
+    color-mix(
+        in srgb,
+        var(--color-category-institucional) 25%,
+        var(--color-background-body)
+      )
+      calc(100% - var(--course-cta-fade) * 0.45),
     color-mix(in srgb, var(--color-category-institucional) 82%, #171310) 100%
   );
-}
-
-/* Arco de fotos do espaço: em /sobre a seção termina no arco (o próximo
-   bloco, depoimentos, tem sua própria folga de topo); aqui um botão vem
-   logo abaixo, então a seção precisa da própria folga de fechamento. */
-.works-arc-section--coworking {
-  padding-bottom: clamp(var(--spacing-10), 8vw, 88px);
 }
 
 /*
