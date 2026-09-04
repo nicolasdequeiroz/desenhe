@@ -69,7 +69,7 @@ export const COWORKING_PROMO: FeaturedPromo = {
   nav: {label: 'Coworking'},
   hero: {
     badge: 'Novidade',
-    image: '/images/espaco/sala-01-mesas.webp',
+    image: '/images/espaco/coworking-featured.webp',
     imageAlt: 'Coworking artístico da Desenhe, Curitiba',
   },
   bar: {
