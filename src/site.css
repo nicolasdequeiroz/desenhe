@@ -2727,6 +2727,20 @@ body {
   }
 }
 
+/*
+ * Só no Coworking: a chamada de abertura é bem mais curta que a do /sobre
+ * (duas frases, não três parágrafos), então a dobra de 100svh cheia (ver
+ * `.hero` acima) sobrava um vão morto entre o fim do fade da foto e o
+ * começo do texto, ancorado no rodapé da dobra inteira. Aqui a dobra encolhe
+ * para a altura do próprio conteúdo, sem herdar a altura cheia da home.
+ */
+@media (max-width: 900px) {
+  .hero--coworking,
+  .hero--coworking .hero__inner {
+    min-height: auto;
+  }
+}
+
 /* As aberturas de seção do /sobre acompanham o hero: alinhadas à esquerda,
    não centralizadas. */
 .about-page .section__head--centered {
