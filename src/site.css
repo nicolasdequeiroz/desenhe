@@ -2697,17 +2697,16 @@ body {
 }
 
 /*
- * Mobile: o texto é longo, então a foto ocupa só o topo e se dissolve num
- * fade antes de chegar no texto, em vez de ficar por baixo do hero inteiro.
+ * Mobile: o texto do /sobre é longo, então a foto ocupa só o topo e se
+ * dissolve num fade antes de chegar no texto, em vez de ficar por baixo do
+ * hero inteiro.
  */
 @media (max-width: 900px) {
-  .hero--about,
-  .hero--coworking {
+  .hero--about {
     --hero-gap: clamp(150px, 24vh, 240px);
   }
 
-  .hero--about .hero__background,
-  .hero--coworking .hero__background {
+  .hero--about .hero__background {
     bottom: auto;
     height: clamp(260px, 46vh, 400px);
     -webkit-mask-image: linear-gradient(to bottom, #000 22%, transparent 72%);
@@ -2716,8 +2715,7 @@ body {
 
   /* Com o fade da máscara cuidando da base, o overlay só precisa escurecer
      o topo o suficiente para o header continuar legível sobre a foto. */
-  .hero--about .hero__background-overlay,
-  .hero--coworking .hero__background-overlay {
+  .hero--about .hero__background-overlay {
     background: linear-gradient(
       to bottom,
       color-mix(in srgb, #000 55%, transparent) 0,
@@ -2728,21 +2726,20 @@ body {
 }
 
 /*
- * Só no Coworking: a chamada de abertura é bem mais curta que a do /sobre
- * (duas frases, não três parágrafos), então a dobra de 100svh cheia (ver
- * `.hero` acima) sobrava um vão morto entre o fim do fade da foto e o
- * começo do texto, ancorado no rodapé da dobra inteira. Aqui a dobra encolhe
- * para a altura do próprio conteúdo, sem herdar a altura cheia da home.
+ * Só no Coworking: no mobile o vídeo cobre a dobra inteira, do mesmo jeito
+ * que o vídeo de fundo da home (ver Home.tsx/useHeroVideo) e sem o fade da
+ * máscara do /sobre, então cai de volta no `.hero` puro (foto/vídeo atrás do
+ * texto inteiro) em vez do recorte menor com fade. A dobra em si fica um
+ * pouco mais baixa que a da home (80svh, não 100svh): o texto de abertura é
+ * mais curto, então 100svh sobrava espaço vazio acima do texto.
  */
 @media (max-width: 900px) {
-  .hero--coworking,
-  .hero--coworking .hero__inner {
-    min-height: auto;
+  .hero--coworking {
+    min-height: 80svh;
   }
 
-  /* Vídeo em vez de foto: vale a pena mostrar mais dele antes do fade. */
-  .hero--coworking .hero__background {
-    height: 55svh;
+  .hero--coworking .hero__inner {
+    min-height: calc(80svh - var(--hero-pad-top) - var(--hero-pad-bottom));
   }
 }
 
