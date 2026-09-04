@@ -30,8 +30,15 @@ Google com um Apps Script na frente — de graça e sem servidor.
 
 ## Como moderar
 
-Cada desenho é uma linha da aba `desenhos`. Para esconder um desenho do site,
-escreva `oculto` na coluna **status** — ou simplesmente apague a linha.
+Todo desenho novo entra **pendente**: fica invisível para todo mundo, exceto
+para quem o desenhou (o próprio navegador guarda uma cópia local e mostra na
+hora, então quem desenhou não percebe a espera). Você recebe um e-mail a cada
+envio, com o nome e o link da planilha.
+
+Cada desenho é uma linha da aba `desenhos`. Para publicar um desenho pendente,
+escreva `ok` na coluna **status**. Para esconder um desenho já publicado, troque
+o `ok` por qualquer outra coisa (ex.: `oculto`) — ou apague a linha. Só o valor
+exato `ok` fica visível no site.
 
 ## Detalhes que importam
 
@@ -41,7 +48,10 @@ escreva `oculto` na coluna **status** — ou simplesmente apague a linha.
 - O envio usa `Content-Type: text/plain` de propósito: o Apps Script não responde
   ao preflight `OPTIONS` do CORS, então a requisição precisa ser "simples".
 - Cota do Apps Script: cerca de 20 mil execuções por dia — muito acima do
-  movimento esperado do site.
+  movimento esperado do site. O envio de e-mail tem cota própria (bem mais
+  apertada, ~100/dia numa conta pessoal do Gmail), mas uma falha aqui nunca
+  derruba o envio do desenho, só o aviso.
 - Se a planilha estiver fora do ar, o site não quebra: o desenho fica salvo no
   navegador de quem desenhou e a pilha mostra os que já tinham sido carregados.
-- O site lê no máximo os 60 desenhos mais recentes e empilha os 22 últimos.
+- O site lê no máximo os 60 desenhos **aprovados** mais recentes e empilha os
+  22 últimos.
