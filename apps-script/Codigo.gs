@@ -129,6 +129,14 @@ function handleModerate_(e) {
 
 /** Coluna onde a prévia em imagem do desenho fica ancorada na planilha. */
 var PREVIEW_COLUMN = 6;
+/*
+ * Tamanho de exibição da imagem na planilha (o PNG em si continua 320x240,
+ * só o que aparece aqui encolhe): sem isso, `insertImage` cola no tamanho
+ * original flutuando por cima da grade, e como as linhas são bem mais baixas
+ * que a imagem, os previews de linhas vizinhas ficam se sobrepondo.
+ */
+var PREVIEW_SHEET_WIDTH = 160;
+var PREVIEW_SHEET_HEIGHT = 120;
 
 /** POST com o JSON do desenho no corpo (text/plain, para evitar preflight). */
 function doPost(e) {
@@ -155,7 +163,15 @@ function doPost(e) {
       try {
         var bytes = Utilities.base64Decode(body.preview);
         previewBlob = Utilities.newBlob(bytes, 'image/png', 'desenho-' + id + '.png');
-        sh.insertImage(previewBlob, PREVIEW_COLUMN, sh.getLastRow());
+        var row = sh.getLastRow();
+        var image = sh.insertImage(previewBlob, PREVIEW_COLUMN, row);
+        image.setWidth(PREVIEW_SHEET_WIDTH).setHeight(PREVIEW_SHEET_HEIGHT);
+        // Linha alta o bastante pra caber a imagem inteira, senão ela invade
+        // as linhas vizinhas; coluna larga o bastante pra não vazar pra G.
+        sh.setRowHeight(row, PREVIEW_SHEET_HEIGHT + 10);
+        if (sh.getColumnWidth(PREVIEW_COLUMN) < PREVIEW_SHEET_WIDTH + 10) {
+          sh.setColumnWidth(PREVIEW_COLUMN, PREVIEW_SHEET_WIDTH + 10);
+        }
       } catch (imgErr) {
         previewBlob = null;
       }
