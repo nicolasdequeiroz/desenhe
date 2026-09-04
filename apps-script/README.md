@@ -10,10 +10,14 @@ Google com um Apps Script na frente — de graça e sem servidor.
 > **Já tem uma planilha instalada e só precisa atualizar o código?** Pule
 > para o editor do Apps Script dela (Extensões → Apps Script), substitua o
 > conteúdo por [`Codigo.gs`](./Codigo.gs), salve, rode `testeEmail` uma vez
-> (passo 7 abaixo — é o que garante o e-mail de aviso) e crie uma **nova
+> (passo 7 abaixo — o Apps Script detecta os escopos a partir do código do
+> projeto inteiro, então rodar essa função manualmente já pede consentimento
+> pra tudo que o script usa, e-mail e Drive incluídos) e crie uma **nova
 > versão** da implantação existente (Implantar → Gerenciar implantações →
 > editar → Nova versão). A URL `/exec` não muda, então não precisa tocar em
-> `guestbook.ts` de novo.
+> `guestbook.ts` de novo. Na primeira execução depois de atualizar, a
+> planilha migra sozinha pro layout novo (coluna **previa** antes de
+> **tracos**) — veja "Como moderar" abaixo.
 
 ## Passo a passo (uma vez só, ~5 min)
 
@@ -27,11 +31,12 @@ Google com um Apps Script na frente — de graça e sem servidor.
    - Quem pode acessar: **Qualquer pessoa** ← precisa ser este, senão o site não consegue ler
 6. Autorize quando o Google pedir (vai aparecer um aviso de "app não verificado";
    é o seu próprio script — siga em *Avançado → Acessar projeto*).
-7. **Autorize o envio de e-mail à parte**: no editor, no menu de funções (ao
+7. **Autorize e-mail e Drive à parte**: no editor, no menu de funções (ao
    lado do botão ▶ Executar), selecione `testeEmail` e clique em Executar.
-   O Google vai pedir uma segunda autorização (agora para enviar e-mail em
-   seu nome) — sem isso, os avisos de novo desenho falham em silêncio. Se o
-   e-mail de teste chegar em `nicolasazevedo38@gmail.com`, está liberado.
+   O Google vai pedir uma segunda autorização, cobrindo tudo que o script usa
+   (enviar e-mail em seu nome, e guardar as prévias no seu Drive) — sem isso,
+   esses recursos falham em silêncio. Se o e-mail de teste chegar em
+   `nicolasazevedo38@gmail.com`, está liberado.
 8. Copie a **URL do app da Web**. Ela termina em `/exec`.
 9. No repositório do site, abra `src/data/guestbook.ts` e cole a URL:
 
@@ -55,23 +60,28 @@ abrir a planilha. Cada link é assinado com `MOD_SECRET` (definido no topo do
 caminho.
 
 Também dá pra moderar direto na planilha, se preferir: cada desenho é uma
-linha da aba `desenhos`, com a mesma prévia inserida como imagem na coluna
-**previa** (F) — não precisa decifrar o JSON da coluna **tracos** pra ver o
-que foi desenhado. Escreva `ok` na coluna **status** para publicar, ou
-qualquer outra coisa (ex.: `oculto`) para esconder — só o valor exato `ok`
-fica visível no site. Os links do e-mail fazem exatamente essa troca por você.
+linha da aba `desenhos`, com um link **"ver imagem"** na coluna **previa**
+(E, logo antes de **tracos**) — clicar nele abre a prévia guardada no Drive,
+numa aba nova. Escreva `ok` na coluna **status** para publicar, ou qualquer
+outra coisa (ex.: `oculto`) para esconder — só o valor exato `ok` fica
+visível no site. Os links do e-mail fazem exatamente essa troca por você.
 
 ## Detalhes que importam
 
 - O desenho em si é gravado como **traços vetoriais** (coordenadas
   normalizadas): a célula fica pequena e o desenho é redesenhado nítido em
   qualquer tamanho no site. A prévia em PNG é gerada à parte, só na hora do
-  envio, pra você ver a imagem sem precisar decifrar coordenadas.
-- Instalação já existente, de antes da prévia em imagem? As linhas antigas
-  não ganham a imagem retroativamente (só o que foi enviado antes não tinha
-  esse dado) — a coluna **previa** também não existe no cabeçalho de
-  planilhas criadas antes desta atualização; pode adicionar o rótulo à mão
-  na célula F1, se quiser.
+  envio, sobe pra uma pasta do Drive chamada **"Desenhe - prévias do livro
+  de visitas"**, e a planilha guarda só o link — nada de imagem flutuando
+  por cima da grade.
+- Atualizando de uma versão anterior a esta? Na primeira chamada depois do
+  deploy, `sheet_()` detecta o layout antigo (coluna **tracos** em E, sem
+  link nenhum) e insere a coluna **previa** automaticamente antes dela,
+  empurrando os dados existentes — inclusive uma eventual imagem flutuante
+  colada por uma versão anterior a essa migração — uma casa pra direita.
+  Rode uma vez só; linhas já enviadas não ganham um link retroativo (só o
+  layout se ajusta), e uma imagem flutuante de antes da migração para "ver
+  imagem" pode ser apagada à mão (clique nela → Delete).
 - O envio usa `Content-Type: text/plain` de propósito: o Apps Script não responde
   ao preflight `OPTIONS` do CORS, então a requisição precisa ser "simples".
 - Cota do Apps Script: cerca de 20 mil execuções por dia — muito acima do

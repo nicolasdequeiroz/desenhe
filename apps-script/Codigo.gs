@@ -2,11 +2,11 @@
  * Backend do livro de visitas desenhado do site da Desenhe.
  *
  * Guarda cada desenho como uma linha da planilha. O traço vai serializado em
- * JSON numa coluna (pequena, é só texto) e uma prévia em PNG (gerada no
- * navegador de quem desenhou, ver renderPreviewBase64 em guestbook.ts) fica
- * inserida como imagem de verdade na coluna ao lado — pra bater o olho em
- * vez de decifrar coordenadas. A mesma imagem vai embutida no e-mail de
- * aviso.
+ * JSON numa coluna (pequena, é só texto). Uma prévia em PNG é gerada no
+ * navegador de quem desenhou (ver renderPreviewBase64 em guestbook.ts): ela
+ * vai pro Google Drive, e a planilha guarda só um link "ver imagem" na
+ * coluna antes de "tracos" — nada de imagem flutuando por cima da grade. A
+ * mesma imagem vai embutida (de verdade, inline) no e-mail de aviso.
  *
  * Moderação prévia: todo desenho novo entra com status "pendente" e só fica
  * visível pra todo mundo depois que a coluna status virar "ok". Enquanto
@@ -36,14 +36,43 @@ var OWNER_EMAIL = 'nicolasazevedo38@gmail.com';
  *  e-mail tem esse valor; sem ele, ninguém aprova nem recusa por fora. */
 var MOD_SECRET = 'bf274609a7f23fd8e479786017decda4d870d3bc';
 
+/** Coluna do link "ver imagem" — antes de "tracos" de propósito. */
+var PREVIEW_COLUMN = 5;
+/** Pasta no Drive onde as prévias em PNG ficam guardadas. */
+var PREVIEW_FOLDER_NAME = 'Desenhe - prévias do livro de visitas';
+
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
-    sh.appendRow(['id', 'criado_em', 'nome', 'status', 'tracos', 'previa']);
+    sh.appendRow(['id', 'criado_em', 'nome', 'status', 'previa', 'tracos']);
+    return sh;
   }
+  migrateToLinkColumn_(sh);
   return sh;
+}
+
+/**
+ * Versão anterior gravava "tracos" na coluna E e colava uma imagem flutuante
+ * na F. Essa migração roda uma vez só (na primeira chamada depois do
+ * deploy): insere uma coluna nova antes de "tracos" pro link da prévia,
+ * empurrando o que vinha depois — inclusive imagens antigas já coladas —
+ * uma casa pra direita. Depois disso o header já tem "previa" na posição
+ * certa e a função vira no-op.
+ */
+function migrateToLinkColumn_(sh) {
+  var header = sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), 5)).getValues()[0];
+  if (header[4] === 'tracos') {
+    sh.insertColumnBefore(5);
+    sh.getRange(1, 5).setValue('previa');
+  }
+}
+
+/** Pasta do Drive com as prévias, criando na primeira vez se não existir. */
+function previewFolder_() {
+  var folders = DriveApp.getFoldersByName(PREVIEW_FOLDER_NAME);
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder(PREVIEW_FOLDER_NAME);
 }
 
 function json_(payload) {
@@ -83,7 +112,7 @@ function handleList_() {
 
     var strokes;
     try {
-      strokes = JSON.parse(row[4] || '[]');
+      strokes = JSON.parse(row[5] || '[]');
     } catch (err) {
       continue;
     }
@@ -127,17 +156,6 @@ function handleModerate_(e) {
   return html_('Não achei esse desenho (talvez já tenha sido moderado). 🤔', false);
 }
 
-/** Coluna onde a prévia em imagem do desenho fica ancorada na planilha. */
-var PREVIEW_COLUMN = 6;
-/*
- * Tamanho de exibição da imagem na planilha (o PNG em si continua 320x240,
- * só o que aparece aqui encolhe): sem isso, `insertImage` cola no tamanho
- * original flutuando por cima da grade, e como as linhas são bem mais baixas
- * que a imagem, os previews de linhas vizinhas ficam se sobrepondo.
- */
-var PREVIEW_SHEET_WIDTH = 160;
-var PREVIEW_SHEET_HEIGHT = 120;
-
 /** POST com o JSON do desenho no corpo (text/plain, para evitar preflight). */
 function doPost(e) {
   try {
@@ -153,25 +171,24 @@ function doPost(e) {
     var name = String(body.name || 'Anônimo').slice(0, 24);
 
     var sh = sheet_();
-    sh.appendRow([id, new Date(), name, STATUS_PENDING, strokes]);
+    // Coluna "previa" (E) fica em branco aqui e é preenchida com o link
+    // logo abaixo, só depois que a imagem sobe pro Drive com sucesso.
+    sh.appendRow([id, new Date(), name, STATUS_PENDING, '', strokes]);
+    var row = sh.getLastRow();
 
-    // Prévia em PNG (ver renderPreviewBase64 em guestbook.ts): mais fácil
-    // bater o olho do que decifrar o JSON dos traços. Uma falha aqui não
-    // derruba o envio — o desenho já está salvo mesmo sem a imagem.
+    // Prévia em PNG (ver renderPreviewBase64 em guestbook.ts): sobe pro
+    // Drive e vira um link "ver imagem" na planilha, em vez de uma imagem
+    // flutuando por cima da grade. Uma falha aqui não derruba o envio — o
+    // desenho já está salvo mesmo sem a prévia.
     var previewBlob = null;
     if (body.preview) {
       try {
         var bytes = Utilities.base64Decode(body.preview);
         previewBlob = Utilities.newBlob(bytes, 'image/png', 'desenho-' + id + '.png');
-        var row = sh.getLastRow();
-        var image = sh.insertImage(previewBlob, PREVIEW_COLUMN, row);
-        image.setWidth(PREVIEW_SHEET_WIDTH).setHeight(PREVIEW_SHEET_HEIGHT);
-        // Linha alta o bastante pra caber a imagem inteira, senão ela invade
-        // as linhas vizinhas; coluna larga o bastante pra não vazar pra G.
-        sh.setRowHeight(row, PREVIEW_SHEET_HEIGHT + 10);
-        if (sh.getColumnWidth(PREVIEW_COLUMN) < PREVIEW_SHEET_WIDTH + 10) {
-          sh.setColumnWidth(PREVIEW_COLUMN, PREVIEW_SHEET_WIDTH + 10);
-        }
+        var file = previewFolder_().createFile(previewBlob);
+        sh.getRange(row, PREVIEW_COLUMN).setFormula(
+          '=HYPERLINK("' + file.getUrl() + '","ver imagem")'
+        );
       } catch (imgErr) {
         previewBlob = null;
       }
@@ -240,10 +257,13 @@ function notifyOwner_(id, name, previewBlob) {
 
 /**
  * Rode esta função manualmente uma vez no editor (▶ com "testeEmail"
- * selecionado no menu de funções) depois de colar este código. Isso força o
- * Google a pedir autorização para o script enviar e-mail: sem essa
- * autorização, MailApp.sendEmail falha silenciosamente no fluxo normal
- * (o erro é engolido pelo try/catch de notifyOwner_ pra não travar o site).
+ * selecionado no menu de funções) sempre que este arquivo ganhar um serviço
+ * novo (Mail, Drive, etc.). O Apps Script detecta os escopos precisando de
+ * autorização a partir do código do projeto inteiro, então rodar qualquer
+ * função manualmente aqui já pede consentimento pra tudo que o script usa —
+ * inclusive DriveApp, usado pra guardar as prévias. Sem essa autorização,
+ * os recursos que dependem dela falham em silêncio no fluxo normal (os
+ * try/catch existem exatamente pra não travar o site por causa disso).
  */
 function testeEmail() {
   MailApp.sendEmail({
