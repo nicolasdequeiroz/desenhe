@@ -47,22 +47,31 @@ Todo desenho novo entra **pendente**: fica invisível para todo mundo, exceto
 para quem o desenhou (o próprio navegador guarda uma cópia local e mostra na
 hora, então quem desenhou não percebe a espera).
 
-A cada envio, `nicolasazevedo38@gmail.com` recebe um e-mail com dois botões,
+A cada envio, `nicolasazevedo38@gmail.com` recebe um e-mail com **a prévia do
+desenho** (imagem de verdade, embutida no corpo do e-mail) e dois botões,
 **Aprovar** e **Recusar** — um clique em qualquer um já resolve, sem precisar
 abrir a planilha. Cada link é assinado com `MOD_SECRET` (definido no topo do
 `Codigo.gs`), então só quem recebeu o e-mail consegue moderar por esse
 caminho.
 
 Também dá pra moderar direto na planilha, se preferir: cada desenho é uma
-linha da aba `desenhos`. Escreva `ok` na coluna **status** para publicar, ou
+linha da aba `desenhos`, com a mesma prévia inserida como imagem na coluna
+**previa** (F) — não precisa decifrar o JSON da coluna **tracos** pra ver o
+que foi desenhado. Escreva `ok` na coluna **status** para publicar, ou
 qualquer outra coisa (ex.: `oculto`) para esconder — só o valor exato `ok`
 fica visível no site. Os links do e-mail fazem exatamente essa troca por você.
 
 ## Detalhes que importam
 
-- O desenho é gravado como **traços vetoriais** (coordenadas normalizadas), não
-  como imagem. A célula fica pequena e o desenho é redesenhado nítido em
-  qualquer tamanho.
+- O desenho em si é gravado como **traços vetoriais** (coordenadas
+  normalizadas): a célula fica pequena e o desenho é redesenhado nítido em
+  qualquer tamanho no site. A prévia em PNG é gerada à parte, só na hora do
+  envio, pra você ver a imagem sem precisar decifrar coordenadas.
+- Instalação já existente, de antes da prévia em imagem? As linhas antigas
+  não ganham a imagem retroativamente (só o que foi enviado antes não tinha
+  esse dado) — a coluna **previa** também não existe no cabeçalho de
+  planilhas criadas antes desta atualização; pode adicionar o rótulo à mão
+  na célula F1, se quiser.
 - O envio usa `Content-Type: text/plain` de propósito: o Apps Script não responde
   ao preflight `OPTIONS` do CORS, então a requisição precisa ser "simples".
 - Cota do Apps Script: cerca de 20 mil execuções por dia — muito acima do

@@ -2,7 +2,11 @@
  * Backend do livro de visitas desenhado do site da Desenhe.
  *
  * Guarda cada desenho como uma linha da planilha. O traço vai serializado em
- * JSON na última coluna — nada de imagem, então a célula é pequena.
+ * JSON numa coluna (pequena, é só texto) e uma prévia em PNG (gerada no
+ * navegador de quem desenhou, ver renderPreviewBase64 em guestbook.ts) fica
+ * inserida como imagem de verdade na coluna ao lado — pra bater o olho em
+ * vez de decifrar coordenadas. A mesma imagem vai embutida no e-mail de
+ * aviso.
  *
  * Moderação prévia: todo desenho novo entra com status "pendente" e só fica
  * visível pra todo mundo depois que a coluna status virar "ok". Enquanto
@@ -37,7 +41,7 @@ function sheet_() {
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
-    sh.appendRow(['id', 'criado_em', 'nome', 'status', 'tracos']);
+    sh.appendRow(['id', 'criado_em', 'nome', 'status', 'tracos', 'previa']);
   }
   return sh;
 }
@@ -123,6 +127,9 @@ function handleModerate_(e) {
   return html_('Não achei esse desenho (talvez já tenha sido moderado). 🤔', false);
 }
 
+/** Coluna onde a prévia em imagem do desenho fica ancorada na planilha. */
+var PREVIEW_COLUMN = 6;
+
 /** POST com o JSON do desenho no corpo (text/plain, para evitar preflight). */
 function doPost(e) {
   try {
@@ -137,9 +144,24 @@ function doPost(e) {
     var id = String(body.id || Date.now());
     var name = String(body.name || 'Anônimo').slice(0, 24);
 
-    sheet_().appendRow([id, new Date(), name, STATUS_PENDING, strokes]);
+    var sh = sheet_();
+    sh.appendRow([id, new Date(), name, STATUS_PENDING, strokes]);
 
-    notifyOwner_(id, name);
+    // Prévia em PNG (ver renderPreviewBase64 em guestbook.ts): mais fácil
+    // bater o olho do que decifrar o JSON dos traços. Uma falha aqui não
+    // derruba o envio — o desenho já está salvo mesmo sem a imagem.
+    var previewBlob = null;
+    if (body.preview) {
+      try {
+        var bytes = Utilities.base64Decode(body.preview);
+        previewBlob = Utilities.newBlob(bytes, 'image/png', 'desenho-' + id + '.png');
+        sh.insertImage(previewBlob, PREVIEW_COLUMN, sh.getLastRow());
+      } catch (imgErr) {
+        previewBlob = null;
+      }
+    }
+
+    notifyOwner_(id, name, previewBlob);
 
     return json_({ok: true});
   } catch (err) {
@@ -148,11 +170,12 @@ function doPost(e) {
 }
 
 /**
- * Avisa por e-mail que chegou desenho novo, com links de aprovar/recusar de
- * um clique só. Nunca deixa uma falha aqui derrubar o envio do desenho: sem
- * isso, cota de e-mail estourada bloquearia visitas de verdade.
+ * Avisa por e-mail que chegou desenho novo, com a prévia embutida (quando
+ * veio uma) e links de aprovar/recusar de um clique só. Nunca deixa uma
+ * falha aqui derrubar o envio do desenho: sem isso, cota de e-mail estourada
+ * bloquearia visitas de verdade.
  */
-function notifyOwner_(id, name) {
+function notifyOwner_(id, name, previewBlob) {
   try {
     var baseUrl = ScriptApp.getService().getUrl();
     var approveUrl =
@@ -163,9 +186,17 @@ function notifyOwner_(id, name) {
       '&token=' + MOD_SECRET;
     var sheetUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl();
 
+    // `cid:preview` só funciona com `inlineImages` (anexo referenciado por
+    // Content-ID); um data: URI direto no <img> é bloqueado pelo Gmail.
+    var previewHtml = previewBlob
+      ? '<p style="margin:0 0 20px;"><img src="cid:preview" alt="Prévia do desenho" ' +
+        'style="max-width:100%;border:1px solid #ddd;border-radius:8px;display:block;"/></p>'
+      : '';
+
     var html =
       '<div style="font-family:sans-serif;font-size:15px;line-height:1.5;">' +
       '<p>Novo desenho no livro de visitas: <strong>' + name + '</strong></p>' +
+      previewHtml +
       '<p style="margin:24px 0;">' +
       '<a href="' + approveUrl + '" style="display:inline-block;padding:10px 20px;' +
       'margin-right:12px;background:#2f7a3d;color:#fff;text-decoration:none;' +
@@ -177,11 +208,14 @@ function notifyOwner_(id, name) {
       '<p style="color:#666;">Ou revise direto na <a href="' + sheetUrl + '">planilha</a>.</p>' +
       '</div>';
 
-    MailApp.sendEmail({
+    var mail = {
       to: OWNER_EMAIL,
       subject: 'Novo desenho no livro de visitas da Desenhe',
       htmlBody: html
-    });
+    };
+    if (previewBlob) mail.inlineImages = {preview: previewBlob};
+
+    MailApp.sendEmail(mail);
   } catch (err) {
     // Cota de e-mail estourada ou outro erro: o desenho já foi salvo como
     // pendente de qualquer forma, só o aviso que não saiu.
