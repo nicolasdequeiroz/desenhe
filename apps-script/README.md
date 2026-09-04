@@ -7,6 +7,14 @@ Para que os desenhos apareçam para todo mundo, é preciso um lugar fora do site
 guardando os dados. O site é estático (GitHub Pages), então usamos uma Planilha
 Google com um Apps Script na frente — de graça e sem servidor.
 
+> **Já tem uma planilha instalada e só precisa atualizar o código?** Pule
+> para o editor do Apps Script dela (Extensões → Apps Script), substitua o
+> conteúdo por [`Codigo.gs`](./Codigo.gs), salve, rode `testeEmail` uma vez
+> (passo 7 abaixo — é o que garante o e-mail de aviso) e crie uma **nova
+> versão** da implantação existente (Implantar → Gerenciar implantações →
+> editar → Nova versão). A URL `/exec` não muda, então não precisa tocar em
+> `guestbook.ts` de novo.
+
 ## Passo a passo (uma vez só, ~5 min)
 
 1. Crie uma planilha em <https://sheets.new> e dê um nome (ex.: `Desenhe — livro de visitas`).
@@ -19,26 +27,36 @@ Google com um Apps Script na frente — de graça e sem servidor.
    - Quem pode acessar: **Qualquer pessoa** ← precisa ser este, senão o site não consegue ler
 6. Autorize quando o Google pedir (vai aparecer um aviso de "app não verificado";
    é o seu próprio script — siga em *Avançado → Acessar projeto*).
-7. Copie a **URL do app da Web**. Ela termina em `/exec`.
-8. No repositório do site, abra `src/data/guestbook.ts` e cole a URL:
+7. **Autorize o envio de e-mail à parte**: no editor, no menu de funções (ao
+   lado do botão ▶ Executar), selecione `testeEmail` e clique em Executar.
+   O Google vai pedir uma segunda autorização (agora para enviar e-mail em
+   seu nome) — sem isso, os avisos de novo desenho falham em silêncio. Se o
+   e-mail de teste chegar em `nicolasazevedo38@gmail.com`, está liberado.
+8. Copie a **URL do app da Web**. Ela termina em `/exec`.
+9. No repositório do site, abra `src/data/guestbook.ts` e cole a URL:
 
    ```ts
    export const GUESTBOOK_ENDPOINT = 'https://script.google.com/macros/s/AAAA.../exec';
    ```
 
-9. Faça commit e push. O deploy no GitHub Pages é automático.
+10. Faça commit e push. O deploy no GitHub Pages é automático.
 
 ## Como moderar
 
 Todo desenho novo entra **pendente**: fica invisível para todo mundo, exceto
 para quem o desenhou (o próprio navegador guarda uma cópia local e mostra na
-hora, então quem desenhou não percebe a espera). Você recebe um e-mail a cada
-envio, com o nome e o link da planilha.
+hora, então quem desenhou não percebe a espera).
 
-Cada desenho é uma linha da aba `desenhos`. Para publicar um desenho pendente,
-escreva `ok` na coluna **status**. Para esconder um desenho já publicado, troque
-o `ok` por qualquer outra coisa (ex.: `oculto`) — ou apague a linha. Só o valor
-exato `ok` fica visível no site.
+A cada envio, `nicolasazevedo38@gmail.com` recebe um e-mail com dois botões,
+**Aprovar** e **Recusar** — um clique em qualquer um já resolve, sem precisar
+abrir a planilha. Cada link é assinado com `MOD_SECRET` (definido no topo do
+`Codigo.gs`), então só quem recebeu o e-mail consegue moderar por esse
+caminho.
+
+Também dá pra moderar direto na planilha, se preferir: cada desenho é uma
+linha da aba `desenhos`. Escreva `ok` na coluna **status** para publicar, ou
+qualquer outra coisa (ex.: `oculto`) para esconder — só o valor exato `ok`
+fica visível no site. Os links do e-mail fazem exatamente essa troca por você.
 
 ## Detalhes que importam
 
@@ -55,3 +73,8 @@ exato `ok` fica visível no site.
   navegador de quem desenhou e a pilha mostra os que já tinham sido carregados.
 - O site lê no máximo os 60 desenhos **aprovados** mais recentes e empilha os
   22 últimos.
+- `MOD_SECRET` é uma proteção leve, não uma senha forte: qualquer um com esse
+  valor consegue aprovar/recusar pelos links. Ele só existe no código-fonte
+  (`Codigo.gs`, que não é público) e nos e-mails que você recebe, então é
+  suficiente para o risco real aqui. Se algum dia vazar, troque o valor da
+  constante e implante uma nova versão.
