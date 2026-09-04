@@ -186,9 +186,16 @@ function doPost(e) {
         var bytes = Utilities.base64Decode(body.preview);
         previewBlob = Utilities.newBlob(bytes, 'image/png', 'desenho-' + id + '.png');
         var file = previewFolder_().createFile(previewBlob);
-        sh.getRange(row, PREVIEW_COLUMN).setFormula(
-          '=HYPERLINK("' + file.getUrl() + '","ver imagem")'
-        );
+        // RichTextValue em vez de fórmula =HYPERLINK(...): o separador de
+        // argumento de fórmula muda com o idioma da planilha (vírgula vs.
+        // ponto-e-vírgula), e uma fórmula escrita com vírgula quebra em
+        // planilhas em português. RichTextValue não passa por parsing de
+        // fórmula nenhum, então não depende de locale.
+        var link = SpreadsheetApp.newRichTextValue()
+          .setText('ver imagem')
+          .setLinkUrl(file.getUrl())
+          .build();
+        sh.getRange(row, PREVIEW_COLUMN).setRichTextValue(link);
       } catch (imgErr) {
         previewBlob = null;
       }
