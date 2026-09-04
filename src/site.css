@@ -5071,30 +5071,35 @@ body {
 }
 
 /*
- * Confete sutil ao enviar: um punhado de quadradinhos caindo do topo do
- * painel, recortados pelo `overflow: hidden` dele. Nada de canvas nem lib:
- * cada peça é um <span> com posição/cor/atraso sorteados em JS e a queda é
- * só CSS.
+ * Confete sutil ao enviar: explode no topo do rodapé (não no painel, que já
+ * fechou), cobrindo a largura inteira dele. `.site-footer` é `position:
+ * sticky`, que já funciona como contêiner posicional pros filhos absolutos
+ * (mesma base que `.doodle-pile` usa) — nada de posicionamento extra aqui.
+ * Nada de canvas nem lib: cada peça é um <span> com posição/cor/atraso
+ * sorteados em JS e a queda é só CSS.
  */
-.guestbook-confetti {
+.footer-confetti {
   position: absolute;
-  inset: 0;
-  z-index: 5;
-  overflow: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  overflow: visible;
+  z-index: 2;
   pointer-events: none;
 }
 
-.guestbook-confetti__piece {
+.footer-confetti__piece {
   position: absolute;
-  top: -10px;
+  top: 0;
   border-radius: 1px;
   opacity: 0;
-  animation-name: guestbook-confetti-fall;
+  animation-name: footer-confetti-fall;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
 
-@keyframes guestbook-confetti-fall {
+@keyframes footer-confetti-fall {
   0% {
     transform: translateY(0) rotate(0deg);
     opacity: 0;
@@ -5103,14 +5108,118 @@ body {
     opacity: 0.9;
   }
   100% {
-    transform: translateY(160px) rotate(var(--guestbook-confetti-rot, 180deg));
+    transform: translateY(200px) rotate(var(--footer-confetti-rot, 180deg));
     opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guestbook-confetti {
+  .footer-confetti {
     display: none;
+  }
+}
+
+/*
+ * Toast de "desenho enviado": aparece por cima de tudo, alinhado ao rodapé
+ * da viewport (não do <footer> em si — o efeito de "push" pede fixo na
+ * tela). Some sozinho depois de TOAST_DURATION_MS (ver Guestbook.tsx), com
+ * um anel circular contando a régua e um leve deslize de saída.
+ */
+.guestbook-toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--spacing-5);
+  z-index: 75;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  max-width: min(360px, calc(100vw - 2 * var(--spacing-5)));
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: 9999px;
+  border: 1px solid var(--surface-warm-border);
+  background: var(--surface-warm-card);
+  color: var(--surface-warm-text);
+  box-shadow: 0 12px 30px color-mix(in srgb, #000 28%, transparent);
+  transform: translate(-50%, 0);
+  animation: guestbook-toast-in var(--duration-medium) var(--site-button-ease, ease) both;
+}
+
+.guestbook-toast--warn {
+  border-color: color-mix(in srgb, #a33333 40%, var(--surface-warm-border));
+}
+
+.guestbook-toast.is-leaving {
+  animation: guestbook-toast-out var(--duration-medium) ease both;
+}
+
+@keyframes guestbook-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}
+
+@keyframes guestbook-toast-out {
+  to {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}
+
+.guestbook-toast__text {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.guestbook-toast__timer {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  transform: rotate(-90deg);
+}
+
+.guestbook-toast__timer-track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--surface-warm-text) 18%, transparent);
+  stroke-width: 2;
+}
+
+.guestbook-toast__timer-fill {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  /* 2 * π * r(8) ≈ 50.27: some do círculo cheio a vazio em linha reta. */
+  stroke-dasharray: 50.27;
+  stroke-dashoffset: 0;
+  animation-name: guestbook-toast-timer;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.guestbook-toast--warn .guestbook-toast__timer-fill {
+  stroke: #a33333;
+}
+
+@keyframes guestbook-toast-timer {
+  to {
+    stroke-dashoffset: 50.27;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guestbook-toast {
+    animation: none;
+  }
+
+  .guestbook-toast.is-leaving {
+    display: none;
+  }
+
+  .guestbook-toast__timer-fill {
+    animation: none;
   }
 }
 
@@ -5329,19 +5438,6 @@ body {
 .guestbook-panel__close:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-}
-
-.guestbook-panel__msg {
-  margin: 0;
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
-  line-height: 1.4;
-  color: var(--surface-warm-text-muted);
-}
-
-.guestbook-panel__msg--ok {
-  color: var(--color-accent);
-  font-weight: 600;
 }
 
 .guestbook-panel__gallery {
