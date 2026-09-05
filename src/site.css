@@ -1517,6 +1517,12 @@ body {
     align-items: flex-start;
     gap: var(--spacing-6);
   }
+
+  /* Sem a capa flutuante ao lado, o fio antes do rodapé fica sobrando entre
+     a lista e o CTA: o espaço em branco já separa os dois. */
+  .featured-courses__divider {
+    display: none;
+  }
 }
 
 /* ---------- Cards de curso ---------- */
