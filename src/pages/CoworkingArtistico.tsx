@@ -349,7 +349,7 @@ export function CoworkingArtistico() {
                       Um espaço só seu para criar, no seu ritmo. Alugue nosso
                       ateliê por hora em Curitiba e tenha luz natural,
                       estrutura completa e silêncio para dar forma às suas
-                      ideias.
+                      ideias, sem compromisso de longo prazo.
                     </p>
                   </div>
                 </div>
