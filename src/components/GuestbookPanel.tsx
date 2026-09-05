@@ -1,5 +1,5 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {X, ArrowUUpLeft, Eraser, Trash} from '@phosphor-icons/react';
+import {X, ArrowUUpLeft, Eraser, PencilSimple, Trash} from '@phosphor-icons/react';
 import {DoodleThumb} from './DoodlePile';
 import {
   DOODLE_RATIO,
@@ -183,7 +183,10 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
         ref={panelRef}
       >
         <div className="guestbook-panel__hdr">
-          <p className="guestbook-panel__title">Deixe um desenho</p>
+          <div className="guestbook-panel__title-group">
+            <PencilSimple size={16} weight="fill" aria-hidden="true" />
+            <p className="guestbook-panel__title">Deixe um desenho</p>
+          </div>
           <button
             type="button"
             className="guestbook-panel__close"
@@ -306,7 +309,11 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
             </div>
 
             <div className="guestbook-panel__submit">
+              <label className="guestbook-panel__signature-label" htmlFor="guestbook-name">
+                Assine seu desenho
+              </label>
               <input
+                id="guestbook-name"
                 className="guestbook-panel__name"
                 placeholder="Seu nome (opcional)"
                 value={name}
