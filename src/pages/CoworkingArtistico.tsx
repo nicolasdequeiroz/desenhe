@@ -345,11 +345,11 @@ export function CoworkingArtistico() {
                 <div className="hero__heading">
                   <h1 className="hero__title">Coworking Artístico</h1>
                   <div className="hero__lead">
-                    <p>Um espaço só seu para criar, no seu ritmo.</p>
                     <p>
-                      Alugue nosso ateliê por hora em Curitiba e tenha luz
-                      natural, estrutura completa e silêncio para dar forma
-                      às suas ideias.
+                      Um espaço só seu para criar, no seu ritmo. Alugue nosso
+                      ateliê por hora em Curitiba e tenha luz natural,
+                      estrutura completa e silêncio para dar forma às suas
+                      ideias.
                     </p>
                   </div>
                 </div>
