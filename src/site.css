@@ -7648,6 +7648,25 @@ body {
   scroll-margin-top: 88px;
 }
 
+/* No mobile os cabeçalhos de seção (kicker + título + texto) alinham à
+   esquerda, em vez de centralizados como no desktop: com a tela estreita, o
+   bloco centralizado ficava com linhas de comprimentos bem diferentes e
+   perdia a leitura em coluna única. */
+@media (max-width: 640px) {
+  .coworking-page .section__head--centered {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .coworking-page .section__head--centered .section__head-copy {
+    margin-inline: 0;
+  }
+
+  .coworking-page .section__head--centered .section__eyebrow::after {
+    margin-inline: 0;
+  }
+}
+
 /*
  * Fecho da página: mesmo fade de cor usado no fim das páginas de curso e do
  * /sobre (ver --course-cta-fade) entre a seção que antecede a faixa final e
