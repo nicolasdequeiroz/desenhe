@@ -1892,17 +1892,11 @@ body {
   border-top: none;
 }
 
-.coworking-highlights .note-grid__item {
-  padding: var(--spacing-5);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-container);
-  background: var(--color-background-card);
-}
-
 .coworking-highlights .note-grid__item-icon {
   width: 44px;
   height: 44px;
-  margin-bottom: var(--spacing-4);
+  /* O cartão já é flex column com gap: o espaço vem dali, não de margin. */
+  margin-bottom: 0;
   border-radius: 50%;
   background: color-mix(in srgb, var(--color-accent) 14%, transparent);
 }
@@ -1922,15 +1916,18 @@ body {
  * Em /precos as notas viram cartas, no mesmo desenho dos planos logo acima:
  * os textos têm comprimentos bem diferentes, e soltos na página eles deixam
  * as linhas da grade irregulares. Nas outras páginas (/cursos, /sobre) a
- * grade continua sem moldura, que é o tom editorial delas.
+ * grade continua sem moldura, que é o tom editorial delas. As vantagens do
+ * coworking usam o mesmo cartão, só com o ícone de bônus acima do título.
  */
-.pricing-notes .note-grid__items {
+.pricing-notes .note-grid__items,
+.coworking-highlights .note-grid__items {
   /* Todas as cartas da mesma linha com a mesma altura. */
   grid-auto-rows: 1fr;
   gap: var(--spacing-4);
 }
 
-.pricing-notes .note-grid__item {
+.pricing-notes .note-grid__item,
+.coworking-highlights .note-grid__item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1941,7 +1938,8 @@ body {
   background: var(--color-background-card);
 }
 
-.pricing-notes .note-grid__item h3 {
+.pricing-notes .note-grid__item h3,
+.coworking-highlights .note-grid__item h3 {
   margin: 0;
   font-size: var(--font-size-base);
 }
@@ -2021,7 +2019,8 @@ body {
    para a base. Vem depois das regras acima de propósito, para vencer o
    `grid-auto-rows: 1fr` e o `margin-top: auto` de mesma especificidade. */
 @media (max-width: 560px) {
-  .pricing-notes .note-grid__items {
+  .pricing-notes .note-grid__items,
+  .coworking-highlights .note-grid__items {
     grid-auto-rows: auto;
   }
 
