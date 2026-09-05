@@ -308,10 +308,10 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
               </div>
             </div>
 
+            <label className="guestbook-panel__signature-label" htmlFor="guestbook-name">
+              Assine seu desenho
+            </label>
             <div className="guestbook-panel__submit">
-              <label className="guestbook-panel__signature-label" htmlFor="guestbook-name">
-                Assine seu desenho
-              </label>
               <input
                 id="guestbook-name"
                 className="guestbook-panel__name"
