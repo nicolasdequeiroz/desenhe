@@ -1058,8 +1058,8 @@ body {
     background:
       linear-gradient(
         to bottom,
-        color-mix(in srgb, #000 62%, transparent) 0,
-        color-mix(in srgb, #000 22%, transparent) 96px,
+        color-mix(in srgb, #000 74%, transparent) 0,
+        color-mix(in srgb, #000 32%, transparent) 96px,
         transparent 180px
       ),
       radial-gradient(
