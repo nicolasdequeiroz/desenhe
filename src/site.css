@@ -5863,8 +5863,7 @@ body {
 }
 
 /* No celular o seletor continua horizontal, ocupando a largura toda, e as
-   duas opções dividem esse espaço em partes iguais (50/50), com ou sem
-   selo. */
+   opções dividem esse espaço em partes iguais (fill), com ou sem selo. */
 @media (max-width: 640px) {
   .pricing-toggle-wrap {
     display: block;
@@ -5885,6 +5884,20 @@ body {
     padding-inline: var(--spacing-2);
     font-size: 0.75rem;
     letter-spacing: 0.02em;
+  }
+
+  /*
+   * Único caso que foge do fill: o seletor de duração dos cursos práticos
+   * (12/6/3 meses) tem três opções, e a de 12 meses com o selo "-20%" fica
+   * larga demais pra dividir em terços iguais sem apertar o texto. Ela volta
+   * a abraçar o próprio conteúdo; as outras duas continuam dividindo o
+   * espaço que sobra. O seletor de duração do curso teórico (2 opções) não é
+   * afetado por este seletor e continua fill 50/50.
+   */
+  .pricing-block:not(.pricing-block--theory) .pricing-toggle__option:has(.pricing-toggle__badge) {
+    flex: 0 0 auto;
+    min-width: auto;
+    padding-inline-start: var(--spacing-4);
   }
 }
 
