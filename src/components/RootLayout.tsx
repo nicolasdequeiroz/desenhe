@@ -24,15 +24,6 @@ export function RootLayout() {
       </main>
       <SiteFooter />
       <WhatsFloat />
-      {/*
-       * Âncora só para o Safari (iOS 26, "Liquid Glass"): ele lê o
-       * background-color do elemento fixed mais próximo da borda de baixo da
-       * tela para colorir a própria barra ali, e sem um elemento sólido bem
-       * ali ele acaba refletindo o que está sob a barra (a foto/vídeo do
-       * hero, por exemplo), em vez do fundo escuro do site. Ver
-       * .safari-toolbar-anchor em site.css.
-       */}
-      <div className="safari-toolbar-anchor" aria-hidden="true" />
       <ScrollRestoration />
     </>
   );

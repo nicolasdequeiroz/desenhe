@@ -2405,26 +2405,6 @@ body {
   background: var(--surface-warm-bg);
 }
 
-/*
- * Só existe pelo Safari (ver o comentário de .site-footer acima): quando a
- * própria borda de baixo da tela está sobre o vídeo/foto do hero (bem no
- * início da página, por exemplo), não há elemento fixed nenhum ali pro
- * Safari 26 usar como referência, e ele acaba refletindo a imagem por trás
- * da barra em vez do fundo escuro do site. Uma faixa fixa, fina e opaca no
- * rodapé de verdade da tela resolve isso: dimensão mínima recomendada pela
- * Apple (altura de pelo menos 12px, largura de pelo menos 80% da tela).
- * Sem conteúdo, sem interação, sempre atrás de tudo o mais.
- */
-.safari-toolbar-anchor {
-  position: fixed;
-  inset-inline: 0;
-  bottom: 0;
-  height: 12px;
-  z-index: -1;
-  background: var(--color-background-body);
-  pointer-events: none;
-}
-
 .testimonials__inner {
   overflow: visible;
 }
