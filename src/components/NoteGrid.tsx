@@ -9,6 +9,8 @@ export interface Note {
   href?: string;
   /** Texto do link exibido no rodapé da nota (padrão: "Saiba mais"). */
   linkLabel?: string;
+  /** Ícone opcional acima do título (ver as vantagens do coworking). */
+  icon?: () => ReactNode;
 }
 
 interface Props {
@@ -38,6 +40,11 @@ export function NoteGrid({eyebrow, items, columns = 3, footerCard}: Props) {
         {items.map((item) => {
           const body = (
             <>
+              {item.icon && (
+                <span className="note-grid__item-icon" aria-hidden="true">
+                  {item.icon()}
+                </span>
+              )}
               <Heading level={3}>{item.title}</Heading>
               <Text color="secondary">{item.text}</Text>
               {item.href && (

@@ -390,7 +390,9 @@ export function CoworkingArtistico() {
         kicker="Vantagens"
         title="Tudo pronto pra você focar só em criar"
       >
-        <NoteGrid items={HIGHLIGHTS.map(({title, text}) => ({title, text}))} columns={3} />
+        <div className="coworking-highlights">
+          <NoteGrid items={HIGHLIGHTS} columns={3} />
+        </div>
       </Section>
 
       <Section
