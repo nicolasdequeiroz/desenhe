@@ -154,7 +154,7 @@ export function DoodlePile({doodles, pinnedIds = []}: Props) {
       const Matter = await import('matter-js');
       if (cancelled) return;
 
-      const {Engine, Runner, Composite, Bodies, Body, Mouse, MouseConstraint} = Matter;
+      const {Engine, Runner, Composite, Bodies, Body, Mouse, MouseConstraint, Query} = Matter;
       const width = container.clientWidth;
       const height = container.clientHeight;
       if (!width || !height) return;
@@ -188,27 +188,62 @@ export function DoodlePile({doodles, pinnedIds = []}: Props) {
       });
       Composite.add(engine.world, bodies);
 
-      /*
-       * Arrastar só onde existe mouse: no toque, o Mouse do matter dá
-       * preventDefault no touchmove e a página deixaria de rolar sobre a pilha.
-       */
-      if (window.matchMedia('(pointer: fine)').matches) {
-        const mouse = Mouse.create(container);
-        // O matter também escuta a roda do mouse; sem soltar, a página trava.
-        const wheelHandler = (mouse as typeof mouse & {
-          mousewheel(event: Event): void;
-        }).mousewheel;
-        container.removeEventListener('wheel', wheelHandler);
-        container.removeEventListener('DOMMouseScroll', wheelHandler);
+      const mouse = Mouse.create(container);
+      // O matter também escuta a roda do mouse; sem soltar, a página trava.
+      const wheelHandler = (mouse as typeof mouse & {
+        mousewheel(event: Event): void;
+      }).mousewheel;
+      container.removeEventListener('wheel', wheelHandler);
+      container.removeEventListener('DOMMouseScroll', wheelHandler);
 
-        Composite.add(
-          engine.world,
-          MouseConstraint.create(engine, {
-            mouse,
-            constraint: {stiffness: 0.2, render: {visible: false}},
-          }),
-        );
-      }
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: {stiffness: 0.2, render: {visible: false}},
+      });
+      Composite.add(engine.world, mouseConstraint);
+
+      /*
+       * No toque, o Mouse do matter dá preventDefault sem condição em
+       * touchstart/touchmove/touchend, então qualquer arrasto sobre a pilha
+       * (mesmo fora de um cartão) travaria o scroll da página. Troca os três
+       * pelas versões abaixo, que só repassam pro matter quando o toque
+       * realmente começa em cima de um cartão: fora disso o dedo continua
+       * rolando a página normalmente.
+       */
+      const touchstart = (mouse as typeof mouse & {mousedown(event: Event): void}).mousedown;
+      const touchmove = (mouse as typeof mouse & {mousemove(event: Event): void}).mousemove;
+      const touchend = (mouse as typeof mouse & {mouseup(event: Event): void}).mouseup;
+      container.removeEventListener('touchstart', touchstart);
+      container.removeEventListener('touchmove', touchmove);
+      container.removeEventListener('touchend', touchend);
+
+      const touchPoint = (event: TouchEvent) => {
+        const touch = event.changedTouches[0];
+        const rect = container.getBoundingClientRect();
+        return {x: touch.clientX - rect.left, y: touch.clientY - rect.top};
+      };
+
+      container.addEventListener(
+        'touchstart',
+        (event: TouchEvent) => {
+          if (Query.point(bodies, touchPoint(event)).length > 0) touchstart(event);
+        },
+        {passive: false},
+      );
+      container.addEventListener(
+        'touchmove',
+        (event: TouchEvent) => {
+          if (mouseConstraint.body) touchmove(event);
+        },
+        {passive: false},
+      );
+      container.addEventListener(
+        'touchend',
+        (event: TouchEvent) => {
+          if (mouseConstraint.body) touchend(event);
+        },
+        {passive: false},
+      );
 
       const runner = Runner.create();
       Runner.run(runner, engine);
