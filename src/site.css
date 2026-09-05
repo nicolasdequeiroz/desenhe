@@ -1887,11 +1887,6 @@ body {
  * pastilha redonda acima do título, em vez do bloco de texto solto que as
  * outras páginas usam para esse mesmo componente.
  */
-.coworking-highlights .note-grid {
-  padding-top: 0;
-  border-top: none;
-}
-
 .coworking-highlights .note-grid__item-icon {
   width: 44px;
   height: 44px;

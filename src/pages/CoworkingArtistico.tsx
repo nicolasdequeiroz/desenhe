@@ -387,12 +387,9 @@ export function CoworkingArtistico() {
         </dl>
       </div>
 
-      <Section
-        kicker="Vantagens"
-        title="Tudo pronto pra você focar só em criar"
-      >
+      <Section>
         <div className="coworking-highlights">
-          <NoteGrid items={HIGHLIGHTS} columns={3} />
+          <NoteGrid eyebrow="Vantagens" items={HIGHLIGHTS} columns={3} />
         </div>
       </Section>
 
