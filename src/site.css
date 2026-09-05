@@ -5466,6 +5466,9 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--surface-warm-text-subtle);
+  /* .guestbook-panel__view já dá spacing-4 de gap entre os filhos; puxa pra
+     mais perto só do input logo abaixo, sem mexer no espaço acima do rotulo. */
+  margin-bottom: calc(var(--spacing-1) - var(--spacing-4));
 }
 
 .guestbook-panel__submit {
