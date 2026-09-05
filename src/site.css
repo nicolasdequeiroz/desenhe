@@ -5285,10 +5285,10 @@ body {
 .guestbook-panel__tabs {
   display: flex;
   gap: 4px;
-  margin: var(--spacing-3) var(--spacing-4) 0;
+  margin: var(--spacing-3) var(--spacing-4) calc(var(--spacing-2) - var(--spacing-4));
   padding: 4px;
   border: 1px solid var(--surface-warm-border);
-  border-radius: 9999px;
+  border-radius: 12px;
   background: var(--surface-warm-bg);
 }
 
@@ -5296,7 +5296,7 @@ body {
   flex: 1;
   padding: var(--spacing-2) var(--spacing-3);
   border: none;
-  border-radius: 9999px;
+  border-radius: 8px;
   background: none;
   font-family: var(--font-family-body);
   font-size: var(--font-size-sm);
