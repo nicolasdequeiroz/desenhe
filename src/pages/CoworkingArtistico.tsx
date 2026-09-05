@@ -339,13 +339,11 @@ export function CoworkingArtistico() {
         </div>
 
         <div className="container hero__inner">
-          <div className="hero__top">
-            <span className="section__eyebrow hero__top-eyebrow">Novidade em Curitiba</span>
-          </div>
           <div className="hero__main">
             <div className="hero__bottom">
               <div className="hero__subheading">
                 <div className="hero__heading">
+                  <span className="section__eyebrow hero__top-eyebrow">Novidade em Curitiba</span>
                   <h1 className="hero__title">Coworking Artístico</h1>
                   <div className="hero__lead">
                     <p>
