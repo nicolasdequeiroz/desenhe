@@ -1042,10 +1042,11 @@ body {
     --hero-gap: clamp(200px, 36vh, 360px);
     --hero-pad-top: calc(64px + var(--hero-gap));
     --hero-pad-bottom: calc(var(--spacing-8) + var(--spacing-5));
-    /* A dobra ocupa a tela toda: 100svh (a menor altura da viewport, com a
-       barra do navegador aberta) pra nada ser cortado quando ela recolhe. */
-    min-height: 100vh;
-    min-height: 100svh;
+    /* A dobra ocupa quase a tela toda: 90svh (a menor altura da viewport,
+       com a barra do navegador aberta) pra nada ser cortado quando ela
+       recolhe, com uma folga que já entrega o início da próxima seção. */
+    min-height: 90vh;
+    min-height: 90svh;
   }
 
   /*
@@ -1075,13 +1076,13 @@ body {
   }
 
   .hero__inner {
-    /* Preenche a dobra de 100svh e joga TODO o conteúdo para o rodapé dela,
+    /* Preenche a dobra de 90svh e joga TODO o conteúdo para o rodapé dela,
        com a tag "Desde 1988..." logo acima do h1 (no desktop o
        `.hero__main` cresce e só o texto desce; no mobile a hero é mais
        cheia e a tag ficava flutuando no meio). Se a janela do gap não
        couber, o `calc` fica <= 0 e o header cuida do respiro. */
     min-height: calc(
-      100svh - var(--hero-pad-top) - var(--hero-pad-bottom)
+      90svh - var(--hero-pad-top) - var(--hero-pad-bottom)
     );
     justify-content: flex-end;
   }
