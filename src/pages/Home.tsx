@@ -89,7 +89,7 @@ export function Home() {
 
   return (
     <>
-      <Seo path="/" />
+      <Seo path="/" image="/images/brand/og-home.jpg" />
 
       {FEATURED_PROMO && <PromoBar promo={FEATURED_PROMO} />}
 
