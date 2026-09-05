@@ -5862,9 +5862,9 @@ body {
   }
 }
 
-/* No celular o seletor continua horizontal, ocupando a largura toda. As
-   opções sem selo dividem o espaço em partes iguais; a de "12 meses" abraça
-   o próprio conteúdo (rótulo + selo) e pode ficar um pouco maior. */
+/* No celular o seletor continua horizontal, ocupando a largura toda, e as
+   duas opções dividem esse espaço em partes iguais (50/50), com ou sem
+   selo. */
 @media (max-width: 640px) {
   .pricing-toggle-wrap {
     display: block;
@@ -5877,16 +5877,14 @@ body {
 
   .pricing-toggle__option {
     flex: 1;
+    /* Sem isto, o mínimo de cada opção vira o conteúdo dela (largura
+       padrão de item flex): a que tem selo, mais larga, sobrava espaço
+       das outras em vez de dividir o trilho em partes exatamente iguais. */
+    min-width: 0;
     gap: 0.3rem;
     padding-inline: var(--spacing-2);
     font-size: 0.75rem;
     letter-spacing: 0.02em;
-  }
-
-  .pricing-toggle__option:has(.pricing-toggle__badge) {
-    flex: 0 0 auto;
-    /* Abraçando o conteúdo, cabe (e pede) mais respiro antes do rótulo. */
-    padding-inline-start: var(--spacing-4);
   }
 }
 
