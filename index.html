@@ -2,7 +2,14 @@
 <html lang="pt-BR" style="color-scheme: dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      viewport-fit=cover: sem isto o Safari no iPhone não estende a página
+      por baixo da barra de ferramentas (home indicator), e mantém aquela
+      área com a cor padrão dele (cinza claro), ignorando o theme-color
+      abaixo. Com cover, o site assume a área inteira e a cor de fundo do
+      body some por baixo da barra também.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <!--
       Cor da UI do navegador (barra de status / barra de endereço no iOS
       Safari e Chrome Android). Sem isto, o Safari amostra o fundo do
