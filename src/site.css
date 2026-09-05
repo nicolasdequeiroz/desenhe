@@ -1200,6 +1200,26 @@ body {
   margin-inline: auto;
 }
 
+/* No mobile os cabeçalhos de seção (kicker + título + texto) alinham à
+   esquerda, em vez de centralizados como no desktop: com a tela estreita, o
+   bloco centralizado ficava com linhas de comprimentos bem diferentes e
+   perdia a leitura em coluna única. Vale para toda seção que usa o
+   cabeçalho centralizado do componente Section, em qualquer página. */
+@media (max-width: 640px) {
+  .section__head--centered {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .section__head--centered .section__head-copy {
+    margin-inline: 0;
+  }
+
+  .section__head--centered .section__eyebrow::after {
+    margin-inline: 0;
+  }
+}
+
 /* ---------- Cursos em destaque (lista com capa flutuante) ---------- */
 
 .featured-courses__block {
@@ -4400,12 +4420,8 @@ body {
   .course-timeline__header {
     position: static;
     max-width: none;
-    align-items: center;
-    text-align: center;
-  }
-
-  .course-timeline__header .section__eyebrow::after {
-    margin-inline: auto;
+    align-items: flex-start;
+    text-align: left;
   }
 
   /*
@@ -6471,6 +6487,19 @@ body {
   margin-top: var(--spacing-2);
 }
 
+/* No mobile alinha à esquerda, mesmo tratamento de .section__head--centered
+   (ver acima): esse cabeçalho reproduz o mesmo estilo, só que fora do
+   componente Section, então precisa da própria regra. */
+@media (max-width: 640px) {
+  .works-arc-section__head {
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  .works-arc-section__head .section__eyebrow::after {
+    margin-inline: 0;
+  }
+}
 
 /*
  * Recorte da seção. A altura é fixada aqui porque o arco empurra as peças
@@ -7646,25 +7675,6 @@ body {
    .hero--about), com um único bloco de texto em vez de três parágrafos. */
 .coworking-page :where(.section)[id] {
   scroll-margin-top: 88px;
-}
-
-/* No mobile os cabeçalhos de seção (kicker + título + texto) alinham à
-   esquerda, em vez de centralizados como no desktop: com a tela estreita, o
-   bloco centralizado ficava com linhas de comprimentos bem diferentes e
-   perdia a leitura em coluna única. */
-@media (max-width: 640px) {
-  .coworking-page .section__head--centered {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .coworking-page .section__head--centered .section__head-copy {
-    margin-inline: 0;
-  }
-
-  .coworking-page .section__head--centered .section__eyebrow::after {
-    margin-inline: 0;
-  }
 }
 
 /*
