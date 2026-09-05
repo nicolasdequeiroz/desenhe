@@ -404,7 +404,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
           <div className="course-cta__copy">
             <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
             <Heading level={2} className="course-cta__headline">
-              Comece <span className="course-cta__highlight">quando quiser</span>.
+              Comece quando quiser.
             </Heading>
             <Text
               type="large"

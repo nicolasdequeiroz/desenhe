@@ -337,7 +337,7 @@ export function Sobre() {
           <div className="course-cta__copy">
             <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
             <Heading level={2} className="course-cta__headline">
-              Venha <span className="course-cta__highlight">conhecer a escola</span>.
+              Venha conhecer a escola.
             </Heading>
             <Text type="large" color="inherit" display="block" className="course-cta__lead">
               Agende a primeira aula (experimental) ou uma visita à escola: é o

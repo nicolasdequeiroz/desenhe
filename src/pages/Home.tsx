@@ -170,8 +170,7 @@ export function Home() {
           <div className="course-cta__copy">
             <span className="course-cta__eyebrow">Matrículas abertas o ano todo</span>
             <Heading level={2} className="course-cta__headline">
-              Comece{' '}
-              <span className="course-cta__highlight">pelo primeiro traço.</span>
+              Comece pelo primeiro traço.
             </Heading>
             <Text type="large" color="inherit" display="block" className="course-cta__lead">
               Turmas de no máximo 8 alunos, cronograma no seu ritmo e uma

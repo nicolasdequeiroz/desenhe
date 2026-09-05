@@ -452,8 +452,7 @@ export function Precos() {
           <div className="course-cta__copy">
             <span className="course-cta__eyebrow">Sem letras miúdas</span>
             <Heading level={2} className="course-cta__headline">
-              Alguma dúvida sobre a{' '}
-              <span className="course-cta__highlight">precificação</span>?
+              Alguma dúvida sobre a precificação?
             </Heading>
             <Text
               type="large"

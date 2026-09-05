@@ -4604,14 +4604,6 @@ body {
   text-wrap: balance;
 }
 
-/* Trecho em destaque dentro do título, como a caixa escura da referência. */
-.course-cta__highlight {
-  display: inline-block;
-  padding-inline: 0.2em;
-  background: color-mix(in srgb, #171310 78%, transparent);
-  border-radius: var(--radius-inner);
-}
-
 .course-cta__lead {
   margin-top: var(--spacing-4);
   max-width: 460px;
