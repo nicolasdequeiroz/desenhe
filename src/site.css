@@ -2385,9 +2385,24 @@ body {
 
 /* ---------- Depoimentos (layout testimonial3) ---------- */
 
+/*
+ * Sem `background` direto aqui de propósito: o iOS 26 (Liquid Glass) lê o
+ * `background-color` do elemento fixed/sticky mais próximo da borda da tela
+ * para colorir a barra do Safari, ignorando `theme-color`. Como o rodapé é
+ * `position: sticky; bottom: 0` (ver a outra regra .site-footer), um
+ * `background` bege aqui pintava a barra de bege, mesmo com o body escuro.
+ * O bege visual continua existindo, só que num `::before` (elemento comum,
+ * não é o próprio sticky) logo abaixo.
+ */
 .site-footer {
-  background: var(--surface-warm-bg);
   color: var(--surface-warm-text);
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--surface-warm-bg);
 }
 
 .testimonials__inner {
