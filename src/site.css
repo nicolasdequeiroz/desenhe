@@ -1357,19 +1357,22 @@ body {
 }
 
 /* Bolinha na cor do curso, à frente do título: cresce a partir do zero no
-   hover/foco/linha ativa (nas outras horas fica colapsada, sem recuo). */
+   hover/foco/linha ativa (nas outras horas fica colapsada, sem recuo).
+   Largura e altura animam juntas para o círculo crescer do centro em vez de
+   esticar como uma barra até virar redondo só no fim da transição. */
 .featured-courses__link-title::before {
   content: '';
   display: inline-block;
   width: 0;
-  height: 0.42em;
+  height: 0;
   margin-right: 0;
   border-radius: 999px;
   background: var(--category-color, var(--color-accent));
-  vertical-align: 0.06em;
+  vertical-align: 0.05em;
   opacity: 0;
   transition:
     width var(--duration-medium) ease,
+    height var(--duration-medium) ease,
     margin var(--duration-medium) ease,
     opacity var(--duration-medium) ease;
 }
@@ -1384,8 +1387,9 @@ body {
 .featured-courses__link:hover .featured-courses__link-title::before,
 .featured-courses__link:focus-visible .featured-courses__link-title::before,
 .featured-courses__link.is-active .featured-courses__link-title::before {
-  width: 0.42em;
-  margin-right: 0.4em;
+  width: 0.34em;
+  height: 0.34em;
+  margin-right: 0.36em;
   opacity: 1;
 }
 
