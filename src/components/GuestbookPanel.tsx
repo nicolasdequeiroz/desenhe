@@ -228,78 +228,80 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
               />
             </div>
 
-            <div className="guestbook-panel__toolbar">
-              <div className="guestbook-panel__swatches">
-                {COLORS.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    className={`guestbook-panel__swatch${
-                      c === color && !erasing ? ' is-active' : ''
-                    }`}
-                    style={{background: c}}
-                    aria-label={`Cor ${c}`}
-                    aria-pressed={c === color && !erasing}
-                    onClick={() => {
-                      setColor(c);
-                      setErasing(false);
-                    }}
-                  />
-                ))}
+            <div className="guestbook-panel__tools">
+              <div className="guestbook-panel__toolbar">
+                <div className="guestbook-panel__swatches">
+                  {COLORS.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`guestbook-panel__swatch${
+                        c === color && !erasing ? ' is-active' : ''
+                      }`}
+                      style={{background: c}}
+                      aria-label={`Cor ${c}`}
+                      aria-pressed={c === color && !erasing}
+                      onClick={() => {
+                        setColor(c);
+                        setErasing(false);
+                      }}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className={`guestbook-panel__tool${erasing ? ' is-active' : ''}`}
+                  onClick={() => setErasing((v) => !v)}
+                  aria-pressed={erasing}
+                  aria-label="Borracha"
+                  title="Borracha"
+                >
+                  <Eraser size={16} />
+                </button>
               </div>
-              <button
-                type="button"
-                className={`guestbook-panel__tool${erasing ? ' is-active' : ''}`}
-                onClick={() => setErasing((v) => !v)}
-                aria-pressed={erasing}
-                aria-label="Borracha"
-                title="Borracha"
-              >
-                <Eraser size={16} />
-              </button>
-            </div>
 
-            <div className="guestbook-panel__toolbar guestbook-panel__toolbar--size">
-              <label className="guestbook-panel__brush">
-                <span
-                  className="guestbook-panel__brush-dot"
-                  style={{
-                    width: `${previewPx}px`,
-                    height: `${previewPx}px`,
-                    background: erasing ? PAPER : color,
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="sr-only">Espessura do traço</span>
-                <input
-                  type="range"
-                  min={MIN_W * 1000}
-                  max={MAX_W * 1000}
-                  value={size * 1000}
-                  onChange={(e) => setSize(Number(e.target.value) / 1000)}
-                />
-              </label>
-              <div className="guestbook-panel__history">
-                <button
-                  type="button"
-                  className="guestbook-panel__tool"
-                  onClick={undo}
-                  disabled={!strokes.length}
-                  aria-label="Desfazer"
-                  title="Desfazer"
-                >
-                  <ArrowUUpLeft size={16} />
-                </button>
-                <button
-                  type="button"
-                  className="guestbook-panel__tool"
-                  onClick={clear}
-                  disabled={!strokes.length}
-                  aria-label="Limpar tudo"
-                  title="Limpar tudo"
-                >
-                  <Trash size={16} />
-                </button>
+              <div className="guestbook-panel__toolbar guestbook-panel__toolbar--size">
+                <label className="guestbook-panel__brush">
+                  <span
+                    className="guestbook-panel__brush-dot"
+                    style={{
+                      width: `${previewPx}px`,
+                      height: `${previewPx}px`,
+                      background: erasing ? PAPER : color,
+                    }}
+                    aria-hidden="true"
+                  />
+                  <span className="sr-only">Espessura do traço</span>
+                  <input
+                    type="range"
+                    min={MIN_W * 1000}
+                    max={MAX_W * 1000}
+                    value={size * 1000}
+                    onChange={(e) => setSize(Number(e.target.value) / 1000)}
+                  />
+                </label>
+                <div className="guestbook-panel__history">
+                  <button
+                    type="button"
+                    className="guestbook-panel__tool"
+                    onClick={undo}
+                    disabled={!strokes.length}
+                    aria-label="Desfazer"
+                    title="Desfazer"
+                  >
+                    <ArrowUUpLeft size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    className="guestbook-panel__tool"
+                    onClick={clear}
+                    disabled={!strokes.length}
+                    aria-label="Limpar tudo"
+                    title="Limpar tudo"
+                  >
+                    <Trash size={16} />
+                  </button>
+                </div>
               </div>
             </div>
 

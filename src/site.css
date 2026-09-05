@@ -5043,7 +5043,7 @@ body {
   /* Acima dos dois botões flutuantes (lápis + WhatsApp), empilhados no canto. */
   bottom: calc(var(--spacing-5) + 3.5rem + var(--spacing-3) + 3.5rem + var(--spacing-3));
   z-index: 70;
-  width: min(360px, calc(100vw - 2 * var(--spacing-4)));
+  width: min(380px, calc(100vw - 2 * var(--spacing-4)));
   display: flex;
   flex-direction: column;
   border: 1px solid var(--surface-warm-border);
@@ -5310,15 +5310,16 @@ body {
 .guestbook-panel__view {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
+  gap: var(--spacing-4);
   padding: var(--spacing-4);
 }
 
 .guestbook-panel__canvas-wrap {
   width: 100%;
-  border: 1px dashed var(--surface-warm-border);
+  border: 1px solid var(--surface-warm-border);
   border-radius: var(--radius-element);
   background: #fffbf7;
+  box-shadow: inset 0 1px 4px color-mix(in srgb, #231a13 10%, transparent);
   overflow: hidden;
 }
 
@@ -5328,6 +5329,23 @@ body {
   height: 100%;
   cursor: crosshair;
   touch-action: none;
+}
+
+.guestbook-panel__tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  border: 1px solid var(--surface-warm-border);
+  border-radius: var(--radius-element);
+  background: color-mix(in srgb, var(--surface-warm-bg) 55%, transparent);
+}
+
+/* A segunda fileira (espessura/histórico) ganha um fio acima: separa
+   visualmente "escolher" (cor/borracha) de "ajustar" (espessura/desfazer). */
+.guestbook-panel__toolbar + .guestbook-panel__toolbar {
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--surface-warm-border);
 }
 
 .guestbook-panel__toolbar {
@@ -5340,13 +5358,13 @@ body {
 .guestbook-panel__swatches {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
+  gap: 7px;
 }
 
 .guestbook-panel__swatch {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   padding: 0;
   border: 1px solid var(--surface-warm-border);
   border-radius: 50%;
@@ -5433,6 +5451,7 @@ body {
 .guestbook-panel__submit {
   display: flex;
   gap: var(--spacing-2);
+  padding-top: var(--spacing-1);
 }
 
 .guestbook-panel__name {
@@ -5441,10 +5460,15 @@ body {
   padding: var(--spacing-2) var(--spacing-3);
   border: 1px solid var(--surface-warm-border);
   border-radius: var(--radius-element);
-  background: transparent;
+  background: color-mix(in srgb, var(--surface-warm-bg) 45%, transparent);
   font-family: var(--font-family-body);
   font-size: var(--font-size-sm);
   color: var(--surface-warm-text);
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+
+.guestbook-panel__name:focus-visible {
+  background: var(--surface-warm-card);
 }
 
 .guestbook-panel__name:focus-visible,
@@ -5464,7 +5488,7 @@ body {
 .guestbook-panel__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
 }
 
 .guestbook-panel__polaroid {
