@@ -3421,13 +3421,18 @@ body {
 }
 
 /*
- * Sem moldura: só o desenho. A largura perde da conta a tarja de autoria e a
- * borda, que deixam de existir, então a imagem pode ocupar toda a altura
- * disponível.
+ * Sem moldura: só o desenho, e na proporção real dele. O polaroid com tarja
+ * mantém 4:3 para todas as peças ficarem iguais na parede; aqui não há
+ * moldura para preencher, então a caixa se ajusta à imagem e uma foto em pé
+ * abre em pé, inteira. Quem limita é o `max-*` da imagem, logo abaixo.
+ *
+ * O seletor é composto de propósito: a largura do polaroid é redefinida no
+ * @media de 640px lá embaixo, com a mesma especificidade e depois desta
+ * regra, e sem isso ele voltaria a mandar na largura no celular.
  */
-.work-viewer__polaroid--bare {
+.work-viewer .work-viewer__polaroid--bare {
   --viewer-border: 0px;
-  width: min(720px, 100%, calc(78dvh * 4 / 3));
+  width: auto;
   border: none;
   background: none;
   overflow: hidden;
@@ -3443,6 +3448,15 @@ body {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+.work-viewer__polaroid--bare .work-viewer__photo img {
+  width: auto;
+  height: auto;
+  max-width: min(720px, 100%);
+  max-height: 78dvh;
+  aspect-ratio: auto;
+  object-fit: contain;
 }
 
 .work-viewer__credit {
@@ -3573,6 +3587,11 @@ body {
         (62dvh - var(--polaroid-caption-h) - 2 * var(--viewer-border)) * 4 / 3
       )
     );
+  }
+
+  /* Sem moldura quem se limita é a imagem, não a caixa (ver acima). */
+  .work-viewer__polaroid--bare .work-viewer__photo img {
+    max-height: 62dvh;
   }
 
   .work-viewer__nav {
