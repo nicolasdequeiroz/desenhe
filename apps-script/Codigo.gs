@@ -28,9 +28,10 @@ var STATUS_PENDING = 'pendente';
 var STATUS_APPROVED = 'ok';
 var STATUS_REJECTED = 'oculto';
 
-/** Pra quem vai o aviso de novo desenho. Fixo: nada de Session.*, que pode
- *  vir vazio dependendo de como o Web App foi implantado. */
-var OWNER_EMAIL = 'nicolasazevedo38@gmail.com';
+/** Pra quem vai o aviso de novo desenho (um ou mais, todos recebem). Fixo:
+ *  nada de Session.*, que pode vir vazio dependendo de como o Web App foi
+ *  implantado. */
+var OWNER_EMAILS = ['nicolasazevedo38@gmail.com', 'desenhe@desenhe.com.br'];
 
 /** Senha simples nos links de aprovar/recusar do e-mail. Só quem recebe o
  *  e-mail tem esse valor; sem ele, ninguém aprova nem recusa por fora. */
@@ -249,7 +250,7 @@ function notifyOwner_(id, name, previewBlob) {
       '</div>';
 
     var mail = {
-      to: OWNER_EMAIL,
+      to: OWNER_EMAILS.join(','),
       subject: 'Novo desenho no livro de visitas da Desenhe',
       htmlBody: html
     };
@@ -274,7 +275,7 @@ function notifyOwner_(id, name, previewBlob) {
  */
 function testeEmail() {
   MailApp.sendEmail({
-    to: OWNER_EMAIL,
+    to: OWNER_EMAILS.join(','),
     subject: 'Teste: livro de visitas da Desenhe',
     htmlBody: 'Se você recebeu isto, o envio de e-mail está autorizado. ✅'
   });

@@ -35,8 +35,9 @@ Google com um Apps Script na frente — de graça e sem servidor.
    lado do botão ▶ Executar), selecione `testeEmail` e clique em Executar.
    O Google vai pedir uma segunda autorização, cobrindo tudo que o script usa
    (enviar e-mail em seu nome, e guardar as prévias no seu Drive) — sem isso,
-   esses recursos falham em silêncio. Se o e-mail de teste chegar em
-   `nicolasazevedo38@gmail.com`, está liberado.
+   esses recursos falham em silêncio. Se o e-mail de teste chegar nos
+   endereços de `OWNER_EMAILS` (`nicolasazevedo38@gmail.com` e
+   `desenhe@desenhe.com.br`), está liberado.
 8. Copie a **URL do app da Web**. Ela termina em `/exec`.
 9. No repositório do site, abra `src/data/guestbook.ts` e cole a URL:
 
@@ -52,12 +53,13 @@ Todo desenho novo entra **pendente**: fica invisível para todo mundo, exceto
 para quem o desenhou (o próprio navegador guarda uma cópia local e mostra na
 hora, então quem desenhou não percebe a espera).
 
-A cada envio, `nicolasazevedo38@gmail.com` recebe um e-mail com **a prévia do
-desenho** (imagem de verdade, embutida no corpo do e-mail) e dois botões,
-**Aprovar** e **Recusar** — um clique em qualquer um já resolve, sem precisar
-abrir a planilha. Cada link é assinado com `MOD_SECRET` (definido no topo do
-`Codigo.gs`), então só quem recebeu o e-mail consegue moderar por esse
-caminho.
+A cada envio, todo mundo listado em `OWNER_EMAILS` (hoje
+`nicolasazevedo38@gmail.com` e `desenhe@desenhe.com.br`) recebe um e-mail com
+**a prévia do desenho** (imagem de verdade, embutida no corpo do e-mail) e
+dois botões, **Aprovar** e **Recusar** — um clique em qualquer um já resolve,
+sem precisar abrir a planilha. Cada link é assinado com `MOD_SECRET` (definido
+no topo do `Codigo.gs`), então só quem recebeu o e-mail consegue moderar por
+esse caminho.
 
 Também dá pra moderar direto na planilha, se preferir: cada desenho é uma
 linha da aba `desenhos`, com um link **"ver imagem"** na coluna **previa**
