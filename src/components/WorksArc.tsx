@@ -57,12 +57,15 @@ export function WorksArc({images, caption}: Props) {
   const movedRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartPositionRef = useRef(0);
+  /** Se o ponteiro já foi capturado neste gesto (ver `capturePointer`). */
+  const capturedRef = useRef(false);
   /*
    * No toque, capturar o ponteiro logo no `pointerdown` faz o navegador
    * disparar `pointercancel` enquanto ainda decide se o gesto é rolagem
    * vertical: o arraste morre antes de comecar. Entao o toque fica
-   * "pendente" e so vira arraste (captura + flag) quando o movimento se
-   * confirma mais horizontal que vertical. Mouse trava na hora.
+   * "pendente" e so vira arraste (a flag) quando o movimento se confirma
+   * mais horizontal que vertical. Mouse trava na hora, mas em nenhum dos
+   * dois a captura acontece antes do arraste comecar de fato.
    */
   const pendingRef = useRef<{
     x: number;
@@ -200,15 +203,28 @@ export function WorksArc({images, caption}: Props) {
     hint.style.top = `${event.clientY - rect.top}px`;
   };
 
-  const lockDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+  /**
+   * Passa a seguir o ponteiro. A captura NÃO entra aqui: capturar já no
+   * `pointerdown` faz o `pointerup` ser reapontado para este elemento, e aí o
+   * navegador dispara o `click` no ancestral comum (a própria trilha) em vez
+   * do botão da peça — o visor nunca abria no mouse. Ela vem depois, em
+   * `capturePointer`, só quando o arraste se confirma.
+   */
+  const lockDrag = () => {
     const pending = pendingRef.current;
     if (!pending) return;
     draggingRef.current = true;
     dragStartXRef.current = pending.x;
     dragStartPositionRef.current = pending.position;
     setIsDragging(true);
+  };
+
+  /** Segura o ponteiro para o arraste continuar mesmo saindo da trilha. */
+  const capturePointer = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (capturedRef.current) return;
+    capturedRef.current = true;
     try {
-      event.currentTarget.setPointerCapture(pending.pointerId);
+      event.currentTarget.setPointerCapture(event.pointerId);
     } catch {
       /* ponteiro ja solto */
     }
@@ -222,7 +238,9 @@ export function WorksArc({images, caption}: Props) {
       pointerId: event.pointerId,
       position: positionRef.current,
     };
-    if (event.pointerType === 'mouse') lockDrag(event);
+    // No mouse a trilha para na hora, mas sem capturar: enquanto for só um
+    // clique parado, o evento precisa chegar inteiro no botão da peça.
+    if (event.pointerType === 'mouse') lockDrag();
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -238,18 +256,24 @@ export function WorksArc({images, caption}: Props) {
         pendingRef.current = null;
         return;
       }
-      lockDrag(event);
+      lockDrag();
     }
 
     if (!draggingRef.current) return;
     if (event.cancelable) event.preventDefault();
     const delta = event.clientX - dragStartXRef.current;
-    if (Math.abs(delta) > DRAG_THRESHOLD) movedRef.current = true;
+    if (Math.abs(delta) > DRAG_THRESHOLD) {
+      // Virou arraste de verdade: agora sim segura o ponteiro (e o clique
+      // deixa de valer, ver o onClick da peça).
+      movedRef.current = true;
+      capturePointer(event);
+    }
     positionRef.current = dragStartPositionRef.current + delta;
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
     pendingRef.current = null;
+    capturedRef.current = false;
     if (!draggingRef.current) return;
     draggingRef.current = false;
     setIsDragging(false);
