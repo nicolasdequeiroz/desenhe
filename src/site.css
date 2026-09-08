@@ -3432,7 +3432,14 @@ body {
  */
 .work-viewer .work-viewer__polaroid--bare {
   --viewer-border: 0px;
+  /* `--photo-ratio` vem do tamanho real da foto, no WorkViewer. Com a
+     proporção conhecida, a caixa acha sozinha o maior tamanho que respeita os
+     dois limites abaixo: a horizontal para na largura, a vertical na altura,
+     e nenhuma das duas sobra caixa vazia em volta. */
+  aspect-ratio: var(--photo-ratio, 4 / 3);
   width: auto;
+  max-width: min(720px, 100%);
+  max-height: 78dvh;
   border: none;
   background: none;
   overflow: hidden;
@@ -3450,11 +3457,14 @@ body {
   object-fit: cover;
 }
 
+/* A caixa já tem a proporção certa: aqui a foto só preenche. */
+.work-viewer__polaroid--bare .work-viewer__photo {
+  height: 100%;
+}
+
 .work-viewer__polaroid--bare .work-viewer__photo img {
-  width: auto;
-  height: auto;
-  max-width: min(720px, 100%);
-  max-height: 78dvh;
+  width: 100%;
+  height: 100%;
   aspect-ratio: auto;
   object-fit: contain;
 }
@@ -3589,8 +3599,8 @@ body {
     );
   }
 
-  /* Sem moldura quem se limita é a imagem, não a caixa (ver acima). */
-  .work-viewer__polaroid--bare .work-viewer__photo img {
+  /* Sem moldura a altura limite vive na caixa, que segue a proporção da foto. */
+  .work-viewer .work-viewer__polaroid--bare {
     max-height: 62dvh;
   }
 

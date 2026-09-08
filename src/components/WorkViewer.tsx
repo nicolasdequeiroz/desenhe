@@ -207,6 +207,35 @@ export function WorkViewer({
     panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
   }, []);
 
+  /*
+   * Sem moldura, a foto abre na proporção real dela (uma foto em pé abre em
+   * pé), então é a caixa que se ajusta à imagem, e não o contrário. Só o CSS
+   * não dá conta: `width: auto` mede a imagem pela largura natural dela, que é
+   * bem maior que a largura em que ela cabe na tela, e sobrava caixa vazia ao
+   * lado. Com a proporção aqui, o `aspect-ratio` do CSS resolve os dois lados.
+   */
+  const applyPhotoRatio = useCallback(() => {
+    const polaroid = polaroidRef.current;
+    const image = imageRef.current;
+    if (!polaroid || !image || framed) return;
+    if (!image.naturalWidth || !image.naturalHeight) return;
+    polaroid.style.setProperty(
+      '--photo-ratio',
+      `${image.naturalWidth} / ${image.naturalHeight}`,
+    );
+  }, [framed]);
+
+  useLayoutEffect(() => {
+    const image = imageRef.current;
+    if (!image) return;
+    if (image.complete && image.naturalWidth) {
+      applyPhotoRatio();
+      return;
+    }
+    image.addEventListener('load', applyPhotoRatio, {once: true});
+    return () => image.removeEventListener('load', applyPhotoRatio);
+  }, [applyPhotoRatio, index]);
+
   // Voo de abertura: o polaroid clicado cresce da posição dele até o visor.
   useLayoutEffect(() => {
     const polaroid = polaroidRef.current;
@@ -220,6 +249,12 @@ export function WorkViewer({
 
     const start = () => {
       if (cancelled) return;
+      // Sem moldura a caixa acompanha a foto, e para isso precisa saber a
+      // proporção dela: `width: auto` sozinho mediria pela largura natural da
+      // imagem (1600px), não pela largura em que ela de fato cabe, e sobrava
+      // caixa vazia do lado. Vem antes de medir: é este retângulo que o voo
+      // usa como destino.
+      applyPhotoRatio();
       const to = polaroid.getBoundingClientRect();
       const from = origin.getBoundingClientRect();
       if (!to.width || !from.width) return;
@@ -258,7 +293,7 @@ export function WorkViewer({
       ghost?.remove();
       polaroid.style.opacity = '';
     };
-  }, [resolveOrigin, author, year, framed]);
+  }, [resolveOrigin, author, year, framed, applyPhotoRatio]);
 
   // Fechar é o voo inverso: a imagem volta a ser a peça, no lugar dela.
   const requestClose = useCallback(() => {
