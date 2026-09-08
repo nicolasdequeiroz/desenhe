@@ -126,15 +126,30 @@ const STEPS: TimelineItem[] = [
 
 const STEP_ICONS = [ChatCircleText, CalendarCheck, DoorOpen];
 
-/** Fotos da infraestrutura da escola, para o arco em "Sinta o espaço". */
+/**
+ * Fotos do próprio coworking, para o arco em "Sinta o espaço". A ordem
+ * alterna os três assuntos (sala, gente trabalhando, detalhe de material)
+ * para o arco nunca mostrar duas fotos parecidas lado a lado.
+ */
 const SPACE_PHOTOS = [
-  '/images/espaco/sala-01-mesas.webp',
-  '/images/espaco/sala-02.webp',
-  '/images/espaco/atelie-galeria.webp',
-  '/images/espaco/sala-03.webp',
-  '/images/espaco/biblioteca.webp',
-  '/images/espaco/sala-01-parede.webp',
-  '/images/espaco/cozinha.webp',
+  '/images/coworking/sala-vazia-mesas.webp',
+  '/images/coworking/aula-pintura-oleo.webp',
+  '/images/coworking/gode-potes-materiais.webp',
+  '/images/coworking/janelas-luz-natural.webp',
+  '/images/coworking/aquarela-fachada.webp',
+  '/images/coworking/bancada-manequins.webp',
+  '/images/coworking/sala-01-estante.webp',
+  '/images/coworking/turma-pintura-sala-01.webp',
+  '/images/coworking/cavalete-mesa-detalhe.webp',
+  '/images/coworking/cavalete-janelas.webp',
+  '/images/coworking/natureza-morta-livros.webp',
+  '/images/coworking/manequins-gode.webp',
+  '/images/coworking/sala-cavalete-trabalhos.webp',
+  '/images/coworking/mesa-vidro-luz-natural.webp',
+  '/images/coworking/bancada-cavalete-manequins.webp',
+  '/images/coworking/sala-01-angulo.webp',
+  '/images/coworking/cavalete-mesa-parede-trabalhos.webp',
+  '/images/coworking/manequins-madeira.webp',
 ];
 
 /**
@@ -239,7 +254,7 @@ function HeroBackgroundVideo() {
       muted
       playsInline
       preload="auto"
-      poster={asset('/images/espaco/sala-01-mesas.webp')}
+      poster={asset('/images/coworking/sala-vazia-mesas.webp')}
     >
       <source src={asset('/videos/fundo-coworking.mp4')} type="video/mp4" />
     </video>
@@ -330,7 +345,7 @@ export function CoworkingArtistico() {
             <HeroBackgroundVideo />
           ) : (
             <img
-              src={asset('/images/espaco/sala-01-mesas.webp')}
+              src={asset('/images/coworking/sala-vazia-mesas.webp')}
               alt=""
               className="hero__background-image"
             />
