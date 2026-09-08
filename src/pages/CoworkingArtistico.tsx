@@ -171,80 +171,35 @@ function useHeroVideo(): boolean {
   return enabled;
 }
 
-/** Velocidade do vídeo, nos dois sentidos: câmera lenta, metade do tempo real. */
-const VIDEO_RATE = 0.5;
+/** Velocidade do vídeo: levemente desacelerado, não é câmera lenta. */
+const VIDEO_RATE = 0.75;
 
 /**
- * Vídeo "bumerangue": toca pra frente e, ao chegar no fim, volta de trás
- * pra frente até o início antes de tocar de novo, em vez do corte seco do
- * `loop` nativo. O <video> não suporta `playbackRate` negativo, então a
- * volta é simulada: o vídeo é pausado e cada quadro de animação recua
- * `currentTime` proporcionalmente ao tempo real decorrido (na mesma
- * velocidade da ida, `VIDEO_RATE`).
+ * Ajusta a velocidade do vídeo de fundo. O <video> não tem atributo de
+ * `playbackRate`, então é sempre via DOM; `loop` é o nativo mesmo, sem o
+ * vaivém que a versão anterior fazia à mão (o clipe de agora é longo o
+ * bastante para o corte do loop não saltar aos olhos).
  */
-function useBoomerangVideo(ref: RefObject<HTMLVideoElement | null>) {
+function useSlowVideo(ref: RefObject<HTMLVideoElement | null>) {
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
 
-    let frame = 0;
-    let reversing = false;
-    let lastTime: number | null = null;
-
-    const play = () => {
+    const applyRate = () => {
       video.playbackRate = VIDEO_RATE;
-      const attempt = video.play();
-      if (attempt && typeof attempt.catch === 'function') {
-        attempt.catch(() => {});
-      }
     };
 
-    const stepReverse = (time: number) => {
-      if (lastTime === null) lastTime = time;
-      const dt = ((time - lastTime) / 1000) * VIDEO_RATE;
-      lastTime = time;
-
-      video.currentTime = Math.max(0, video.currentTime - dt);
-
-      if (video.currentTime <= 0) {
-        reversing = false;
-        lastTime = null;
-        play();
-        return;
-      }
-      frame = requestAnimationFrame(stepReverse);
-    };
-
-    const onEnded = () => {
-      reversing = true;
-      lastTime = null;
-      frame = requestAnimationFrame(stepReverse);
-    };
-
-    video.muted = true;
-    video.defaultMuted = true;
-    video.loop = false;
-
-    play();
-    video.addEventListener('ended', onEnded);
-
-    const onVisible = () => {
-      if (document.visibilityState !== 'visible') return;
-      if (!reversing) play();
-    };
-    document.addEventListener('visibilitychange', onVisible);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      video.removeEventListener('ended', onEnded);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
+    applyRate();
+    // Trocar de fonte ou recarregar zera a taxa: reaplica quando o vídeo
+    // volta a ficar pronto.
+    video.addEventListener('loadedmetadata', applyRate);
+    return () => video.removeEventListener('loadedmetadata', applyRate);
   }, [ref]);
 }
 
 function HeroBackgroundVideo() {
   const ref = useRef<HTMLVideoElement>(null);
-  useBoomerangVideo(ref);
+  useSlowVideo(ref);
 
   return (
     <video
@@ -253,10 +208,11 @@ function HeroBackgroundVideo() {
       autoPlay
       muted
       playsInline
+      loop
       preload="auto"
       poster={asset('/images/coworking/sala-vazia-mesas.webp')}
     >
-      <source src={asset('/videos/fundo-coworking.mp4')} type="video/mp4" />
+      <source src={asset('/videos/fundo-coworking-sala.mp4')} type="video/mp4" />
     </video>
   );
 }
