@@ -28,13 +28,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Caminho em que o site é servido. Enquanto o endereço for
-      # nicolasdequeiroz.github.io/desenhe/, tudo vive dentro de /desenhe/.
-      #
-      # NO DIA DO DOMÍNIO PRÓPRIO: troque esta linha para "/" e faça push.
-      # É o único lugar que precisa mudar (o CNAME não é necessário quando a
-      # publicação vem de um workflow: o domínio fica salvo em Settings > Pages).
-      BASE_PATH: /desenhe/
+      # Caminho em que o site é servido. Era /desenhe/ enquanto o endereço
+      # era nicolasdequeiroz.github.io/desenhe/; com o domínio próprio
+      # (Settings > Pages > Custom domain) o site passa a servir da raiz.
+      BASE_PATH: /
     steps:
       - uses: actions/checkout@v4
 
