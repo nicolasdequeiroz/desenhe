@@ -6686,6 +6686,13 @@ body {
     height: calc(var(--arc-item) + 64px);
   }
 
+  /* "Arraste para ver mais" é uma dica pro cursor do mouse: no toque não
+     tem cursor pra seguir, e ela só ficaria comendo espaço sem servir pra
+     nada (já é o gesto nativo esperado no celular). */
+  .works-arc__hint {
+    display: none;
+  }
+
   .works-arc__stage {
     top: 8px;
   }

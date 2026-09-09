@@ -195,28 +195,86 @@ export function WorksArc({images, caption}: Props) {
   }, []);
 
   /*
-   * `touch-action: pan-y` (ver .works-arc no CSS) já diz ao navegador que o
-   * gesto horizontal é nosso e o vertical é dele. O Safari do iPhone, porém,
-   * decide cedo e às vezes leva o gesto inteiro para a rolagem da página: os
-   * `pointermove` param de chegar no meio do arraste e a trilha trava.
+   * O toque usa Touch Events nativos, não Pointer Events: no Safari do
+   * iPhone, `setPointerCapture` num ponteiro de toque é instável (o gesto
+   * simplesmente não reagia, sem rolar a página nem arrastar a trilha), então
+   * a versão anterior — Pointer Events também para o toque, capturando o
+   * ponteiro quando o arraste era confirmado — não funcionava de forma
+   * confiável nesse navegador.
    *
-   * Este listener fecha essa porta, mas só depois que o arraste horizontal já
-   * foi confirmado (`draggingRef`): enquanto o dedo não se decidiu, o
-   * `touchmove` segue intocado e a página rola normalmente. Precisa ser
-   * `passive: false` (senão o `preventDefault` é ignorado) e registrado à mão,
-   * já que o React não deixa escolher isso pelo `onTouchMove`.
+   * Touch Events não têm esse problema: o evento já continua mirando o
+   * elemento onde o dedo tocou primeiro, não importa por onde ele passe
+   * depois, sem precisar de captura nenhuma. É a mesma razão pela qual
+   * bibliotecas de carrossel (Swiper, Embla) tratam toque à parte do mouse
+   * em vez de unificar tudo em Pointer Events.
+   *
+   * Precisa ser registrado à mão com `addEventListener` (não pelo
+   * `onTouchMove` do React) porque o `touchmove` só consegue segurar o gesto
+   * (impedir a rolagem da página) com `passive: false`, e mesmo assim só
+   * DEPOIS que o arraste horizontal for confirmado (`draggingRef`): enquanto
+   * o dedo não disse pra que lado vai, a página rola normalmente.
    */
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    const holdGesture = (event: TouchEvent) => {
-      if (!draggingRef.current) return;
-      if (event.cancelable) event.preventDefault();
+    const touchXY = (event: TouchEvent) => {
+      const touch = event.touches[0] ?? event.changedTouches[0];
+      return touch ? {x: touch.clientX, y: touch.clientY} : null;
     };
 
-    viewport.addEventListener('touchmove', holdGesture, {passive: false});
-    return () => viewport.removeEventListener('touchmove', holdGesture);
+    const onTouchStart = (event: TouchEvent) => {
+      const point = touchXY(event);
+      if (!point) return;
+      movedRef.current = false;
+      pendingRef.current = {
+        x: point.x,
+        y: point.y,
+        pointerId: 0,
+        position: positionRef.current,
+      };
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      const point = touchXY(event);
+      if (!point) return;
+
+      const pending = pendingRef.current;
+      if (pending && !draggingRef.current) {
+        const dx = point.x - pending.x;
+        const dy = point.y - pending.y;
+        if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+        // Gesto mais vertical que horizontal: é rolagem da página, desiste.
+        if (Math.abs(dy) > Math.abs(dx)) {
+          pendingRef.current = null;
+          return;
+        }
+        lockDrag(point.x);
+        movedRef.current = true;
+      }
+
+      if (!draggingRef.current) return;
+      if (event.cancelable) event.preventDefault();
+      positionRef.current = dragStartPositionRef.current + (point.x - dragStartXRef.current);
+    };
+
+    const onTouchEnd = () => {
+      pendingRef.current = null;
+      draggingRef.current = false;
+      setIsDragging(false);
+    };
+
+    viewport.addEventListener('touchstart', onTouchStart, {passive: true});
+    viewport.addEventListener('touchmove', onTouchMove, {passive: false});
+    viewport.addEventListener('touchend', onTouchEnd, {passive: true});
+    viewport.addEventListener('touchcancel', onTouchEnd, {passive: true});
+    return () => {
+      viewport.removeEventListener('touchstart', onTouchStart);
+      viewport.removeEventListener('touchmove', onTouchMove);
+      viewport.removeEventListener('touchend', onTouchEnd);
+      viewport.removeEventListener('touchcancel', onTouchEnd);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const moveHint = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -234,16 +292,20 @@ export function WorksArc({images, caption}: Props) {
    * navegador dispara o `click` no ancestral comum (a própria trilha) em vez
    * do botão da peça — o visor nunca abria no mouse. Ela vem depois, em
    * `capturePointer`, só quando o arraste se confirma.
+   *
+   * Compartilhada com o toque (ver o `useEffect` de Touch Events acima):
+   * só mexe em refs e no `setIsDragging`, nada específico de mouse.
    */
   const lockDrag = (x: number) => {
     const pending = pendingRef.current;
     if (!pending) return;
     draggingRef.current = true;
     /*
-     * O arraste começa daqui: o dedo onde está AGORA e a trilha onde ela está
-     * AGORA. Partir do ponto do `pointerdown` fazia a trilha saltar para trás
-     * no instante em que o gesto se confirmava, porque ela seguiu correndo
-     * sozinha enquanto o toque ainda não tinha dito para que lado ia.
+     * O arraste começa daqui: o dedo/cursor onde está AGORA e a trilha onde
+     * ela está AGORA. Partir do ponto do `pointerdown`/`touchstart` fazia a
+     * trilha saltar para trás no instante em que o gesto se confirmava,
+     * porque ela seguiu correndo sozinha enquanto o gesto ainda não tinha
+     * dito para que lado ia.
      */
     dragStartXRef.current = x;
     dragStartPositionRef.current = positionRef.current;
@@ -261,7 +323,13 @@ export function WorksArc({images, caption}: Props) {
     }
   };
 
+  /*
+   * Só mouse daqui pra baixo: o toque tem seu próprio caminho, via Touch
+   * Events nativos (ver o `useEffect` acima). Sem esse filtro os dois
+   * sistemas processariam o mesmo gesto de toque em paralelo.
+   */
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'mouse') return;
     movedRef.current = false;
     pendingRef.current = {
       x: event.clientX,
@@ -269,33 +337,14 @@ export function WorksArc({images, caption}: Props) {
       pointerId: event.pointerId,
       position: positionRef.current,
     };
-    // No mouse a trilha para na hora, mas sem capturar: enquanto for só um
-    // clique parado, o evento precisa chegar inteiro no botão da peça.
-    if (event.pointerType === 'mouse') lockDrag(event.clientX);
+    // A trilha para na hora, mas sem capturar: enquanto for só um clique
+    // parado, o evento precisa chegar inteiro no botão da peça.
+    lockDrag(event.clientX);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'mouse') return;
     moveHint(event);
-
-    const pending = pendingRef.current;
-    if (pending && !draggingRef.current) {
-      const dx = event.clientX - pending.x;
-      const dy = event.clientY - pending.y;
-      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
-      // Gesto mais vertical que horizontal: e rolagem da pagina, desiste.
-      if (Math.abs(dy) > Math.abs(dx)) {
-        pendingRef.current = null;
-        return;
-      }
-      /*
-       * No toque só se chega aqui depois de o dedo andar de verdade para o
-       * lado: já nasce valendo como arraste (e não como toque na peça) e com
-       * o ponteiro seguro, sem esperar mais um limiar a partir do zero.
-       */
-      lockDrag(event.clientX);
-      movedRef.current = true;
-      capturePointer(event);
-    }
 
     if (!draggingRef.current) return;
     if (event.cancelable) event.preventDefault();
@@ -310,6 +359,7 @@ export function WorksArc({images, caption}: Props) {
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== 'mouse') return;
     pendingRef.current = null;
     capturedRef.current = false;
     if (!draggingRef.current) return;
