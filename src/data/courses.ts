@@ -160,7 +160,7 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
-        heading: 'Fundamentos da forma',
+        heading: 'Fundamentos do desenho',
         description:
           'O aluno constrói as bases do desenho observando formas bidimensionais e tridimensionais, com os primeiros estudos de escala tonal, luz e sombra que treinam o olhar antes da técnica.',
       },
@@ -178,7 +178,7 @@ export const COURSES: Course[] = [
       },
       {
         title: 'Módulo 4',
-        heading: 'Sombreamento avançado e autoral',
+        heading: 'Produção autoral',
         description:
           'Com a base consolidada, o aluno chega aos níveis avançados de sombreamento e composição e passa a desenvolver trabalhos autorais, com acompanhamento próximo.',
       },
@@ -447,7 +447,7 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
-        heading: 'Círculo cromático',
+        heading: 'Teoria da cor',
         description:
           'Introdução às cores e aos materiais: círculo cromático, isocromia, monocromia, policromia e harmonia das cores como base para toda a pintura.',
       },
@@ -520,7 +520,7 @@ export const COURSES: Course[] = [
     modules: [
       {
         title: 'Módulo 1',
-        heading: 'Cores e materiais',
+        heading: 'Teoria da cor e materialidade',
         description:
           'Introdução às cores e aos materiais da pintura, com as primeiras experimentações em tinta a óleo ou acrílica, grafite e carvão.',
       },
