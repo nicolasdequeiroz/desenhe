@@ -3710,6 +3710,44 @@ body {
 }
 
 /*
+ * História da Arte (único curso "teórico"): a primeira dobra ganha de fundo
+ * a carta-mapa medieval enviada pela escola. O véu terracota por cima
+ * preserva o contraste do título e do texto de apoio. Vale só aqui.
+ */
+.course-deck__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.course-deck__background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Enquadra os três reis a cavalo abaixo do header fixo. */
+  object-position: center 28%;
+}
+
+.course-deck__background-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #171310 58%, transparent) 0%,
+      color-mix(in srgb, #171310 22%, transparent) 42%,
+      color-mix(in srgb, #171310 48%, transparent) 100%
+    ),
+    color-mix(in srgb, var(--category-color) 52%, transparent);
+}
+
+.course-deck__background + .container {
+  position: relative;
+  z-index: 1;
+}
+
+/*
  * Curso sem galeria ainda: não há baralho para vazar pela borda de baixo,
  * então a faixa precisa do próprio respiro inferior.
  */

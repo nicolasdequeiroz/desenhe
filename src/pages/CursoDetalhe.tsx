@@ -115,6 +115,16 @@ export function CursoDetalhe({slug}: {slug: string}) {
           course.gallery.length === 0 ? ' course-deck--bare' : ''
         }`}
       >
+        {course.category === 'teorico' && (
+          <div className="course-deck__background" aria-hidden="true">
+            <img
+              src={asset('/images/cursos/historia-da-arte/fundo.webp')}
+              alt=""
+              className="course-deck__background-image"
+            />
+            <div className="course-deck__background-veil" />
+          </div>
+        )}
         <div className="container">
           {(() => {
             // Cursos com título próprio (hoje só História da Arte): o
