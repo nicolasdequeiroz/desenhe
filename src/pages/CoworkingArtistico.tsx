@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState, type RefObject} from 'react';
+import {useState} from 'react';
 import {
   CalendarCheck,
   ChatCircleText,
@@ -153,71 +153,6 @@ const SPACE_PHOTOS = [
 ];
 
 /**
- * Se o fundo em vídeo pode rodar: só falta o modo "menos movimento" do
- * usuário, já que aqui (ao contrário do vídeo mobile da home) ele substitui
- * a foto em qualquer largura de tela.
- */
-function useHeroVideo(): boolean {
-  const [enabled, setEnabled] = useState(true);
-
-  useEffect(() => {
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setEnabled(!calm.matches);
-    update();
-    calm.addEventListener('change', update);
-    return () => calm.removeEventListener('change', update);
-  }, []);
-
-  return enabled;
-}
-
-/** Velocidade do vídeo: levemente desacelerado, não é câmera lenta. */
-const VIDEO_RATE = 0.75;
-
-/**
- * Ajusta a velocidade do vídeo de fundo. O <video> não tem atributo de
- * `playbackRate`, então é sempre via DOM; `loop` é o nativo mesmo, sem o
- * vaivém que a versão anterior fazia à mão (o clipe de agora é longo o
- * bastante para o corte do loop não saltar aos olhos).
- */
-function useSlowVideo(ref: RefObject<HTMLVideoElement | null>) {
-  useEffect(() => {
-    const video = ref.current;
-    if (!video) return;
-
-    const applyRate = () => {
-      video.playbackRate = VIDEO_RATE;
-    };
-
-    applyRate();
-    // Trocar de fonte ou recarregar zera a taxa: reaplica quando o vídeo
-    // volta a ficar pronto.
-    video.addEventListener('loadedmetadata', applyRate);
-    return () => video.removeEventListener('loadedmetadata', applyRate);
-  }, [ref]);
-}
-
-function HeroBackgroundVideo() {
-  const ref = useRef<HTMLVideoElement>(null);
-  useSlowVideo(ref);
-
-  return (
-    <video
-      ref={ref}
-      className="hero__background-video"
-      autoPlay
-      muted
-      playsInline
-      loop
-      preload="auto"
-      poster={asset('/images/coworking/sala-vazia-mesas.webp')}
-    >
-      <source src={asset('/videos/fundo-coworking-sala.mp4')} type="video/mp4" />
-    </video>
-  );
-}
-
-/**
  * Item de FAQ com painel animado: a altura interpola via `grid-template-rows`
  * (0fr a 1fr) em vez do corte seco do `<details>` nativo, a mesma técnica do
  * accordion mobile das linguagens de curso (ver StrandAccordions.tsx).
@@ -279,8 +214,6 @@ const FAQ = [
 ];
 
 export function CoworkingArtistico() {
-  const heroVideo = useHeroVideo();
-
   return (
     <div className="coworking-page">
       <Seo
@@ -290,22 +223,16 @@ export function CoworkingArtistico() {
       />
 
       {/*
-        Primeira dobra no mesmo formato do /sobre, só que com vídeo em vez de
-        foto: a gravação sangra no bloco inteiro e o header sobrevoa a seção
-        (ver `overlay` em SiteHeader). "Menos movimento" cai de volta pro
-        quadro estático.
+        Primeira dobra no mesmo formato do /sobre: a foto sangra no bloco
+        inteiro e o header sobrevoa a seção (ver `overlay` em SiteHeader).
       */}
       <section className="hero hero--coworking">
         <div className="hero__background" aria-hidden="true">
-          {heroVideo ? (
-            <HeroBackgroundVideo />
-          ) : (
-            <img
-              src={asset('/images/coworking/sala-vazia-mesas.webp')}
-              alt=""
-              className="hero__background-image"
-            />
-          )}
+          <img
+            src={asset('/images/coworking/natureza-morta-livros.webp')}
+            alt=""
+            className="hero__background-image"
+          />
           <div className="hero__background-overlay" />
         </div>
 
