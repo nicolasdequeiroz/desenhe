@@ -4113,28 +4113,69 @@ body {
 
 /*
  * Professores do curso de História da Arte, só nessa página, logo antes da
- * galeria: retrato quadrado à esquerda e mini bio à direita, uma pessoa por
- * linha.
+ * galeria. Mesma vitrine da página /professores (cards em coluna, retrato
+ * numa moldura arredondada, fileira alternada em altura), mas com a mini
+ * bio impressa no card em vez do link para o modal.
  */
 .course-teachers {
-  display: grid;
-  gap: clamp(var(--spacing-6), 5vw, var(--spacing-10));
-  max-width: 820px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-8) var(--spacing-5);
+  max-width: 1100px;
   margin-inline: auto;
 }
 
 .course-teacher {
-  display: grid;
-  grid-template-columns: 132px 1fr;
-  gap: clamp(var(--spacing-4), 4vw, var(--spacing-8));
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 calc((100% - 2 * var(--spacing-5)) / 3);
+}
+
+@media (min-width: 700px) {
+  .course-teacher:nth-child(even) {
+    margin-top: var(--spacing-10);
+  }
+}
+
+@media (max-width: 860px) {
+  .course-teacher {
+    flex-basis: calc((100% - var(--spacing-5)) / 2);
+  }
+}
+
+@media (max-width: 460px) {
+  .course-teacher {
+    flex-basis: 100%;
+  }
+}
+
+.course-teacher__frame {
+  display: block;
+  aspect-ratio: 1 / 1.15;
+  padding: var(--spacing-3);
+  border-radius: var(--radius-container);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-category-teorico) 32%, #171310 68%);
+}
+
+.course-teacher:nth-child(3n + 2) .course-teacher__frame {
+  background: color-mix(in srgb, var(--color-category-teorico) 20%, #171310 80%);
+}
+
+.course-teacher:nth-child(3n) .course-teacher__frame {
+  background: color-mix(in srgb, var(--color-category-teorico) 44%, #171310 56%);
 }
 
 .course-teacher__photo {
-  width: 132px;
-  height: 132px;
-  border-radius: var(--radius-element);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: var(--radius-element);
+}
+
+.course-teacher__text {
+  margin-top: var(--spacing-3);
 }
 
 .course-teacher__name {
@@ -4156,18 +4197,6 @@ body {
   margin: var(--spacing-3) 0 0;
   line-height: 1.6;
   color: var(--color-text-secondary);
-}
-
-@media (max-width: 560px) {
-  .course-teacher {
-    grid-template-columns: 96px 1fr;
-    gap: var(--spacing-4);
-  }
-
-  .course-teacher__photo {
-    width: 96px;
-    height: 96px;
-  }
 }
 
 /*

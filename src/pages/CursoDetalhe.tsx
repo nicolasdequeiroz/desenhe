@@ -431,12 +431,14 @@ export function CursoDetalhe({slug}: {slug: string}) {
           <div className="course-teachers">
             {HISTORIA_TEACHERS.map((teacher) => (
               <article className="course-teacher" key={teacher.name}>
-                <img
-                  className="course-teacher__photo"
-                  src={asset(teacher.photo)}
-                  alt={`Retrato de ${teacher.name}`}
-                  loading="lazy"
-                />
+                <span className="course-teacher__frame">
+                  <img
+                    className="course-teacher__photo"
+                    src={asset(teacher.photo)}
+                    alt={`Retrato de ${teacher.name}`}
+                    loading="lazy"
+                  />
+                </span>
                 <div className="course-teacher__text">
                   <h3 className="course-teacher__name">{teacher.name}</h3>
                   <p className="course-teacher__role">{teacher.credential}</p>
