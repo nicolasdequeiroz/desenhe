@@ -194,6 +194,31 @@ export function WorksArc({images, caption}: Props) {
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  /*
+   * `touch-action: pan-y` (ver .works-arc no CSS) já diz ao navegador que o
+   * gesto horizontal é nosso e o vertical é dele. O Safari do iPhone, porém,
+   * decide cedo e às vezes leva o gesto inteiro para a rolagem da página: os
+   * `pointermove` param de chegar no meio do arraste e a trilha trava.
+   *
+   * Este listener fecha essa porta, mas só depois que o arraste horizontal já
+   * foi confirmado (`draggingRef`): enquanto o dedo não se decidiu, o
+   * `touchmove` segue intocado e a página rola normalmente. Precisa ser
+   * `passive: false` (senão o `preventDefault` é ignorado) e registrado à mão,
+   * já que o React não deixa escolher isso pelo `onTouchMove`.
+   */
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const holdGesture = (event: TouchEvent) => {
+      if (!draggingRef.current) return;
+      if (event.cancelable) event.preventDefault();
+    };
+
+    viewport.addEventListener('touchmove', holdGesture, {passive: false});
+    return () => viewport.removeEventListener('touchmove', holdGesture);
+  }, []);
+
   const moveHint = (event: React.PointerEvent<HTMLDivElement>) => {
     const viewport = viewportRef.current;
     const hint = hintRef.current;
@@ -210,12 +235,18 @@ export function WorksArc({images, caption}: Props) {
    * do botão da peça — o visor nunca abria no mouse. Ela vem depois, em
    * `capturePointer`, só quando o arraste se confirma.
    */
-  const lockDrag = () => {
+  const lockDrag = (x: number) => {
     const pending = pendingRef.current;
     if (!pending) return;
     draggingRef.current = true;
-    dragStartXRef.current = pending.x;
-    dragStartPositionRef.current = pending.position;
+    /*
+     * O arraste começa daqui: o dedo onde está AGORA e a trilha onde ela está
+     * AGORA. Partir do ponto do `pointerdown` fazia a trilha saltar para trás
+     * no instante em que o gesto se confirmava, porque ela seguiu correndo
+     * sozinha enquanto o toque ainda não tinha dito para que lado ia.
+     */
+    dragStartXRef.current = x;
+    dragStartPositionRef.current = positionRef.current;
     setIsDragging(true);
   };
 
@@ -240,7 +271,7 @@ export function WorksArc({images, caption}: Props) {
     };
     // No mouse a trilha para na hora, mas sem capturar: enquanto for só um
     // clique parado, o evento precisa chegar inteiro no botão da peça.
-    if (event.pointerType === 'mouse') lockDrag();
+    if (event.pointerType === 'mouse') lockDrag(event.clientX);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -256,7 +287,14 @@ export function WorksArc({images, caption}: Props) {
         pendingRef.current = null;
         return;
       }
-      lockDrag();
+      /*
+       * No toque só se chega aqui depois de o dedo andar de verdade para o
+       * lado: já nasce valendo como arraste (e não como toque na peça) e com
+       * o ponteiro seguro, sem esperar mais um limiar a partir do zero.
+       */
+      lockDrag(event.clientX);
+      movedRef.current = true;
+      capturePointer(event);
     }
 
     if (!draggingRef.current) return;
