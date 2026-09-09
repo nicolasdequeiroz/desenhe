@@ -229,7 +229,7 @@ export function CoworkingArtistico() {
       <section className="hero hero--coworking">
         <div className="hero__background" aria-hidden="true">
           <img
-            src={asset('/images/coworking/natureza-morta-livros.webp')}
+            src={asset('/images/coworking/aquarela-fachada.webp')}
             alt=""
             className="hero__background-image"
           />
