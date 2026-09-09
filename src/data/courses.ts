@@ -596,7 +596,7 @@ export const COURSES: Course[] = [
       },
     ],
     pricingTier: 'desenho-2h',
-    cover: '/images/cursos/desenho-infantil/capa.webp',
+    cover: '/images/cursos/desenho-infantil/galeria-4.webp',
     ogImage: '/images/og/desenho-infantil.jpg',
     gallery: [
       '/images/cursos/desenho-infantil/galeria-1.webp',
