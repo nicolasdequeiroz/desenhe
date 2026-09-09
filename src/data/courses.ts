@@ -114,6 +114,12 @@ export interface Course {
   /** Opcional: cursos novos podem entrar no ar antes das fotos. */
   cover?: string;
   /**
+   * Opcional: recorte vertical (4:5) para a pilha de capas do bloco "Cursos
+   * em destaque" da home, onde a `cover` horizontal cortava demais. Sem ele,
+   * o bloco cai de volta na `cover`.
+   */
+  featuredCover?: string;
+  /**
    * Versão JPEG da capa, usada só em og:image (o preview do link no
    * WhatsApp e em parte dos leitores de link não abre .webp). Os arquivos
    * ficam em public/images/og/ e saem da própria capa.
@@ -179,6 +185,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/desenho-artistico/capa.webp',
+    featuredCover: '/images/cursos/desenho-artistico/destaque.webp',
     ogImage: '/images/og/desenho-artistico.jpg',
     gallery: [
       '/images/cursos/desenho-artistico/galeria-1.webp',
@@ -465,6 +472,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'desenho-2h',
     cover: '/images/cursos/aquarela-guache/capa.webp',
+    featuredCover: '/images/cursos/aquarela-guache/destaque.webp',
     ogImage: '/images/og/aquarela-guache.jpg',
     gallery: [
       '/images/cursos/aquarela-guache/galeria-1.webp',
@@ -647,6 +655,7 @@ export const COURSES: Course[] = [
       'Taxa de matrícula de R$ 120',
     ],
     cover: '/images/cursos/historia-da-arte/capa.webp',
+    featuredCover: '/images/cursos/historia-da-arte/destaque.webp',
     ogImage: '/images/og/historia-da-arte.jpg',
     gallery: [
       '/images/cursos/historia-da-arte/encontro-01.webp',

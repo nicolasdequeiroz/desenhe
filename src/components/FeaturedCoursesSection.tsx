@@ -217,7 +217,9 @@ export function FeaturedCoursesSection() {
                   <img
                     key={course.slug}
                     className={`featured-courses__image${index === 0 ? ' is-active' : ''}`}
-                    src={asset(course.cover)}
+                    // Recorte vertical quando existe (a `cover` horizontal
+                    // cortava demais neste quadro 4:5).
+                    src={asset(course.featuredCover ?? course.cover)}
                     alt=""
                     loading={index === 0 ? undefined : 'lazy'}
                   />
