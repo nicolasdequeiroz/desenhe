@@ -4112,6 +4112,65 @@ body {
 }
 
 /*
+ * Professores do curso de História da Arte, só nessa página, logo antes da
+ * galeria: retrato quadrado à esquerda e mini bio à direita, uma pessoa por
+ * linha.
+ */
+.course-teachers {
+  display: grid;
+  gap: clamp(var(--spacing-6), 5vw, var(--spacing-10));
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+.course-teacher {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: clamp(var(--spacing-4), 4vw, var(--spacing-8));
+  align-items: start;
+}
+
+.course-teacher__photo {
+  width: 132px;
+  height: 132px;
+  border-radius: var(--radius-element);
+  object-fit: cover;
+}
+
+.course-teacher__name {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+.course-teacher__role {
+  margin: 2px 0 0;
+  font-family: var(--font-family-body);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-category-teorico);
+}
+
+.course-teacher__bio {
+  margin: var(--spacing-3) 0 0;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 560px) {
+  .course-teacher {
+    grid-template-columns: 96px 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .course-teacher__photo {
+    width: 96px;
+    height: 96px;
+  }
+}
+
+/*
  * Corpo da página de curso: uma pilha de blocos nomeados (descrição,
  * linguagens, resumo em fatos), com o mesmo respiro entre eles. O rótulo
  * de cada bloco é o que separa um do outro: sem ele os três viravam

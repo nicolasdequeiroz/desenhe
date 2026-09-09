@@ -46,6 +46,32 @@ const RELICS = [
   '/images/cursos/historia-da-arte/mascara.webp',
 ];
 
+/**
+ * Trio que leciona História da Arte, com mini bios próprias, exibido só
+ * nessa página (antes da galeria). Fica fora da lista global de TEACHERS
+ * porque lá as bios e as fotos seguem outro padrão.
+ */
+const HISTORIA_TEACHERS = [
+  {
+    name: 'Roberta Bentes Surkamp',
+    credential: 'Doutora em História pela UFPR',
+    bio: 'Graduada em História (UNOPAR) e em Artes (UNESPAR), com mestrado e doutorado em História pela UFPR. Trajetória interdisciplinar voltada ao olhar crítico sobre a história e a sociedade, com a análise criteriosa e a escuta ativa no centro do ensino.',
+    photo: '/images/cursos/historia-da-arte/prof-roberta.webp',
+  },
+  {
+    name: 'Mateus Dukevicz',
+    credential: 'Mestre em História e Teoria da Arte pela UDESC',
+    bio: 'Licenciado em Artes Visuais (UNESPAR) e mestre em História e Teoria da Arte (UDESC), passou por PIBID, Iniciação Científica e Residência Pedagógica. Pesquisa a produção artística brasileira do século XIX e acompanha de perto o processo de cada aluno na Desenhe.',
+    photo: '/images/cursos/historia-da-arte/prof-mateus.webp',
+  },
+  {
+    name: 'Renan Negrão',
+    credential: 'Mestre e doutorando em História pela UFPR',
+    bio: 'Licenciado em Artes Visuais e mestre e doutorando em História pela UFPR. Pesquisa cultura material, história da cor e arte islâmica medieval na Península Ibérica. Há mais de 14 anos leciona práticas artísticas, estimulando a experimentação e o pensamento crítico.',
+    photo: '/images/cursos/historia-da-arte/prof-renan.webp',
+  },
+];
+
 /** Página de detalhe de curso: descrição, módulos, horários, preço e CTA. */
 export function CursoDetalhe({slug}: {slug: string}) {
   const course = getCourse(slug);
@@ -396,6 +422,28 @@ export function CursoDetalhe({slug}: {slug: string}) {
                 Ou <Link to="/horarios">veja a grade completa</Link> antes de decidir.
               </Text>
             </div>
+          </div>
+        </Section>
+      )}
+
+      {course.category === 'teorico' && (
+        <Section kicker="Equipe" title="Quem dá as aulas">
+          <div className="course-teachers">
+            {HISTORIA_TEACHERS.map((teacher) => (
+              <article className="course-teacher" key={teacher.name}>
+                <img
+                  className="course-teacher__photo"
+                  src={asset(teacher.photo)}
+                  alt={`Retrato de ${teacher.name}`}
+                  loading="lazy"
+                />
+                <div className="course-teacher__text">
+                  <h3 className="course-teacher__name">{teacher.name}</h3>
+                  <p className="course-teacher__role">{teacher.credential}</p>
+                  <p className="course-teacher__bio">{teacher.bio}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </Section>
       )}
