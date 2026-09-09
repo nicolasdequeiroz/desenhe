@@ -40,10 +40,10 @@ const MODULE_ICONS = [PencilSimple, Compass, PaintBrush, Eye];
  * soltos sobre a carta-mapa. O visual fica todo no CSS (.course-deck__relic).
  */
 const RELICS = [
-  '/images/cursos/historia-da-arte/relicario.webp',
-  '/images/cursos/historia-da-arte/mascara.webp',
   '/images/cursos/historia-da-arte/retrato.webp',
+  '/images/cursos/historia-da-arte/relicario.webp',
   '/images/cursos/historia-da-arte/globo.webp',
+  '/images/cursos/historia-da-arte/mascara.webp',
 ];
 
 /** Página de detalhe de curso: descrição, módulos, horários, preço e CTA. */
