@@ -4016,6 +4016,85 @@ body {
 }
 
 /*
+ * Peças recortadas da primeira dobra de História da Arte (ver RELICS em
+ * CursoDetalhe.tsx). Ao contrário das cartas de curso, não têm moldura
+ * branca nem caixa: são PNGs com fundo transparente, apoiados na borda de
+ * baixo da faixa, um pouco sobrepostos e tortos. Não são recortadas nem
+ * esticadas, a altura manda e a largura acompanha a proporção original.
+ */
+.course-deck__relics {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  max-width: 1152px;
+  margin-inline: auto;
+  /* Mesmo respiro do baralho: as peças vazam pela borda de baixo da faixa. */
+  margin-bottom: -3%;
+  padding-top: 3%;
+}
+
+.course-deck__relic {
+  --relic-rotate: 0deg;
+  --relic-y: 0rem;
+  --relic-lift: 0rem;
+  width: auto;
+  height: clamp(200px, 26vw, 340px);
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.45));
+  transform: translateY(calc(var(--relic-y) + var(--relic-lift)))
+    rotate(var(--relic-rotate));
+  transition:
+    transform var(--duration-medium) ease,
+    filter var(--duration-medium) ease;
+}
+
+/* Cada peça com seu deslocamento, giro e sobreposição (margem negativa). */
+.course-deck__relic--1 {
+  z-index: 1;
+  --relic-rotate: -8deg;
+  --relic-y: 1.5rem;
+  margin-right: -3%;
+}
+
+.course-deck__relic--2 {
+  z-index: 3;
+  --relic-rotate: 5deg;
+  margin-right: -4%;
+}
+
+.course-deck__relic--3 {
+  z-index: 2;
+  --relic-rotate: -5deg;
+  --relic-y: 1rem;
+  margin-right: -3%;
+}
+
+.course-deck__relic--4 {
+  z-index: 1;
+  --relic-rotate: 9deg;
+  --relic-y: 2rem;
+}
+
+/* Hover: a peça se endireita, sobe e passa para a frente das vizinhas. */
+@media (hover: hover) {
+  .course-deck__relic:hover {
+    z-index: 5;
+    --relic-rotate: 0deg;
+    --relic-lift: -1.75rem;
+    filter: drop-shadow(0 26px 36px rgba(0, 0, 0, 0.5));
+  }
+}
+
+@media (max-width: 640px) {
+  .course-deck__relics {
+    margin-bottom: -6%;
+  }
+
+  .course-deck__relic {
+    height: clamp(140px, 34vw, 220px);
+  }
+}
+
+/*
  * Corpo da página de curso: uma pilha de blocos nomeados (descrição,
  * linguagens, resumo em fatos), com o mesmo respiro entre eles. O rótulo
  * de cada bloco é o que separa um do outro: sem ele os três viravam

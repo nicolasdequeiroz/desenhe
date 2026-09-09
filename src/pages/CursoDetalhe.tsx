@@ -33,6 +33,19 @@ import {
 /** Ícones dos módulos, em rodízio pelo índice: não há categoria própria por módulo. */
 const MODULE_ICONS = [PencilSimple, Compass, PaintBrush, Eye];
 
+/**
+ * Só na primeira dobra de História da Arte (curso "teórico"): no lugar do
+ * baralho de fotos, quatro peças recortadas que a escola enviou (relicário,
+ * máscara, retrato, globo). São PNGs com fundo transparente, sem moldura,
+ * soltos sobre a carta-mapa. O visual fica todo no CSS (.course-deck__relic).
+ */
+const RELICS = [
+  '/images/cursos/historia-da-arte/relicario.webp',
+  '/images/cursos/historia-da-arte/mascara.webp',
+  '/images/cursos/historia-da-arte/retrato.webp',
+  '/images/cursos/historia-da-arte/globo.webp',
+];
+
 /** Página de detalhe de curso: descrição, módulos, horários, preço e CTA. */
 export function CursoDetalhe({slug}: {slug: string}) {
   const course = getCourse(slug);
@@ -148,9 +161,23 @@ export function CursoDetalhe({slug}: {slug: string}) {
             );
           })()}
 
-          {/* Cursos novos podem entrar no ar antes das fotos: sem galeria,
-              a primeira dobra fica só com o título e a chamada. */}
-          {course.gallery.length > 0 && (
+          {/* História da Arte: as peças recortadas entram no lugar do baralho
+              de fotos, com um display próprio (ver .course-deck__relic). */}
+          {course.category === 'teorico' ? (
+          <div className="course-deck__relics" aria-hidden="true">
+            {RELICS.map((src, i) => (
+              <img
+                key={src}
+                src={asset(src)}
+                alt=""
+                className={`course-deck__relic course-deck__relic--${i + 1}`}
+                loading="lazy"
+              />
+            ))}
+          </div>
+          ) : course.gallery.length > 0 ? (
+          /* Cursos novos podem entrar no ar antes das fotos: sem galeria,
+             a primeira dobra fica só com o título e a chamada. */
           <div className="course-deck__cards">
             {/*
               Uma trilha só, com o conjunto de cartas duplicado dentro dela
@@ -205,7 +232,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
               </div>
             </div>
           </div>
-          )}
+          ) : null}
         </div>
         {deckLightbox.lightbox}
       </section>
