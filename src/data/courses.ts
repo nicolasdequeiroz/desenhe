@@ -646,7 +646,7 @@ export const COURSES: Course[] = [
       'R$ 460 por mês, à vista ou parcelado',
       'Taxa de matrícula de R$ 120',
     ],
-    cover: '/images/cursos/historia-da-arte/galeria-1.webp',
+    cover: '/images/cursos/historia-da-arte/capa.webp',
     ogImage: '/images/og/historia-da-arte.jpg',
     gallery: [
       '/images/cursos/historia-da-arte/encontro-01.webp',
