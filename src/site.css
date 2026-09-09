@@ -4096,6 +4096,19 @@ body {
   .course-deck__relic {
     height: clamp(190px, 46vw, 300px);
   }
+
+  /* E mais sobrepostas: a tela estreita não comporta o leque aberto. */
+  .course-deck__relic--1 {
+    margin-right: -12%;
+  }
+
+  .course-deck__relic--2 {
+    margin-right: -14%;
+  }
+
+  .course-deck__relic--3 {
+    margin-right: -12%;
+  }
 }
 
 /*
