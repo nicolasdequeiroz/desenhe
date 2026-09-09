@@ -552,7 +552,7 @@ export const COURSES: Course[] = [
     title: 'Laboratório de Desenho Infantil',
     category: 'infantil',
     shortTitle: 'Laboratório de Desenho Infantil',
-    featuredTitle: 'Desenho Infantil',
+    featuredTitle: 'Lab Desenho Infantil',
     excerpt:
       'Um espaço lúdico para descobrir e desenvolver a expressão criativa, com os fundamentos do desenho no ritmo de cada criança.',
     description: [
