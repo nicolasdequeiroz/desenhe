@@ -4157,6 +4157,13 @@ body {
   border-radius: var(--radius-container);
   overflow: hidden;
   background: color-mix(in srgb, var(--color-category-teorico) 32%, #171310 68%);
+  transition: box-shadow var(--duration-medium) ease;
+}
+
+/* Mesmo hover dos cards de /professores: a moldura ganha sombra e o retrato
+   dá um leve zoom. */
+.course-teacher:hover .course-teacher__frame {
+  box-shadow: var(--shadow-med);
 }
 
 .course-teacher:nth-child(3n + 2) .course-teacher__frame {
@@ -4172,6 +4179,11 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: var(--radius-element);
+  transition: transform var(--duration-medium) ease;
+}
+
+.course-teacher:hover .course-teacher__photo {
+  transform: scale(1.04);
 }
 
 .course-teacher__text {
