@@ -24,6 +24,12 @@ interface Props {
   caption: string;
   /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
+  /**
+   * 'plain' tira o estilo polaroid: sem moldura de papel, sem inclinação e
+   * sem legenda por imagem, só a foto num recorte reto (usado em História da
+   * Arte).
+   */
+  variant?: 'polaroid' | 'plain';
 }
 
 /**
@@ -33,7 +39,8 @@ interface Props {
  * diferentes conforme a página rola (ver --wall-progress). Clicar em um deles
  * abre o visor em tela cheia, que é onde dá para reparar no traço.
  */
-export function CourseGallery({images, caption, credits}: Props) {
+export function CourseGallery({images, caption, credits, variant}: Props) {
+  const plain = variant === 'plain';
   const wallRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const frameRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -46,7 +53,8 @@ export function CourseGallery({images, caption, credits}: Props) {
   const {openWork, lightbox} = useWorkLightbox({
     images,
     caption,
-    credits,
+    credits: plain ? undefined : credits,
+    framed: !plain,
     getOrigin,
     onClosed,
   });
@@ -123,11 +131,13 @@ export function CourseGallery({images, caption, credits}: Props) {
   return (
     <>
       <div
-        className={`work-wall${images.length <= 2 ? ` work-wall--${images.length}` : ''}`}
+        className={`work-wall${images.length <= 2 ? ` work-wall--${images.length}` : ''}${
+          plain ? ' work-wall--plain' : ''
+        }`}
         ref={wallRef}
       >
         {images.map((img, i) => {
-          const credit = credits?.[i];
+          const credit = plain ? undefined : credits?.[i];
           return (
             <button
               key={img}
@@ -162,18 +172,22 @@ export function CourseGallery({images, caption, credits}: Props) {
                     Ver de perto
                   </span>
                 </span>
-                <span className="work-wall__caption">
-                  <span className="work-wall__author">
-                    {credit?.author ?? UNCREDITED_AUTHOR}
+                {!plain && (
+                  <span className="work-wall__caption">
+                    <span className="work-wall__author">
+                      {credit?.author ?? UNCREDITED_AUTHOR}
+                    </span>
+                    {credit?.year && (
+                      <span className="work-wall__year">{credit.year}</span>
+                    )}
                   </span>
-                  {credit?.year && (
-                    <span className="work-wall__year">{credit.year}</span>
-                  )}
+                )}
+              </span>
+              {!plain && (
+                <span className="work-wall__label" aria-hidden="true">
+                  / {pad(i + 1)} /
                 </span>
-              </span>
-              <span className="work-wall__label" aria-hidden="true">
-                / {pad(i + 1)} /
-              </span>
+              )}
             </button>
           );
         })}

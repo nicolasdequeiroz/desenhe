@@ -3185,6 +3185,35 @@ body {
   color: var(--category-color, var(--color-accent));
 }
 
+/*
+ * Variante "plain" (História da Arte): a parede perde o estilo polaroid. Sem
+ * moldura de papel, sem tarja de autor, sem inclinação nem alturas
+ * alternadas: só a foto num recorte reto, numa grade certinha. O zoom no
+ * hover e a pílula "Ver de perto" continuam.
+ */
+.work-wall--plain .work-wall__item {
+  --wall-depth: 0px;
+  --wall-tilt: 0deg;
+  margin-top: 0;
+}
+
+.work-wall--plain .work-wall__frame {
+  --frame-border: 0px;
+  border: none;
+  background: none;
+  box-shadow: 0 12px 28px color-mix(in srgb, #000 38%, transparent);
+  /* Sem rotação: só o leve levantar no hover permanece. */
+  transform: translateY(var(--wall-lift, 0px));
+}
+
+@media (hover: none), (max-width: 900px) {
+  .work-wall--plain .work-wall__frame,
+  .work-wall--plain .work-wall__item:hover .work-wall__frame {
+    --work-zoom: 1;
+    --work-drift: 0px;
+  }
+}
+
 @media (max-width: 900px) {
   .work-wall,
   .work-wall--2 {
