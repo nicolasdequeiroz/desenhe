@@ -68,6 +68,26 @@ numa aba nova. Escreva `ok` na coluna **status** para publicar, ou qualquer
 outra coisa (ex.: `oculto`) para esconder — só o valor exato `ok` fica
 visível no site. Os links do e-mail fazem exatamente essa troca por você.
 
+### Um dos endereços não está recebendo
+
+Cada endereço de `OWNER_EMAILS` recebe o seu próprio envio, e cada falha vira
+log. Para descobrir onde parou, nesta ordem:
+
+1. **Spam.** É de longe o caso mais comum, principalmente em domínio próprio
+   recebendo de uma conta `@gmail.com`. Marque como "não é spam" e, se puder,
+   crie um filtro no Google Workspace liberando o remetente.
+2. **Rode `testeEmail`** no editor (menu de funções ao lado do ▶ Executar).
+   Ele usa sempre o código salvo, não o da implantação publicada, e escreve
+   no log o que aconteceu com cada endereço.
+3. **Veja o log** em **Execuções**, no menu da esquerda do editor. Lá aparece
+   `Aviso enviado para <endereço>` ou o erro exato de quem falhou, além da
+   cota de e-mail restante do dia.
+4. Se o teste chega e o aviso de desenho novo não, então o código salvo está
+   certo mas **a implantação publicada está velha**: o `/exec` que o site
+   chama serve a *versão* escolhida, não o último código salvo. Refaça em
+   Implantar → Gerenciar implantações → editar (lápis) → Versão: **Nova
+   versão** → Implantar.
+
 ## Detalhes que importam
 
 - O desenho em si é gravado como **traços vetoriais** (coordenadas

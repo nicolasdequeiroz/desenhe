@@ -249,17 +249,37 @@ function notifyOwner_(id, name, previewBlob) {
       '<p style="color:#666;">Ou revise direto na <a href="' + sheetUrl + '">planilha</a>.</p>' +
       '</div>';
 
-    var mail = {
-      to: OWNER_EMAILS.join(','),
-      subject: 'Novo desenho no livro de visitas da Desenhe',
-      htmlBody: html
-    };
-    if (previewBlob) mail.inlineImages = {preview: previewBlob};
-
-    MailApp.sendEmail(mail);
+    sendToOwners_('Novo desenho no livro de visitas da Desenhe', html, previewBlob);
   } catch (err) {
     // Cota de e-mail estourada ou outro erro: o desenho já foi salvo como
     // pendente de qualquer forma, só o aviso que não saiu.
+    console.error('Falha ao montar o aviso de desenho novo: ' + err);
+  }
+}
+
+/**
+ * Manda o mesmo e-mail para cada endereço de OWNER_EMAILS, um envio por vez.
+ *
+ * Um envio só com os dois no `to` também funciona, mas junta a sorte dos
+ * dois: se um endereço tropeça (caixa cheia, domínio recusando, engano de
+ * digitação), o envio inteiro pode ir junto e ninguém recebe. Separado, cada
+ * um falha por conta própria.
+ *
+ * As falhas viram log em vez de sumirem: sem isso não há como saber se o
+ * aviso não saiu ou se saiu e foi parar no spam de quem deveria receber. Elas
+ * aparecem no editor do Apps Script, em "Execuções".
+ */
+function sendToOwners_(subject, html, previewBlob) {
+  for (var i = 0; i < OWNER_EMAILS.length; i++) {
+    var to = OWNER_EMAILS[i];
+    try {
+      var mail = {to: to, subject: subject, htmlBody: html};
+      if (previewBlob) mail.inlineImages = {preview: previewBlob};
+      MailApp.sendEmail(mail);
+      console.info('Aviso enviado para ' + to);
+    } catch (err) {
+      console.error('Nao consegui enviar para ' + to + ': ' + err);
+    }
   }
 }
 
@@ -274,9 +294,13 @@ function notifyOwner_(id, name, previewBlob) {
  * try/catch existem exatamente pra não travar o site por causa disso).
  */
 function testeEmail() {
-  MailApp.sendEmail({
-    to: OWNER_EMAILS.join(','),
-    subject: 'Teste: livro de visitas da Desenhe',
-    htmlBody: 'Se você recebeu isto, o envio de e-mail está autorizado. ✅'
-  });
+  console.info('Cota de e-mail restante hoje: ' + MailApp.getRemainingDailyQuota());
+  sendToOwners_(
+    'Teste: livro de visitas da Desenhe',
+    'Se você recebeu isto, o envio de e-mail está autorizado. ✅'
+  );
+  console.info(
+    'Enviado para: ' + OWNER_EMAILS.join(', ') +
+    '. Quem não receber, olhe no spam antes de mais nada.'
+  );
 }
