@@ -658,26 +658,20 @@ export const COURSES: Course[] = [
       '/images/cursos/historia-da-arte/encontro-07.webp',
       '/images/cursos/historia-da-arte/encontro-08.webp',
       '/images/cursos/historia-da-arte/encontro-09.webp',
-      '/images/cursos/historia-da-arte/encontro-10.webp',
-      '/images/cursos/historia-da-arte/encontro-11.webp',
-      '/images/cursos/historia-da-arte/encontro-12.webp',
     ],
     galleryCaption: 'Encontros do curso de História da Arte',
     // Galeria de registro: no lugar do autor, uma frase curta que descreve
     // cada cena (mesmo índice de `gallery`).
     galleryCredits: [
-      {author: 'Aula na galeria'},
+      {author: 'Aula na Escola do Patrimônio'},
       {author: 'Turma reunida'},
       {author: 'Começo do encontro'},
       {author: 'No meio do debate'},
-      {author: 'Conversa de perto'},
       {author: 'Caderno aberto'},
       {author: 'Gravuras na mão'},
       {author: 'Lendo a imagem'},
       {author: 'Turma em roda'},
       {author: 'A palavra é sua'},
-      {author: 'Para além do cânone'},
-      {author: 'Saída pela cidade'},
     ],
   },
 ];
