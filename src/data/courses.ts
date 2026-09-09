@@ -360,7 +360,7 @@ export const COURSES: Course[] = [
     title: 'Ilustração de Livros Infantis',
     category: 'desenho',
     shortTitle: 'Ilustração de Livros Infantis',
-    featuredTitle: 'Ilustração Infantil',
+    featuredTitle: 'Ilustração Editorial',
     excerpt:
       'Narrativas visuais para o universo da infância: personagens, cenários e a relação entre texto e imagem.',
     description: [
