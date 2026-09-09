@@ -4091,8 +4091,10 @@ body {
     margin-bottom: -6%;
   }
 
+  /* Peças maiores no mobile, mesmo que a fileira sangre pelas laterais
+     (a faixa recorta o excesso com overflow: clip). */
   .course-deck__relic {
-    height: clamp(140px, 34vw, 220px);
+    height: clamp(190px, 46vw, 300px);
   }
 }
 
