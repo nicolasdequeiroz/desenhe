@@ -74,7 +74,11 @@ export function ProfessorModal({teacher, onClose}: Props) {
         <div className="professor-modal__body">
           <p className="professor-modal__role">{teacher.role}</p>
           <h3 className="professor-modal__name">{teacher.name}</h3>
-          <p className="professor-modal__bio">{teacher.bio}</p>
+          {teacher.bio.map((paragraph, index) => (
+            <p className="professor-modal__bio" key={index}>
+              {paragraph}
+            </p>
+          ))}
         </div>
       </div>
     </>
