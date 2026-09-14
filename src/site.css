@@ -7888,7 +7888,7 @@ body {
   left: 50%;
   z-index: 70;
   width: min(560px, calc(100vw - 2 * var(--spacing-4)));
-  max-height: calc(100vh - 2 * var(--spacing-6));
+  max-height: min(640px, calc(100vh - 2 * var(--spacing-8)));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -7898,6 +7898,25 @@ body {
   box-shadow: 0 24px 60px color-mix(in srgb, #000 40%, transparent);
   transform: translate(-50%, -50%);
   animation: professor-modal-in var(--duration-medium) var(--site-button-ease, ease) both;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, #fff 25%, transparent) transparent;
+}
+
+.professor-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.professor-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.professor-modal::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, #fff 25%, transparent);
+  border-radius: 9999px;
+}
+
+.professor-modal::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, #fff 40%, transparent);
 }
 
 @keyframes professor-modal-in {
