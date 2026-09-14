@@ -13,11 +13,10 @@ export interface CourseModule {
 
 export interface GalleryCredit {
   /**
-   * O que aparece na legenda estilo polaroid: normalmente o nome do autor do
-   * trabalho, mas em galerias de registro (fotos de aula) uma frase curta que
-   * descreve a cena.
+   * Técnica usada no trabalho, exibida na legenda estilo polaroid (ex.:
+   * "Grafite sobre papel", "Aquarela").
    */
-  author: string;
+  technique: string;
   /** Ano do trabalho, ex.: '2025'. Fica de fora quando não se aplica. */
   year?: string;
 }
@@ -27,7 +26,7 @@ export interface GalleryCredit {
  * `galleryCredits`. Fica aqui, e não nos componentes, para a parede de
  * trabalhos e o visor em tela cheia nunca divergirem.
  */
-export const UNCREDITED_AUTHOR = 'Aluno(a) da Desenhe';
+export const DEFAULT_TECHNIQUE = 'Técnica mista';
 
 /**
  * Submodalidade de um curso "guarda-chuva": um mesmo curso que reúne
@@ -128,7 +127,7 @@ export interface Course {
   gallery: string[];
   galleryCaption?: string;
   /**
-   * Crédito de cada imagem de `gallery`, no mesmo índice: autor e ano do
+   * Crédito de cada imagem de `gallery`, no mesmo índice: técnica e ano do
    * trabalho, exibidos na legenda estilo polaroid da parede de trabalhos
    * (ver CourseGallery.tsx). Índice sem entrada aqui cai no texto genérico.
    */
@@ -195,6 +194,13 @@ export const COURSES: Course[] = [
       '/images/cursos/desenho-artistico/galeria-5.webp',
     ],
     galleryCaption: 'Trabalhos de alunos do curso de Desenho Artístico',
+    galleryCredits: [
+      {technique: 'Grafite e lápis de cor'},
+      {technique: 'Grafite sobre papel'},
+      {technique: 'Grafite sobre papel'},
+      {technique: 'Grafite sobre papel'},
+      {technique: 'Grafite sobre papel'},
+    ],
   },
   {
     slug: 'desenho-de-figura-humana',
@@ -313,6 +319,12 @@ export const COURSES: Course[] = [
       '/images/cursos/quadrinhos/galeria-4.webp',
     ],
     galleryCaption: 'Trabalhos de alunos do curso de Quadrinhos',
+    galleryCredits: [
+      {technique: 'Lápis de cor'},
+      {technique: 'Grafite sobre papel'},
+      {technique: 'Arte digital'},
+      {technique: 'Nanquim sobre papel'},
+    ],
   },
   {
     slug: 'desenho-de-moda',
@@ -482,6 +494,13 @@ export const COURSES: Course[] = [
       '/images/cursos/aquarela-guache/galeria-5.webp',
     ],
     galleryCaption: 'Trabalhos de alunos do curso de Aquarela e Guache',
+    galleryCredits: [
+      {technique: 'Guache'},
+      {technique: 'Guache'},
+      {technique: 'Aquarela'},
+      {technique: 'Aquarela e nanquim'},
+      {technique: 'Guache'},
+    ],
   },
   {
     slug: 'pintura-a-oleo-ou-acrilica',
@@ -554,6 +573,13 @@ export const COURSES: Course[] = [
       '/images/cursos/pintura-oleo-acrilica/galeria-5.webp',
     ],
     galleryCaption: 'Trabalhos de alunos do curso de Pintura',
+    galleryCredits: [
+      {technique: 'Tinta a óleo'},
+      {technique: 'Acrílica sobre fundo preto'},
+      {technique: 'Carvão sobre papel'},
+      {technique: 'Tinta a óleo'},
+      {technique: 'Acrílica sobre fundo preto'},
+    ],
   },
   {
     slug: 'desenho-infantil',
@@ -606,6 +632,13 @@ export const COURSES: Course[] = [
       '/images/cursos/desenho-infantil/galeria-5.webp',
     ],
     galleryCaption: 'Atividades e trabalhos das turmas infantis',
+    galleryCredits: [
+      {technique: 'Caneta hidrográfica'},
+      {technique: 'Caneta e lápis de cor'},
+      {technique: 'Caneta e lápis de cor'},
+      {technique: 'Caneta e lápis de cor'},
+      {technique: 'Caneta e lápis de cor'},
+    ],
   },
   {
     slug: 'historia-da-arte',

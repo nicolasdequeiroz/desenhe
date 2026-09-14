@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {createPortal} from 'react-dom';
 import {ArrowLeft, ArrowRight, X} from '@phosphor-icons/react';
-import {asset, UNCREDITED_AUTHOR, type GalleryCredit} from '../data';
+import {asset, DEFAULT_TECHNIQUE, type GalleryCredit} from '../data';
 import {useScrollLock} from './useScrollLock';
 
 const FOCUSABLE_SELECTOR =
@@ -64,7 +64,7 @@ function readRotation(element: HTMLElement): number {
 
 /**
  * Cópia do polaroid em voo, posicionada em coordenadas de viewport. É ela que
- * atravessa a tela: o bloco inteiro (foto e legenda de autoria) viaja junto,
+ * atravessa a tela: o bloco inteiro (foto e legenda de técnica) viaja junto,
  * porque é o polaroid inteiro que sai da parede e vira o conteúdo do visor.
  *
  * A tarja da legenda tem altura fixa, igual na parede e no visor, então só a
@@ -74,7 +74,7 @@ function readRotation(element: HTMLElement): number {
  */
 function createGhost(
   src: string,
-  author: string,
+  technique: string,
   year?: string,
   framed = true,
 ): HTMLElement {
@@ -89,17 +89,17 @@ function createGhost(
   photo.append(image);
   ghost.append(photo);
 
-  // Sem moldura não há tarja de autoria, nem no voo nem no visor: as duas
+  // Sem moldura não há tarja de crédito, nem no voo nem no visor: as duas
   // pontas do crossfade precisam ter a mesma estrutura.
   if (framed) {
     // Mesma estrutura da legenda na parede e no visor, para as pontas do
     // crossfade coincidirem em vez de trocar de layout no meio do caminho.
     const caption = document.createElement('div');
     caption.className = 'work-ghost__caption';
-    const authorLine = document.createElement('span');
-    authorLine.className = 'work-ghost__author';
-    authorLine.textContent = author;
-    caption.append(authorLine);
+    const techniqueLine = document.createElement('span');
+    techniqueLine.className = 'work-ghost__author';
+    techniqueLine.textContent = technique;
+    caption.append(techniqueLine);
     if (year) {
       const yearLine = document.createElement('span');
       yearLine.className = 'work-ghost__year';
@@ -140,11 +140,11 @@ function flightFrames(
 export interface ViewerProps {
   images: string[];
   caption: string;
-  /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
+  /** Técnica e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
   index: number;
   /**
-   * Moldura de papel com a tarja de autoria em volta da imagem. Desligada
+   * Moldura de papel com a tarja de técnica em volta da imagem. Desligada
    * onde a peça não é um polaroid na página (ver o arco de /sobre).
    */
   framed?: boolean;
@@ -178,7 +178,7 @@ export function WorkViewer({
   indexRef.current = index;
 
   const credit = credits?.[index];
-  const author = credit?.author ?? UNCREDITED_AUTHOR;
+  const technique = credit?.technique ?? DEFAULT_TECHNIQUE;
   const year = credit?.year;
 
   useScrollLock();
@@ -260,7 +260,7 @@ export function WorkViewer({
       if (!to.width || !from.width) return;
 
       polaroid.style.opacity = '0';
-      ghost = createGhost(image.currentSrc || image.src, author, year, framed);
+      ghost = createGhost(image.currentSrc || image.src, technique, year, framed);
       fades = crossFade(ghost, origin, 'in');
       ghost
         .animate(flightFrames(from, readRotation(origin), to, 0), {
@@ -293,7 +293,7 @@ export function WorkViewer({
       ghost?.remove();
       polaroid.style.opacity = '';
     };
-  }, [resolveOrigin, author, year, framed, applyPhotoRatio]);
+  }, [resolveOrigin, technique, year, framed, applyPhotoRatio]);
 
   // Fechar é o voo inverso: a imagem volta a ser a peça, no lugar dela.
   const requestClose = useCallback(() => {
@@ -327,7 +327,7 @@ export function WorkViewer({
     panelRef.current?.classList.add('is-closing');
     polaroid.style.opacity = '0';
 
-    const ghost = createGhost(image.currentSrc || image.src, author, year, framed);
+    const ghost = createGhost(image.currentSrc || image.src, technique, year, framed);
     // A peça na página reaparece no fim do percurso, por baixo da cópia que
     // some: é a troca inversa da abertura.
     const fades = crossFade(ghost, origin, 'out');
@@ -344,7 +344,7 @@ export function WorkViewer({
         ghost.remove();
         onClose(current);
       });
-  }, [resolveOrigin, onClose, author, year, framed]);
+  }, [resolveOrigin, onClose, technique, year, framed]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -463,7 +463,7 @@ export function WorkViewer({
           </div>
           {framed && (
             <div className="work-viewer__credit">
-              <span className="work-viewer__author">{author}</span>
+              <span className="work-viewer__author">{technique}</span>
               {credit?.year && (
                 <span className="work-viewer__year">{credit.year}</span>
               )}

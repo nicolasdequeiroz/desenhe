@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {MagnifyingGlassPlus} from '@phosphor-icons/react';
-import {asset, UNCREDITED_AUTHOR, type GalleryCredit} from '../data';
+import {asset, DEFAULT_TECHNIQUE, type GalleryCredit} from '../data';
 import {useWorkLightbox} from './WorkLightbox';
 
 /** 3 -> "03": numeração de catálogo, no formato já usado nos cursos em destaque. */
@@ -22,7 +22,7 @@ interface Props {
   images: string[];
   /** Legenda coletiva da galeria, usada nos textos alternativos e no visor. */
   caption: string;
-  /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
+  /** Técnica e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
   /**
    * 'plain' tira o estilo polaroid: sem moldura de papel, sem inclinação e
@@ -34,7 +34,7 @@ interface Props {
 
 /**
  * Galeria da página de curso: os trabalhos ficam pendurados como numa parede
- * de ateliê, cada um em formato polaroid (com a legenda de autor e ano na
+ * de ateliê, cada um em formato polaroid (com a legenda de técnica e ano na
  * margem inferior), na sua altura e levemente torto, subindo em ritmos
  * diferentes conforme a página rola (ver --wall-progress). Clicar em um deles
  * abre o visor em tela cheia, que é onde dá para reparar no traço.
@@ -175,7 +175,7 @@ export function CourseGallery({images, caption, credits, variant}: Props) {
                 {!plain && (
                   <span className="work-wall__caption">
                     <span className="work-wall__author">
-                      {credit?.author ?? UNCREDITED_AUTHOR}
+                      {credit?.technique ?? DEFAULT_TECHNIQUE}
                     </span>
                     {credit?.year && (
                       <span className="work-wall__year">{credit.year}</span>
