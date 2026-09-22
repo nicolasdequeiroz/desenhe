@@ -15,58 +15,105 @@ export interface Plan {
 export type Feature = string | {label: string; minMonths?: number; short?: string};
 
 export interface PricingTier {
-  id: 'desenho-2h' | 'oleo-3h';
-  /** Nome do curso, usado nas mensagens de contato. */
+  id: 'desenho-2h' | 'aquarela-2h' | 'oleo-3h';
+  /** Nome do curso, usado nas mensagens de contato ("curso de ..."). */
   title: string;
-  /** Título exibido no card de plano. */
-  cardTitle: string;
+  /** Nome da modalidade, exibido como título do card. */
+  name: string;
+  /** Técnica, exibida entre parênteses depois do nome (quando houver). */
+  technique?: string;
+  /** Categoria do curso: dá a cor do card (mesmos tokens das páginas de curso). */
+  category: 'desenho' | 'pintura';
+  /** Cursos cobertos pelo card, numa linha curta abaixo do título. */
+  covers: string;
   subtitle: string;
   /**
    * Página de curso para onde o botão "Ver curso" do card aponta. Quando o
-   * card cobre mais de um curso (ex.: desenho + aquarela/guache), deixe
-   * indefinido: o botão vira "Ver cursos" e leva à listagem.
+   * card cobre mais de um curso (ex.: desenho), deixe indefinido: o botão
+   * vira "Ver cursos" e leva à listagem.
    */
   courseHref?: string;
   /** Planos ordenados do maior compromisso para o menor (12, 6, 3 meses). */
   plans: Plan[];
-  features: Feature[];
 }
 
-const COMMON_FEATURES: Feature[] = [
-  'Turmas de no máximo 8 alunos',
+/**
+ * O que vale igual para os três cursos práticos. Fica numa faixa única
+ * abaixo dos cards, em vez de repetido dentro de cada um: título curto
+ * e um detalhe, que pode mudar conforme a duração escolhida.
+ */
+export interface CommonFeature {
+  title: string;
+  detail: string;
+  /** Detalhe nos planos curtos (< 6 meses). */
+  shortDetail?: string;
+  /** Abaixo dessa duração o item não vale: aparece apagado, com um "x". */
+  minMonths?: number;
+}
+
+export const COMMON_FEATURES: CommonFeature[] = [
   {
-    label: 'Cronograma personalizado, do iniciante ao avançado',
-    short: 'Cronograma personalizado, no seu ritmo',
+    title: 'Turmas pequenas', detail: 'Até 8 alunos por turma'},
+  {
+    title: 'Cronograma personalizado',
+    detail: 'Do iniciante ao avançado',
+    shortDetail: 'No seu ritmo',
   },
-  'Presencial em Curitiba ou online ao vivo',
-  {label: 'Certificação ao concluir', minMonths: 6},
+  {
+    title: 'Presencial ou online',
+    detail: 'Em Curitiba ou ao vivo, de onde estiver',
+  },
+  {
+    title: 'Certificação',
+    detail: 'Ao concluir o curso',
+    shortDetail: 'Nos planos de 6 e 12 meses',
+    minMonths: 6,
+  },
+];
+
+/* Desenho e Pintura (aquarela/guache) têm o mesmo valor: aula de 2 horas. */
+const PLANS_2H: Plan[] = [
+  {months: 12, monthly: 330},
+  {months: 6, monthly: 367},
+  {months: 3, monthly: 418},
 ];
 
 export const PRICING: PricingTier[] = [
   {
     id: 'desenho-2h',
-    title: 'Desenho ou Pintura (aquarela/guache)',
-    cardTitle: 'Cursos de Desenho ou Pintura (aquarela/guache)',
-    subtitle: 'Aulas de 2 horas, 1x por semana',
-    plans: [
-      {months: 12, monthly: 330},
-      {months: 6, monthly: 367},
-      {months: 3, monthly: 418},
-    ],
-    features: ['Aula de 2 horas por semana', ...COMMON_FEATURES],
+    title: 'Desenho',
+    name: 'Desenho',
+    category: 'desenho',
+    covers:
+      'Desenho Artístico, Figura Humana, Quadrinhos, Desenho de Moda, Ilustração de Livros Infantis e Laboratório de Desenho Infantil',
+    subtitle: 'Aulas de 2h, 1x por semana',
+    plans: PLANS_2H,
+  },
+  {
+    id: 'aquarela-2h',
+    title: 'Pintura em aquarela/guache',
+    name: 'Pintura',
+    technique: 'aquarela/guache',
+    category: 'pintura',
+    covers: 'Técnicas de Pintura a Base d’Água',
+    subtitle: 'Aulas de 2h, 1x por semana',
+    courseHref: '/cursos/pintura-em-aquarela-ou-guache',
+    plans: PLANS_2H,
   },
   {
     id: 'oleo-3h',
     title: 'Pintura a Óleo e Acrílica',
-    cardTitle: 'Curso de Pintura a Óleo e Acrílica',
-    subtitle: 'Aulas de 3 horas, 1x por semana',
+    name: 'Pintura',
+    technique: 'óleo/acrílica',
+    category: 'pintura',
+    covers: 'Técnicas de Pintura II (requer base de desenho)',
+    subtitle: 'Aulas de 3h, 1x por semana',
     courseHref: '/cursos/pintura-a-oleo-ou-acrilica',
     plans: [
       {months: 12, monthly: 478},
       {months: 6, monthly: 540},
       {months: 3, monthly: 600},
     ],
-    features: ['Aula de 3 horas por semana', ...COMMON_FEATURES],
   },
 ];
 

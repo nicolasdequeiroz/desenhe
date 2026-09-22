@@ -104,7 +104,7 @@ export interface Course {
   strands?: CourseStrand[];
   modules: CourseModule[];
   /** Chave da tabela de preços correspondente (ver pricing.ts). */
-  pricingTier: 'desenho-2h' | 'oleo-3h' | 'consultar';
+  pricingTier: 'desenho-2h' | 'aquarela-2h' | 'oleo-3h' | 'consultar';
   /**
    * Texto de mensalidade para cursos fora da tabela padrão
    * (pricingTier: 'consultar'), exibido no lugar do valor calculado.
@@ -482,7 +482,7 @@ export const COURSES: Course[] = [
           'Acompanhamento personalizado para projetos autorais, sem prazo pré-definido, para o aluno amadurecer o próprio estilo.',
       },
     ],
-    pricingTier: 'desenho-2h',
+    pricingTier: 'aquarela-2h',
     cover: '/images/cursos/aquarela-guache/capa.webp',
     featuredCover: '/images/cursos/aquarela-guache/destaque.webp',
     ogImage: '/images/og/aquarela-guache.jpg',

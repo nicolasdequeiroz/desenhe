@@ -6,6 +6,8 @@ import {Section} from '../components/Section';
 import {NoteGrid} from '../components/NoteGrid';
 import {WhatsCta} from '../components/WhatsCta';
 import {
+  COMMON_FEATURES,
+  type CommonFeature,
   COWORKING,
   type Feature,
   FIRST_CLASS_PRICES,
@@ -18,22 +20,69 @@ import {
   planTotal,
 } from '../data';
 
+/** Texto do item para a duração escolhida e se ele vale nela. */
+function resolveFeature(item: Feature, months?: number) {
+  if (typeof item === 'string') return {label: item, off: false};
+  const off =
+    item.minMonths !== undefined &&
+    months !== undefined &&
+    months < item.minMonths;
+  const short = item.short !== undefined && months !== undefined && months < 6;
+  return {label: short ? item.short! : item.label, off};
+}
+
+/**
+ * Faixa abaixo dos cards de cursos práticos com o que vale igual para os
+ * três, no mesmo check dos checklists: título curto e detalhe. O detalhe muda
+ * nos planos curtos, e o item que não vale na duração escolhida fica
+ * apagado com um "x" (ex.: certificação no plano de 3 meses).
+ */
+function CommonFeatures({
+  items,
+  months,
+}: {
+  items: CommonFeature[];
+  months: number;
+}) {
+  return (
+    <div className="pricing-common">
+      <span className="pricing-common__label">Incluso nos três cursos</span>
+      <ul className="pricing-common__list">
+        {items.map((item) => {
+          const off = item.minMonths !== undefined && months < item.minMonths;
+          const StatusIcon = off ? X : Check;
+          return (
+            <li
+              key={item.title}
+              className={`pricing-check pricing-common__item${off ? ' pricing-check--off' : ''}`}
+            >
+              <StatusIcon
+                size={14}
+                weight="bold"
+                className="pricing-check__icon"
+                aria-hidden="true"
+              />
+              <span className="pricing-common__text">
+                <span className="pricing-common__title">{item.title}</span>
+                <span className="pricing-common__detail">
+                  {months < 6 && item.shortDetail
+                    ? item.shortDetail
+                    : item.detail}
+                </span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function CheckList({items, months}: {items: Feature[]; months?: number}) {
   return (
     <ul className="pricing-check-list">
       {items.map((item) => {
-        const short =
-          typeof item !== 'string' &&
-          item.short !== undefined &&
-          months !== undefined &&
-          months < 6;
-        const label =
-          typeof item === 'string' ? item : short ? item.short! : item.label;
-        const off =
-          typeof item !== 'string' &&
-          item.minMonths !== undefined &&
-          months !== undefined &&
-          months < item.minMonths;
+        const {label, off} = resolveFeature(item, months);
         return (
           <li
             key={label}
@@ -129,7 +178,7 @@ export function Precos() {
     <>
       <Seo
         title="Preços e Mensalidades dos Cursos"
-        description="Mensalidades dos cursos de desenho e pintura da Desenhe, em planos de 3, 6 e 12 meses com aulas semanais, e aluguel de sala por hora no coworking de arte."
+        description="Mensalidades dos cursos de Desenho, Pintura em aquarela e guache e Pintura a óleo e acrílica da Desenhe, em planos de 3, 6 e 12 meses, além de História da Arte e do coworking artístico."
         path="/precos"
       />
       <Section
@@ -139,43 +188,56 @@ export function Precos() {
         lead="Uma aula por semana nos cursos de desenho e pintura, presencial em Curitiba ou online ao vivo. A mensalidade depende só da duração do plano: quanto mais longo o compromisso, menor o valor por mês."
       >
         {/*
-          Os dois blocos de curso ficam lado a lado no desktop (cursos de
-          ateliê à esquerda, História da Arte à direita) e empilham no
-          mobile. Cada um tem rótulo e seletor de duração próprios.
+          Cursos práticos (aula semanal): um card por modalidade. O seletor
+          12/6/3 troca parcela e total dos três ao mesmo tempo.
         */}
-        <div className="pricing-blocks">
-        {/*
-          Bloco 1: os cursos de ateliê (aula semanal). O seletor 12/6/3
-          troca os valores dos dois cards ao mesmo tempo e só deles.
-        */}
-        <div className="pricing-block">
-          <span className="pricing-block__label">Cursos práticos</span>
+        <div className="pricing-block pricing-block--practice">
+          <div className="pricing-block__intro">
+            <div className="pricing-block__head">
+              <span className="pricing-block__label">Cursos práticos</span>
+              <Text as="p" color="secondary" className="pricing-block__lead">
+                {PLAN_INFO[months].note}.
+              </Text>
+            </div>
 
-          <Toggle
-            label="Duração do plano dos cursos de ateliê"
-            options={PLAN_MONTHS}
-            value={months}
-            onChange={setMonths}
-            renderLabel={(m) => (
-              <>
-                {PLAN_INFO[m].label}
-                {m === 12 && (
-                  <span className="pricing-toggle__badge">
-                    -{longPlanDiscount}%
-                  </span>
-                )}
-              </>
-            )}
-          />
+            <Toggle
+              label="Duração do plano dos cursos práticos"
+              options={PLAN_MONTHS}
+              value={months}
+              onChange={setMonths}
+              renderLabel={(m) => (
+                <>
+                  {PLAN_INFO[m].label}
+                  {m === 12 && (
+                    <span className="pricing-toggle__badge">
+                      -{longPlanDiscount}%
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
 
-          <div className="pricing-grid pricing-grid--2">
+          <div className="pricing-grid pricing-grid--3">
             {PRICING.map((tier) => {
               const active =
                 tier.plans.find((p) => p.months === months) ?? tier.plans[0];
               return (
-                <Card key={tier.id} padding={6} className="pricing-card">
+                <Card
+                  key={tier.id}
+                  padding={6}
+                  className={`pricing-card pricing-card--course pricing-card--${tier.category}`}
+                >
                   <div className="pricing-card__head">
-                    <Heading level={3}>{tier.cardTitle}</Heading>
+                    <Heading level={3} className="pricing-card__name">
+                      {tier.name}
+                      {tier.technique && (
+                        <span className="pricing-card__technique">
+                          {' '}({tier.technique})
+                        </span>
+                      )}
+                    </Heading>
+                    <p className="pricing-card__covers">{tier.covers}</p>
                     <Text type="supporting" display="block">
                       {tier.subtitle}
                     </Text>
@@ -200,10 +262,6 @@ export function Precos() {
                     </Text>
                   </div>
 
-                  <p className="pricing-card__intake">
-                    {PLAN_INFO[active.months].note}.
-                  </p>
-
                   <div className="pricing-card__cta">
                     <WhatsCta
                       message={`Olá! Quero saber mais sobre o curso de ${tier.title}, no plano de ${active.months} meses.`}
@@ -217,159 +275,151 @@ export function Precos() {
                       size="sm"
                     />
                   </div>
-
-                  <Divider />
-
-                  <div className="pricing-card__includes">
-                    <span className="pricing-card__includes-label">
-                      O que está incluso
-                    </span>
-                    <CheckList items={tier.features} months={active.months} />
-                  </div>
                 </Card>
               );
             })}
           </div>
 
           {/*
-            A primeira aula é avulsa, não pertence a nenhum plano: fecha o
-            bloco dos cursos práticos, abaixo da grade. O valor é só por
-            duração da aula, não por curso.
+            Abaixo da grade, lado a lado no desktop: o que vale nos três
+            cursos e a primeira aula. A primeira aula é avulsa, não pertence
+            a nenhum plano; o valor é só por duração da aula, não por curso.
           */}
-          <div className="pricing-first">
-            <div className="pricing-first__intro">
-              <span className="pricing-first__eyebrow">
-                Primeira aula{' '}
-                <span className="pricing-first__paren">(experimental)</span>
-              </span>
-              <Text as="p" color="secondary" className="pricing-first__text">
-                Uma aula avulsa para conhecer a escola e o professor antes de
-                fechar um plano. O valor depende só da duração da aula, não do
-                curso escolhido.
-              </Text>
-            </div>
-            <div className="pricing-first__offer">
-              <dl className="pricing-first__prices">
-                {FIRST_CLASS_PRICES.map(({hours, price}) => (
-                  <div key={hours} className="pricing-first__price-row">
-                    <dt className="pricing-first__hours">Aula de {hours}h</dt>
-                    <dd className="pricing-first__price">{formatBRL(price)}</dd>
-                  </div>
-                ))}
-              </dl>
-              <WhatsCta
-                message="Olá! Quero agendar a primeira aula (experimental) na Desenhe."
-                label="Agendar primeira aula"
-                variant="ghost"
-                size="sm"
-              />
+          <div className="pricing-extras">
+            <CommonFeatures items={COMMON_FEATURES} months={months} />
+
+            <div className="pricing-first">
+              <div className="pricing-first__intro">
+                <span className="pricing-first__eyebrow">
+                  Primeira aula{' '}
+                  <span className="pricing-first__paren">(experimental)</span>
+                </span>
+                <Text as="p" color="secondary" className="pricing-first__text">
+                  Uma aula avulsa para conhecer a escola e o professor antes de
+                  fechar um plano. O valor depende só da duração da aula, não do
+                  curso escolhido.
+                </Text>
+              </div>
+              <div className="pricing-first__offer">
+                <dl className="pricing-first__prices">
+                  {FIRST_CLASS_PRICES.map(({hours, price}) => (
+                    <div key={hours} className="pricing-first__price-row">
+                      <dt className="pricing-first__hours">Aula de {hours}h</dt>
+                      <dd className="pricing-first__price">{formatBRL(price)}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <WhatsCta
+                  message="Olá! Quero agendar a primeira aula (experimental) na Desenhe."
+                  label="Agendar primeira aula"
+                  variant="ghost"
+                  size="sm"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/*
-          Empilhado (mobile), o mesmo fio da "Infraestrutura" separa a
-          primeira aula do curso teórico. No desktop some: a separação já
-          é o vão entre as colunas da grade.
+          História da Arte: curso teórico em turma fechada, sem vaga
+          garantida nem entrada contínua. Vem depois dos cursos práticos,
+          secundário a eles, no mesmo formato de card do coworking, com
+          cor e seletor (9/3 meses) próprios.
         */}
-        <div className="pricing-break pricing-break--inline" role="presentation">
+        <div className="pricing-break" role="presentation">
           <Divider />
         </div>
 
-        {/*
-          Bloco 2: História da Arte. É curso teórico em turma fechada, sem
-          vaga garantida nem entrada contínua, então fica separado, com
-          cor própria, seletor próprio (9/3 meses) e o texto deixando
-          claro que a turma abre em janelas ao longo do ano.
-        */}
         <div className="pricing-block pricing-block--theory">
-          <span className="pricing-block__label">
-            Curso teórico · {HISTORY_OF_ART.name}
-          </span>
-
-          <Toggle
-            label="Duração do curso de História da Arte"
-            options={HISTORY_OF_ART.plans.map((p) => p.months)}
-            value={historyMonths}
-            onChange={setHistoryMonths}
-            renderLabel={(m) => (
-              <>
-                {HISTORY_OF_ART.plans.find((p) => p.months === m)?.label ?? `${m}`}
-                {m === historyLongPlan.months && historyLongPlanDiscount > 0 && (
-                  <span className="pricing-toggle__badge">
-                    -{historyLongPlanDiscount}%
-                  </span>
-                )}
-              </>
-            )}
-          />
-
-          <Card
-            padding={6}
-            className="pricing-card pricing-card--theory"
-          >
-            <div className="pricing-card__head">
-              <Heading level={3}>{HISTORY_OF_ART.title}</Heading>
-              <Text type="supporting" display="block">
-                {HISTORY_OF_ART.subtitle}
+          <div className="pricing-block__intro">
+            <div className="pricing-block__head">
+              <span className="pricing-block__label">Curso teórico</span>
+              <Heading level={2} className="pricing-block__title">
+                {HISTORY_OF_ART.name}
+              </Heading>
+              <Text as="p" color="secondary" className="pricing-block__lead">
+                {HISTORY_OF_ART.title}. {HISTORY_OF_ART.subtitle}.
               </Text>
             </div>
 
-            <Divider />
+            <Toggle
+              label="Duração do curso de História da Arte"
+              options={HISTORY_OF_ART.plans.map((p) => p.months)}
+              value={historyMonths}
+              onChange={setHistoryMonths}
+              renderLabel={(m) => (
+                <>
+                  {HISTORY_OF_ART.plans.find((p) => p.months === m)?.label ?? `${m}`}
+                  {m === historyLongPlan.months && historyLongPlanDiscount > 0 && (
+                    <span className="pricing-toggle__badge">
+                      -{historyLongPlanDiscount}%
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
 
-            <div className="pricing-card__hero">
-              <div className="pricing-card__price">
-                <span className="pricing-card__price-prefix">
-                  {historyPlan.months}x
-                </span>
-                <span className="pricing-card__price-value">
-                  {formatBRL(historyPlan.monthly)}
-                </span>
+          <div className="pricing-solo">
+            <Card
+              padding={6}
+              className="pricing-card pricing-card--solo pricing-card--theory"
+            >
+              <div className="pricing-card__main">
+                <div className="pricing-card__hero">
+                  <div className="pricing-card__price">
+                    <span className="pricing-card__price-prefix">
+                      {historyPlan.months}x
+                    </span>
+                    <span className="pricing-card__price-value">
+                      {formatBRL(historyPlan.monthly)}
+                    </span>
+                  </div>
+                  <Text
+                    type="supporting"
+                    display="block"
+                    color="primary"
+                    weight="medium"
+                  >
+                    Taxa de matrícula única de{' '}
+                    {formatBRL(HISTORY_OF_ART.enrollmentFee)}.
+                  </Text>
+                  <Text type="supporting" display="block">
+                    {historyPlan.scope}.
+                  </Text>
+                </div>
+
+                <p className="pricing-card__intake">{HISTORY_OF_ART.intake}</p>
+
+                <div className="pricing-card__cta">
+                  <WhatsCta
+                    message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.name} da Desenhe (versão de ${historyPlan.months} meses).`}
+                    label="Entrar na lista de espera"
+                    size="sm"
+                  />
+                  <Button
+                    label="Saiba mais"
+                    href="/cursos/historia-da-arte"
+                    variant="tint"
+                    size="sm"
+                  />
+                </div>
               </div>
-              <Text
-                type="supporting"
-                display="block"
-                color="primary"
-                weight="medium"
-              >
-                Taxa de matrícula única de{' '}
-                {formatBRL(HISTORY_OF_ART.enrollmentFee)}.
-              </Text>
-              <Text type="supporting" display="block">
-                {historyPlan.scope}.
-              </Text>
-            </div>
 
-            <p className="pricing-card__intake">{HISTORY_OF_ART.intake}</p>
+              <Divider />
 
-            <div className="pricing-card__cta">
-              <WhatsCta
-                message={`Olá! Quero entrar na lista de espera do curso de ${HISTORY_OF_ART.name} da Desenhe (versão de ${historyPlan.months} meses).`}
-                label="Entrar na lista de espera"
-                size="sm"
-              />
-              <Button
-                label="Saiba mais"
-                href="/cursos/historia-da-arte"
-                variant="tint"
-                size="sm"
-              />
-            </div>
-
-            <Divider />
-
-            <div className="pricing-card__includes">
-              <span className="pricing-card__includes-label">
-                O que está incluso
-              </span>
-              <CheckList
-                items={HISTORY_OF_ART.features}
-                months={historyPlan.months}
-              />
-              <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
-            </div>
-          </Card>
-        </div>
+              <div className="pricing-card__includes">
+                <span className="pricing-card__includes-label">
+                  O que está incluso
+                </span>
+                <CheckList
+                  items={HISTORY_OF_ART.features}
+                  months={historyPlan.months}
+                />
+                <p className="pricing-card__fineprint">{HISTORY_OF_ART.note}</p>
+              </div>
+            </Card>
+          </div>
         </div>
 
         {/*
