@@ -389,9 +389,14 @@ export function CursoDetalhe({slug}: {slug: string}) {
                       >
                         <span className="timetable__cell-day">{cell.day}</span>
                         {cell.times.length > 0 ? (
-                          cell.times.map((time) => (
+                          cell.times.map(({time, note}) => (
                             <span key={time} className="timetable__time">
                               {time}
+                              {note && (
+                                <span className="timetable__time-note">
+                                  {note}
+                                </span>
+                              )}
                             </span>
                           ))
                         ) : (

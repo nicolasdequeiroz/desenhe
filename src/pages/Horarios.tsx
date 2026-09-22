@@ -8,8 +8,12 @@ import {
   SCHEDULE,
   SCHEDULE_CONFIRM_NOTE,
   SCHEDULE_DAYS,
+  SCHEDULE_DURATION_NOTE,
+  SCHEDULE_GROUPS,
   SCHEDULE_NOTES,
+  type ScheduleGroupId,
   WEEKLY_SCHEDULE,
+  type WeeklyTag,
 } from '../data';
 
 /** getDay(): 0=domingo...6=sábado. Mapeia para o índice em SCHEDULE_DAYS (ou -1 se domingo). */
@@ -18,18 +22,64 @@ function todayIndex(): number {
   return jsDay === 0 ? -1 : jsDay - 1;
 }
 
+/** 'A, B e C' */
+function joinList(items: string[]): string {
+  return items.length <= 1
+    ? (items[0] ?? '')
+    : `${items.slice(0, -1).join(', ')} e ${items[items.length - 1]}`;
+}
+
+/**
+ * Etiquetas de um grupo num horário (Aquarela e guache vira duas:
+ * "Aquarela" e "Guache"). No grupo Desenho, o hover (ou o foco,
+ * no toque e no teclado) mostra quais especialidades acontecem ali.
+ * Observações da turma (ex.: '9+ anos') vão junto do rótulo.
+ */
+function ScheduleTag({tag}: {tag: WeeklyTag}) {
+  const tooltip =
+    tag.group === 'desenho' ? joinList(tag.courses.map((c) => c.label)) : undefined;
+  return (
+    <>
+      {tag.labels.map((text, index) => {
+        // As observações vão na primeira etiqueta do grupo.
+        const label = index === 0 ? [text, ...tag.notes].join(' · ') : text;
+        return tooltip ? (
+          <span
+            key={text}
+            className={`timetable__tag timetable__tag--${tag.category} timetable__tag--tip`}
+            data-tooltip={tooltip}
+            tabIndex={0}
+            aria-label={`${label}: ${tooltip}`}
+          >
+            {label}
+          </span>
+        ) : (
+          <span key={text} className={`timetable__tag timetable__tag--${tag.category}`}>
+            {label}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
 export function Horarios() {
   const [todayIdx, setTodayIdx] = useState(-1);
-  const [activeCourse, setActiveCourse] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<ScheduleGroupId | null>(null);
 
   useEffect(() => {
     setTodayIdx(todayIndex());
   }, []);
 
-  const active = SCHEDULE.find((c) => c.courseSlug === activeCourse);
-  const activeDays = active
-    ? SCHEDULE_DAYS.filter((day) => active.slots.some((s) => s.day === day)).length
-    : 0;
+  const active = SCHEDULE_GROUPS.find((g) => g.id === activeGroup);
+  const activeCourses = SCHEDULE.filter((c) => c.group === activeGroup);
+  const activeDays = SCHEDULE_DAYS.filter((day) =>
+    activeCourses.some((c) => c.slots.some((s) => s.day === day)),
+  ).length;
+  // Grupo de um curso só leva à página dele; Desenho (várias especialidades)
+  // leva à listagem de cursos.
+  const activeHref =
+    activeCourses.length === 1 ? `/cursos/${activeCourses[0].courseSlug}` : '/cursos';
 
   return (
     <>
@@ -47,26 +97,24 @@ export function Horarios() {
           <div className="timetable__filters" role="group" aria-label="Filtrar por curso">
             <button
               type="button"
-              className={`timetable__filter${activeCourse === null ? ' is-active' : ''}`}
-              onClick={() => setActiveCourse(null)}
+              className={`timetable__filter${activeGroup === null ? ' is-active' : ''}`}
+              onClick={() => setActiveGroup(null)}
             >
               Todos os cursos
             </button>
-            {SCHEDULE.map((course) => (
+            {SCHEDULE_GROUPS.map((group) => (
               <button
-                key={course.courseSlug}
+                key={group.id}
                 type="button"
-                className={`timetable__filter timetable__filter--${course.category}${
-                  activeCourse === course.courseSlug ? ' is-active' : ''
+                className={`timetable__filter timetable__filter--${group.category}${
+                  activeGroup === group.id ? ' is-active' : ''
                 }`}
                 onClick={() =>
-                  setActiveCourse(
-                    activeCourse === course.courseSlug ? null : course.courseSlug,
-                  )
+                  setActiveGroup(activeGroup === group.id ? null : group.id)
                 }
               >
                 <span className="timetable__filter-dot" aria-hidden="true" />
-                {course.shortLabel}
+                {group.label}
               </button>
             ))}
           </div>
@@ -74,11 +122,15 @@ export function Horarios() {
           <p className="timetable__caption">
             {active ? (
               <>
-                <Link to={`/cursos/${active.courseSlug}`}>{active.course}</Link>:{' '}
-                {activeDays} {activeDays === 1 ? 'dia' : 'dias'} por semana.
+                <Link to={activeHref}>
+                  {active.label}
+                  {activeCourses.length > 1 &&
+                    ` (${joinList(activeCourses.map((c) => c.shortLabel))})`}
+                </Link>
+                : {activeDays} {activeDays === 1 ? 'dia' : 'dias'} por semana.
               </>
             ) : (
-              'Cada horário mostra os cursos que acontecem nele. Selecione um curso acima para isolar a grade dele.'
+              'Cada horário mostra as modalidades que acontecem nele. Em Desenho, passe o mouse ou toque na etiqueta para ver as especialidades.'
             )}
           </p>
 
@@ -102,8 +154,14 @@ export function Horarios() {
                 <div key={row.period} className="timetable__row">
                   <span className="timetable__period">{row.label}</span>
                   {row.cells.map((cell, index) => {
-                    const slots = activeCourse
-                      ? cell.slots.filter((s) => s.courses.includes(activeCourse))
+                    const slots = activeGroup
+                      ? cell.slots
+                          .map((s) => ({
+                            ...s,
+                            tags: s.tags.filter((t) => t.group === activeGroup),
+                            waitlist: undefined,
+                          }))
+                          .filter((s) => s.tags.length > 0)
                       : cell.slots;
                     return (
                       <div
@@ -118,23 +176,19 @@ export function Horarios() {
                             <div key={slot.time} className="timetable__slot">
                               <span className="timetable__time">{slot.time}</span>
                               <span className="timetable__tags">
-                                {slot.courses
-                                  .filter(
-                                    (slug) => !activeCourse || slug === activeCourse,
-                                  )
-                                  .map((slug) => {
-                                    const course = SCHEDULE.find(
-                                      (c) => c.courseSlug === slug,
-                                    );
-                                    return (
-                                      <span
-                                        key={slug}
-                                        className={`timetable__tag timetable__tag--${course?.category}`}
-                                      >
-                                        {course?.shortLabel}
-                                      </span>
-                                    );
-                                  })}
+                                {slot.tags.map((tag) => (
+                                  <ScheduleTag key={tag.group} tag={tag} />
+                                ))}
+                                {slot.waitlist && (
+                                  <span
+                                    className="timetable__tag timetable__tag--waitlist timetable__tag--tip"
+                                    data-tooltip={`Nova turma: ${slot.waitlist}`}
+                                    tabIndex={0}
+                                    aria-label={`Lista de espera para nova turma: ${slot.waitlist}`}
+                                  >
+                                    Lista de espera
+                                  </span>
+                                )}
                               </span>
                             </div>
                           ))
@@ -151,16 +205,9 @@ export function Horarios() {
             </div>
           </div>
 
-          {SCHEDULE.filter((c) => c.note && (!activeCourse || c.courseSlug === activeCourse)).map(
-            (course) => (
-              <p key={course.courseSlug} className="timetable__note">
-                <span className={`timetable__tag timetable__tag--${course.category}`}>
-                  {course.shortLabel}
-                </span>
-                <Text type="supporting">{course.note}</Text>
-              </p>
-            ),
-          )}
+          <p className="timetable__note">
+            <Text type="supporting">{SCHEDULE_DURATION_NOTE}</Text>
+          </p>
         </div>
       </Section>
 

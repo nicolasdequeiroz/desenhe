@@ -6221,20 +6221,22 @@ body {
 }
 
 /*
- * Bloco dos cursos práticos: dois cards preenchendo a coluna do bloco (sem
- * max-width nem `margin-inline: auto`, que centralizavam a grade e a
- * desalinhavam do rótulo/seletor acima). `minmax(0, 1fr)` deixa as
- * colunas encolherem com o container em vez de estourarem a tela.
+ * Bloco dos cursos práticos: um card por modalidade, preenchendo a largura
+ * do bloco (sem max-width nem `margin-inline: auto`, que desalinhariam a
+ * grade do rótulo/seletor acima). Três colunas só a partir de 1000px:
+ * abaixo disso o título grande ("Pintura (aquarela/guache)") não cabe
+ * inteiro numa coluna estreita, então os cards empilham, na ordem da
+ * página. `minmax(0, 1fr)` deixa as colunas encolherem com o container.
  */
-.pricing-grid--2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.pricing-grid--3 {
+  grid-template-columns: minmax(0, 1fr);
   max-width: none;
   margin-inline: 0;
 }
 
-@media (max-width: 620px) {
-  .pricing-grid--2 {
-    grid-template-columns: minmax(0, 1fr);
+@media (min-width: 1000px) {
+  .pricing-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -6247,11 +6249,90 @@ body {
   transition: border-color var(--duration-medium) ease;
 }
 
-/* Título longo (ex.: "Desenho ou Pintura (aquarela/guache)") quebra em vez
-   de esticar a carta. */
+/* Título longo quebra em vez de esticar a carta. */
 .pricing-card__head h3 {
   overflow-wrap: anywhere;
 }
+
+/*
+ * Cards dos cursos práticos: a leitura é "o que é" antes de "quanto custa".
+ * O nome da modalidade é o maior texto do card; o preço vem abaixo, um
+ * degrau menor. A cor da categoria (a mesma das páginas de curso) entra
+ * só como acento: faixa no topo e borda no hover. O texto e o botão
+ * principal ficam nas cores de sempre, sem perder contraste.
+ */
+.pricing-card--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.pricing-card--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.pricing-card--course {
+  box-shadow: inset 0 4px 0 var(--category-color);
+}
+
+.pricing-card--course:hover {
+  border-color: color-mix(in srgb, var(--category-color) 55%, transparent);
+}
+
+/* O cabeçalho estica para ocupar a sobra de altura: com a linha de cursos
+   cobertos de tamanhos diferentes, preço e botões ficam na mesma altura
+   nos três cards. */
+.pricing-card--course .pricing-card__head {
+  flex: 1 0 auto;
+  gap: var(--spacing-2);
+}
+
+/* Em três colunas (a partir de 1000px) o título encolhe com a tela, para
+   "(aquarela/guache)" caber inteiro numa linha sem quebrar no meio. O
+   título de História da Arte usa a mesma escala, assim como o do
+   coworking: todos os nomes têm o mesmo peso na página. */
+.pricing-card__name,
+.section--pricing .pricing-block__title {
+  margin: 0;
+  font-size: clamp(1.4375rem, 2.2vw, 1.8125rem);
+  line-height: 1.12;
+  overflow-wrap: normal;
+}
+
+/* A técnica fica na linha de baixo, um degrau abaixo do nome, sem caixa
+   alta nem negrito: o nome da modalidade continua sendo o destaque. */
+.pricing-card__technique {
+  display: block;
+  margin-top: var(--spacing-1);
+  font-size: 0.72em;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.pricing-card__covers {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* "12x" um degrau bem abaixo do valor, em peso médio: é contexto, não o
+   número que se lê primeiro. História da Arte e coworking (os cards
+   "solo") seguem a mesma escala de preço dos cursos práticos. */
+.pricing-card--course .pricing-card__price-prefix,
+.pricing-card--solo .pricing-card__price-prefix {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+.pricing-card--course .pricing-card__price-value,
+.pricing-card--solo .pricing-card__price-value {
+  font-size: var(--font-size-xl);
+}
+
+/* "/hora" do coworking no mesmo degrau do "12x". */
+.pricing-card--solo .pricing-card__price-unit {
+  font-size: var(--font-size-base);
+}
+
 
 .pricing-card:hover {
   border-color: var(--color-border-emphasized);
@@ -6410,6 +6491,131 @@ body {
 }
 
 /*
+ * O que vale igual nos três cursos práticos: uma faixa só, abaixo dos
+ * cards, em vez de repetido dentro de cada um. Quatro colunas no desktop
+ * (casando com a largura da grade), duas no tablet e no celular. Sem
+ * caixa própria, para não competir com os cards nem com o painel da
+ * primeira aula logo abaixo: só o fio no topo a separa da grade.
+ */
+.pricing-common {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-6);
+  padding-top: var(--spacing-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.pricing-common__label {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.pricing-common__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-5) var(--spacing-4);
+}
+
+@media (min-width: 1000px) {
+  .pricing-common__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-5);
+  }
+}
+
+.pricing-common__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* O check centra na linha do título (maior que o texto padrão do .pricing-check). */
+.pricing-common__item .pricing-check__icon {
+  margin-top: calc((1.35 * var(--font-size-base) - 14px) / 2);
+}
+
+.pricing-common__title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-primary);
+}
+
+.pricing-common__detail {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* Item que não vale no plano escolhido (certificação em 3 meses): apagado
+   e com "x", como no checklist. Só o título é riscado; o detalhe explica
+   em quais planos ele vale. */
+.pricing-common__item.pricing-check--off {
+  opacity: 0.6;
+}
+
+.pricing-common__item.pricing-check--off span {
+  text-decoration: none;
+}
+
+.pricing-common__item.pricing-check--off .pricing-common__title {
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+}
+
+/*
+ * Abaixo da grade: "incluso nos três cursos" e a primeira aula. Empilhados
+ * até 1100px (a faixa sem caixa pede mais respiro antes do painel da
+ * primeira aula, para não parecer parte dele); lado a lado no desktop, a
+ * faixa em 2x2 à esquerda e o painel à direita.
+ */
+.pricing-extras {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-extras .pricing-first {
+  margin-top: var(--spacing-8);
+}
+
+/* A partir de 1100px: abaixo disso a coluna da primeira aula fica estreita
+   demais e o texto dela quebra em muitas linhas. */
+@media (min-width: 1100px) {
+  .pricing-extras {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: clamp(var(--spacing-8), 4vw, var(--spacing-12));
+    align-items: start;
+    margin-top: var(--spacing-8);
+  }
+
+  /* Sem o fio no topo: a faixa começa na mesma altura do painel e o título
+     dela alinha com o título da primeira aula. */
+  .pricing-extras .pricing-common {
+    margin-top: 0;
+    padding-top: var(--spacing-6);
+    border-top: 0;
+  }
+
+  .pricing-extras .pricing-common__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pricing-extras .pricing-first {
+    margin-top: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 240px);
+  }
+}
+
+/*
  * Primeira aula (experimental): fecha o bloco dos cursos práticos, abaixo
  * da grade. Não é um plano, então não repete o card grande: é um painel
  * horizontal, com a explicação à esquerda e, separado por um fio, o
@@ -6548,30 +6754,9 @@ body {
   min-width: 0;
 }
 
-/*
- * Os dois blocos de curso ficam lado a lado no desktop (ateliê à esquerda,
- * ocupando o espaço de dois cards; teórico à direita, um card), preenchendo
- * o container. Abaixo de 1000px empilham, com respiro vertical entre eles.
- */
-.pricing-blocks {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(var(--spacing-10), 9vw, 88px);
-}
-
+/* Seletor alinhado ao rótulo do bloco, à esquerda, no desktop. */
 @media (min-width: 1000px) {
-  .pricing-blocks {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    /* Folga generosa entre os cursos práticos e o teórico: o vão maior
-       que o de dentro do bloco (20px) é o que separa os dois grupos. */
-    column-gap: clamp(var(--spacing-10), 5vw, 72px);
-    row-gap: 0;
-    align-items: start;
-  }
-
-  /* Alinha o seletor ao rótulo do bloco, à esquerda, em vez de centrado. */
-  .pricing-blocks .pricing-toggle-wrap {
+  .section--pricing .pricing-toggle-wrap {
     justify-content: flex-start;
   }
 }
@@ -6597,34 +6782,33 @@ body {
   --color-accent: color-mix(in srgb, var(--color-category-teorico) 55%, #fdece2);
 }
 
-/*
- * Fio entre a primeira aula e o curso teórico, só quando os blocos empilham
- * (abaixo de 1000px). Funciona igual ao fio da "Infraestrutura"
- * (`.pricing-break`): mesmo respiro grande por cima e a folga curta por
- * baixo, colando no rótulo do bloco seguinte. No desktop some, porque a
- * separação já é o vão entre as colunas da grade; por isso o `gap` do
- * `.pricing-blocks` no mobile zera e o espaçamento fica por conta do fio.
- */
-.pricing-break--inline {
-  display: none;
-}
-
-@media (max-width: 999px) {
-  .pricing-blocks {
-    gap: 0;
-  }
-
-  .pricing-break--inline {
-    display: block;
-  }
-}
-
 .pricing-block__head {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-2);
   margin-bottom: var(--spacing-6);
+}
+
+/*
+ * Cabeçalho + seletor de duração na mesma linha no desktop (cursos
+ * práticos e História da Arte): cabeçalho à esquerda, seletor à direita,
+ * alinhados pela base.
+ * Abaixo de 1000px voltam a empilhar.
+ */
+@media (min-width: 1000px) {
+  .pricing-block__intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-6);
+  }
+
+  .pricing-block__intro .pricing-block__head,
+  .pricing-block .pricing-block__intro .pricing-toggle-wrap {
+    margin-bottom: 0;
+  }
 }
 
 .pricing-block__head .pricing-block__label {
@@ -6689,7 +6873,7 @@ body {
 }
 
 /* Aviso de como a turma abre (só na História da Arte). Fica em destaque,
-   entre o preço e o CTA, porque é o ponto que muda a expectativa: não é
+   logo acima dos botões, porque é o ponto que muda a expectativa: não é
    "pague e comece", é "entre na fila da próxima turma". */
 .pricing-card__intake {
   margin: 0;
@@ -6715,7 +6899,8 @@ body {
     flex: 1 1 0;
   }
 
-  /* Sem o fio horizontal: quem separa as colunas é o próprio gap. */
+  /* Sem o fio horizontal: quem separa as colunas é o fio vertical (ver
+     "Cards em duas colunas" abaixo). */
   .pricing-card--solo > .divider {
     display: none;
   }
@@ -6729,9 +6914,46 @@ body {
  */
 .pricing-card--theory {
   --color-accent: var(--color-category-teorico);
-  /* Empilhado (abaixo de 1000px) o bloco ocupa a largura toda; o card não
-     precisa acompanhar. No desktop ele já é limitado pela coluna. */
-  max-width: 460px;
+}
+
+/*
+ * Cards em duas colunas (História da Arte e coworking, a partir de 761px):
+ * as colunas esticam até a mesma altura e o conteúdo se distribui nelas,
+ * em vez de a esquerda ficar alta e a direita curta. Preço no topo da
+ * esquerda, aviso (quando houver) e botões no pé; checklist no topo da
+ * direita, observação no pé. Um fio vertical separa as colunas.
+ */
+@media (min-width: 761px) {
+  .pricing-card--solo {
+    align-items: stretch;
+    gap: clamp(var(--spacing-6), 2.5vw, var(--spacing-8));
+  }
+
+  .pricing-card--solo > .pricing-card__includes {
+    padding-left: clamp(var(--spacing-6), 2.5vw, var(--spacing-8));
+    border-left: 1px solid var(--color-border);
+  }
+
+  .pricing-card--solo .pricing-card__hero {
+    margin-bottom: auto;
+  }
+
+  .pricing-card--solo .pricing-card__fineprint {
+    margin-top: auto;
+  }
+}
+
+/* Com a coluna larga o bastante, os dois botões ficam lado a lado em vez
+   de esticados um sobre o outro. */
+@media (min-width: 1000px) {
+  .pricing-card--solo .pricing-card__cta {
+    flex-direction: row;
+  }
+
+  .pricing-card--solo .pricing-card__cta .btn {
+    flex: 1 1 0;
+    width: auto;
+  }
 }
 
 /* Elementos pequenos (checks, fio do aviso, botão tint) numa versão
@@ -7646,6 +7868,90 @@ body {
   font-weight: 600;
   line-height: 1.5;
   white-space: nowrap;
+}
+
+/* Observação da turma ao lado do horário na página do curso (ex.: "9+
+   anos", "só aquarela"). */
+.timetable__time-note {
+  display: block;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: normal;
+}
+
+/* Horário só com lista de espera para nova turma: etiqueta neutra e
+   tracejada, para não parecer turma aberta. */
+.timetable__tag--waitlist {
+  --course-tone: var(--color-text-secondary);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-text-secondary) 55%, transparent);
+}
+
+/*
+ * Etiqueta com tooltip (grupo Desenho: quais especialidades acontecem no
+ * horário; lista de espera: quais cursos). Aparece no hover e no foco, que
+ * cobre teclado e toque.
+ */
+.timetable__tag--tip {
+  position: relative;
+  cursor: help;
+}
+
+.timetable__tag--tip:focus-visible {
+  outline: 2px solid var(--course-tone);
+}
+
+.timetable__tag--tip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 5;
+  width: max-content;
+  max-width: 220px;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-inner);
+  background: var(--color-background-surface);
+  box-shadow: var(--shadow-med);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
+}
+
+.timetable__tag--tip:hover::after,
+.timetable__tag--tip:focus::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* No empilhamento mobile as etiquetas ficam perto da borda esquerda: o
+   balão parte do início da etiqueta em vez de centrar nela. */
+@media (max-width: 900px) {
+  .timetable__tag--tip::after {
+    left: 0;
+    transform: translateY(4px);
+  }
+
+  .timetable__tag--tip:hover::after,
+  .timetable__tag--tip:focus::after {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timetable__tag--tip::after {
+    transition: none;
+  }
 }
 
 .timetable__empty {
