@@ -8,25 +8,25 @@ type Weight = 'normal' | 'medium' | 'semibold' | 'bold';
 const TYPE_STYLE: Record<TextType, CSSProperties> = {
   body: {
     fontFamily: 'var(--font-family-body)',
-    fontSize: 'var(--font-size-base)',
+    fontSize: 'var(--text-size-regular)',
     fontWeight: 400,
     lineHeight: 1.6,
   },
   large: {
     fontFamily: 'var(--font-family-body)',
-    fontSize: '1rem',
+    fontSize: 'var(--text-size-large)',
     fontWeight: 400,
     lineHeight: 1.5,
   },
   supporting: {
     fontFamily: 'var(--font-family-body)',
-    fontSize: 'var(--font-size-sm)',
+    fontSize: 'var(--text-size-small)',
     fontWeight: 400,
     lineHeight: 1.6667,
   },
   'display-3': {
     fontFamily: 'var(--font-family-heading)',
-    fontSize: 'var(--font-size-3xl)',
+    fontSize: 'var(--heading-h2)',
     fontWeight: 400,
     lineHeight: 1.297,
   },

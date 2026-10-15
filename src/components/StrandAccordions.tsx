@@ -17,7 +17,14 @@ const MOBILE_QUERY = '(max-width: 860px)';
  * painel. O clique no summary tem o toggle nativo cancelado para não brigar
  * com isso.
  */
-export function StrandAccordions({strands}: {strands: CourseStrand[]}) {
+export function StrandAccordions({
+  strands,
+  prefix = 'Curso de ',
+}: {
+  strands: CourseStrand[];
+  /** Texto antes do nome em cada card ("Curso de Mangá"); vazio desliga. */
+  prefix?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,7 +94,8 @@ export function StrandAccordions({strands}: {strands: CourseStrand[]}) {
           <details key={strand.name} className="course-strand-card" open>
             <summary className="course-strand-card__summary">
               <h2 className="course-strand-card__title">
-                Curso de {strand.name}
+                {prefix}
+                {strand.name}
               </h2>
               <span className="course-strand-card__chevron" aria-hidden="true" />
             </summary>

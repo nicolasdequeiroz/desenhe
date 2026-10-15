@@ -1,13 +1,12 @@
 import {useEffect, useRef, useState} from 'react';
-import {Link} from 'react-router-dom';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
-import {PromoBar} from '../components/PromoBar';
+import {FeaturedPromoCard} from '../components/FeaturedPromoCard';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
 import {SpaceShowcaseSection} from '../components/SpaceShowcaseSection';
 import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
-import {asset, FEATURED_PROMO} from '../data';
+import {asset, FEATURED_PROMOS} from '../data';
 
 /**
  * No mobile o fundo do hero vira um vídeo curto em loop (a versão desktop
@@ -91,8 +90,6 @@ export function Home() {
     <>
       <Seo path="/" image="/images/brand/og-home.jpg" />
 
-      {FEATURED_PROMO && <PromoBar promo={FEATURED_PROMO} />}
-
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
           <img
@@ -140,23 +137,23 @@ export function Home() {
                 </div>
               </div>
 
-              {FEATURED_PROMO && (
-                <div className="hero__gallery">
-                  <span className="hero__gallery-badge">
-                    {FEATURED_PROMO.hero.badge}
-                  </span>
-                  <Link to={FEATURED_PROMO.path} className="hero__featured-card">
-                    <img
-                      src={asset(FEATURED_PROMO.hero.image)}
-                      alt={FEATURED_PROMO.hero.imageAlt}
-                    />
-                  </Link>
-                </div>
+              {FEATURED_PROMOS.length > 0 && (
+                <FeaturedPromoCard promos={FEATURED_PROMOS} />
               )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* No mobile o destaque sai do hero e vem para cá (o CSS esconde esta
+          seção no desktop, onde o card já está ao lado do texto). */}
+      {FEATURED_PROMOS.length > 0 && (
+        <section className="promo-section">
+          <div className="container">
+            <FeaturedPromoCard promos={FEATURED_PROMOS} withSummary />
+          </div>
+        </section>
+      )}
 
       <FeaturedCoursesSection />
 

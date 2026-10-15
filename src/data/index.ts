@@ -5,3 +5,4 @@ export * from './teachers';
 export * from './pricing';
 export * from './schedule';
 export * from './testimonials';
+export * from './inCompany';

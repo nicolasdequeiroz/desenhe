@@ -144,8 +144,8 @@ export function ColoniaDeFerias() {
          * Fora de temporada a página fica escondida: sai do sitemap e do
          * índice de busca, mas continua no ar por link direto (inclusive
          * pelos links antigos do Wix). Para divulgar a próxima edição,
-         * atualize as datas, tire este noindex e aponte FEATURED_PROMO
-         * (src/data/promo.ts) de volta para a colônia.
+         * atualize as datas, tire este noindex e ponha a colônia de volta
+         * em FEATURED_PROMOS (src/data/promo.ts).
          */
         noindex
       />

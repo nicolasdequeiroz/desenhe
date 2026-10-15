@@ -1,0 +1,181 @@
+/*
+ * Classes utilitárias globais, no espírito do Client-First (Finsweet).
+ *
+ * Regra de nome: classe SEM sublinhado é utilitária e global (vale em
+ * qualquer página e não depende de contexto); classe COM sublinhado
+ * (`.course-card__title`, `.ic-why__card`) é custom, de um componente só.
+ * Ver "Classes" no CLAUDE.md.
+ *
+ * Este arquivo é importado por último (src/index.css): uma utilitária
+ * aplicada no JSX vence o CSS custom da página sem precisar de !important,
+ * exceto nos modificadores de direção de margem/padding, que precisam
+ * zerar os outros lados de qualquer jeito. Os títulos não mexem em margem:
+ * o reset já zera a de h1 a h6, e o espaço vem do `gap` do pai ou de um par
+ * `margin-* margin-*`.
+ */
+
+/* ---------- Títulos (Courier, caixa alta) ---------- */
+
+.heading-style-display,
+.heading-style-h2,
+.heading-style-h3,
+.heading-style-h4,
+.heading-style-h5,
+.heading-style-h6 {
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.heading-style-display {
+  font-size: var(--heading-display);
+}
+
+.heading-style-h2 {
+  font-size: var(--heading-h2);
+}
+
+.heading-style-h3 {
+  font-size: var(--heading-h3);
+}
+
+.heading-style-h4 {
+  font-size: var(--heading-h4);
+  line-height: 1.15;
+}
+
+.heading-style-h5 {
+  font-size: var(--heading-h5);
+  line-height: 1.25;
+}
+
+.heading-style-h6 {
+  font-size: var(--heading-h6);
+  line-height: 1.3;
+}
+
+/* ---------- Texto corrido (Manrope) ---------- */
+
+.text-size-large {
+  font-size: var(--text-size-large);
+  line-height: 1.5;
+}
+
+.text-size-regular {
+  font-size: var(--text-size-regular);
+  line-height: 1.6;
+}
+
+.text-size-small {
+  font-size: var(--text-size-small);
+  line-height: 1.6;
+}
+
+.text-size-tiny {
+  font-size: var(--text-size-tiny);
+  line-height: 1.5;
+}
+
+/* Rótulo pequeno em caixa alta (ficha, metadado). O kicker de seção, com o
+   fio embaixo, continua sendo `.section__eyebrow`. */
+.text-style-label {
+  font-size: var(--text-size-tiny);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.text-style-balance {
+  text-wrap: balance;
+}
+
+.text-style-pretty {
+  text-wrap: pretty;
+}
+
+.text-weight-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.text-weight-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.text-weight-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.text-weight-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.text-color-primary {
+  color: var(--color-text-primary);
+}
+
+.text-color-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-color-accent {
+  color: var(--color-accent);
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+/* ---------- Espaçamento ---------- */
+
+/*
+ * Como no Client-First: a classe de tamanho define a margem/padding em todos
+ * os lados, e a classe de direção zera os outros. Sempre em par:
+ * `margin-bottom margin-medium`, `padding-top padding-large`.
+ */
+.margin-0 { margin: 0; }
+.margin-tiny { margin: var(--spacing-1); }
+.margin-xxsmall { margin: var(--spacing-2); }
+.margin-xsmall { margin: var(--spacing-4); }
+.margin-small { margin: var(--spacing-6); }
+.margin-medium { margin: var(--spacing-8); }
+.margin-large { margin: var(--spacing-12); }
+.margin-xlarge { margin: calc(var(--spacing-8) * 2); }
+.margin-xxlarge { margin: calc(var(--spacing-10) * 2); }
+
+.padding-0 { padding: 0; }
+.padding-tiny { padding: var(--spacing-1); }
+.padding-xxsmall { padding: var(--spacing-2); }
+.padding-xsmall { padding: var(--spacing-4); }
+.padding-small { padding: var(--spacing-6); }
+.padding-medium { padding: var(--spacing-8); }
+.padding-large { padding: var(--spacing-12); }
+.padding-xlarge { padding: calc(var(--spacing-8) * 2); }
+.padding-xxlarge { padding: calc(var(--spacing-10) * 2); }
+
+.margin-top { margin-right: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; }
+.margin-bottom { margin-top: 0 !important; margin-right: 0 !important; margin-left: 0 !important; }
+.margin-left { margin-top: 0 !important; margin-right: 0 !important; margin-bottom: 0 !important; }
+.margin-right { margin-top: 0 !important; margin-bottom: 0 !important; margin-left: 0 !important; }
+.margin-vertical { margin-right: 0 !important; margin-left: 0 !important; }
+.margin-horizontal { margin-top: 0 !important; margin-bottom: 0 !important; }
+
+.padding-top { padding-right: 0 !important; padding-bottom: 0 !important; padding-left: 0 !important; }
+.padding-bottom { padding-top: 0 !important; padding-right: 0 !important; padding-left: 0 !important; }
+.padding-left { padding-top: 0 !important; padding-right: 0 !important; padding-bottom: 0 !important; }
+.padding-right { padding-top: 0 !important; padding-bottom: 0 !important; padding-left: 0 !important; }
+.padding-vertical { padding-right: 0 !important; padding-left: 0 !important; }
+.padding-horizontal { padding-top: 0 !important; padding-bottom: 0 !important; }
+
+/* ---------- Largura de texto ---------- */
+
+.max-width-small { max-width: 28rem; }
+.max-width-medium { max-width: 36rem; }
+.max-width-large { max-width: 44rem; }
+.max-width-full { max-width: none; }
