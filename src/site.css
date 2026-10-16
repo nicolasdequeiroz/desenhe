@@ -9039,6 +9039,13 @@ body {
   object-fit: contain;
 }
 
+/* Envolve prévia e downloads, para os botões poderem sair de cima da
+   prévia no celular. */
+.brand-center__visual {
+  position: relative;
+  min-width: 0;
+}
+
 .brand-center__downloads {
   position: absolute;
   left: var(--spacing-3);
@@ -9371,5 +9378,10 @@ body {
 
   .brand-center__stage {
     aspect-ratio: 1;
+  }
+
+  .brand-center__downloads {
+    position: static;
+    margin-top: var(--spacing-3);
   }
 }

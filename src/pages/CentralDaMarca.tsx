@@ -109,14 +109,17 @@ function LogoConfigurator() {
 
   return (
     <div className="brand-center">
-      <div className="brand-center__stage" style={{backgroundColor: bg.hex}}>
-        <img
-          className="brand-center__preview"
-          src={asset(brandLogoFile(logo.slug, ink, 'svg'))}
-          alt={`${logo.name} em ${fg.name.toLowerCase()} sobre ${bg.name.toLowerCase()}`}
-          width={1080}
-          height={1080}
-        />
+      {/* No desktop os downloads ficam sobre o canto da prévia; no celular, abaixo dela. */}
+      <div className="brand-center__visual">
+        <div className="brand-center__stage" style={{backgroundColor: bg.hex}}>
+          <img
+            className="brand-center__preview"
+            src={asset(brandLogoFile(logo.slug, ink, 'svg'))}
+            alt={`${logo.name} em ${fg.name.toLowerCase()} sobre ${bg.name.toLowerCase()}`}
+            width={1080}
+            height={1080}
+          />
+        </div>
         <div className="brand-center__downloads">
           <a
             className="brand-center__chip"
