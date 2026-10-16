@@ -9246,6 +9246,13 @@ body {
   padding: 0 var(--spacing-5) var(--spacing-5);
 }
 
+/* Fio entre o título do acordeão e o conteúdo, na Central da Marca. */
+.brand-page__accordions .coworking-faq__panel-body {
+  margin: 0 var(--spacing-5);
+  padding: var(--spacing-5) 0;
+  border-top: 1px solid var(--color-border);
+}
+
 .brand-page__uses {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -9296,6 +9303,66 @@ body {
   margin: 0;
   /* Anula o recuo do parágrafo de resposta do FAQ. */
   padding: 0;
+}
+
+/* Download do guia em PDF, no topo do acordeão da paleta: o bloco inteiro
+   é o link, com a capa do PDF exportada do Figma. */
+.brand-palette__download {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-5);
+  padding: var(--spacing-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.brand-palette__download:hover {
+  border-color: var(--color-border-emphasized);
+}
+
+.brand-palette__download-cover {
+  flex: none;
+  width: calc(var(--spacing-12) + var(--spacing-6));
+  height: auto;
+  border-radius: var(--radius-inner);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transform: rotate(-3deg);
+  transition: transform 0.2s ease;
+}
+
+.brand-palette__download:hover .brand-palette__download-cover {
+  transform: rotate(0deg) translateY(-2px);
+}
+
+.brand-palette__download-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+
+/* O botão fica na coluna de texto, alinhado ao título. */
+.brand-palette__download-button {
+  align-self: flex-start;
+  margin-top: var(--spacing-2);
+}
+
+.brand-palette__download-button > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+@media (max-width: 560px) {
+  .brand-palette__download {
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
 }
 
 .brand-palette__group p {

@@ -318,6 +318,33 @@ export function CentralDaMarca() {
             </FaqItem>
             <FaqItem question="Paleta de cores">
               <div className="brand-palette">
+                <a
+                  className="brand-palette__download"
+                  href={asset('/downloads/desenhe-paleta-de-cores.pdf')}
+                  download="Desenhe - Paleta de Cores.pdf"
+                >
+                  <img
+                    className="brand-palette__download-cover"
+                    src={asset('/downloads/desenhe-paleta-de-cores-capa.png')}
+                    alt=""
+                    width={72}
+                    height={102}
+                    loading="lazy"
+                  />
+                  <span className="brand-palette__download-copy">
+                    <span className="text-style-label text-color-accent">Guia em PDF</span>
+                    <span className="heading-style-h5">Paleta de cores da Desenhe</span>
+                    <span className="text-size-small text-color-secondary">
+                      Combinações da logo, escala sequencial, usos internos e valores de impressão.
+                    </span>
+                    <span className="btn primary sm brand-palette__download-button">
+                      <span>
+                        <DownloadIcon />
+                        Baixar PDF
+                      </span>
+                    </span>
+                  </span>
+                </a>
                 {BRAND_PALETTE.map((group) => (
                   <div key={group.title} className="brand-palette__group">
                     <h3 className="heading-style-h6">{group.title}</h3>
