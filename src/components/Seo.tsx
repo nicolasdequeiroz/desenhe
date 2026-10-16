@@ -12,6 +12,8 @@ interface SeoProps {
    * Sem isto, a página herda a foto da fachada.
    */
   image?: string;
+  /** Descrição da `image` (og:image:alt). Sem isto, vale a da fachada. */
+  imageAlt?: string;
   /**
    * Tira a página do índice de busca sem tirá-la do ar. Serve para páginas
    * de campanha fora de temporada, que continuam valendo por link direto.
@@ -19,7 +21,7 @@ interface SeoProps {
   noindex?: boolean;
 }
 
-export function Seo({title, description, path, image, noindex}: SeoProps) {
+export function Seo({title, description, path, image, imageAlt, noindex}: SeoProps) {
   const fullTitle = title ? `${title} | ${SITE.shortName}` : SITE.defaultTitle;
   const desc = description ?? SITE.description;
   const canonical = path ? `${SITE.url}${path}` : SITE.url;
@@ -38,7 +40,7 @@ export function Seo({title, description, path, image, noindex}: SeoProps) {
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="pt_BR" />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:image:alt" content={SITE.ogImageAlt} />
+      <meta property="og:image:alt" content={imageAlt ?? SITE.ogImageAlt} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={desc} />
