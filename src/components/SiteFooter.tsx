@@ -8,6 +8,7 @@ const EXPLORAR_LINKS = [
   {label: 'Preços', to: '/precos'},
   {label: 'Professores', to: '/professores'},
   {label: 'Sobre', to: '/sobre'},
+  {label: 'Central da marca', to: '/central-da-marca'},
 ] as const;
 
 const CONTATO_LINKS = [

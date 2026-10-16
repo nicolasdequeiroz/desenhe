@@ -12,6 +12,7 @@ import {InCompany} from './pages/InCompany';
 import {InCompanyFormato} from './pages/InCompanyFormato';
 import {Sobre} from './pages/Sobre';
 import {Contato} from './pages/Contato';
+import {CentralDaMarca} from './pages/CentralDaMarca';
 import {NotFound} from './pages/NotFound';
 import {Redirect} from './components/Redirect';
 import {COURSES, IN_COMPANY_FORMATS} from './data';
@@ -85,6 +86,7 @@ export const routes: RouteRecord[] = [
       })),
       {path: 'sobre', element: <Sobre />},
       {path: 'contato', element: <Contato />},
+      {path: 'central-da-marca', element: <CentralDaMarca />},
       ...[...LEGACY_REDIRECTS, ...LEGACY_WILDCARDS].map(([from, to]) => ({
         path: from,
         element: <Redirect to={to} />,

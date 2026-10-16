@@ -1,12 +1,21 @@
-import {useState} from 'react';
+import {useState, type ReactNode} from 'react';
 
 /**
  * Item de FAQ com painel animado: a altura interpola via `grid-template-rows`
  * (0fr a 1fr) em vez do corte seco do `<details>` nativo, a mesma técnica do
  * accordion mobile das linguagens de curso (ver StrandAccordions.tsx).
- * Usado no Coworking e nas páginas In Company; o estilo é `.coworking-faq`.
+ * Usado no Coworking, nas páginas In Company e nos acordeões da Central da
+ * Marca (com `children` no lugar de `answer`); o estilo é `.coworking-faq`.
  */
-export function FaqItem({question, answer}: {question: string; answer: string}) {
+export function FaqItem({
+  question,
+  answer,
+  children,
+}: {
+  question: string;
+  answer?: string;
+  children?: ReactNode;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,7 +31,8 @@ export function FaqItem({question, answer}: {question: string; answer: string}) 
       </button>
       <div className="coworking-faq__panel">
         <div className="coworking-faq__panel-inner">
-          <p>{answer}</p>
+          {answer && <p>{answer}</p>}
+          {children && <div className="coworking-faq__panel-body">{children}</div>}
         </div>
       </div>
     </div>
