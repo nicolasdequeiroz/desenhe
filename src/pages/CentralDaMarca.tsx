@@ -76,6 +76,18 @@ async function downloadWithBackground(url: string, format: 'svg' | 'png', hex: s
 }
 
 /**
+ * Traduz o contraste numa escala de leitura para quem não conhece a conta.
+ * Toda combinação habilitada no painel é aprovada pela marca (e o WCAG
+ * isenta logotipos da exigência de contraste), então a escala nunca diz
+ * "ruim": vai de Boa a Ótima, com o corte de 4,5:1 do WCAG para texto.
+ * As combinações de assinatura (as oficiais do manual e o branco sobre o
+ * laranja web) são sempre Ótima, independentemente da conta.
+ */
+function legibility(ratio: number, signature: boolean): {level: 2 | 3; label: string} {
+  return signature || ratio >= 4.5 ? {level: 3, label: 'Ótima'} : {level: 2, label: 'Boa'};
+}
+
+/**
  * Configurador no formato dos brand centers de referência (bloomy, IONIC):
  * prévia grande com os downloads no canto e, ao lado, fundo, cor da logo e
  * versão. As 13 cores do manual servem de fundo e de logo; as combinações
@@ -92,7 +104,9 @@ function LogoConfigurator() {
   const allowed = allowedInks(background);
   const bg = brandColor(background);
   const fg = brandColor(ink);
-  const contrast = contrastRatio(bg.hex, fg.hex).toFixed(1).replace('.', ',');
+  const ratio = contrastRatio(bg.hex, fg.hex);
+  const official = isOfficialCombo(background, ink);
+  const reading = legibility(ratio, official || (background === 'laranja-web' && ink === 'branco'));
   const fileName = `desenhe-${logo.slug}-${ink}${withBackground ? `-fundo-${background}` : ''}`;
 
   const download = (format: 'svg' | 'png') => (event: MouseEvent<HTMLAnchorElement>) => {
@@ -217,14 +231,25 @@ function LogoConfigurator() {
           </div>
         </fieldset>
 
-        <p className="brand-center__summary text-size-small text-color-secondary">
+        <div className="brand-center__summary">
           <span
-            className={`brand-center__badge${isOfficialCombo(background, ink) ? ' brand-center__badge--official' : ''}`}
+            className={`brand-center__badge text-size-small${official ? ' brand-center__badge--official' : ''}`}
           >
-            {isOfficialCombo(background, ink) ? 'Combinação oficial' : 'Combinação estendida'}
+            {official ? 'Combinação oficial' : 'Combinação estendida'}
           </span>
-          {logo.usage} · contraste {contrast}:1
-        </p>
+          <div
+            className={`brand-center__reading brand-center__reading--${reading.level}`}
+            title={`Contraste ${ratio.toFixed(1).replace('.', ',')}:1`}
+          >
+            <span className="text-style-label text-color-secondary">Leitura</span>
+            <span className="brand-center__meter" aria-hidden="true">
+              {[1, 2, 3].map((bar) => (
+                <span key={bar} className={bar <= reading.level ? 'is-on' : undefined} />
+              ))}
+            </span>
+            <span className="text-size-small">{reading.label}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

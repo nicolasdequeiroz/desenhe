@@ -9178,12 +9178,43 @@ body {
 
 .brand-center__summary {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-2);
-  margin: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
   padding-top: var(--spacing-4);
   border-top: 1px solid var(--color-border);
+}
+
+/* Medidor de leitura: três barras, acesas conforme o contraste. */
+.brand-center__reading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-primary);
+}
+
+.brand-center__reading--3 {
+  --reading-color: var(--color-teacher-tone-1);
+}
+
+.brand-center__reading--2 {
+  --reading-color: var(--color-accent);
+}
+
+.brand-center__meter {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.brand-center__meter span {
+  width: var(--spacing-4);
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border-emphasized);
+}
+
+.brand-center__meter span.is-on {
+  background: var(--reading-color);
 }
 
 .brand-center__badge {
