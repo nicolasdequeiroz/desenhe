@@ -69,6 +69,24 @@
   --font-size-2xl: 1.8125rem; /* 29px */
   --font-size-3xl: 2.3125rem; /* 37px */
 
+  /*
+   * Escala tipográfica semântica (ver "Classes" no CLAUDE.md). É a única
+   * fonte de tamanhos de título e de texto corrido: CSS de página usa estes
+   * tokens (ou as classes utilitárias de styles/utilities.css), nunca um
+   * clamp() ou um px novo.
+   */
+  --heading-display: clamp(1.875rem, 4vw, 3rem); /* 30 a 48px: h1 de hero, faixa de CTA */
+  --heading-h2: clamp(1.75rem, 3.5vw, 2.5rem); /* 28 a 40px: título de seção */
+  --heading-h3: clamp(1.5rem, 2.6vw, 2rem); /* 24 a 32px: título dentro de cartão grande */
+  --heading-h4: var(--font-size-xl); /* 23px: título de bloco */
+  --heading-h5: var(--font-size-lg); /* 19px: título de card */
+  --heading-h6: var(--font-size-base); /* 15px */
+
+  --text-size-large: 1rem; /* 16px: texto de apoio de seção (lead) */
+  --text-size-regular: var(--font-size-base); /* 15px: corpo */
+  --text-size-small: var(--font-size-sm); /* 12px: legenda, nota */
+  --text-size-tiny: var(--font-size-xs); /* 10px: rótulo em caixa alta */
+
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -99,9 +117,6 @@
   --spacing-8: 32px;
   --spacing-10: 40px;
   --spacing-12: 48px;
-
-  /* Altura da faixa promocional fixa no topo (mobile/tablet). */
-  --promo-bar-height: 36px;
 }
 
 /*

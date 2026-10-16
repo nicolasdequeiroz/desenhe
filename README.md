@@ -110,42 +110,47 @@ Pages, que não emite redirect de servidor.
 Ao renomear uma rota, acrescente a URL antiga em `LEGACY_REDIRECTS` e tire a
 antiga do `public/sitemap.xml`: só o endereço novo entra no sitemap.
 
-## Campanha em destaque (`FEATURED_PROMO`)
+## Campanhas em destaque (`FEATURED_PROMOS`)
 
 O espaço "Em destaque" do site (Colônia de Férias de inverno, Colônia de
 verão, Coworking, o que vier depois) é controlado por um único ponto:
 `src/data/promo.ts`.
 
 Cada campanha é um objeto `FeaturedPromo` (id, rota, rótulo de nav, imagem do
-card e texto da faixa). A constante `FEATURED_PROMO` aponta para a campanha em
-cartaz, ou é `null` quando não há nenhuma:
+card e texto da faixa). A lista `FEATURED_PROMOS` diz o que está em cartaz, na
+ordem de exibição; vazia, nada é divulgado:
 
 ```ts
 // src/data/promo.ts
-export const FEATURED_PROMO: FeaturedPromo | null = null;        // nada em cartaz
-// export const FEATURED_PROMO: FeaturedPromo | null = COLONIA_INVERNO_2026;
+export const FEATURED_PROMOS: FeaturedPromo[] = [];                                  // nada em cartaz
+// export const FEATURED_PROMOS: FeaturedPromo[] = [COWORKING_PROMO];                 // uma só, fixa
+// export const FEATURED_PROMOS: FeaturedPromo[] = [COWORKING_PROMO, COLONIA_INVERNO_2026]; // giram
 ```
 
-O site inteiro lê essa constante:
+O site inteiro lê essa lista:
 
-- **`src/components/SiteHeader.tsx`** — com `FEATURED_PROMO` definido, o link
-  `nav.label → path` entra na navegação (desktop e menu mobile), logo depois
-  de "Professores". Com `null`, o link não aparece.
-- **`src/pages/Home.tsx`** — mostra o card "Em destaque" ao lado do hero (desktop)
-  e a faixa `PromoBar` no topo (mobile/tablet), ambos a partir dos campos de
-  `FEATURED_PROMO`. Com `null`, o layout do hero se ajusta sozinho.
+- **`src/components/SiteHeader.tsx`**: cada campanha vira um link
+  `nav.label → path` na navegação (desktop e menu mobile), logo depois de
+  "Professores".
+- **`src/pages/Home.tsx`**: mostra o card "Em destaque" (`FeaturedPromoCard`)
+  ao lado do texto do hero no desktop e numa seção própria logo abaixo do hero
+  no mobile/tablet (`.promo-section`, escondida no desktop). Com mais de uma
+  campanha, o card se reveza sozinho a cada `PROMO_ROTATION_MS` (6 s) e ganha
+  pontos para trocar na mão. A rotação pausa com o mouse em cima e não roda
+  para quem pediu "menos movimento" no sistema. Com a lista vazia, o layout do
+  hero se ajusta sozinho e a seção do mobile some.
 
-Com `null`, a página promovida (ex.: `/colonia-de-ferias`) continua acessível
-por URL direta; ela só some da divulgação.
+Fora da lista, a página promovida (ex.: `/colonia-de-ferias`) continua
+acessível por URL direta; ela só some da divulgação.
 
-### Trocar a campanha
+### Trocar as campanhas
 
-1. Em `src/data/promo.ts`, defina um novo preset `FeaturedPromo` (há um exemplo
-   de `COWORKING` comentado no arquivo) ou ajuste um existente.
-2. Coloque a imagem do card em `public/images/<campanha>/` e aponte
-   `hero.image`/`hero.imageAlt` para ela.
-3. Aponte `FEATURED_PROMO` para o preset (ou `null` para desligar) e faça
-   push: o deploy é automático.
+1. Em `src/data/promo.ts`, defina um novo preset `FeaturedPromo` ou ajuste um
+   existente.
+2. Coloque as duas imagens do card em `public/images/<campanha>/`: uma em
+   retrato 4:5 para o desktop (`hero.image`, ex.: 900×1125) e uma quadrada
+   1:1 para o mobile (`hero.imageMobile`, ex.: 900×900). Preencha também
+   `hero.imageAlt` e o `summary` (título, texto e link da seção do mobile).
+3. Edite `FEATURED_PROMOS` (acrescente, tire ou reordene) e faça push: o
+   deploy é automático.
 
-O `id` de cada campanha é a chave do "fechar" da faixa no `sessionStorage`:
-trocar de campanha faz a faixa reaparecer mesmo para quem fechou a anterior.

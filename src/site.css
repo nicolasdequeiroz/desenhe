@@ -87,7 +87,7 @@ body {
   align-items: center;
   font-family: var(--font-family-body);
   font-weight: 700;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 0.85;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -121,7 +121,7 @@ body {
 
 .btn.lg {
   min-height: 38px;
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
 }
 
 .btn.sm {
@@ -382,7 +382,7 @@ body {
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-element);
   color: color-mix(in srgb, var(--color-text-primary) 70%, transparent);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
@@ -530,7 +530,7 @@ body {
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-element);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 500;
   line-height: 1.4;
   text-align: left;
@@ -554,6 +554,33 @@ body {
 .site-nav-dropdown__item[aria-current='page'] {
   color: var(--color-accent);
   font-weight: 600;
+}
+
+/* Com grupo, o painel alarga para os nomes dos formatos caberem numa linha. */
+.site-nav-dropdown__menu:has(.site-nav-dropdown__group) {
+  min-width: 19rem;
+}
+
+/* Grupo dentro do menu (In Company e seus formatos): título clicável e as
+   subpáginas recuadas embaixo, com um fio separando do item seguinte. */
+.site-nav-dropdown__group {
+  display: grid;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-1);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav-dropdown__item--group {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.site-nav-dropdown__item--sub {
+  margin-left: var(--spacing-3);
+  padding-left: var(--spacing-3);
+  border-left: 1px solid var(--color-border);
+  border-radius: 0 var(--radius-element) var(--radius-element) 0;
 }
 
 /* ---------- Menu mobile (hambúrguer) ---------- */
@@ -665,7 +692,7 @@ body {
     border-radius: var(--radius-element);
     color: var(--color-text-primary);
     font-family: var(--font-family-body);
-    font-size: var(--font-size-base);
+    font-size: var(--text-size-regular);
     font-weight: 600;
     text-decoration: none;
     opacity: 0;
@@ -727,77 +754,6 @@ body {
 
   .site-menu__cta .btn {
     width: 100%;
-  }
-}
-
-/* ---------- Faixa promocional (Colônia de Férias, mobile/tablet) ---------- */
-
-.promo-bar {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  /*
-   * Fica acima até do header: o header (fixo na home) desce a altura da
-   * faixa via a classe `has-promo-bar` no body, aplicada enquanto a faixa
-   * existe (ver ColoniaPromoBar.tsx).
-   */
-  /* Em fluxo normal: rola junto com a página, não fica fixa. */
-  .promo-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-3);
-    min-height: var(--promo-bar-height);
-    padding: var(--spacing-1) var(--spacing-4);
-    background: var(--color-accent);
-    color: var(--color-on-accent);
-  }
-
-  /*
-   * No topo (não rolado) o header fixo abre espaço para a faixa acima dele.
-   * Ao rolar, a faixa já saiu de vista (fluxo normal) e o header volta para
-   * o topo, sem deixar vão vazio.
-   */
-  body.has-promo-bar .site-header--overlay {
-    top: var(--promo-bar-height);
-  }
-
-  body.has-promo-bar .site-header--overlay.site-header--scrolled {
-    top: 0;
-  }
-
-  .promo-bar__link {
-    color: inherit;
-    text-decoration: none;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-sm);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    text-align: left;
-  }
-
-  .promo-bar__link:hover {
-    text-decoration: underline;
-  }
-
-  .promo-bar__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 22px;
-    height: 22px;
-    border: none;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--color-on-accent) 15%, transparent);
-    color: inherit;
-    cursor: pointer;
-  }
-
-  .promo-bar__close:hover {
-    background: color-mix(in srgb, var(--color-on-accent) 25%, transparent);
   }
 }
 
@@ -930,7 +886,7 @@ body {
 
 .hero__title {
   font-family: var(--font-family-heading);
-  font-size: clamp(1.875rem, 4vw, 3rem);
+  font-size: var(--heading-display);
   line-height: 1.05;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -956,7 +912,7 @@ body {
 .hero__lead {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-md);
+  font-size: var(--text-size-large);
   font-weight: 500;
   line-height: 1.55;
   color: color-mix(in srgb, var(--color-text-primary) 88%, transparent);
@@ -985,34 +941,51 @@ body {
   background: var(--color-accent);
   color: var(--color-on-accent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.hero__featured-card {
+/*
+ * Moldura do destaque: borda, sombra e o "levantar" no hover ficam aqui, e
+ * dentro dela as campanhas correm lado a lado num trilho (carrossel). O
+ * trilho anda `--index` larguras para a esquerda.
+ */
+.hero__featured-stack {
   position: relative;
-  display: block;
   width: 100%;
   aspect-ratio: 819 / 1024;
   overflow: hidden;
   border: 4px solid color-mix(in srgb, var(--color-background-card) 92%, transparent);
   border-radius: var(--radius-container);
-  background: transparent;
-  text-decoration: none;
-  color: inherit;
   box-shadow: 0 4px 20px color-mix(in srgb, #000 18%, transparent);
+  touch-action: pan-y;
   transition:
     border-color 0.35s ease,
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s ease;
 }
 
-.hero__featured-card:hover {
+.hero__featured-stack:hover {
   border-color: color-mix(in srgb, var(--color-accent) 85%, #fff);
   transform: translateY(-3px);
   box-shadow: 0 14px 36px color-mix(in srgb, #000 32%, transparent);
+}
+
+.hero__featured-track {
+  display: flex;
+  height: 100%;
+  transform: translateX(calc(var(--index, 0) * -100%));
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero__featured-card {
+  display: block;
+  flex: 0 0 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 .hero__featured-card img {
@@ -1021,13 +994,87 @@ body {
   object-fit: cover;
 }
 
+/*
+ * Selo com as setas de anterior/próxima de cada lado: as setas são círculos
+ * do diâmetro exato da altura da pill (`--pill-size`).
+ */
+.hero__gallery-top {
+  --pill-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.hero__gallery-top .hero__gallery-badge {
+  height: var(--pill-size);
+}
+
+.hero__featured-arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--pill-size);
+  height: var(--pill-size);
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-text-primary) 18%, transparent);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.hero__featured-arrow:hover {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.hero__featured-arrow:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.hero__featured-dots {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.hero__featured-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  cursor: pointer;
+  transition:
+    width 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.hero__featured-dot:hover {
+  background: color-mix(in srgb, var(--color-text-primary) 60%, transparent);
+}
+
+.hero__featured-dot.is-active {
+  width: 24px;
+  background: var(--color-accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero__featured-card {
+  .hero__featured-stack {
     transition: border-color 0.2s ease;
   }
 
-  .hero__featured-card:hover {
+  .hero__featured-stack:hover {
     transform: none;
+  }
+
+  .hero__featured-track {
+    transition: none;
   }
 }
 
@@ -1091,19 +1138,123 @@ body {
     flex: 0 0 auto;
   }
 
-  .hero__title {
-    font-size: clamp(1.625rem, 6.5vw, 2.5rem);
-  }
-
   .hero__bottom {
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-6);
   }
 
-  /* Vira a faixa .promo-bar aqui embaixo; o card com foto some. */
-  .hero__gallery {
+  /* O card com foto sai do hero e desce para a seção .promo-section. */
+  .hero .hero__gallery {
     display: none;
+  }
+}
+
+/* ---------- Destaque no mobile (abaixo do hero) ---------- */
+
+/*
+ * No mobile/tablet o card "Em destaque" não cabe ao lado do texto do hero:
+ * ganha esta seção própria logo abaixo, com o mesmo componente do desktop.
+ * No desktop ela some, porque o card já está dentro do hero.
+ */
+.promo-section {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .promo-section {
+    display: block;
+    padding-block: var(--spacing-6) var(--spacing-12);
+  }
+
+  /* Aqui tudo alinha à esquerda: selo e pontos no topo, texto, carrossel. */
+  .hero__gallery--summary {
+    align-items: stretch;
+    max-width: 26rem;
+    margin-inline: auto;
+  }
+
+  /* No mobile o card é quadrado (imagem `hero.imageMobile`, 1:1). */
+  .hero__gallery--summary .hero__featured-stack {
+    aspect-ratio: 1;
+  }
+
+  .hero__gallery--summary .hero__gallery-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+  }
+
+  /* Todos os textos na mesma célula: a altura é a do maior e nada pula. */
+  .promo-summary {
+    display: grid;
+  }
+
+  .promo-summary__item {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(12px);
+    transition:
+      opacity 0.4s ease,
+      visibility 0.4s,
+      transform 0.4s ease;
+  }
+
+  .promo-summary__item.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0.15s;
+  }
+
+  .promo-summary__title {
+    margin: 0;
+    font-family: var(--font-family-heading);
+    font-size: var(--heading-h3);
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+  }
+
+  .promo-summary__text {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-size: var(--text-size-regular);
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+  }
+
+  .promo-summary__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    margin-top: var(--spacing-1);
+    font-family: var(--font-family-body);
+    font-size: var(--text-size-small);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+
+  .promo-summary__link:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .promo-summary__item,
+  .promo-summary__item.is-active {
+    transform: none;
+    transition: none;
   }
 }
 
@@ -1174,14 +1325,14 @@ body {
 }
 
 .section__head--centered h2 {
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: var(--heading-h2);
   font-weight: 700;
   line-height: 1.15;
 }
 
 .section__eyebrow {
   display: block;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1368,7 +1519,7 @@ body {
 
 .featured-courses__link-title {
   font-family: var(--font-family-heading);
-  font-size: clamp(1.5rem, 3.2vw, 2.75rem);
+  font-size: var(--heading-display);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -1431,7 +1582,7 @@ body {
 .featured-courses__link-arrow {
   flex-shrink: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xl);
+  font-size: var(--heading-h4);
   line-height: 1;
   color: var(--color-text-secondary);
   transition:
@@ -1470,7 +1621,7 @@ body {
   max-width: 32rem;
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 400;
   line-height: 1.6;
   color: var(--color-text-secondary);
@@ -1494,11 +1645,11 @@ body {
   }
 
   .featured-courses__link-title {
-    font-size: clamp(1.25rem, 5.5vw, 2rem);
+    font-size: var(--heading-h4);
   }
 
   .featured-courses__link-arrow {
-    font-size: var(--font-size-md);
+    font-size: var(--text-size-large);
   }
 
   /* No mobile o subtítulo em 0.5em ficava ilegível: cai para a linha de
@@ -1507,7 +1658,7 @@ body {
     display: block;
     margin-left: 0;
     margin-top: 6px;
-    font-size: var(--font-size-base);
+    font-size: var(--text-size-regular);
     letter-spacing: 0.02em;
     color: var(--color-text-secondary);
   }
@@ -1666,7 +1817,7 @@ body {
   background: var(--category-color, var(--color-accent));
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1741,7 +1892,7 @@ body {
 .course-card__cover-placeholder span,
 .featured-courses__image--placeholder span {
   font-family: var(--font-family-heading);
-  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-size: var(--heading-h3);
   line-height: 1.15;
   text-wrap: balance;
   opacity: 0.9;
@@ -1759,7 +1910,7 @@ body {
 
 .course-card__title {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   font-weight: 600;
   margin: 0;
 }
@@ -1783,7 +1934,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 9999px;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   color: var(--color-text-secondary);
 }
@@ -1796,7 +1947,7 @@ body {
   padding-top: var(--spacing-2);
   color: var(--color-accent);
   font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   /* Só aparece no hover/foco do card (ver .course-card:hover acima). */
   opacity: 0;
   transform: translateY(4px);
@@ -1852,7 +2003,7 @@ body {
   margin-bottom: var(--spacing-6);
   color: var(--color-accent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1963,7 +2114,7 @@ body {
 .pricing-notes .note-grid__item h3,
 .coworking-highlights .note-grid__item h3 {
   margin: 0;
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
 }
 
 /* A chamada ocupa a célula que sobra na última linha, marcada pelo tom de
@@ -2017,7 +2168,7 @@ body {
   margin-top: var(--spacing-3);
   color: var(--color-accent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
 }
 
@@ -2147,7 +2298,7 @@ body {
 
 .space-showcase__highlight-title {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.01em;
@@ -2156,7 +2307,7 @@ body {
 .space-showcase__highlight-body {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -2170,7 +2321,7 @@ body {
 .space-showcase__title {
   margin: 0;
   font-family: var(--font-family-heading);
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: var(--heading-h2);
   line-height: 1.1;
   letter-spacing: -0.02em;
   font-weight: 700;
@@ -2188,7 +2339,7 @@ body {
 .space-showcase__lead {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: 14px;
+  font-size: var(--text-size-regular);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -2338,7 +2489,7 @@ body {
   justify-content: space-between;
   gap: var(--spacing-2);
   padding: var(--spacing-3);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2349,7 +2500,7 @@ body {
 .space-showcase__gallery-caption {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -2426,7 +2577,7 @@ body {
 .testimonials__title {
   margin: 0;
   font-family: var(--font-family-heading);
-  font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+  font-size: var(--heading-h3);
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 700;
@@ -2439,7 +2590,7 @@ body {
   width: 100%;
   max-width: 34rem;
   font-family: var(--font-family-body);
-  font-size: 14px;
+  font-size: var(--text-size-regular);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -2491,7 +2642,7 @@ body {
   background: color-mix(in srgb, var(--color-background-card) 88%, transparent);
   box-shadow: 0 2px 10px color-mix(in srgb, var(--color-shadow) 55%, transparent);
   font-family: var(--font-family-body);
-  font-size: 0.65rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -2580,7 +2731,7 @@ body {
   margin: 0;
   flex: 1;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-md);
+  font-size: var(--text-size-large);
   font-weight: 600;
   line-height: 1.45;
   text-transform: none;
@@ -2595,13 +2746,13 @@ body {
 
 .testimonials__name {
   font-style: normal;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   color: var(--color-text-primary);
 }
 
 .testimonials__role {
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2667,7 +2818,7 @@ body {
   }
 
   .testimonials__quote {
-    font-size: var(--font-size-base);
+    font-size: var(--text-size-regular);
     line-height: 1.5;
   }
 }
@@ -2868,7 +3019,7 @@ body {
   border-radius: 999px;
   color: var(--color-text-secondary);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3077,13 +3228,13 @@ body {
 
 .work-wall__author {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--surface-warm-text);
 }
 
 .work-wall__year {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   color: var(--surface-warm-text-muted);
 }
 
@@ -3115,7 +3266,7 @@ body {
   background: color-mix(in srgb, #171310 88%, transparent);
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -3169,7 +3320,7 @@ body {
   display: block;
   margin-top: var(--spacing-3);
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   letter-spacing: 0.16em;
   /* Acende junto com a peça, seja por hover ou pela rolagem. */
   color: color-mix(
@@ -3385,13 +3536,13 @@ body {
 
 .work-ghost__author {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--surface-warm-text);
 }
 
 .work-ghost__year {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   color: var(--surface-warm-text-muted);
 }
 
@@ -3519,7 +3670,7 @@ body {
   text-align: center;
   color: color-mix(in srgb, var(--color-text-primary) 78%, transparent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
 }
 
 .work-viewer__count {
@@ -3531,13 +3682,13 @@ body {
 /* Autoria: fica no papel do polaroid, então usa a cor do papel, não a do fundo. */
 .work-viewer__author {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--surface-warm-text);
 }
 
 .work-viewer__year {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   color: var(--surface-warm-text-muted);
 }
 
@@ -3812,7 +3963,7 @@ body {
 
 .course-deck__eyebrow {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3823,7 +3974,7 @@ body {
   max-width: 384px;
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: 1rem;
+  font-size: var(--text-size-large);
   line-height: 1.6;
   color: inherit;
   opacity: 0.85;
@@ -4222,7 +4373,7 @@ body {
 .course-teacher__name {
   margin: 0;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   color: var(--color-text-primary);
 }
 
@@ -4230,7 +4381,7 @@ body {
   margin: 2px 0 0;
   font-family: var(--font-family-body);
   font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--color-category-teorico);
 }
 
@@ -4303,7 +4454,7 @@ body {
   margin-bottom: var(--spacing-4);
   color: var(--category-color, var(--color-accent));
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4375,7 +4526,7 @@ body {
   margin: 0;
   padding-left: var(--spacing-4);
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   font-weight: 600;
   line-height: 1.3;
 }
@@ -4400,7 +4551,7 @@ body {
 .course-strand-card__text {
   margin: var(--spacing-3) 0 0;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.7;
 }
 
@@ -4431,7 +4582,7 @@ body {
   }
 
   .course-strand-card__title {
-    font-size: var(--font-size-base);
+    font-size: var(--text-size-regular);
   }
 
   .course-strand-card__panel {
@@ -4542,7 +4693,7 @@ body {
   align-items: center;
   gap: var(--spacing-3);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -4561,7 +4712,7 @@ body {
   align-items: flex-start;
   gap: var(--spacing-1);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -4571,7 +4722,7 @@ body {
   align-items: center;
   gap: 0.45em;
   margin-top: var(--spacing-2);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4701,7 +4852,7 @@ body {
 
 .course-timeline__label {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -4710,7 +4861,7 @@ body {
 
 .course-timeline__heading {
   margin: 0;
-  font-size: var(--font-size-2xl);
+  font-size: var(--heading-h3);
 }
 
 .course-timeline__item :where(p, span) + p {
@@ -4772,7 +4923,7 @@ body {
   }
 
   .course-timeline__heading {
-    font-size: var(--font-size-xl);
+    font-size: var(--heading-h4);
   }
 }
 
@@ -4892,7 +5043,7 @@ body {
   display: inline-block;
   margin-bottom: var(--spacing-3);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4903,7 +5054,7 @@ body {
   margin: 0;
   color: inherit;
   font-family: var(--font-family-heading);
-  font-size: clamp(1.875rem, 4vw, 3rem);
+  font-size: var(--heading-display);
   line-height: 1.05;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -4955,7 +5106,7 @@ body {
 
 .fact-list__label {
   min-width: 120px;
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5085,7 +5236,7 @@ body {
   border: 1px solid var(--surface-warm-border);
   border-radius: 9999px;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5103,7 +5254,7 @@ body {
   margin: 0;
   max-width: 34ch;
   font-family: var(--font-family-heading);
-  font-size: clamp(1.125rem, 2.2vw, 1.75rem);
+  font-size: var(--heading-h4);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -5126,7 +5277,7 @@ body {
 .site-footer__group-title {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5141,7 +5292,7 @@ body {
 
 .site-footer__link {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -5165,7 +5316,7 @@ body {
   /* .site-footer__intro usa gap uniforme; puxa só o espaço pro título acima. */
   margin: calc(var(--spacing-2) - var(--spacing-5)) 0 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   color: var(--surface-warm-text-subtle);
 }
 
@@ -5248,7 +5399,7 @@ body {
 
 .doodle-pile__name {
   font-family: var(--font-family-body);
-  font-size: 9px;
+  font-size: var(--text-size-tiny);
   line-height: 1.2;
   text-align: center;
   color: var(--surface-warm-text-subtle);
@@ -5528,7 +5679,7 @@ body {
 
 .guestbook-toast__text {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   line-height: 1.3;
 }
@@ -5606,7 +5757,7 @@ body {
 .guestbook-panel__title {
   margin: 0;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 700;
   text-transform: uppercase;
   /* :where(p) já define uma cor, então herdar do painel não basta. */
@@ -5656,7 +5807,7 @@ body {
   border-radius: 8px;
   background: none;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   color: var(--surface-warm-text-subtle);
   cursor: pointer;
@@ -5818,7 +5969,7 @@ body {
 
 .guestbook-panel__signature-label {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -5841,7 +5992,7 @@ body {
   border-radius: var(--radius-element);
   background: transparent;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--surface-warm-text);
 }
 
@@ -5882,7 +6033,7 @@ body {
 
 .guestbook-panel__polaroid-name {
   font-family: var(--font-family-body);
-  font-size: 9px;
+  font-size: var(--text-size-tiny);
   color: var(--surface-warm-text-subtle);
 }
 
@@ -5891,7 +6042,7 @@ body {
   padding-block: var(--spacing-6);
   text-align: center;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--surface-warm-text-subtle);
 }
 
@@ -5958,7 +6109,7 @@ body {
    */
   .btn.sm.site-header__cta {
     padding-inline: var(--spacing-2) calc(var(--spacing-2) - 0.04em);
-    font-size: 0.6875rem;
+    font-size: var(--text-size-tiny);
   }
 
   .site-footer__social-btn {
@@ -6115,7 +6266,7 @@ body {
   background: transparent;
   color: var(--color-text-secondary);
   font-family: var(--font-family-body);
-  font-size: 0.8125rem;
+  font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -6151,7 +6302,7 @@ body {
   border-radius: 9999px;
   background: var(--color-accent);
   color: var(--color-on-accent);
-  font-size: 0.6875rem;
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
@@ -6189,7 +6340,7 @@ body {
     min-width: 0;
     gap: 0.3rem;
     padding-inline: var(--spacing-2);
-    font-size: 0.75rem;
+    font-size: var(--text-size-small);
     letter-spacing: 0.02em;
   }
 
@@ -6292,7 +6443,7 @@ body {
 .pricing-card__name,
 .section--pricing .pricing-block__title {
   margin: 0;
-  font-size: clamp(1.4375rem, 2.2vw, 1.8125rem);
+  font-size: var(--heading-h3);
   line-height: 1.12;
   overflow-wrap: normal;
 }
@@ -6309,7 +6460,7 @@ body {
 
 .pricing-card__covers {
   margin: 0;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -6319,18 +6470,18 @@ body {
    "solo") seguem a mesma escala de preço dos cursos práticos. */
 .pricing-card--course .pricing-card__price-prefix,
 .pricing-card--solo .pricing-card__price-prefix {
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 500;
 }
 
 .pricing-card--course .pricing-card__price-value,
 .pricing-card--solo .pricing-card__price-value {
-  font-size: var(--font-size-xl);
+  font-size: var(--heading-h4);
 }
 
 /* "/hora" do coworking no mesmo degrau do "12x". */
 .pricing-card--solo .pricing-card__price-unit {
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
 }
 
 
@@ -6385,7 +6536,7 @@ body {
    fica implícito no "12x", então nem aparece. */
 .pricing-card__price-prefix {
   font-family: var(--font-family-body);
-  font-size: clamp(1.5rem, 3.5vw, 1.875rem);
+  font-size: var(--heading-h3);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
@@ -6393,7 +6544,7 @@ body {
 
 .pricing-card__price-value {
   font-family: var(--font-family-body);
-  font-size: clamp(2.25rem, 5vw, 2.75rem);
+  font-size: var(--heading-display);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
@@ -6407,7 +6558,7 @@ body {
 
 .pricing-card__price-unit {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   color: var(--color-text-secondary);
 }
 
@@ -6433,7 +6584,7 @@ body {
 
 .pricing-card__includes-label {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -6454,7 +6605,7 @@ body {
   align-items: flex-start;
   gap: var(--spacing-2);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.5;
   color: var(--color-text-primary);
 }
@@ -6485,7 +6636,7 @@ body {
 .pricing-card__fineprint {
   margin: var(--spacing-1) 0 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -6508,7 +6659,7 @@ body {
 
 .pricing-common__label {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -6543,14 +6694,14 @@ body {
 }
 
 .pricing-common__title {
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 600;
   line-height: 1.35;
   color: var(--color-text-primary);
 }
 
 .pricing-common__detail {
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.5;
   color: var(--color-text-secondary);
 }
@@ -6644,7 +6795,7 @@ body {
 
 .pricing-first__eyebrow {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   font-weight: 600;
   text-transform: uppercase;
   color: var(--color-text-primary);
@@ -6689,7 +6840,7 @@ body {
 
 .pricing-first__hours {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -6699,7 +6850,7 @@ body {
 .pricing-first__price {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-lg);
+  font-size: var(--heading-h5);
   font-weight: 700;
   color: var(--color-text-primary);
 }
@@ -6765,7 +6916,7 @@ body {
   display: block;
   margin-bottom: var(--spacing-3);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -6882,7 +7033,7 @@ body {
   border-radius: var(--radius-inner);
   background: color-mix(in srgb, var(--color-border-emphasized) 12%, transparent);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   line-height: 1.6;
   color: var(--color-text-secondary);
 }
@@ -7027,7 +7178,7 @@ body {
 
 .works-arc-section__head h2 {
   margin: 0;
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: var(--heading-h2);
   font-weight: 700;
   line-height: 1.15;
 }
@@ -7088,7 +7239,7 @@ body {
   background: color-mix(in srgb, var(--color-background-card) 88%, transparent);
   box-shadow: 0 2px 10px color-mix(in srgb, var(--color-shadow) 55%, transparent);
   font-family: var(--font-family-body);
-  font-size: 0.65rem;
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -7243,7 +7394,7 @@ body {
 
 .contact-card__title {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -7252,7 +7403,7 @@ body {
   margin-top: var(--spacing-2);
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -7363,7 +7514,7 @@ body {
 
 .colonia-page .course-hero__intro h1 {
   margin: 0;
-  font-size: clamp(1.875rem, 4vw, 3rem);
+  font-size: var(--heading-display);
   line-height: 1.05;
   letter-spacing: 0.02em;
 }
@@ -7393,7 +7544,7 @@ body {
   border: 1px solid color-mix(in srgb, var(--colonia-color) 55%, var(--color-border));
   border-radius: 9999px;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -7453,7 +7604,7 @@ body {
 }
 
 .colonia-facts__label {
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -7605,7 +7756,7 @@ body {
   display: inline-block;
   margin-bottom: var(--spacing-3);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -7616,7 +7767,7 @@ body {
   margin: 0;
   color: inherit;
   font-family: var(--font-family-heading);
-  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-size: var(--heading-display);
   line-height: 1.05;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -7647,7 +7798,7 @@ body {
 
 .colonia-cta__fact dt {
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -7657,7 +7808,7 @@ body {
 .colonia-cta__fact dd {
   margin: 0;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
 }
 
 .colonia-cta__action {
@@ -7726,7 +7877,7 @@ body {
   background: transparent;
   color: var(--color-text-secondary);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 500;
   cursor: pointer;
   transition:
@@ -7756,7 +7907,7 @@ body {
 .timetable__caption {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   color: var(--color-text-secondary);
   text-align: center;
 }
@@ -7786,7 +7937,7 @@ body {
 .timetable__day-head {
   padding-bottom: var(--spacing-2);
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
@@ -7801,7 +7952,7 @@ body {
   display: flex;
   align-items: center;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
@@ -7832,7 +7983,7 @@ body {
 .timetable__cell-day {
   display: none;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
@@ -7846,7 +7997,7 @@ body {
 
 .timetable__time {
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   color: var(--color-text-primary);
   white-space: nowrap;
@@ -7864,7 +8015,7 @@ body {
   background: color-mix(in srgb, var(--course-tone) 18%, transparent);
   color: var(--course-tone);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 600;
   line-height: 1.5;
   white-space: nowrap;
@@ -7875,7 +8026,7 @@ body {
 .timetable__time-note {
   display: block;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-xs);
+  font-size: var(--text-size-tiny);
   font-weight: 500;
   color: var(--color-text-secondary);
   white-space: normal;
@@ -8160,7 +8311,7 @@ body {
   color: var(--color-teacher-tone-1);
   font-family: var(--font-family-body);
   font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   opacity: 0;
   transform: translateY(2px);
   transition:
@@ -8280,7 +8431,7 @@ body {
 .professor-modal__role {
   margin: 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -8290,14 +8441,14 @@ body {
 .professor-modal__name {
   margin: var(--spacing-1) 0 0;
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-2xl);
+  font-size: var(--heading-h3);
   color: var(--color-text-primary);
 }
 
 .professor-modal__bio {
   margin: var(--spacing-4) 0 0;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   line-height: 1.6;
   color: var(--color-text-secondary);
 }
@@ -8320,7 +8471,7 @@ body {
   padding: var(--spacing-12) var(--spacing-6);
   text-align: center;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   color: var(--color-text-secondary);
 }
 
@@ -8395,7 +8546,7 @@ body {
   /* Manrope em vez da Courier Prime dos títulos: a pergunta é uma frase
      corrida, e em bold ela pesa o suficiente para abrir o bloco sozinha. */
   font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
+  font-size: var(--text-size-regular);
   font-weight: 700;
   color: var(--color-text-primary);
   text-align: left;
@@ -8459,5 +8610,391 @@ body {
   .coworking-faq__icon::before,
   .coworking-faq__icon::after {
     transition: none;
+  }
+}
+
+/*
+ * In Company (/in-company e páginas de formato). Quase tudo reaproveita
+ * componentes do site (hero e FAQ do Coworking, grade de cursos, baralho
+ * das páginas de curso, Timeline, NoteGrid); aqui fica só o que é próprio
+ * da linha. Tipografia pelas classes de styles/utilities.css (ver CLAUDE.md).
+ */
+.ic-page [id] {
+  scroll-margin-top: 88px;
+}
+
+/* Faixa final com o mesmo fade das páginas de curso: o fim da seção
+   anterior já vai virando a cor da faixa. */
+.ic-page .section:has(+ .course-cta) {
+  --ic-fade-from: var(--color-background-body);
+  background: linear-gradient(
+    to bottom,
+    var(--ic-fade-from) 0,
+    var(--ic-fade-from) calc(100% - var(--course-cta-fade)),
+    color-mix(in srgb, var(--color-category-institucional) 82%, #171310) 100%
+  );
+}
+
+.ic-page .section--muted:has(+ .course-cta) {
+  --ic-fade-from: var(--color-background-muted);
+}
+
+/* Cabeçalho de seção: alinhado à esquerda, título maior que o padrão. */
+.ic-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  max-width: 44rem;
+  margin-bottom: var(--spacing-10);
+}
+
+.ic-head__lead {
+  text-wrap: pretty;
+}
+
+.ic-head__lead a,
+.ic-contact__aside a {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Hero ---------- */
+
+.ic-crumb {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ic-crumb:hover {
+  text-decoration: underline;
+}
+
+/* Primeira dobra da página de formato (reaproveita .course-deck). */
+.ic-deck .course-deck__card {
+  cursor: default;
+}
+
+/* Títulos longos quebram em duas linhas equilibradas, como nos cursos. */
+.ic-deck .course-deck__heading h1 {
+  max-width: 22ch;
+}
+
+.ic-deck__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  max-width: 28rem;
+}
+
+.ic-deck__aside .course-deck__lead {
+  max-width: none;
+}
+
+.ic-deck__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+/* Na faixa laranja o laranja do botão some: os botões vão em tons claros. */
+.ic-deck .btn {
+  --color-accent: var(--color-text-primary);
+}
+
+/* ---------- Formatos ---------- */
+
+/* Grade de polaroids de /cursos (.course-grid), em 2x2 para os quatro
+   formatos; cai para uma coluna no celular. */
+.ic-format-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--spacing-10);
+}
+
+@media (max-width: 640px) {
+  .ic-format-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Na grade, a ficha de cada formato fica sempre à mostra. */
+.ic-format-grid .course-card__body .course-card__strands {
+  margin-top: var(--spacing-1);
+}
+
+/* ---------- Por que arte no trabalho ---------- */
+
+/* Cartão num marrom mais claro que o fundo, para quebrar o escuro sem
+   recorrer ao creme do rodapé. */
+.ic-why__card {
+  padding: clamp(32px, 6vw, 80px);
+  border-radius: 24px;
+  background: var(--color-background-surface);
+  color: var(--color-text-primary);
+}
+
+.ic-why__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--spacing-10);
+  align-items: end;
+  margin-bottom: clamp(40px, 6vw, 72px);
+}
+
+.ic-why__title {
+  margin-top: var(--spacing-3);
+}
+
+.ic-why__points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ic-why__points li {
+  padding: var(--spacing-6);
+  border-top: 3px solid var(--color-accent);
+  border-radius: var(--radius-container);
+  background: color-mix(in srgb, var(--color-text-primary) 5%, var(--color-background-surface));
+}
+
+.ic-why__number {
+  display: block;
+  margin-bottom: var(--spacing-3);
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-h3);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.ic-why__points h3 {
+  margin: 0 0 var(--spacing-2);
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-h5);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.ic-why__points p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* A Timeline vem com fundo de seção "muted": aqui ela fica na cor padrão
+   da página. */
+.ic-page .course-timeline {
+  background: transparent;
+}
+
+/* ---------- FAQ em duas colunas ---------- */
+
+.ic-faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: var(--spacing-10);
+  align-items: start;
+}
+
+.ic-faq .ic-head {
+  margin-bottom: 0;
+}
+
+.ic-faq .coworking-faq {
+  max-width: none;
+  margin: 0;
+}
+
+/* ---------- Pedido de proposta ---------- */
+
+.ic-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+  padding: clamp(28px, 5vw, 64px);
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      120% 80% at 0% 0%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 60%
+    ),
+    var(--color-background-card);
+}
+
+.ic-contact__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.ic-contact__details {
+  display: grid;
+  gap: var(--spacing-3);
+  margin: var(--spacing-4) 0 0;
+}
+
+.ic-contact__details > div {
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.ic-contact__details dt {
+  font-size: var(--text-size-tiny);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.ic-contact__details dd {
+  margin: var(--spacing-1) 0 0;
+  font-weight: 600;
+}
+
+.ic-contact__details a {
+  color: inherit;
+}
+
+.ic-contact__aside {
+  margin: var(--spacing-2) 0 0;
+  font-size: var(--text-size-small);
+  color: var(--color-text-secondary);
+}
+
+.ic-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+}
+
+.ic-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.ic-form__field--wide,
+.ic-form__error,
+.ic-form__actions {
+  grid-column: 1 / -1;
+}
+
+.ic-form__field > span {
+  font-size: var(--text-size-tiny);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.ic-form input,
+.ic-form select,
+.ic-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-emphasized);
+  border-radius: var(--radius-element);
+  background: var(--color-background-body);
+  color: var(--color-text-primary);
+  font: inherit;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+/* Seta própria no select: a nativa muda de navegador para navegador e destoa
+   do resto. Chevron fino na cor do texto secundário (#bba79c), com respiro
+   à direita. */
+.ic-form select {
+  padding-right: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256'%3E%3Cpath fill='none' stroke='%23bba79c' stroke-linecap='round' stroke-linejoin='round' stroke-width='20' d='M208 96l-80 80-80-80'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.ic-form select:hover {
+  border-color: var(--color-text-secondary);
+}
+
+.ic-form textarea {
+  resize: vertical;
+}
+
+.ic-form input::placeholder,
+.ic-form textarea::placeholder {
+  color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
+}
+
+.ic-form input:focus-visible,
+.ic-form select:focus-visible,
+.ic-form textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.ic-form__error {
+  margin: 0;
+  font-size: var(--text-size-small);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.ic-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-1);
+}
+
+.ic-form__hint {
+  font-size: var(--text-size-small);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 900px) {
+  .ic-why__top,
+  .ic-faq,
+  .ic-contact {
+    grid-template-columns: 1fr;
+  }
+
+  .ic-why__top {
+    gap: var(--spacing-5);
+    align-items: start;
+  }
+
+  .ic-why__points {
+    grid-template-columns: 1fr;
+  }
+
+  .ic-faq {
+    gap: var(--spacing-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .ic-form {
+    grid-template-columns: 1fr;
+  }
+
+  .ic-contact {
+    padding: var(--spacing-5);
+  }
+
+  .ic-head {
+    margin-bottom: var(--spacing-8);
   }
 }

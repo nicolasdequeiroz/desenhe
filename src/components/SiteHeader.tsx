@@ -3,26 +3,40 @@ import {NavLink, Link, useLocation} from 'react-router-dom';
 import {List, X} from '@phosphor-icons/react';
 import {WhatsCta} from './WhatsCta';
 import {NavCoursesDropdown} from './NavCoursesDropdown';
+import {NavDropdown} from './NavDropdown';
 import {BrandLogo} from './BrandLogo';
-import {FEATURED_PROMO} from '../data';
+import {FEATURED_PROMOS, IN_COMPANY_FORMATS, IN_COMPANY_MESSAGE} from '../data';
 
 const HORARIOS_ITEM = {to: '/horarios', label: 'Horários'};
 const PROFESSORES_ITEM = {to: '/professores', label: 'Professores'};
+// In Company leva junto as páginas de cada formato, listadas no menu.
+const IN_COMPANY_PAGES = IN_COMPANY_FORMATS.filter((format) => format.page).map((format) => ({
+  to: `/in-company/${format.slug}`,
+  label: format.title,
+}));
+const EMPRESAS_ITEM = {to: '/in-company', label: 'In Company', children: IN_COMPANY_PAGES};
+const COWORKING_ITEM = {to: '/coworking-artistico', label: 'Coworking'};
+
+/** In Company e Coworking ficam juntos num menu "Serviços" no desktop. */
+const SERVICE_ITEMS = [EMPRESAS_ITEM, COWORKING_ITEM];
 const PRECOS_ITEM = {to: '/precos', label: 'Preços'};
 const SOBRE_ITEM = {to: '/sobre', label: 'Sobre'};
 const CONTATO_ITEM = {to: '/contato', label: 'Contato'};
 
-// A campanha em destaque (Colônia de Férias, Coworking, etc.) entra na nav
-// como um link só enquanto `FEATURED_PROMO` não for `null` (ver src/data/promo.ts).
-const PROMO_ITEM = FEATURED_PROMO
-  ? {to: FEATURED_PROMO.path, label: FEATURED_PROMO.nav.label}
-  : null;
+// Cada campanha em destaque (Colônia de Férias, Coworking, etc.) entra na nav
+// como um link enquanto estiver em `FEATURED_PROMOS` (ver src/data/promo.ts).
+// In Company e Coworking são permanentes (menu "Serviços"): se também
+// estiverem em cartaz, o link da campanha não duplica o do menu.
+const PROMO_ITEMS = FEATURED_PROMOS.filter(
+  (promo) => !SERVICE_ITEMS.some((item) => item.to === promo.path),
+).map(
+  (promo) => ({
+    to: promo.path,
+    label: promo.nav.label,
+  }),
+);
 
-const NAV_ITEMS = [
-  HORARIOS_ITEM,
-  PROFESSORES_ITEM,
-  ...(PROMO_ITEM ? [PROMO_ITEM] : []),
-];
+const NAV_ITEMS = [HORARIOS_ITEM, PROFESSORES_ITEM, ...PROMO_ITEMS];
 
 /** Itens auxiliares (Preços, Sobre, Contato) agrupados perto das ações. */
 const AUX_NAV_ITEMS = [PRECOS_ITEM, SOBRE_ITEM, CONTATO_ITEM];
@@ -33,7 +47,8 @@ const MOBILE_NAV_ITEMS = [
   HORARIOS_ITEM,
   PRECOS_ITEM,
   PROFESSORES_ITEM,
-  ...(PROMO_ITEM ? [PROMO_ITEM] : []),
+  ...SERVICE_ITEMS,
+  ...PROMO_ITEMS,
   SOBRE_ITEM,
   CONTATO_ITEM,
 ];
@@ -48,10 +63,17 @@ export function SiteHeader() {
     pathname === '/sobre' ||
     pathname === '/precos' ||
     pathname === '/coworking-artistico' ||
+    pathname.startsWith('/in-company') ||
     /^\/cursos\/[^/]+$/.test(pathname);
   // /precos flutua como o Sobre, mas já entra com o fundo do estado rolado
   // (nada de transparência sobre o conteúdo antes do primeiro scroll).
   const alwaysScrolled = pathname === '/precos';
+  // Nas páginas In Company o CTA do header vira pedido de proposta.
+  const empresas = pathname.startsWith('/in-company');
+  const ctaMessage = empresas
+    ? IN_COMPANY_MESSAGE
+    : 'Olá! Gostaria de mais informações sobre os cursos da Desenhe.';
+  const ctaLabel = empresas ? 'Peça uma proposta' : 'Matricule-se';
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -104,6 +126,7 @@ export function SiteHeader() {
               {item.label}
             </NavLink>
           ))}
+          <NavDropdown label="Serviços" id="nav-services-menu" items={SERVICE_ITEMS} />
         </nav>
         <Link to="/" className="site-header__brand">
           <BrandLogo />
@@ -117,8 +140,8 @@ export function SiteHeader() {
             ))}
           </div>
           <WhatsCta
-            message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
-            label="Matricule-se"
+            message={ctaMessage}
+            label={ctaLabel}
             size="sm"
             className="site-header__cta"
           />
@@ -139,8 +162,8 @@ export function SiteHeader() {
         </nav>
         <div className="site-menu__cta">
           <WhatsCta
-            message="Olá! Gostaria de mais informações sobre os cursos da Desenhe."
-            label="Matricule-se"
+            message={ctaMessage}
+            label={ctaLabel}
           />
         </div>
       </div>

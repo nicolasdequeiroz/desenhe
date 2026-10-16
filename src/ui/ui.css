@@ -9,7 +9,7 @@
   line-height: 1;
   border-radius: 9999px;
   font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
+  font-size: var(--text-size-small);
   font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }

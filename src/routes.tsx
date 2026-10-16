@@ -8,11 +8,13 @@ import {Precos} from './pages/Precos';
 import {Horarios} from './pages/Horarios';
 import {ColoniaDeFerias} from './pages/ColoniaDeFerias';
 import {CoworkingArtistico} from './pages/CoworkingArtistico';
+import {InCompany} from './pages/InCompany';
+import {InCompanyFormato} from './pages/InCompanyFormato';
 import {Sobre} from './pages/Sobre';
 import {Contato} from './pages/Contato';
 import {NotFound} from './pages/NotFound';
 import {Redirect} from './components/Redirect';
-import {COURSES} from './data';
+import {COURSES, IN_COMPANY_FORMATS} from './data';
 
 /**
  * URLs do site antigo (Wix) → destino no site novo.
@@ -75,6 +77,12 @@ export const routes: RouteRecord[] = [
       {path: 'horarios', element: <Horarios />},
       {path: 'colonia-de-ferias', element: <ColoniaDeFerias />},
       {path: 'coworking-artistico', element: <CoworkingArtistico />},
+      {path: 'in-company', element: <InCompany />},
+      // Uma página por formato In Company, cada uma com HTML próprio, como nos cursos.
+      ...IN_COMPANY_FORMATS.filter((format) => format.page).map((format) => ({
+        path: `in-company/${format.slug}`,
+        element: <InCompanyFormato slug={format.slug} />,
+      })),
       {path: 'sobre', element: <Sobre />},
       {path: 'contato', element: <Contato />},
       ...[...LEGACY_REDIRECTS, ...LEGACY_WILDCARDS].map(([from, to]) => ({
