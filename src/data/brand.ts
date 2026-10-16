@@ -159,6 +159,8 @@ const MIN_CONTRAST = 3;
 const EXTRA_INKS: Partial<Record<BrandInk, BrandInk[]>> = {
   laranja: ['branco', 'bege', 'preto', 'cafe', 'chumbo'],
   'laranja-web': ['branco', 'bege'],
+  // Turquesa também aceita logo clara: branco (2,7:1) e bege (2,4:1).
+  turquesa: ['branco', 'bege'],
 };
 
 /**
