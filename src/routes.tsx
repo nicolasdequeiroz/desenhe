@@ -78,7 +78,7 @@ export const routes: RouteRecord[] = [
       {path: 'colonia-de-ferias', element: <ColoniaDeFerias />},
       {path: 'coworking-artistico', element: <CoworkingArtistico />},
       {path: 'in-company', element: <InCompany />},
-      // Só palestra e festa têm página própria; um HTML por formato, como nos cursos.
+      // Uma página por formato In Company, cada uma com HTML próprio, como nos cursos.
       ...IN_COMPANY_FORMATS.filter((format) => format.page).map((format) => ({
         path: `in-company/${format.slug}`,
         element: <InCompanyFormato slug={format.slug} />,

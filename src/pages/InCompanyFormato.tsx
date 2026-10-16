@@ -33,9 +33,8 @@ const FACT_ICONS: Record<string, Icon> = {
 const STEP_ICONS = [PresentationChart, UsersThree, Megaphone, Lightbulb];
 
 /**
- * Página de um formato In Company (só a palestra e a confraternização têm
- * uma; os outros vivem como bloco em /in-company). Dirigida por `slug`,
- * como o CursoDetalhe.
+ * Página de um formato In Company, dirigida por `slug` como o CursoDetalhe.
+ * Formatos sem `page` nos dados aparecem só como card no hub /in-company.
  */
 export function InCompanyFormato({slug}: {slug: string}) {
   const format = IN_COMPANY_FORMATS.find((f) => f.slug === slug);

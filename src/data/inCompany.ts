@@ -101,7 +101,7 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
         {label: 'Ideal para', value: 'Treinamentos, convenções, planejamento e semanas de inovação'},
         {label: 'A empresa recebe', value: '4 propostas visuais para desafios reais e devolutiva à equipe de RH'},
       ],
-      stepsTitle: 'Uma tarde, quatro tempos',
+      stepsTitle: 'Uma hora e meia, quatro tempos',
       stepsLead:
         'Cerca de uma hora e meia na sua empresa, da palestra à votação final, conduzida por um professor da Desenhe.',
       steps: [
@@ -111,7 +111,7 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
           text: 'Arte como resolução de problemas, circulação de ideias e os três mecanismos: restrição deliberada, deslocamento de contexto e iteração sem apego.',
         },
         {
-          time: '40 a 50 min',
+          time: '35 a 40 min',
           title: 'Dinâmica em grupos',
           text: 'Cada grupo recebe um desafio real da empresa e cartas de restrição. Na virada, os trabalhos trocam de grupo e cada um continua a ideia do outro.',
         },
@@ -137,14 +137,14 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
         },
         {
           title: 'Visita técnica',
-          text: 'Conferimos o espaço: mesas, projeção, tomadas e parede livre para a exposição final.',
+          text: 'Numa visita ou pela planta, conferimos o espaço: mesas, projeção, tomadas e parede livre para a exposição final.',
         },
       ],
       faq: [
         {
           question: 'Quantas pessoas participam?',
           answer:
-            'De 16 a 30 pessoas por condutor, em grupos de cerca de cinco. Para turmas maiores, existem outros formatos: fale com a gente.',
+            'De 16 a 30 pessoas, divididas em quatro grupos, cada um com um desafio da empresa. Para turmas maiores, existem outros formatos: fale com a gente.',
         },
         {
           question: 'O que a empresa precisa ter?',
@@ -200,6 +200,111 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       {label: 'Participantes', value: '15 a 20 por sessão'},
       {label: 'Onde', value: 'Na empresa'},
     ],
+    page: {
+      seoTitle: 'Pausa de Descompressão com Arte para Empresas em Curitiba',
+      seoDescription:
+        'Atividade de bem-estar de 30 minutos para equipes: cor, movimento e criação coletiva num painel iluminado, sem precisar saber desenhar. Para SIPAT, semana de saúde e intervalos de reunião, em Curitiba.',
+      kicker: 'Bem-estar',
+      lead: 'Trinta minutos em pé e sem tela em branco: a equipe sobrepõe lâminas de cor num painel iluminado e volta para o dia em outro ritmo.',
+      deck: [
+        '/images/in-company/deck-descompressao-1.webp',
+        '/images/in-company/deck-descompressao-2.webp',
+        '/images/in-company/deck-descompressao-3.webp',
+        '/images/in-company/deck-descompressao-4.webp',
+      ],
+      description: [
+        'Um momento para se afastar dos problemas da rotina e voltar às atividades do dia com outro olhar e em outro ritmo. Formato curto, em pé, sem cadeira e sem uma tela em branco individual para encarar.',
+        'Cada pessoa recebe lâminas translúcidas nas três cores primárias (ciano, magenta e amarelo) e só pode fixá-las sobrepondo as de um colega. No painel iluminado, o grupo vê as cores secundárias nascerem juntas, sem certo nem errado e sem resultado individual para defender.',
+        'A regra obriga as pessoas a circular e a encostar no trabalho dos outros, sem exigir conversa de ninguém. No final, o grupo dá três passos para trás e descobre o que ninguém tinha planejado.',
+      ],
+      details: [
+        {label: 'Equipe', value: '1 condutor'},
+        {label: 'Ideal para', value: 'SIPAT, semana de saúde, Setembro Amarelo e intervalo de reunião longa'},
+        {label: 'A empresa recebe', value: 'O painel coletivo de cor e o registro em foto'},
+      ],
+      stepsTitle: 'Meia hora, em quatro movimentos',
+      stepsLead:
+        'Do primeiro minuto à leitura do painel, tudo em pé e conduzido por um professor da Desenhe.',
+      steps: [
+        {
+          time: '0 a 3 min',
+          title: 'Chegada',
+          text: 'Uma instrução de 90 segundos, todo mundo em pé, sem projeção.',
+        },
+        {
+          time: '3 a 9 min',
+          title: 'Soltar a mão',
+          text: 'O mesmo exercício da primeira aula da escola: traço gestual em papel kraft e um aquecimento de ombros, braços e punhos.',
+        },
+        {
+          time: '9 a 20 min',
+          title: 'Estação de cor',
+          text: 'Cada pessoa recebe três lâminas, uma de cada primária. A única regra: nenhuma lâmina fica isolada, toda lâmina sobrepõe pelo menos em parte a de outra pessoa.',
+        },
+        {
+          time: '20 a 30 min',
+          title: 'Leitura coletiva',
+          text: 'O grupo se afasta do painel e o condutor aponta onde nasceram o verde, o laranja e o violeta, e o que ninguém tinha planejado.',
+        },
+      ],
+      prepare: [
+        {
+          title: 'Briefing curto',
+          text: 'Combinamos o número de pessoas, o horário exato e o que acontece antes e depois na agenda: perto do almoço ou logo depois de uma reunião, a pausa pede ajustes diferentes.',
+        },
+        {
+          title: 'Visita ao espaço',
+          text: 'Escolhemos onde o painel vai ficar, medimos e conferimos se o prédio permite fixação temporária.',
+        },
+        {
+          title: 'Painel pronto antes',
+          text: 'Chegamos antes e montamos tudo antes de o grupo entrar: encontrar a parede já preparada faz parte da experiência.',
+        },
+      ],
+      faq: [
+        {
+          question: 'Precisa saber desenhar?',
+          answer:
+            'Não. Não há tela em branco nem resultado individual: cada pessoa só sobrepõe cores às de um colega, e o efeito aparece no painel do grupo.',
+        },
+        {
+          question: 'Por que em pé?',
+          answer:
+            'Porque a ideia é tirar o corpo do modo reunião. Em pé, o grupo circula, se aproxima do trabalho dos outros e sai da pausa mais desperto.',
+        },
+        {
+          question: 'Quantas pessoas participam?',
+          answer:
+            'De 15 a 20 por sessão. Para equipes maiores, fazemos mais de uma sessão no mesmo dia.',
+        },
+        {
+          question: 'O que a empresa precisa ter?',
+          answer:
+            'Uma área livre para circular e uma parede lisa de cerca de 4 metros, com autorização para fixação temporária, e tomadas por perto. As lâminas, o painel iluminado e os materiais ficam por nossa conta.',
+        },
+        {
+          question: 'Funciona em sala sem janela ou à noite?',
+          answer:
+            'Funciona: o painel é iluminado, então as cores aparecem vivas sem depender da luz do dia.',
+        },
+        {
+          question: 'Em que ocasiões ela se encaixa melhor?',
+          answer:
+            'Na abertura de uma SIPAT ou de uma semana de saúde, no Setembro Amarelo ou no meio de uma reunião longa ou de uma convenção, quando o grupo precisa respirar.',
+        },
+        {
+          question: 'O que fica para a empresa depois?',
+          answer:
+            'O painel coletivo de cor, que pode ficar exposto no espaço combinado, e o registro em foto da ação, usado com autorização dos participantes.',
+        },
+        {
+          question: 'Com quanta antecedência devo pedir?',
+          answer:
+            'O ideal são 30 dias, para o briefing e a visita ao espaço. Para datas mais próximas, consulte a agenda.',
+        },
+      ],
+      message: 'Olá! Quero uma proposta de In Company para a "Pausa de descompressão".',
+    },
   },
   {
     slug: 'retratos-em-dupla',
@@ -317,7 +422,7 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
     needLabel: 'Outros formatos',
     title: 'Oficina sob medida no ateliê',
     summary:
-      'Sua equipe vem até a Desenhe e cria uma peça com tema definido junto com a gente: lenços, telas para o escritório, cadernos ou cartões.',
+      'Sua equipe vem até a Desenhe e cria uma peça com tema definido junto com a gente, como telas para o escritório, cadernos ou cartões.',
     image: '/images/in-company/card-oficina.webp',
     imageAlt: 'Turma desenhando e pintando nas mesas do ateliê da Desenhe',
     facts: [
@@ -325,6 +430,109 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       {label: 'Participantes', value: 'Até 10 por grupo'},
       {label: 'Onde', value: 'No ateliê da Desenhe'},
     ],
+    page: {
+      seoTitle: 'Oficina de Arte para Empresas no Ateliê da Desenhe, Curitiba',
+      seoDescription:
+        'Oficina de desenho e pintura sob medida para equipes, no ateliê da Desenhe em Curitiba: a equipe cria peças com o tema da empresa, com orientação de professores e materiais inclusos.',
+      kicker: 'No ateliê da Desenhe',
+      lead: 'Sua equipe vem até o nosso ateliê e cria, com orientação de professores, uma peça com tema definido junto com vocês.',
+      deck: [
+        '/images/in-company/deck-oficina-1.webp',
+        '/images/in-company/deck-oficina-2.webp',
+        '/images/in-company/deck-oficina-3.webp',
+        '/images/in-company/deck-oficina-4.webp',
+      ],
+      description: [
+        'Em vez de levar a arte até a empresa, a equipe sai do escritório e passa algumas horas no ateliê da Desenhe, entre cavaletes, mesas de desenho e luz natural, no mesmo espaço em que acontecem as nossas aulas.',
+        'O tema e a peça são definidos junto com vocês: telas para decorar o escritório, cadernos, cartões ou outra ideia que faça sentido para a ocasião. Começamos com uma orientação rápida de desenho e cor e seguimos para a prática, com moldes e paletas que garantem um resultado bonito mesmo para quem nunca desenhou.',
+      ],
+      details: [
+        {label: 'Equipe', value: 'Professor e monitor'},
+        {label: 'Ideal para', value: 'Integração de equipes, datas comemorativas e peças para o escritório'},
+        {label: 'A empresa recebe', value: 'As peças criadas pela equipe'},
+      ],
+      stepsTitle: 'Do tema à peça pronta',
+      stepsLead:
+        'De uma a duas horas por grupo, no ateliê, com tudo preparado antes de a equipe chegar.',
+      steps: [
+        {
+          time: 'Antes',
+          title: 'Tema e peça',
+          text: 'Combinamos com vocês o que a equipe vai criar e o tema: valores, uma campanha, uma data comemorativa.',
+        },
+        {
+          time: 'Início',
+          title: 'Orientação de desenho e cor',
+          text: 'Uma introdução curta e prática, pensada para quem nunca pegou num pincel.',
+        },
+        {
+          time: 'Prática',
+          title: 'Mão na massa',
+          text: 'Cada pessoa trabalha na sua peça, com moldes, paletas e o acompanhamento do professor e do monitor.',
+        },
+        {
+          time: 'Final',
+          title: 'Peças prontas',
+          text: 'Os trabalhos ficam com a equipe, para levar para casa ou para o escritório.',
+        },
+      ],
+      prepare: [
+        {
+          title: 'Tema da empresa',
+          text: 'Valores, campanha ou data comemorativa entram nos exemplos e nos materiais.',
+        },
+        {
+          title: 'Moldes e paletas',
+          text: 'Preparamos referências e paletas sob medida para a peça escolhida, o que garante um bom resultado para todos.',
+        },
+        {
+          title: 'Ateliê pronto',
+          text: 'A sala fica montada antes de a equipe chegar, com os materiais separados por lugar.',
+        },
+      ],
+      faq: [
+        {
+          question: 'Onde fica o ateliê?',
+          answer:
+            'Na Rua Padre Anchieta, 265A, no bairro Mercês, em Curitiba. É a sede da Desenhe, onde acontecem as nossas aulas.',
+        },
+        {
+          question: 'Quantas pessoas participam?',
+          answer:
+            'Até 10 pessoas por grupo, para cada um ter acompanhamento de perto. Equipes maiores participam em grupos, em horários seguidos.',
+        },
+        {
+          question: 'Precisa saber desenhar?',
+          answer:
+            'Não. A orientação inicial e os moldes foram pensados para quem nunca desenhou, e o resultado vem bonito de qualquer forma.',
+        },
+        {
+          question: 'Que tipo de peça a equipe pode criar?',
+          answer:
+            'Telas para decorar o escritório, cadernos, cartões ou outra ideia que faça sentido para a ocasião. Definimos juntos na conversa inicial.',
+        },
+        {
+          question: 'Os materiais estão inclusos?',
+          answer: 'Sim. Tintas, papéis, pincéis e o que mais a peça pedir ficam por nossa conta.',
+        },
+        {
+          question: 'Dá para colocar o logo da empresa nas peças?',
+          answer:
+            'Dá, em molduras, envelopes ou na própria peça, conforme o formato. Combinamos isso na proposta.',
+        },
+        {
+          question: 'Os trabalhos podem ser expostos na empresa?',
+          answer:
+            'Podem: fazemos a curadoria e a montagem dos trabalhos no escritório, se a empresa quiser transformar a oficina numa exposição.',
+        },
+        {
+          question: 'Com quanta antecedência devo pedir?',
+          answer:
+            'O ideal são 30 dias, para preparar os materiais personalizados. Para datas mais próximas, consulte a agenda do ateliê.',
+        },
+      ],
+      message: 'Olá! Quero uma proposta de In Company para a "Oficina sob medida no ateliê".',
+    },
   },
 ];
 

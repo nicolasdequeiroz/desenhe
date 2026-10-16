@@ -556,6 +556,33 @@ body {
   font-weight: 600;
 }
 
+/* Com grupo, o painel alarga para os nomes dos formatos caberem numa linha. */
+.site-nav-dropdown__menu:has(.site-nav-dropdown__group) {
+  min-width: 19rem;
+}
+
+/* Grupo dentro do menu (In Company e seus formatos): título clicável e as
+   subpáginas recuadas embaixo, com um fio separando do item seguinte. */
+.site-nav-dropdown__group {
+  display: grid;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-1);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav-dropdown__item--group {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.site-nav-dropdown__item--sub {
+  margin-left: var(--spacing-3);
+  padding-left: var(--spacing-3);
+  border-left: 1px solid var(--color-border);
+  border-radius: 0 var(--radius-element) var(--radius-element) 0;
+}
+
 /* ---------- Menu mobile (hambúrguer) ---------- */
 
 .site-header__toggle {
