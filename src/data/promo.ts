@@ -98,7 +98,7 @@ export const IN_COMPANY_PROMO: FeaturedPromo = {
   path: '/in-company',
   nav: {label: 'In Company'},
   hero: {
-    badge: 'Para empresas',
+    badge: 'Novidade',
     image: '/images/in-company/in-company-featured.webp',
     imageMobile: '/images/in-company/in-company-featured-mobile.webp',
     imageAlt: 'Desenhe In Company: oficinas de arte para empresas em Curitiba',

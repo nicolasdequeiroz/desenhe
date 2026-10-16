@@ -14,7 +14,11 @@ const IN_COMPANY_PAGES = IN_COMPANY_FORMATS.filter((format) => format.page).map(
   to: `/in-company/${format.slug}`,
   label: format.title,
 }));
-const EMPRESAS_ITEM = {to: '/in-company', label: 'In Company', children: IN_COMPANY_PAGES};
+const EMPRESAS_ITEM = {
+  to: '/in-company',
+  label: 'In Company (para empresas)',
+  children: IN_COMPANY_PAGES,
+};
 const COWORKING_ITEM = {to: '/coworking-artistico', label: 'Coworking'};
 
 /** In Company e Coworking ficam juntos num menu "Serviços" no desktop. */
