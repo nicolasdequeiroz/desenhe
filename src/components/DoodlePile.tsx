@@ -13,12 +13,12 @@ const MAX_VISIBLE_DESKTOP = 60;
  * os limites e as medidas usadas na conta.
  */
 const MOBILE_MIN_VISIBLE = 3;
-const MOBILE_CARD_COLUMN = 94; // 84px do cartão + respiro
-const MOBILE_CARD_ROW = 100; // altura do cartão com o nome + respiro
+const MOBILE_CARD_COLUMN = 82; // 72px do cartão + respiro
+const MOBILE_CARD_ROW = 80; // altura do cartão com o nome + respiro
 /** Fração das células que os cartões realmente ocupam (eles caem tortos e se sobrepõem). */
-const MOBILE_FILL = 0.7;
+const MOBILE_FILL = 0.75;
 const THUMB_WIDTH_DESKTOP = 116;
-const THUMB_WIDTH_MOBILE = 84;
+const THUMB_WIDTH_MOBILE = 72;
 const MOBILE_QUERY = '(max-width: 640px)';
 
 /** Miniatura de um desenho, redesenhada dos traços (nunca uma imagem). */
@@ -102,7 +102,7 @@ export function DoodlePile({doodles, pinnedIds = []}: Props) {
     const measure = () => {
       const band = parseFloat(getComputedStyle(footer).paddingBottom) || 0;
       const columns = Math.max(1, Math.floor(footer.clientWidth / MOBILE_CARD_COLUMN));
-      const rows = Math.max(1, Math.floor(band / MOBILE_CARD_ROW));
+      const rows = Math.max(1, band / MOBILE_CARD_ROW);
       setMobileCapacity(Math.max(MOBILE_MIN_VISIBLE, Math.floor(columns * rows * MOBILE_FILL)));
     };
 
@@ -201,9 +201,11 @@ export function DoodlePile({doodles, pinnedIds = []}: Props) {
       engine.gravity.y = 1;
 
       const WALL = 200;
+      // Os cartões assentam 4px acima do fim da página, e não rente a ela.
+      const FLOOR_GAP = 4;
       const walls = [
         // Chão e paredes ficam para fora da área visível, escondendo a espessura.
-        Bodies.rectangle(width / 2, height + WALL / 2, width * 3, WALL, {isStatic: true}),
+        Bodies.rectangle(width / 2, height - FLOOR_GAP + WALL / 2, width * 3, WALL, {isStatic: true}),
         Bodies.rectangle(-WALL / 2, height / 2, WALL, height * 3, {isStatic: true}),
         Bodies.rectangle(width + WALL / 2, height / 2, WALL, height * 3, {isStatic: true}),
       ];

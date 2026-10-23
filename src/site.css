@@ -5448,6 +5448,16 @@ body {
   line-height: 1.2;
   text-align: center;
   color: var(--surface-warm-text-subtle);
+  /*
+   * Nome longo não alarga o cartão: o cartão tem a largura do desenho e o
+   * nome que não couber termina em reticências. `width: 0` com `min-width:
+   * 100%` tira o texto do cálculo da largura do cartão e o limita a ela.
+   */
+  width: 0;
+  min-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ---------- Botão-estrela ---------- */
