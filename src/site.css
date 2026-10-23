@@ -5208,11 +5208,13 @@ body {
   .site-footer {
     min-height: 560px;
     /*
-     * O texto do rodapé (três colunas de links, mais alto que o antigo) e a
-     * pilha dividem a mesma área: sem reserva embaixo, os cartões empilham
-     * por cima dos links. Esta faixa fica só para eles assentarem.
+     * O texto do rodapé (três colunas de links) e a pilha dividem a mesma
+     * área: sem reserva embaixo, os cartões empilham por cima dos links. Esta
+     * faixa é só deles e vem da altura da tela (`svh`, que não pula quando a
+     * barra do navegador some): tela baixa, faixa baixa. O DoodlePile mede
+     * esta faixa e solta só os cartões que cabem nela.
      */
-    padding-bottom: calc(var(--spacing-12) * 8);
+    padding-bottom: clamp(200px, 38svh, 420px);
   }
 }
 

@@ -6,8 +6,17 @@ import {renderStrokes, DOODLE_RATIO, type Doodle} from '../data/guestbook';
  * que o Apps Script devolve (ver apps-script/Codigo.gs).
  */
 const MAX_VISIBLE_DESKTOP = 60;
-/** No celular os cartões são menores e a tela é estreita: menos que no desktop. */
-const MAX_VISIBLE_MOBILE = 11;
+/**
+ * No celular o número de cartões vem do espaço livre da pilha (ver
+ * `mobileCapacity`), que por sua vez vem da altura da tela (o rodapé reserva
+ * uma faixa em `svh`): tela baixa, poucos cartões; tela alta, mais. Estes são
+ * os limites e as medidas usadas na conta.
+ */
+const MOBILE_MIN_VISIBLE = 3;
+const MOBILE_CARD_COLUMN = 94; // 84px do cartão + respiro
+const MOBILE_CARD_ROW = 100; // altura do cartão com o nome + respiro
+/** Fração das células que os cartões realmente ocupam (eles caem tortos e se sobrepõem). */
+const MOBILE_FILL = 0.7;
 const THUMB_WIDTH_DESKTOP = 116;
 const THUMB_WIDTH_MOBILE = 84;
 const MOBILE_QUERY = '(max-width: 640px)';
@@ -77,7 +86,33 @@ export function DoodlePile({doodles, pinnedIds = []}: Props) {
     return () => mq.removeEventListener('change', apply);
   }, []);
 
-  const maxVisible = isMobile ? MAX_VISIBLE_MOBILE : MAX_VISIBLE_DESKTOP;
+  const hasDoodles = doodles.length > 0;
+  const [mobileCapacity, setMobileCapacity] = useState(MOBILE_MIN_VISIBLE);
+
+  /*
+   * Quantos cartões cabem na faixa que o rodapé reserva para a pilha (o
+   * padding-bottom dele, em svh). Mede de novo ao girar o aparelho ou mudar
+   * a largura, mas não a cada pequeno ajuste da barra do navegador.
+   */
+  useEffect(() => {
+    if (!isMobile) return;
+    const footer = containerRef.current?.parentElement;
+    if (!footer) return;
+
+    const measure = () => {
+      const band = parseFloat(getComputedStyle(footer).paddingBottom) || 0;
+      const columns = Math.max(1, Math.floor(footer.clientWidth / MOBILE_CARD_COLUMN));
+      const rows = Math.max(1, Math.floor(band / MOBILE_CARD_ROW));
+      setMobileCapacity(Math.max(MOBILE_MIN_VISIBLE, Math.floor(columns * rows * MOBILE_FILL)));
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+    // A pilha só existe (e tem pai) depois que os desenhos chegam.
+  }, [isMobile, hasDoodles]);
+
+  const maxVisible = isMobile ? mobileCapacity : MAX_VISIBLE_DESKTOP;
   const thumbWidth = isMobile ? THUMB_WIDTH_MOBILE : THUMB_WIDTH_DESKTOP;
   const poolSignature = doodles.map((d) => d.id).join(',');
   const pinnedSignature = pinnedIds.join(',');
