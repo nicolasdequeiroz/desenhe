@@ -15,6 +15,7 @@ import {
 } from '@phosphor-icons/react';
 import {Button} from '../ui';
 import {Seo} from '../components/Seo';
+import {JsonLd} from '../components/JsonLd';
 import type {Fact} from '../components/FactsSummary';
 import {InCompanyFacts} from '../components/InCompanyFacts';
 import {FaqItem} from '../components/FaqItem';
@@ -29,6 +30,9 @@ import {
   IN_COMPANY_STEPS,
   SITE,
   asset,
+  breadcrumbSchema,
+  faqSchema,
+  serviceListSchema,
   whatsappLink,
 } from '../data';
 
@@ -100,9 +104,18 @@ export function InCompany() {
   return (
     <div className="ic-page">
       <Seo
-        title="In Company: Arte para Empresas em Curitiba"
-        description="Oficinas, palestras e ações de arte para empresas em Curitiba: criatividade para resolver problemas, pausa de descompressão e retratos em dupla para confraternizações. Peça uma proposta."
+        rawTitle="Ações Corporativas com Arte em Curitiba | Desenhe In Company"
+        description="Palestra, ações de saúde mental, dinâmicas para confraternização e workshops de arte para empresas, pela Desenhe, escola de arte em Curitiba."
         path="/in-company"
+        image="/images/og/in-company.jpg"
+        imageAlt="Desenhe In Company: ações de arte para empresas e equipes em Curitiba"
+      />
+      <JsonLd
+        graph={[
+          breadcrumbSchema([{name: 'In Company', path: '/in-company'}]),
+          serviceListSchema(IN_COMPANY_FORMATS),
+          faqSchema(IN_COMPANY_FAQ),
+        ]}
       />
 
       <section className="hero hero--coworking hero--ic">
@@ -111,6 +124,7 @@ export function InCompany() {
             src={asset('/images/in-company/hero-palestra.webp')}
             alt=""
             className="hero__background-image"
+            fetchPriority="high"
           />
           <div className="hero__background-overlay" />
         </div>
@@ -124,7 +138,8 @@ export function InCompany() {
                     In Company · Para empresas
                   </span>
                   <h1 className="hero__title">
-                    <span className="text-color-accent">Arte</span> que move equipes
+                    <span className="text-color-accent">Ações corporativas</span> com arte para
+                    equipes e eventos
                   </h1>
                   <div className="hero__lead">
                     <p>

@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react';
-import {MagnifyingGlassPlus} from '@phosphor-icons/react';
-import {asset, DEFAULT_TECHNIQUE, type GalleryCredit} from '../data';
+import {MagnifyingGlassPlus, SpeakerHigh} from '@phosphor-icons/react';
+import {asset, DEFAULT_TECHNIQUE, type GalleryCredit, type GalleryVideo} from '../data';
+import {LoopVideo} from './LoopVideo';
 import {useWorkLightbox} from './WorkLightbox';
 
 /** 3 -> "03": numeração de catálogo, no formato já usado nos cursos em destaque. */
@@ -25,6 +26,13 @@ interface Props {
   /** Técnica e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
   /**
+   * Vídeos no lugar de algumas fotos, no mesmo índice de `images` (a imagem
+   * do índice vira o cartaz). Ver GalleryVideo.
+   */
+  videos?: (GalleryVideo | undefined)[];
+  /** Texto alternativo de cada imagem, no mesmo índice. Sem ele, vale "legenda, imagem N". */
+  alts?: string[];
+  /**
    * 'plain' tira o estilo polaroid: sem moldura de papel, sem inclinação e
    * sem legenda por imagem, só a foto num recorte reto (usado em História da
    * Arte).
@@ -39,7 +47,7 @@ interface Props {
  * diferentes conforme a página rola (ver --wall-progress). Clicar em um deles
  * abre o visor em tela cheia, que é onde dá para reparar no traço.
  */
-export function CourseGallery({images, caption, credits, variant}: Props) {
+export function CourseGallery({images, caption, credits, videos, alts, variant}: Props) {
   const plain = variant === 'plain';
   const wallRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -54,6 +62,7 @@ export function CourseGallery({images, caption, credits, variant}: Props) {
     images,
     caption,
     credits: plain ? undefined : credits,
+    videos,
     framed: !plain,
     getOrigin,
     onClosed,
@@ -138,6 +147,7 @@ export function CourseGallery({images, caption, credits, variant}: Props) {
       >
         {images.map((img, i) => {
           const credit = plain ? undefined : credits?.[i];
+          const video = videos?.[i];
           return (
             <button
               key={img}
@@ -147,7 +157,11 @@ export function CourseGallery({images, caption, credits, variant}: Props) {
                 itemRefs.current[i] = node;
               }}
               onClick={() => openWork(i, frameRefs.current[i])}
-              aria-label={`Ampliar trabalho ${i + 1} de ${images.length}`}
+              aria-label={
+                video
+                  ? `Assistir ao vídeo ${i + 1} de ${images.length}, com som`
+                  : `Ampliar trabalho ${i + 1} de ${images.length}`
+              }
             >
               {/*
                 Foto e legenda vivem dentro do mesmo .work-wall__frame, que é
@@ -161,15 +175,22 @@ export function CourseGallery({images, caption, credits, variant}: Props) {
                   frameRefs.current[i] = node;
                 }}
               >
-                <span className="work-wall__photo">
+                <span className={`work-wall__photo${video ? ' work-wall__photo--video' : ''}`}>
                   <img
                     src={asset(img)}
-                    alt={`${caption}, imagem ${i + 1}`}
+                    alt={alts?.[i] ?? `${caption}, imagem ${i + 1}`}
                     loading="lazy"
                   />
+                  {video && (
+                    <LoopVideo src={video.loop} poster={img} className="work-wall__video" />
+                  )}
                   <span className="work-wall__zoom">
-                    <MagnifyingGlassPlus size={14} weight="bold" aria-hidden="true" />
-                    Ver de perto
+                    {video ? (
+                      <SpeakerHigh size={14} weight="bold" aria-hidden="true" />
+                    ) : (
+                      <MagnifyingGlassPlus size={14} weight="bold" aria-hidden="true" />
+                    )}
+                    {video ? 'Assistir com som' : 'Ver de perto'}
                   </span>
                 </span>
                 {!plain && (

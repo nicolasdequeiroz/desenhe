@@ -3196,6 +3196,29 @@ body {
 }
 
 /*
+ * Vídeo na parede (ver LoopVideo): fica por cima da foto-cartaz, no mesmo
+ * recorte 4:3, com o mesmo zoom do hover. O vídeo é em pé, então o
+ * enquadramento é puxado para o apresentador (e o cartaz acompanha, para a
+ * troca do cartaz pelo vídeo não pular). Sem eventos: o clique é do botão.
+ */
+.work-wall__photo--video img,
+.work-wall__video {
+  object-position: center 38%;
+}
+
+.work-wall__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transform: scale(var(--work-zoom, 1))
+    translateY(calc(var(--work-shift, 0) * var(--work-drift, 0px)));
+  transition: transform var(--duration-slow) ease;
+}
+
+/*
  * Margem inferior no estilo polaroid: o espaço em branco onde se escreve
  * quem desenhou e quando. `galleryCredits` em courses.ts alimenta o autor e
  * o ano; sem crédito cadastrado entra um texto genérico (ver CourseGallery).
@@ -3292,6 +3315,7 @@ body {
    */
   .work-wall__frame,
   .work-wall__photo img,
+  .work-wall__video,
   .work-wall__label {
     transition: none;
   }
@@ -3432,6 +3456,7 @@ body {
 
   .work-wall__frame,
   .work-wall__photo img,
+  .work-wall__video,
   .work-wall__zoom {
     transition: none;
   }
@@ -3613,6 +3638,7 @@ body {
 }
 
 .work-viewer__photo {
+  position: relative;
   overflow: hidden;
   border-radius: calc(var(--radius-container) - var(--viewer-border));
 }
@@ -3622,6 +3648,19 @@ body {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+/*
+ * Vídeo do visor (ver ViewerVideo): cobre a foto-cartaz, que tem a mesma
+ * proporção e é quem dá o tamanho da caixa. Os controles são os do navegador.
+ */
+.work-viewer__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
 }
 
 /* A caixa já tem a proporção certa: aqui a foto só preenche. */
@@ -5168,6 +5207,12 @@ body {
    */
   .site-footer {
     min-height: 560px;
+    /*
+     * O texto do rodapé (três colunas de links, mais alto que o antigo) e a
+     * pilha dividem a mesma área: sem reserva embaixo, os cartões empilham
+     * por cima dos links. Esta faixa fica só para eles assentarem.
+     */
+    padding-bottom: calc(var(--spacing-12) * 8);
   }
 }
 
@@ -5230,6 +5275,8 @@ body {
 .site-footer__headline {
   margin: 0;
   max-width: 34ch;
+  /* Cada linha do título equilibrada: sem uma palavra sozinha na última. */
+  text-wrap: balance;
   font-family: var(--font-family-heading);
   font-size: var(--heading-h4);
   font-weight: 700;
@@ -5237,6 +5284,23 @@ body {
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: var(--surface-warm-text);
+}
+
+/* Desktop: uma frase por linha. No celular o título é texto corrido, em
+   toda a largura do bloco, e quebra onde o texto acabar. */
+.site-footer__headline-line {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .site-footer__headline {
+    max-width: none;
+    text-wrap: wrap;
+  }
+
+  .site-footer__headline-line {
+    display: inline;
+  }
 }
 
 .site-footer__nav-groups {
@@ -5268,6 +5332,8 @@ body {
 }
 
 .site-footer__link {
+  /* A seta (↗) vai junto da última palavra e nunca quebra sozinha. */
+  overflow-wrap: normal;
   font-family: var(--font-family-body);
   font-size: var(--text-size-small);
   font-weight: 600;
@@ -8738,8 +8804,16 @@ body {
 /* Título no tamanho de hero (o maior da escala), só nas páginas de
    formato; quebra em linhas equilibradas, como nos cursos. */
 .ic-deck .course-deck__heading h1 {
-  max-width: 22ch;
+  max-width: 26ch;
   font-size: var(--heading-display);
+}
+
+/* No desktop o título composto (termo buscado + nome) usa o tamanho de título
+   de seção, um degrau abaixo do display: cabe em duas linhas. */
+@media (min-width: 900px) {
+  .ic-deck .course-deck__heading h1 {
+    font-size: var(--heading-h2);
+  }
 }
 
 /* Objetos recortados de In Company: cada um pode ser maior ou menor que a
@@ -8787,11 +8861,11 @@ body {
 
 /* Oficina: o título ocupa duas linhas e empurra os objetos para baixo;
    aqui eles sobem para mais perto do texto. */
-.ic-page--oficina-sob-medida .course-deck__header {
+.ic-page--workshop-arte-empresas .course-deck__header {
   margin-bottom: var(--spacing-6);
 }
 
-.ic-page--oficina-sob-medida .ic-relics {
+.ic-page--workshop-arte-empresas .ic-relics {
   padding-top: 0;
 }
 

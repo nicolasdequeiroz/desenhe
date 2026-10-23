@@ -4,6 +4,11 @@ import {SITE} from '../data/site';
 interface SeoProps {
   title?: string;
   description?: string;
+  /**
+   * Título completo, sem o sufixo " | Desenhe" que o `title` ganha. Para a
+   * página que precisa de outro fecho, como "| Desenhe In Company".
+   */
+  rawTitle?: string;
   /** Caminho canônico da página, ex.: '/cursos/desenho-artistico' */
   path?: string;
   /**
@@ -21,8 +26,8 @@ interface SeoProps {
   noindex?: boolean;
 }
 
-export function Seo({title, description, path, image, imageAlt, noindex}: SeoProps) {
-  const fullTitle = title ? `${title} | ${SITE.shortName}` : SITE.defaultTitle;
+export function Seo({title, rawTitle, description, path, image, imageAlt, noindex}: SeoProps) {
+  const fullTitle = rawTitle ?? (title ? `${title} | ${SITE.shortName}` : SITE.defaultTitle);
   const desc = description ?? SITE.description;
   const canonical = path ? `${SITE.url}${path}` : SITE.url;
   const ogImage = `${SITE.url}${image ?? SITE.ogImage}`;

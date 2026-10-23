@@ -93,7 +93,7 @@ O site é **dark fixo** (`color-scheme: dark`, independente do sistema).
 
 ## Botões
 
-Os botões de `/componentes` são a verdade absoluta: `Button` (`src/ui/Button.tsx`) com as variantes `primary`, `secondary`, `ghost`, `tint` e os tamanhos `sm`, `md`, `lg`. O `.btn` fixa `--color-accent` e `--color-on-accent` nos tokens da marca (`--color-accent-brand`, `--color-on-accent-brand`), então o laranja é o mesmo em qualquer página, inclusive nas de curso que trocam `--color-accent` pela cor da categoria. Não sobrescreva cor, tamanho ou fonte de `.btn` por página ou contexto; ajuste de layout (largura, margem) pode. Se um fundo não combinar com o primário, troque a variante (`secondary`, `ghost`), não a cor. Botão novo usa o componente, não uma classe própria.
+Os botões de `/componentes` são a verdade absoluta: `Button` (`src/ui/Button.tsx`) com as variantes `primary`, `secondary`, `ghost`, `tint` e os tamanhos `sm`, `md`, `lg`. O `.btn` fixa `--color-accent` e `--color-on-accent` nos tokens da marca (`--color-accent-brand`, `--color-on-accent-brand`), então o laranja é o mesmo em qualquer página, inclusive nas de curso que trocam `--color-accent` pela cor da categoria. Não sobrescreva cor, tamanho ou fonte de `.btn` por página ou contexto; ajuste de layout (largura, margem) pode. Se um fundo não combinar com o primário, troque a variante (`secondary`, `ghost`), não a cor. Botão novo usa o componente, não uma classe própria. Texto de botão curto (até 3 palavras): o contexto vem do título, não do botão.
 
 ## Reaproveite antes de inventar
 
@@ -108,6 +108,7 @@ Antes de criar seção ou componente, procure um existente e adapte com props ou
 - `.course-summary` (via `FactsSummary`): ficha de fatos em duas colunas sob um hero. Em In Company, `InCompanyFacts` (régua de dados curtos + linha de textos, com fios).
 - `.course-deck`: primeira dobra colorida com baralho de fotos em leque. `.hero` com `hero__background`: primeira dobra com foto sangrando.
 - `.course-deck__relics`: objetos recortados (PNG/WebP transparente) no lugar do baralho, como em História da Arte e In Company.
+- `CourseGallery` (parede de polaroids com visor): aceita `videos` no mesmo índice de `images` (a imagem vira o cartaz). Na parede o vídeo toca mudo, em loop e só enquanto está à vista (`LoopVideo`, arquivo `-loop.mp4` leve e sem áudio); no visor abre o arquivo completo com som e controles nativos, sem moldura e na proporção dele. Vídeo novo: H.264 + AAC, `+faststart`, 720px de largura no completo e 540px sem áudio no loop, em `public/videos/`. Vídeo de iPhone vem em HLG (HDR): converter para SDR com tone mapping, senão fica lavado.
 - `FaqItem` dentro de `.coworking-faq`: FAQ. `.course-cta`: faixa colorida de fechamento.
 
 ## Padrões de In Company (páginas de formato)
@@ -117,6 +118,14 @@ Antes de criar seção ou componente, procure um existente e adapte com props ou
 - Objeto de vidro ou acrílico: deixe translúcida só a parte transparente editando a imagem, não com `mix-blend-mode` (multiply some no fundo escuro).
 - Imagens de objeto: WebP com fundo transparente, 900px de altura (`cwebp -q 85 -alpha_q 100 -resize 0 900`), em `public/images/in-company/`.
 - Ajuste de uma página só: cada página de formato tem a classe `ic-page--{slug}`.
+
+## SEO
+
+- `<Seo>` em toda página (title, description, canonical, og). Preview de link só em JPEG ou PNG (o WhatsApp não gera de `.webp`); In Company tem a imagem própria de cada página em `public/images/og/`, gerada por `scripts/og-in-company.py` com a mesma cena dos cards (`.ic-card-scene`: fundo café quadriculado e os objetos do serviço sobrepostos), sem título na imagem.
+- Dados estruturados (JSON-LD) saem dos dados da tela, em `src/data/seo.ts`, injetados por `<JsonLd graph={[...]} />`: Service, FAQPage, Person e BreadcrumbList nas páginas de formato, ItemList e FAQPage no hub, organização local na home. O que está no JSON-LD tem que estar visível na página.
+- O sitemap é gerado no fim do `npm run build` (`scripts/sitemap.mjs`), a partir das páginas pré-renderizadas: entra sozinho o que for indexável e fica de fora `noindex` e redirecionamento. Não existe mais `public/sitemap.xml` para editar à mão.
+- URL de página de serviço leva o termo buscado; ao renomear uma que já está no ar, acrescentar a antiga em `LEGACY_REDIRECTS` (`src/routes.tsx`). O H1 de In Company é o termo buscado + o nome do serviço (`page.h1`), e a etiqueta do card é o termo (`typeLabel`).
+- Imagem de primeira dobra: `loading="eager"` e `width`/`height` (CSS fixa a altura). Foto real leva `alt` descritivo com o termo buscado de forma natural; objeto decorativo fica com `alt=""`.
 
 ## Escrita
 

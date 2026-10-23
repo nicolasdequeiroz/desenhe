@@ -11,6 +11,17 @@ export interface CourseModule {
   description: string;
 }
 
+/**
+ * Vídeo no lugar de uma foto da galeria (ver CourseGallery). Na parede ele
+ * toca mudo, em loop e só enquanto está na tela (`loop`, uma versão leve e sem
+ * áudio); no visor abre o arquivo completo (`src`), com som e controles. A
+ * imagem do mesmo índice em `images` é o cartaz.
+ */
+export interface GalleryVideo {
+  src: string;
+  loop: string;
+}
+
 export interface GalleryCredit {
   /**
    * Técnica usada no trabalho, exibida na legenda estilo polaroid (ex.:

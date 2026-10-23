@@ -1,5 +1,5 @@
 import {useCallback, useRef, useState} from 'react';
-import type {GalleryCredit} from '../data';
+import type {GalleryCredit, GalleryVideo} from '../data';
 import {WorkViewer} from './WorkViewer';
 
 interface LightboxOptions {
@@ -8,6 +8,8 @@ interface LightboxOptions {
   caption: string;
   /** Autor e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
+  /** Vídeos no lugar de fotos, no mesmo índice de `images`. Ver GalleryVideo. */
+  videos?: (GalleryVideo | undefined)[];
   /** Moldura de papel em volta da imagem aberta. Ver WorkViewer. */
   framed?: boolean;
   /**
@@ -30,6 +32,7 @@ export function useWorkLightbox({
   images,
   caption,
   credits,
+  videos,
   framed,
   getOrigin,
   onClosed,
@@ -77,6 +80,7 @@ export function useWorkLightbox({
         images={images}
         caption={caption}
         credits={credits}
+        videos={videos}
         framed={framed}
         index={index}
         resolveOrigin={resolveOrigin}

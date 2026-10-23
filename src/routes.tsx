@@ -45,6 +45,11 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ['rafael-mesquita', '/professores#rafael-mesquita'],
   // Rennan Negrão expôs na galeria, mas não dá aula: vai para a lista.
   ['rennan-negrao', '/professores'],
+  // In Company: URLs de 16 a 23/10/2026, trocadas pelas com a palavra buscada.
+  ['in-company/criatividade-para-resolver-problemas', '/in-company/palestra-criatividade'],
+  ['in-company/pausa-de-descompressao', '/in-company/acao-saude-mental'],
+  ['in-company/retratos-em-dupla', '/in-company/dinamica-confraternizacao'],
+  ['in-company/oficina-sob-medida', '/in-company/workshop-arte-empresas'],
   // Blog do Wix, descontinuado.
   ['blog', '/'],
   ['post/blog-desenhe-arte-desenhe-curitiba', '/'],

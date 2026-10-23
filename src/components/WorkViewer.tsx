@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {createPortal} from 'react-dom';
 import {ArrowLeft, ArrowRight, X} from '@phosphor-icons/react';
-import {asset, DEFAULT_TECHNIQUE, type GalleryCredit} from '../data';
+import {asset, DEFAULT_TECHNIQUE, type GalleryCredit, type GalleryVideo} from '../data';
 import {useScrollLock} from './useScrollLock';
 
 const FOCUSABLE_SELECTOR =
-  'button:not(:disabled), [href], [tabindex]:not([tabindex="-1"])';
+  'button:not(:disabled), [href], video[controls], [tabindex]:not([tabindex="-1"])';
 
 /** Duração e curva do voo da peça entre a página e o visor. */
 const FLIGHT_MS = 460;
@@ -142,6 +142,11 @@ export interface ViewerProps {
   caption: string;
   /** Técnica e ano de cada imagem, no mesmo índice de `images` (ver courses.ts). */
   credits?: GalleryCredit[];
+  /**
+   * Vídeos no lugar de fotos, no mesmo índice de `images`. O vídeo abre sem
+   * moldura, na proporção dele, tocando com som e com os controles nativos.
+   */
+  videos?: (GalleryVideo | undefined)[];
   index: number;
   /**
    * Moldura de papel com a tarja de técnica em volta da imagem. Desligada
@@ -154,6 +159,33 @@ export interface ViewerProps {
 }
 
 /**
+ * Vídeo do visor. O clique que abriu o visor já libera o áudio, então ele
+ * começa a tocar com som; se o navegador ainda assim barrar, fica parado nos
+ * controles à espera do play. A imagem do mesmo índice é o cartaz e também
+ * quem dá a proporção à caixa (ver `bare` em WorkViewer).
+ */
+function ViewerVideo({src, poster, label}: {src: string; poster: string; label: string}) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    ref.current?.play().catch(() => {});
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      className="work-viewer__video"
+      aria-label={label}
+      src={asset(src)}
+      poster={asset(poster)}
+      controls
+      playsInline
+      preload="auto"
+    />
+  );
+}
+
+/**
  * Visor em tela cheia. Vai para o `body` por portal, e não fica onde o
  * componente está: a .site-shell abre um contexto de empilhamento (z-index: 1)
  * que deixaria o visor por baixo do header, que é irmão dela.
@@ -162,6 +194,7 @@ export function WorkViewer({
   images,
   caption,
   credits,
+  videos,
   index,
   framed = true,
   resolveOrigin,
@@ -180,6 +213,10 @@ export function WorkViewer({
   const credit = credits?.[index];
   const technique = credit?.technique ?? DEFAULT_TECHNIQUE;
   const year = credit?.year;
+  const video = videos?.[index];
+  // Vídeo abre como a peça sem moldura: a caixa segue a proporção dele (em pé,
+  // no caso de um vídeo de celular) em vez do 4:3 do polaroid.
+  const bare = !framed || !!video;
 
   useScrollLock();
 
@@ -217,13 +254,13 @@ export function WorkViewer({
   const applyPhotoRatio = useCallback(() => {
     const polaroid = polaroidRef.current;
     const image = imageRef.current;
-    if (!polaroid || !image || framed) return;
+    if (!polaroid || !image || !bare) return;
     if (!image.naturalWidth || !image.naturalHeight) return;
     polaroid.style.setProperty(
       '--photo-ratio',
       `${image.naturalWidth} / ${image.naturalHeight}`,
     );
-  }, [framed]);
+  }, [bare]);
 
   useLayoutEffect(() => {
     const image = imageRef.current;
@@ -260,7 +297,7 @@ export function WorkViewer({
       if (!to.width || !from.width) return;
 
       polaroid.style.opacity = '0';
-      ghost = createGhost(image.currentSrc || image.src, technique, year, framed);
+      ghost = createGhost(image.currentSrc || image.src, technique, year, !bare);
       fades = crossFade(ghost, origin, 'in');
       ghost
         .animate(flightFrames(from, readRotation(origin), to, 0), {
@@ -293,11 +330,13 @@ export function WorkViewer({
       ghost?.remove();
       polaroid.style.opacity = '';
     };
-  }, [resolveOrigin, technique, year, framed, applyPhotoRatio]);
+  }, [resolveOrigin, technique, year, bare, applyPhotoRatio]);
 
   // Fechar é o voo inverso: a imagem volta a ser a peça, no lugar dela.
   const requestClose = useCallback(() => {
     if (closingRef.current) return;
+    // O áudio para na hora, sem esperar o voo de volta.
+    panelRef.current?.querySelectorAll('video').forEach((media) => media.pause());
     const current = indexRef.current;
     const polaroid = polaroidRef.current;
     const image = imageRef.current;
@@ -327,7 +366,7 @@ export function WorkViewer({
     panelRef.current?.classList.add('is-closing');
     polaroid.style.opacity = '0';
 
-    const ghost = createGhost(image.currentSrc || image.src, technique, year, framed);
+    const ghost = createGhost(image.currentSrc || image.src, technique, year, !bare);
     // A peça na página reaparece no fim do percurso, por baixo da cópia que
     // some: é a troca inversa da abertura.
     const fades = crossFade(ghost, origin, 'out');
@@ -344,7 +383,7 @@ export function WorkViewer({
         ghost.remove();
         onClose(current);
       });
-  }, [resolveOrigin, onClose, technique, year, framed]);
+  }, [resolveOrigin, onClose, technique, year, bare]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -353,11 +392,13 @@ export function WorkViewer({
         requestClose();
         return;
       }
-      if (event.key === 'ArrowLeft') {
+      // Com o foco no vídeo, as setas são dele (avançar e voltar no tempo).
+      const onVideo = event.target instanceof HTMLMediaElement;
+      if (event.key === 'ArrowLeft' && !onVideo) {
         onNavigate(-1);
         return;
       }
-      if (event.key === 'ArrowRight') {
+      if (event.key === 'ArrowRight' && !onVideo) {
         onNavigate(1);
         return;
       }
@@ -450,7 +491,7 @@ export function WorkViewer({
           novo em vez de a nova imagem simplesmente aparecer.
         */}
         <div
-          className={`work-viewer__polaroid${framed ? '' : ' work-viewer__polaroid--bare'}`}
+          className={`work-viewer__polaroid${bare ? ' work-viewer__polaroid--bare' : ''}`}
           ref={polaroidRef}
         >
           <div className="work-viewer__photo">
@@ -460,8 +501,16 @@ export function WorkViewer({
               src={asset(images[index])}
               alt={`${caption}, imagem ${index + 1}`}
             />
+            {video && (
+              <ViewerVideo
+                key={video.src}
+                src={video.src}
+                poster={images[index]}
+                label={credit?.technique ? `${caption}, ${credit.technique}` : caption}
+              />
+            )}
           </div>
-          {framed && (
+          {!bare && (
             <div className="work-viewer__credit">
               <span className="work-viewer__author">{technique}</span>
               {credit?.year && (
@@ -474,7 +523,9 @@ export function WorkViewer({
           <span className="work-viewer__count">
             {pad(index + 1)} / {pad(images.length)}
           </span>
-          <span className="work-viewer__course">{caption}</span>
+          <span className="work-viewer__course">
+            {video && credit?.technique ? `${caption}, ${credit.technique}` : caption}
+          </span>
         </figcaption>
       </figure>
     </div>,

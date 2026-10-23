@@ -15,6 +15,7 @@ import {
 } from '@phosphor-icons/react';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
+import {JsonLd} from '../components/JsonLd';
 import type {Fact} from '../components/FactsSummary';
 import {InCompanyFacts} from '../components/InCompanyFacts';
 import {FaqItem} from '../components/FaqItem';
@@ -25,7 +26,15 @@ import {WhatsCta} from '../components/WhatsCta';
 import {InCompanyFormatCard} from '../components/InCompanyFormatCard';
 import {CourseGallery} from '../components/CourseGallery';
 import {Section} from '../components/Section';
-import {IN_COMPANY_FORMATS, asset, whatsappLink} from '../data';
+import {
+  IN_COMPANY_FORMATS,
+  asset,
+  breadcrumbSchema,
+  faqSchema,
+  serviceSchema,
+  speakerSchema,
+  whatsappLink,
+} from '../data';
 
 const FACT_ICONS: Record<string, Icon> = {
   Duração: Clock,
@@ -78,7 +87,24 @@ export function InCompanyFormato({slug}: {slug: string}) {
 
   return (
     <div className={`ic-page ic-page--formato ic-page--${slug}`}>
-      <Seo title={page.seoTitle} description={page.seoDescription} path={`/in-company/${slug}`} />
+      <Seo
+        title={page.seoTitle}
+        description={page.seoDescription}
+        path={`/in-company/${slug}`}
+        image={page.ogImage}
+        imageAlt={`${format.title}: ação de arte para empresas, Desenhe In Company`}
+      />
+      <JsonLd
+        graph={[
+          breadcrumbSchema([
+            {name: 'In Company', path: '/in-company'},
+            {name: format.title, path: `/in-company/${slug}`},
+          ]),
+          serviceSchema(format),
+          faqSchema(page.faq),
+          page.speaker ? speakerSchema(page.speaker) : null,
+        ]}
+      />
 
       {/*
         Primeira dobra no formato das páginas de curso (faixa colorida com um
@@ -93,15 +119,15 @@ export function InCompanyFormato({slug}: {slug: string}) {
                 <Link to="/in-company" className="ic-crumb">
                   In Company
                 </Link>{' '}
-                · {format.typeLabel}
+                · Curitiba
               </span>
-              <Heading level={1}>{highlightTitle(format.title, format.titleHighlight)}</Heading>
+              <Heading level={1}>{highlightTitle(page.h1, page.h1Highlight)}</Heading>
             </div>
             <div className="ic-deck__aside">
               <p className="course-deck__lead">{page.lead}</p>
               <div className="ic-deck__actions">
-                <WhatsCta message={page.message} label="Peça uma proposta" size="sm" variant="secondary" />
-                <Button label="Como acontece" href="#como-acontece" variant="ghost" size="sm" />
+                <WhatsCta message={page.message} label={page.cta} size="sm" />
+                <Button label="Como acontece" href="#como-acontece" variant="secondary" size="sm" />
               </div>
             </div>
           </div>
@@ -114,11 +140,13 @@ export function InCompanyFormato({slug}: {slug: string}) {
             <div className="course-deck__relics ic-relics" aria-hidden="true">
               <div className="ic-relics__track">
                 {[false, true].flatMap((duplicate) =>
-                  page.relics!.map(({src, scale = 1, translucent, overlap = 0}, i) => (
+                  page.relics!.map(({src, width, scale = 1, translucent, overlap = 0}, i) => (
                     <img
                       key={`${duplicate ? 'dup-' : ''}${src}`}
                       src={asset(src)}
                       alt=""
+                      width={width}
+                      height={900}
                       className={[
                         'course-deck__relic',
                         `course-deck__relic--${i + 1}`,
@@ -129,7 +157,8 @@ export function InCompanyFormato({slug}: {slug: string}) {
                         .filter(Boolean)
                         .join(' ')}
                       style={{'--relic-scale': scale, '--relic-overlap': overlap} as CSSProperties}
-                      loading="lazy"
+                      // Primeira dobra: carrega já. Só a cópia do loop do celular espera.
+                      loading={duplicate ? 'lazy' : 'eager'}
                     />
                   )),
                 )}
@@ -172,6 +201,18 @@ export function InCompanyFormato({slug}: {slug: string}) {
             {page.description.map((paragraph) => (
               <p key={paragraph.slice(0, 24)}>{paragraph}</p>
             ))}
+            {page.courseLinks && (
+              <p>
+                A Desenhe é uma escola de arte com aulas o ano todo. Conheça os cursos:{' '}
+                {page.courseLinks.map((course, i) => (
+                  <span key={course.slug}>
+                    {i > 0 && (i === page.courseLinks!.length - 1 ? ' e ' : ', ')}
+                    <Link to={`/cursos/${course.slug}`}>{course.label}</Link>
+                  </span>
+                ))}
+                .
+              </p>
+            )}
           </div>
 
           <aside className="course-intro__aside">
@@ -252,6 +293,8 @@ export function InCompanyFormato({slug}: {slug: string}) {
             images={page.gallery.map((item) => item.src)}
             caption={format.title}
             credits={page.gallery.map((item) => ({technique: item.caption}))}
+            videos={page.gallery.map((item) => item.video)}
+            alts={page.gallery.map((item) => item.alt)}
           />
         </Section>
       )}
@@ -315,7 +358,7 @@ export function InCompanyFormato({slug}: {slug: string}) {
               Conte a data, o tamanho do grupo e o objetivo, e enviamos uma proposta.
             </Text>
             <div className="course-cta__action about-actions" style={{justifyContent: 'flex-start'}}>
-              <WhatsCta message={page.message} label="Peça uma proposta" size="sm" variant="secondary" />
+              <WhatsCta message={page.message} label={page.cta} size="sm" />
               <Button label="Todos os formatos" variant="secondary" size="sm" href="/in-company" />
             </div>
           </div>

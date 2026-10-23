@@ -99,7 +99,7 @@ const NOTES: Note[] = [
 
 const FACTS: Fact[] = [
   {icon: Clock, label: 'Duração', value: 'Cerca de 1h30'},
-  {icon: UsersThree, label: 'Participantes', value: '16 a 30 pessoas'},
+  {icon: UsersThree, label: 'Participantes', value: '16 a 50 pessoas'},
   {icon: MapPin, label: 'Onde', value: 'Na empresa'},
   {icon: Chalkboard, label: 'Equipe', value: '1 condutor e 2 apoios'},
 ];

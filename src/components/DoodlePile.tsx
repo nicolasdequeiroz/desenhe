@@ -6,8 +6,8 @@ import {renderStrokes, DOODLE_RATIO, type Doodle} from '../data/guestbook';
  * que o Apps Script devolve (ver apps-script/Codigo.gs).
  */
 const MAX_VISIBLE_DESKTOP = 60;
-/** No mobile o rodapé é mais baixo em largura: poucos cartões, menores. */
-const MAX_VISIBLE_MOBILE = 8;
+/** No celular os cartões são menores e a tela é estreita: menos que no desktop. */
+const MAX_VISIBLE_MOBILE = 11;
 const THUMB_WIDTH_DESKTOP = 116;
 const THUMB_WIDTH_MOBILE = 84;
 const MOBILE_QUERY = '(max-width: 640px)';

@@ -26,11 +26,13 @@ export function InCompanyFormatCard({format, featured = false}: {format: InCompa
              dobra da página), no lugar da foto. No hover eles se abrem em
              leque e sobem (ver .ic-card-scene). */
           <div className="ic-card-scene" role="img" aria-label={format.imageAlt}>
-            {scene.map(({src, scale = 1, translucent}, i) => (
+            {scene.map(({src, width, scale = 1, translucent}, i) => (
               <img
                 key={src}
                 src={asset(src)}
                 alt=""
+                width={width}
+                height={900}
                 className={`ic-card-scene__item${translucent ? ' ic-deck__relic--translucent' : ''}`}
                 style={
                   {

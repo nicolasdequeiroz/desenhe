@@ -11,6 +11,12 @@ const EXPLORAR_LINKS = [
   {label: 'Central da marca', to: '/central-da-marca'},
 ] as const;
 
+/** Serviços além dos cursos. */
+const SERVICOS_LINKS = [
+  {label: 'In Company', to: '/in-company'},
+  {label: 'Coworking artístico', to: '/coworking-artistico'},
+] as const;
+
 const CONTATO_LINKS = [
   {label: 'WhatsApp', href: whatsappLink('Olá! Vim pelo site da Desenhe.')},
   {label: 'Instagram', href: SITE.instagram},
@@ -30,9 +36,8 @@ export function SiteFooter() {
             Matrículas abertas
           </span>
           <h2 className="site-footer__headline">
-            Antes de ir, deixe um desenho.
-            <br />
-            Toque no lápis para começar.
+            <span className="site-footer__headline-line">Antes de ir, deixe um desenho.</span>{' '}
+            <span className="site-footer__headline-line">Toque no lápis para começar.</span>
           </h2>
           <p className="site-footer__copyright">
             © {year} Desenhe · Escola de Arte · {SITE.address.street},{' '}
@@ -42,9 +47,20 @@ export function SiteFooter() {
 
         <div className="site-footer__nav-groups">
           <div className="site-footer__group">
-            <p className="site-footer__group-title">(Explorar)</p>
-            <nav className="site-footer__nav" aria-label="Explorar">
+            <p className="site-footer__group-title">(Escola)</p>
+            <nav className="site-footer__nav" aria-label="Escola">
               {EXPLORAR_LINKS.map((item) => (
+                <Link key={item.to} to={item.to} className="site-footer__link">
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="site-footer__group">
+            <p className="site-footer__group-title">(Serviços)</p>
+            <nav className="site-footer__nav" aria-label="Serviços">
+              {SERVICOS_LINKS.map((item) => (
                 <Link key={item.to} to={item.to} className="site-footer__link">
                   {item.label}
                 </Link>
@@ -63,7 +79,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {item.label} ↗
+                  {item.label} ↗
                 </a>
               ))}
             </nav>

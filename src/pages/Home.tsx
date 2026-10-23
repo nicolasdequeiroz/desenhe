@@ -1,12 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
+import {JsonLd} from '../components/JsonLd';
 import {FeaturedPromoCard} from '../components/FeaturedPromoCard';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
 import {SpaceShowcaseSection} from '../components/SpaceShowcaseSection';
 import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
-import {asset, FEATURED_PROMOS} from '../data';
+import {asset, FEATURED_PROMOS, organizationSchema} from '../data';
 
 /**
  * No mobile o fundo do hero vira um vídeo curto em loop (a versão desktop
@@ -89,6 +90,7 @@ export function Home() {
   return (
     <>
       <Seo path="/" image="/images/brand/og-home.jpg" />
+      <JsonLd graph={[organizationSchema()]} />
 
       <section className="hero">
         <div className="hero__background" aria-hidden="true">
