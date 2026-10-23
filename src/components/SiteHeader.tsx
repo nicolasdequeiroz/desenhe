@@ -21,7 +21,7 @@ const EMPRESAS_ITEM = {
 };
 const COWORKING_ITEM = {to: '/coworking-artistico', label: 'Coworking'};
 
-/** In Company e Coworking ficam juntos num menu "Serviços" no desktop. */
+/** In Company e Coworking ficam juntos num menu "Outros serviços" no desktop. */
 const SERVICE_ITEMS = [EMPRESAS_ITEM, COWORKING_ITEM];
 const PRECOS_ITEM = {to: '/precos', label: 'Preços'};
 const SOBRE_ITEM = {to: '/sobre', label: 'Sobre'};
@@ -29,7 +29,7 @@ const CONTATO_ITEM = {to: '/contato', label: 'Contato'};
 
 // Cada campanha em destaque (Colônia de Férias, Coworking, etc.) entra na nav
 // como um link enquanto estiver em `FEATURED_PROMOS` (ver src/data/promo.ts).
-// In Company e Coworking são permanentes (menu "Serviços"): se também
+// In Company e Coworking são permanentes (menu "Outros serviços"): se também
 // estiverem em cartaz, o link da campanha não duplica o do menu.
 const PROMO_ITEMS = FEATURED_PROMOS.filter(
   (promo) => !SERVICE_ITEMS.some((item) => item.to === promo.path),
@@ -130,7 +130,7 @@ export function SiteHeader() {
               {item.label}
             </NavLink>
           ))}
-          <NavDropdown label="Serviços" id="nav-services-menu" items={SERVICE_ITEMS} />
+          <NavDropdown label="Outros serviços" id="nav-services-menu" items={SERVICE_ITEMS} />
         </nav>
         <Link to="/" className="site-header__brand">
           <BrandLogo />

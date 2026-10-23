@@ -24,43 +24,9 @@ There is no test suite. `npm run build` is the main correctness check: it runs t
 
 Deploy is automatic: every push to `main` runs `.github/workflows/deploy.yml`, which installs, builds, and uploads the result straight to GitHub Pages (Settings > Pages > Source: **GitHub Actions**). Nothing generated is committed. The one knob is `BASE_PATH` in the workflow's `env`: `/desenhe/` while the site is served from `https://<user>.github.io/desenhe/`, `/` once the custom domain is in place. `vite.config.ts` reads it, and `asset()` in `src/data/site.ts` prefixes every image path with it, so getting it wrong breaks every asset and link. There is no `CNAME` file: with workflow-based publishing the custom domain is stored in the Pages settings. An earlier setup published a committed `docs/` folder; that folder is gone and gitignored. The launch checklist (including turning the guestbook on) is in the README.
 
-## Classes (Client-First, adapted)
+## Design system (Client-First, tokens)
 
-Styling follows a trimmed-down version of Finsweet's Client-First. Read this before writing any CSS or `className`.
-
-**Two kinds of class, told apart by the underscore.**
-- **Utility classes have no underscore** and live in `src/styles/utilities.css`. They are global, context-free and stackable: `heading-style-h2`, `text-size-large`, `text-color-secondary`, `margin-bottom margin-medium`.
-- **Custom classes have an underscore** (the existing BEM `block__element--modifier`, e.g. `.course-card__title`, `.ic-why__card`) and live in `site.css`. They handle layout, structure and anything specific to one component. Don't rename existing BEM classes to Client-First's `folder_element` form; new custom classes keep the BEM shape.
-
-**Typography: never invent a size.** Every `font-size` comes from the semantic scale in `tokens.css`, either through a utility class in JSX or a `--heading-*` / `--text-size-*` token in custom CSS. No new `clamp()`, `px` or `rem` font sizes in `site.css`, and no direct use of the raw `--font-size-*` steps either (they only feed the semantic tokens and the bare `h1` to `h6` defaults). The only allowed exception is an `em` size relative to its parent, for an inline part of a heading (e.g. `.featured-courses__link-subtitle` at `0.5em`). The whole site already follows this; `grep -n "font-size: " src/site.css | grep -v "var(--heading\|var(--text-size"` should only list those `em` cases.
-
-| Role | Utility class | Token | Size |
-| --- | --- | --- | --- |
-| Hero `h1`, colored CTA band headline | `heading-style-display` | `--heading-display` | 30 to 48px |
-| Section title (`h2`) | `heading-style-h2` | `--heading-h2` | 28 to 40px |
-| Title inside a large card (form, contact block) | `heading-style-h3` | `--heading-h3` | 24 to 32px |
-| Block title, pull quote | `heading-style-h4` | `--heading-h4` | 23px |
-| Card title | `heading-style-h5` | `--heading-h5` | 19px |
-| Small heading | `heading-style-h6` | `--heading-h6` | 15px |
-| Section lead (text under a section title) | `text-size-large` | `--text-size-large` | 16px |
-| Body copy | `text-size-regular` | `--text-size-regular` | 15px |
-| Caption, note, hint | `text-size-small` | `--text-size-small` | 12px |
-| Uppercase label (fact sheet, metadata) | `text-style-label` / `text-size-tiny` | `--text-size-tiny` | 10px |
-
-The `heading-style-*` classes carry the site's heading look (Courier Prime, bold, uppercase, tight leading), so a heading needs no custom typography rule at all. `<Text type="large">` and `<Section lead>` already render at `--text-size-large`; a hand-written lead must match it, not be bigger. A note next to a title (e.g. "Não achou a sua? Chame no WhatsApp") is body copy (`text-size-regular`), not a lead. Section kickers keep using `.section__eyebrow`.
-
-**Spacing.** Prefer `gap` on the parent. When a single element needs space, use a Client-First pair: a direction class plus a size class (`margin-top margin-small`, `padding-bottom padding-large`). Sizes map to the `--spacing-*` tokens: `tiny` 4, `xxsmall` 8, `xsmall` 16, `small` 24, `medium` 32, `large` 48, `xlarge` 64, `xxlarge` 80. Custom CSS uses `var(--spacing-*)`, never raw pixels for margins and paddings.
-
-**Color and surfaces.** Text colors come from `text-color-primary` / `text-color-secondary` / `text-color-accent` (or the matching tokens). Section backgrounds are the default page color; `section--muted` and `--color-background-surface` (a lighter brown) are for deliberate contrast only. The cream "warm paper" surface (`--surface-warm-*`) is reserved for the testimonials section and the footer: don't use it for new blocks. Don't color a word inside a heading in orange; headings are one color.
-
-**Reuse before inventing.** Before writing a new section or component, look for an existing one and adapt it with props or a scoped override. The ones that keep coming up:
-- `Section` (kicker, title, lead, children) for any titled section.
-- `Timeline` for step-by-step processes ("Como funciona", "Como trabalhamos").
-- `NoteGrid`, with `icon` notes inside `.coworking-highlights`, for short title + text cards.
-- `.course-grid` + `.course-card` (polaroid cards) for any list of offerings with a photo.
-- `.course-summary` (via `FactsSummary`) for the two-column fact sheet under a hero.
-- `.course-deck` for a colored first fold with a fanned deck of photos; `.hero` with `hero__background` for a full-bleed photo first fold.
-- `FaqItem` inside `.coworking-faq` for FAQs; `.course-cta` for the closing colored band.
+The full styling guide lives in the project skill **`desenhe-design-system`** (`.claude/skills/desenhe-design-system/SKILL.md`). Load it before any visual change to the site, however small: CSS, `className`, colors, font sizes, spacing, new sections or components, first-fold images. It covers the two kinds of class (utilities without underscore, BEM with underscore), the semantic type scale (never invent a font size), the spacing scale and its numeric tokens, the color palette and surfaces, the components to reuse, and the In Company page patterns. When a styling rule changes, update the skill, not this file.
 
 ## Architecture
 

@@ -13,17 +13,19 @@
   font-weight: var(--font-weight-medium);
   white-space: nowrap;
 }
+/* Cores tiradas da paleta (tokens.css): o laranja é o acento da marca,
+   clareado com o texto principal para continuar legível no fundo escuro. */
 .badge--neutral {
-  background: rgba(238, 224, 215, 0.2);
-  color: #e5e5e5;
+  background: color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+  color: var(--color-text-primary);
 }
 .badge--orange {
-  background: rgba(255, 162, 88, 0.24);
-  color: #ffc9a2;
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: color-mix(in srgb, var(--color-accent) 60%, var(--color-text-primary));
 }
 .badge--warning {
-  background: #ffce2f;
-  color: #171717;
+  background: var(--color-category-infantil);
+  color: var(--color-background-body);
 }
 
 /* ---------- Card ---------- */

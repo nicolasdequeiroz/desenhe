@@ -4,7 +4,7 @@
  * Regra de nome: classe SEM sublinhado é utilitária e global (vale em
  * qualquer página e não depende de contexto); classe COM sublinhado
  * (`.course-card__title`, `.ic-why__card`) é custom, de um componente só.
- * Ver "Classes" no CLAUDE.md.
+ * Ver a skill desenhe-design-system (.claude/skills).
  *
  * Este arquivo é importado por último (src/index.css): uma utilitária
  * aplicada no JSX vence o CSS custom da página sem precisar de !important,

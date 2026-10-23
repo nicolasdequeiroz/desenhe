@@ -10,8 +10,12 @@
   color-scheme: dark;
 
   /* Cores */
-  --color-accent: #f67800;
-  --color-on-accent: #651100;
+  /* Laranja da marca e o texto sobre ele. Os botões (.btn) usam sempre
+     estes dois, mesmo onde uma página troca --color-accent. */
+  --color-accent-brand: #f67800;
+  --color-on-accent-brand: #651100;
+  --color-accent: var(--color-accent-brand);
+  --color-on-accent: var(--color-on-accent-brand);
   --color-background-body: #171310;
   --color-background-card: #1d1813;
   --color-background-muted: #1d1813;
@@ -30,6 +34,9 @@
   /* Cursos voltados ao público infantil (ex.: Laboratório de Desenho Infantil). */
   --color-category-infantil: #f6a12b;
   --color-category-teorico: #a3471a;
+  /* Faixas das páginas de formato In Company: marrom café, mais sóbrio que
+     o laranja, para o tom corporativo da linha. */
+  --color-corporate: #6b4630;
 
   /* Tons esverdeados usados nos cartões de professores */
   --color-teacher-tone-1: #6baaa1;
@@ -70,7 +77,7 @@
   --font-size-3xl: 2.3125rem; /* 37px */
 
   /*
-   * Escala tipográfica semântica (ver "Classes" no CLAUDE.md). É a única
+   * Escala tipográfica semântica (ver a skill desenhe-design-system). É a única
    * fonte de tamanhos de título e de texto corrido: CSS de página usa estes
    * tokens (ou as classes utilitárias de styles/utilities.css), nunca um
    * clamp() ou um px novo.

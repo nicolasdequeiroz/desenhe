@@ -77,6 +77,11 @@ body {
 }
 
 .btn {
+  /* Botões são iguais no site inteiro (ver /componentes): o laranja vem
+     sempre da marca, mesmo dentro de páginas que trocam --color-accent
+     para a cor da categoria. Não sobrescreva cor ou tamanho por página. */
+  --color-accent: var(--color-accent-brand);
+  --color-on-accent: var(--color-on-accent-brand);
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -465,24 +470,6 @@ body {
   .site-nav-dropdown.is-active
   .site-nav-dropdown__trigger {
   color: var(--color-text-primary);
-}
-
-/* O CTA laranja encosta no laranja/vermelho da categoria e some no fundo.
-   Enquanto o header está por cima do hero (full bleed, sem a pílula escura),
-   o botão vira o bege da logo (sólido, texto escuro) para garantir contraste;
-   ao rolar, volta a ser laranja junto com o resto do header. */
-.site-header--overlay:not(.site-header--scrolled) .site-header__cta {
-  background-color: var(--color-text-primary);
-  color: var(--color-background-body);
-  box-shadow: 0 6px 20px color-mix(in srgb, #000 22%, transparent);
-}
-
-@media (hover: hover) {
-  .site-header--overlay:not(.site-header--scrolled)
-    .site-header__cta:hover:not(:disabled):not([aria-disabled='true']) {
-    background-color: color-mix(in srgb, var(--color-text-primary) 90%, #000);
-    color: var(--color-background-body);
-  }
 }
 
 .site-nav-dropdown__chevron {
@@ -3835,16 +3822,6 @@ body {
 }
 
 /*
- * Botões da página de curso na cor da categoria: a página gira toda em
- * torno de --category-color (primeira dobra, faixa de fatos, CTA final),
- * então trocamos --color-accent só nos botões e todas as variantes
- * (primary, secondary, ghost, foco) acompanham sem duplicar regra.
- */
-.course-page .btn {
-  --color-accent: var(--category-color, var(--color-category-desenho));
-}
-
-/*
  * Primeira dobra: faixa na cor da categoria do curso com um "baralho" de
  * trabalhos da galeria, girados e sobrepostos, que vaza pela borda inferior
  * (o overflow: hidden da faixa é o que corta as cartas).
@@ -6107,11 +6084,6 @@ body {
    * preenchimento lateral generoso e do espaço em volta, não de esticar a
    * altura. Só o CTA fixo no header, num espaço apertado, encolhe um pouco.
    */
-  .btn.sm.site-header__cta {
-    padding-inline: var(--spacing-2) calc(var(--spacing-2) - 0.04em);
-    font-size: var(--text-size-tiny);
-  }
-
   .site-footer__social-btn {
     width: 2.75rem;
     height: 2.75rem;
@@ -7117,13 +7089,6 @@ body {
   border-left-color: color-mix(in srgb, var(--color-accent) 58%, #fdece2);
   background: color-mix(in srgb, var(--color-accent) 15%, transparent);
   color: var(--color-text-primary);
-}
-
-.pricing-card--theory .btn.tint {
-  color: color-mix(in srgb, var(--color-accent) 40%, #fdece2);
-  background-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
-  box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
 /* Selo "História da Arte": no tom terracota, não neutro. */
@@ -8617,7 +8582,7 @@ body {
  * In Company (/in-company e páginas de formato). Quase tudo reaproveita
  * componentes do site (hero e FAQ do Coworking, grade de cursos, baralho
  * das páginas de curso, Timeline, NoteGrid); aqui fica só o que é próprio
- * da linha. Tipografia pelas classes de styles/utilities.css (ver CLAUDE.md).
+ * da linha. Tipografia pelas classes de styles/utilities.css (ver a skill desenhe-design-system).
  */
 .ic-page [id] {
   scroll-margin-top: 88px;
@@ -8631,8 +8596,97 @@ body {
     to bottom,
     var(--ic-fade-from) 0,
     var(--ic-fade-from) calc(100% - var(--course-cta-fade)),
-    color-mix(in srgb, var(--color-category-institucional) 82%, #171310) 100%
+    color-mix(in srgb, var(--ic-band, var(--color-category-institucional)) 82%, #171310) 100%
   );
+}
+
+/* Páginas de formato: primeira dobra e faixa final no tom corporativo em vez
+   do laranja institucional. */
+.ic-page--formato {
+  --ic-band: var(--color-corporate);
+}
+
+.ic-page--formato .course-deck,
+.ic-page--formato .course-cta {
+  --category-color: var(--ic-band);
+}
+
+/*
+ * Quadriculado de blueprint também na faixa final: cheio na faixa e, na
+ * seção de cima, nascendo junto com o fade de cor (mesma altura,
+ * --course-cta-fade), para a grade não começar numa linha seca.
+ */
+.ic-page--formato {
+  --blueprint-minor: color-mix(in srgb, var(--color-text-primary) 4%, transparent);
+  --blueprint-major: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  --blueprint-cell: var(--spacing-4);
+  --blueprint-grid:
+    linear-gradient(var(--blueprint-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-major) 1px, transparent 1px),
+    linear-gradient(var(--blueprint-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-minor) 1px, transparent 1px);
+  --blueprint-size:
+    calc(var(--blueprint-cell) * 5) calc(var(--blueprint-cell) * 5),
+    calc(var(--blueprint-cell) * 5) calc(var(--blueprint-cell) * 5),
+    var(--blueprint-cell) var(--blueprint-cell),
+    var(--blueprint-cell) var(--blueprint-cell);
+}
+
+.ic-page--formato .course-cta {
+  background-image: var(--blueprint-grid);
+  background-size: var(--blueprint-size);
+  /* Topo da faixa alinhado à base da seção de cima: a grade continua sem
+     emenda de uma para a outra. */
+  background-position: center top;
+}
+
+.ic-page--formato .section:has(+ .course-cta) {
+  position: relative;
+  isolation: isolate;
+}
+
+.ic-page--formato .section:has(+ .course-cta)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--blueprint-grid);
+  background-size: var(--blueprint-size);
+  background-position: center bottom;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent calc(100% - var(--course-cta-fade)),
+    #000 100%
+  );
+}
+
+/* Primeira dobra com papel de projeto (blueprint): quadriculado fino com
+   uma linha mais marcada a cada cinco quadrados, por cima de um gradiente
+   leve em tons de café (mais claro no alto à esquerda, mais escuro embaixo
+   à direita). */
+.ic-page--formato .course-deck {
+  --blueprint-minor: color-mix(in srgb, var(--color-text-primary) 4%, transparent);
+  --blueprint-major: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  --blueprint-cell: var(--spacing-4);
+  background-image:
+    linear-gradient(var(--blueprint-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-major) 1px, transparent 1px),
+    linear-gradient(var(--blueprint-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-minor) 1px, transparent 1px),
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-corporate) 92%, #171310) 0%,
+      color-mix(in srgb, var(--color-corporate) 80%, #171310) 55%,
+      color-mix(in srgb, var(--color-corporate) 62%, #171310) 100%
+    );
+  background-size:
+    calc(var(--blueprint-cell) * 5) calc(var(--blueprint-cell) * 5),
+    calc(var(--blueprint-cell) * 5) calc(var(--blueprint-cell) * 5),
+    var(--blueprint-cell) var(--blueprint-cell),
+    var(--blueprint-cell) var(--blueprint-cell),
+    100% 100%;
+  background-position: center top;
 }
 
 .ic-page .section--muted:has(+ .course-cta) {
@@ -8661,6 +8715,12 @@ body {
 
 /* ---------- Hero ---------- */
 
+/* Foto da palestra: alinhada pelo alto para a TV com a logo e o rosto de
+   quem conduz não ficarem cortados atrás do header. */
+.hero--ic .hero__background-image {
+  object-position: center 12%;
+}
+
 .ic-crumb {
   color: inherit;
   text-decoration: none;
@@ -8675,9 +8735,136 @@ body {
   cursor: default;
 }
 
-/* Títulos longos quebram em duas linhas equilibradas, como nos cursos. */
+/* Título no tamanho de hero (o maior da escala), só nas páginas de
+   formato; quebra em linhas equilibradas, como nos cursos. */
 .ic-deck .course-deck__heading h1 {
   max-width: 22ch;
+  font-size: var(--heading-display);
+}
+
+/* Objetos recortados de In Company: cada um pode ser maior ou menor que a
+   altura padrão (`--relic-scale`, vindo dos dados). */
+/* `--relic-overlap` (dos dados, em fração da altura) soma uma margem
+   negativa à direita: o objeto encosta mais no vizinho e, como é margem e
+   não transform, a fileira continua centralizada. As margens de base são
+   as mesmas de .course-deck__relic--N (História da Arte). */
+.ic-deck .course-deck__relic {
+  --relic-h: calc(clamp(200px, 26vw, 340px) * var(--relic-scale, 1));
+  --relic-pull: calc(var(--relic-overlap, 0) * var(--relic-h));
+  height: var(--relic-h);
+}
+
+.ic-deck .course-deck__relic--1 {
+  margin-right: calc(-3% - var(--relic-pull));
+}
+
+.ic-deck .course-deck__relic--2 {
+  margin-right: calc(-4% - var(--relic-pull));
+}
+
+.ic-deck .course-deck__relic--3 {
+  margin-right: calc(-3% - var(--relic-pull));
+}
+
+.ic-deck .course-deck__relic--4 {
+  margin-right: calc(-3% - var(--relic-pull));
+}
+
+/* Quinto objeto (Retratos): espelha o giro e a altura do primeiro, para
+   as duas placas da ponta se responderem como um par. */
+.ic-deck .course-deck__relic--5 {
+  z-index: 2;
+  --relic-rotate: 8deg;
+  --relic-y: 1.5rem;
+  margin-right: calc(-3% - var(--relic-pull));
+}
+
+/* O último da fileira não sobrepõe ninguém: sem margem, a fileira fica
+   centralizada qualquer que seja a quantidade de objetos. */
+.ic-deck .ic-deck__relic--last {
+  margin-right: 0;
+}
+
+/* Oficina: o título ocupa duas linhas e empurra os objetos para baixo;
+   aqui eles sobem para mais perto do texto. */
+.ic-page--oficina-sob-medida .course-deck__header {
+  margin-bottom: var(--spacing-6);
+}
+
+.ic-page--oficina-sob-medida .ic-relics {
+  padding-top: 0;
+}
+
+/* Trilha dos objetos: no desktop é transparente para o layout (o leque
+   estático de sempre) e a cópia do conjunto fica oculta. */
+.ic-relics__track {
+  display: contents;
+}
+
+.ic-relics__duplicate {
+  display: none;
+}
+
+/*
+ * Celular: os objetos ficam grandes e deslizam devagar em loop, como o
+ * baralho de fotos das páginas de curso (ver .course-deck__track). A
+ * trilha leva o conjunto duas vezes; -50% desloca exatamente um conjunto,
+ * então a emenda não salta. A sobreposição é igual para todos (em vw, não
+ * em %, que dependeria da largura da própria trilha), senão a emenda entre
+ * o último e o primeiro abriria um vão diferente dos outros.
+ */
+@media (max-width: 640px) {
+  .ic-relics {
+    justify-content: flex-start;
+    overflow-x: clip;
+    overflow-y: visible;
+    margin-inline: calc(-1 * var(--spacing-4));
+  }
+
+  .ic-relics__track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    animation: ic-relics-marquee 32s linear infinite;
+    will-change: transform;
+  }
+
+  .ic-relics__duplicate {
+    display: block;
+  }
+
+  .ic-deck .ic-relics .course-deck__relic {
+    --relic-h: calc(clamp(170px, 52vw, 300px) * var(--relic-scale, 1));
+    flex-shrink: 0;
+    height: var(--relic-h);
+    margin-right: calc(-6vw - var(--relic-pull));
+  }
+
+  @keyframes ic-relics-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ic-relics__track {
+      animation: none;
+    }
+  }
+}
+
+/* Objeto translúcido (as lâminas de acetato): o quadriculado do fundo
+   aparece através dele. Um blend como multiply some no fundo escuro. */
+.ic-deck__relic--translucent {
+  opacity: 0.82;
+}
+
+/* Palavra-chave do título: não quebra no meio ("sob medida"). */
+.ic-deck__highlight {
+  white-space: nowrap;
 }
 
 .ic-deck__aside {
@@ -8697,24 +8884,221 @@ body {
   gap: var(--spacing-2);
 }
 
-/* Na faixa laranja o laranja do botão some: os botões vão em tons claros. */
-.ic-deck .btn {
-  --color-accent: var(--color-text-primary);
+/* ---------- Resumo do formato ---------- */
+
+/*
+ * Dois andares: uma régua com os dados curtos (duração, participantes,
+ * onde, equipe) em colunas iguais separadas por fios, e logo abaixo os
+ * textos longos (para quem, ideal para, o que a empresa recebe) lado a lado.
+ */
+.ic-facts {
+  display: flex;
+  flex-direction: column;
+}
+
+.ic-facts dl,
+.ic-facts dd {
+  margin: 0;
+}
+
+.ic-facts__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  border-block: 1px solid var(--color-border);
+}
+
+.ic-facts__notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Mesmos fios nos dois andares: cada célula separada da vizinha por um
+   fio vertical, a primeira encostada na margem. */
+.ic-facts__item {
+  padding: var(--spacing-5) var(--spacing-6);
+}
+
+.ic-facts__item:first-child {
+  padding-left: 0;
+}
+
+.ic-facts__item + .ic-facts__item {
+  border-left: 1px solid var(--color-border);
+}
+
+.ic-facts__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.ic-facts__term {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-family-body);
+  color: var(--color-text-secondary);
+}
+
+.ic-facts__icon {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.ic-facts__value {
+  font-family: var(--font-family-body);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.ic-facts__text {
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* Celular: a régua vira uma grade 2x2 e os textos empilham. */
+@media (max-width: 640px) {
+  .ic-facts__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ic-facts__stats .ic-facts__item {
+    padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) 0;
+  }
+
+  .ic-facts__stats .ic-facts__item + .ic-facts__item {
+    border-left: 0;
+  }
+
+  .ic-facts__stats .ic-facts__item:nth-child(even) {
+    padding-left: var(--spacing-4);
+    border-left: 1px solid var(--color-border);
+  }
+
+  .ic-facts__stats .ic-facts__item:nth-child(n + 3) {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ic-facts__notes {
+    grid-template-columns: 1fr;
+  }
+
+  .ic-facts__notes .ic-facts__item {
+    padding-inline: 0;
+  }
+
+  .ic-facts__notes .ic-facts__item + .ic-facts__item {
+    border-left: 0;
+    border-top: 1px solid var(--color-border);
+  }
 }
 
 /* ---------- Formatos ---------- */
 
-/* Grade de polaroids de /cursos (.course-grid), em 2x2 para os quatro
-   formatos; cai para uma coluna no celular. */
+/* Grade de polaroids de /cursos (.course-grid): a palestra em destaque na
+   linha de cima e os outros três formatos em três colunas embaixo. */
 .ic-format-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--spacing-10);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ic-format-grid > .course-card--featured {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: var(--spacing-10);
+}
+
+.course-card--featured .course-card__body {
+  padding-top: 0;
+}
+
+.course-card--featured .course-card__title {
+  font-size: var(--heading-h3);
+}
+
+@media (max-width: 960px) {
+  .ic-format-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ic-format-grid > .course-card--featured {
+    display: flex;
+    gap: 0;
+  }
+
+  .course-card--featured .course-card__body {
+    padding-top: var(--spacing-4);
+  }
 }
 
 @media (max-width: 640px) {
   .ic-format-grid {
     grid-template-columns: 1fr;
   }
+
+  .course-card--featured .course-card__title {
+    font-size: var(--heading-h5);
+  }
+}
+
+/*
+ * Cena de objetos nos cards pequenos: o mesmo fundo café com quadriculado
+ * da primeira dobra das páginas de formato, com os objetos apoiados na
+ * borda de baixo. `--scene-x` (unidades de largura da cena) e `--scene-r`
+ * (graus) vêm do componente. No hover os objetos se abrem em leque, sobem
+ * e giram mais, um depois do outro.
+ */
+.ic-card-scene {
+  --blueprint-line: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  container-type: inline-size;
+  border-radius: calc(var(--radius-container) - 8px);
+  background-image:
+    linear-gradient(var(--blueprint-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px),
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-corporate) 92%, var(--color-background-body)) 0%,
+      color-mix(in srgb, var(--color-corporate) 62%, var(--color-background-body)) 100%
+    );
+  background-size: var(--spacing-4) var(--spacing-4), var(--spacing-4) var(--spacing-4), 100% 100%;
+}
+
+.ic-card-scene__item {
+  position: absolute;
+  left: 50%;
+  bottom: -8%;
+  width: auto;
+  height: calc(72% * var(--relic-scale, 1));
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55));
+  transform: translateX(calc(-50% + var(--scene-x) * 1cqw)) rotate(calc(var(--scene-r) * 1deg));
+  transition: transform var(--duration-medium) cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--scene-i) * 40ms);
+}
+
+.course-card:hover .ic-card-scene__item,
+.course-card:focus-visible .ic-card-scene__item {
+  transform: translateX(calc(-50% + var(--scene-x) * 1.3cqw)) translateY(-8cqw)
+    rotate(calc(var(--scene-r) * 1.8deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ic-card-scene__item {
+    transition: none;
+  }
+}
+
+/* Tipo da ação (Palestra, Workshop...) no topo do texto do card, fora da foto. */
+.ic-type-tag {
+  padding: var(--spacing-1) var(--spacing-3);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+  border-radius: 9999px;
+  font-family: var(--font-family-body);
+  color: var(--color-accent);
 }
 
 /* Na grade, a ficha de cada formato fica sempre à mostra. */
@@ -8789,6 +9173,69 @@ body {
    da página. */
 .ic-page .course-timeline {
   background: transparent;
+}
+
+/* ---------- Quem conduz ---------- */
+
+/* Retrato em moldura café (como os cards de professor de História da Arte)
+   ao lado do nome, da formação e da bio. */
+.ic-speaker {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.ic-speaker__frame {
+  display: block;
+  aspect-ratio: 1 / 1.15;
+  max-width: 26rem;
+  padding: var(--spacing-3);
+  overflow: hidden;
+  border-radius: var(--radius-container);
+  background: color-mix(in srgb, var(--color-corporate) 60%, var(--color-background-body));
+  transition: box-shadow var(--duration-medium) ease;
+}
+
+.ic-speaker__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-element);
+  transition: transform var(--duration-medium) ease;
+}
+
+/* Mesmo hover dos cards de professor (História da Arte, /professores): a
+   moldura ganha sombra e o retrato dá um leve zoom. */
+.ic-speaker__frame:hover {
+  box-shadow: var(--shadow-med);
+}
+
+.ic-speaker__frame:hover .ic-speaker__photo {
+  transform: scale(1.04);
+}
+
+.ic-speaker__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  max-width: 36rem;
+}
+
+.ic-speaker__text h2,
+.ic-speaker__text p {
+  margin: 0;
+}
+
+.ic-speaker__text p + p {
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .ic-speaker {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+  }
 }
 
 /* ---------- FAQ em duas colunas ---------- */
@@ -9481,5 +9928,149 @@ body {
   .brand-center__downloads {
     position: static;
     margin-top: var(--spacing-3);
+  }
+}
+
+/* ---------- Página interna de componentes (/componentes) ---------- */
+
+.ds-page [id] {
+  scroll-margin-top: 88px;
+}
+
+.ds-intro {
+  padding-top: calc(var(--spacing-12) * 2);
+}
+
+.ds-intro .container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.ds-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-4);
+}
+
+.ds-group + .ds-group {
+  border-top: 1px solid var(--color-border);
+}
+
+.ds-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.ds-specimen {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: var(--spacing-8);
+}
+
+.ds-specimen__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.ds-specimen__head h3,
+.ds-specimen__head p {
+  margin: 0;
+}
+
+.ds-specimen__file {
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+
+.ds-specimen__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  min-width: 0;
+}
+
+.ds-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.ds-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--spacing-5);
+}
+
+.ds-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.ds-swatch__chip {
+  height: calc(var(--spacing-12) + var(--spacing-6));
+  margin-bottom: var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-element);
+}
+
+.ds-type {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-type__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding-block: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ds-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.ds-spacing__row {
+  display: grid;
+  grid-template-columns: calc(var(--spacing-10) * 2) 6rem 1fr;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.ds-spacing__bar {
+  height: var(--spacing-3);
+  border-radius: var(--radius-inner);
+  background: var(--color-accent);
+}
+
+.ds-anchor {
+  height: 0;
+}
+
+.ds-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding-left: var(--spacing-5);
+  color: var(--color-text-secondary);
+}
+
+.ds-page code {
+  font-family: var(--font-family-code);
+}
+
+@media (max-width: 760px) {
+  .ds-specimen {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
   }
 }

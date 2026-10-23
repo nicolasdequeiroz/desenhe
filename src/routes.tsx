@@ -13,6 +13,7 @@ import {InCompanyFormato} from './pages/InCompanyFormato';
 import {Sobre} from './pages/Sobre';
 import {Contato} from './pages/Contato';
 import {CentralDaMarca} from './pages/CentralDaMarca';
+import {Componentes} from './pages/Componentes';
 import {NotFound} from './pages/NotFound';
 import {Redirect} from './components/Redirect';
 import {COURSES, IN_COMPANY_FORMATS} from './data';
@@ -87,6 +88,8 @@ export const routes: RouteRecord[] = [
       {path: 'sobre', element: <Sobre />},
       {path: 'contato', element: <Contato />},
       {path: 'central-da-marca', element: <CentralDaMarca />},
+      // Inventário interno de componentes: fora do menu, do sitemap e do Google.
+      {path: 'componentes', element: <Componentes />},
       ...[...LEGACY_REDIRECTS, ...LEGACY_WILDCARDS].map(([from, to]) => ({
         path: from,
         element: <Redirect to={to} />,

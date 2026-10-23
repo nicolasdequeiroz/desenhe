@@ -24,7 +24,7 @@ interface Props {
 }
 
 /**
- * Item da navegação desktop que abre um menu suspenso (Cursos, Serviços).
+ * Item da navegação desktop que abre um menu suspenso (Cursos, Outros serviços).
  * Fecha ao navegar, com Escape e com clique fora. O botão fica marcado como
  * ativo quando a página atual é um dos itens do menu (ou uma subpágina dele).
  */

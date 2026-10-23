@@ -1,5 +1,7 @@
+import type {CSSProperties} from 'react';
 import {Link} from 'react-router-dom';
 import {
+  Briefcase,
   Chalkboard,
   Clock,
   Gift,
@@ -13,24 +15,41 @@ import {
 } from '@phosphor-icons/react';
 import {Button, Heading, Text} from '../ui';
 import {Seo} from '../components/Seo';
-import {FactsSummary, type Fact} from '../components/FactsSummary';
+import type {Fact} from '../components/FactsSummary';
+import {InCompanyFacts} from '../components/InCompanyFacts';
 import {FaqItem} from '../components/FaqItem';
 import {NoteGrid} from '../components/NoteGrid';
 import {StrandAccordions} from '../components/StrandAccordions';
 import {Timeline} from '../components/Timeline';
 import {WhatsCta} from '../components/WhatsCta';
 import {InCompanyFormatCard} from '../components/InCompanyFormatCard';
+import {CourseGallery} from '../components/CourseGallery';
+import {Section} from '../components/Section';
 import {IN_COMPANY_FORMATS, asset, whatsappLink} from '../data';
 
 const FACT_ICONS: Record<string, Icon> = {
   Duração: Clock,
   Participantes: UsersThree,
   Onde: MapPin,
+  'Para quem': Briefcase,
   Equipe: Chalkboard,
   'Ideal para': Target,
 };
 
 const STEP_ICONS = [PresentationChart, UsersThree, Megaphone, Lightbulb];
+
+/** Título com a palavra-chave (`highlight`) em laranja, se ela estiver nele. */
+function highlightTitle(title: string, highlight?: string) {
+  const at = highlight ? title.indexOf(highlight) : -1;
+  if (!highlight || at < 0) return title;
+  return (
+    <>
+      {title.slice(0, at)}
+      <span className="ic-deck__highlight text-color-accent">{highlight}</span>
+      {title.slice(at + highlight.length)}
+    </>
+  );
+}
 
 /**
  * Página de um formato In Company, dirigida por `slug` como o CursoDetalhe.
@@ -45,16 +64,20 @@ export function InCompanyFormato({slug}: {slug: string}) {
   // cronograma: viram os cards de "linguagens" das páginas de curso em vez
   // da linha do tempo.
   const options = page.steps.every((step) => step.label);
-  // Resumo do formato: os três dados curtos do card mais os detalhes da página.
-  const facts: Fact[] = [...format.facts, ...page.details].map(({label, value}) => ({
+  // Resumo do formato em dois andares: os dados curtos (os três do card mais
+  // a equipe) numa régua de números, e os textos longos (para quem, ideal
+  // para, o que a empresa recebe) em colunas logo abaixo.
+  const toFact = ({label, value}: {label: string; value: string}): Fact => ({
     icon: FACT_ICONS[label] ?? Gift,
     label,
     value,
-  }));
+  });
+  const stats = [...format.facts, ...page.details.filter((d) => d.label === 'Equipe')].map(toFact);
+  const notes = page.details.filter((d) => d.label !== 'Equipe').map(toFact);
   const others = IN_COMPANY_FORMATS.filter((f) => f.slug !== slug);
 
   return (
-    <div className="ic-page">
+    <div className={`ic-page ic-page--formato ic-page--${slug}`}>
       <Seo title={page.seoTitle} description={page.seoDescription} path={`/in-company/${slug}`} />
 
       {/*
@@ -70,9 +93,9 @@ export function InCompanyFormato({slug}: {slug: string}) {
                 <Link to="/in-company" className="ic-crumb">
                   In Company
                 </Link>{' '}
-                · {page.kicker}
+                · {format.typeLabel}
               </span>
-              <Heading level={1}>{format.title}</Heading>
+              <Heading level={1}>{highlightTitle(format.title, format.titleHighlight)}</Heading>
             </div>
             <div className="ic-deck__aside">
               <p className="course-deck__lead">{page.lead}</p>
@@ -83,27 +106,58 @@ export function InCompanyFormato({slug}: {slug: string}) {
             </div>
           </div>
 
-          <div className="course-deck__cards" aria-hidden="true">
-            {/* Mesma trilha duplicada das páginas de curso: no mobile vira
-                marquee infinita; no desktop só as 4 primeiras aparecem. */}
-            <div className="course-deck__track">
-              {page.deck.map((img, i) => (
-                <div key={img} className={`course-deck__card course-deck__card--${i + 1}`}>
-                  <img src={asset(img)} alt="" />
-                </div>
-              ))}
-              <div className="course-deck__track-duplicate">
+          {page.relics ? (
+            /* Objetos recortados no lugar do baralho, com o mesmo display de
+               História da Arte (ver .course-deck__relic). O conjunto vai
+               duplicado na trilha: no celular ela desliza em loop infinito,
+               como o baralho de fotos; no desktop a cópia fica oculta. */
+            <div className="course-deck__relics ic-relics" aria-hidden="true">
+              <div className="ic-relics__track">
+                {[false, true].flatMap((duplicate) =>
+                  page.relics!.map(({src, scale = 1, translucent, overlap = 0}, i) => (
+                    <img
+                      key={`${duplicate ? 'dup-' : ''}${src}`}
+                      src={asset(src)}
+                      alt=""
+                      className={[
+                        'course-deck__relic',
+                        `course-deck__relic--${i + 1}`,
+                        translucent && 'ic-deck__relic--translucent',
+                        i === page.relics!.length - 1 && 'ic-deck__relic--last',
+                        duplicate && 'ic-relics__duplicate',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      style={{'--relic-scale': scale, '--relic-overlap': overlap} as CSSProperties}
+                      loading="lazy"
+                    />
+                  )),
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="course-deck__cards" aria-hidden="true">
+              {/* Mesma trilha duplicada das páginas de curso: no mobile vira
+                  marquee infinita; no desktop só as 4 primeiras aparecem. */}
+              <div className="course-deck__track">
                 {page.deck.map((img, i) => (
-                  <div
-                    key={`dup-${img}`}
-                    className={`course-deck__card course-deck__card--${i + 1} course-deck__card--duplicate`}
-                  >
+                  <div key={img} className={`course-deck__card course-deck__card--${i + 1}`}>
                     <img src={asset(img)} alt="" />
                   </div>
                 ))}
+                <div className="course-deck__track-duplicate">
+                  {page.deck.map((img, i) => (
+                    <div
+                      key={`dup-${img}`}
+                      className={`course-deck__card course-deck__card--${i + 1} course-deck__card--duplicate`}
+                    >
+                      <img src={asset(img)} alt="" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -145,9 +199,34 @@ export function InCompanyFormato({slug}: {slug: string}) {
 
         <div className="course-intro__block">
           <span className="course-intro__label">Resumo do formato</span>
-          <FactsSummary items={facts} />
+          <InCompanyFacts stats={stats} notes={notes} />
         </div>
       </div>
+
+      {page.speaker && (
+        <section className="section ic-section">
+          <div className="container ic-speaker">
+            <span className="ic-speaker__frame">
+              <img
+                src={asset(page.speaker.photo)}
+                alt={page.speaker.photoAlt}
+                className="ic-speaker__photo"
+                loading="lazy"
+              />
+            </span>
+            <div className="ic-speaker__text">
+              <span className="section__eyebrow">Quem conduz</span>
+              <h2 className="heading-style-h2">{page.speaker.name}</h2>
+              <p className="text-size-large">{page.speaker.credential}</p>
+              {page.speaker.bio.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)} className="text-size-regular text-color-secondary">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Cronograma na mesma linha do tempo dos módulos de curso. */}
       {!options && (
@@ -164,6 +243,17 @@ export function InCompanyFormato({slug}: {slug: string}) {
           icons={STEP_ICONS}
           tone="institucional"
         />
+      )}
+
+      {/* Mesma galeria das páginas de curso (parede de polaroids com visor). */}
+      {page.gallery && page.gallery.length > 0 && (
+        <Section kicker="Galeria" title="Em imagens" lead="Abra qualquer imagem para ver de perto.">
+          <CourseGallery
+            images={page.gallery.map((item) => item.src)}
+            caption={format.title}
+            credits={page.gallery.map((item) => ({technique: item.caption}))}
+          />
+        </Section>
       )}
 
       <section className="section section--muted ic-section">

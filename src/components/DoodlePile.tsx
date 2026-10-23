@@ -1,8 +1,11 @@
 import {useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {renderStrokes, DOODLE_RATIO, type Doodle} from '../data/guestbook';
 
-/** Quantos desenhos ficam empilhados no rodapé (os mais recentes). */
-const MAX_VISIBLE_DESKTOP = 40;
+/**
+ * Quantos desenhos ficam empilhados no rodapé no desktop. 60 é o mesmo teto
+ * que o Apps Script devolve (ver apps-script/Codigo.gs).
+ */
+const MAX_VISIBLE_DESKTOP = 60;
 /** No mobile o rodapé é mais baixo em largura: poucos cartões, menores. */
 const MAX_VISIBLE_MOBILE = 8;
 const THUMB_WIDTH_DESKTOP = 116;

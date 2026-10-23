@@ -26,6 +26,10 @@ export interface InCompanyFormat {
   needLabel: string;
   /** Nome que fala de resultado, usado como título. */
   title: string;
+  /** Trecho do título destacado em laranja no h1 da página do formato. */
+  titleHighlight?: string;
+  /** Tipo de ação, etiqueta do card. Não repete palavra do título. */
+  typeLabel: string;
   /** Resumo de uma ou duas frases, para o bloco do hub. */
   summary: string;
   image: string;
@@ -36,7 +40,6 @@ export interface InCompanyFormat {
   page?: {
     seoTitle: string;
     seoDescription: string;
-    kicker: string;
     lead: string;
     /**
      * Quatro fotos do "baralho" da primeira dobra, como nas páginas de curso.
@@ -44,13 +47,23 @@ export interface InCompanyFormat {
      */
     deck: string[];
     /**
+     * Objetos recortados (PNG/WebP com fundo transparente) que substituem o
+     * baralho de fotos na primeira dobra, como em História da Arte. `scale`
+     * aumenta ou diminui um objeto em relação à altura padrão (1);
+     * `translucent` deixa o fundo aparecer através dele (acetato, vidro);
+     * `overlap` aproxima o objeto do vizinho da direita (positivo sobrepõe
+     * mais, negativo afasta), em fração da própria altura; a fileira se
+     * recentraliza sozinha.
+     */
+    relics?: {src: string; scale?: number; translucent?: boolean; overlap?: number}[];
+    /**
      * Descrição em parágrafos, no bloco logo abaixo da primeira dobra (o
      * mesmo `.course-intro` das páginas de curso).
      */
     description: string[];
     /**
      * Linhas que completam o "Resumo do formato", depois de `facts`
-     * (equipe, ideal para, o que a empresa recebe).
+     * (para quem, equipe, ideal para, o que a empresa recebe).
      */
     details: {label: string; value: string}[];
     stepsTitle: string;
@@ -58,6 +71,13 @@ export interface InCompanyFormat {
     stepsLead?: string;
     steps: InCompanyStep[];
     prepare: {title: string; text: string}[];
+    /**
+     * Galeria da página (mesma parede de polaroids dos cursos), depois do
+     * "Como acontece". `caption` vai na margem da polaroid, no lugar da técnica.
+     */
+    gallery?: {src: string; caption: string}[];
+    /** Quem conduz a ação, numa seção própria logo antes do "Como acontece". */
+    speaker?: {name: string; credential: string; bio: string[]; photo: string; photoAlt: string};
     faq: {question: string; answer: string}[];
     /** Mensagem do WhatsApp, citando o formato. */
     message: string;
@@ -70,10 +90,12 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
     need: 'inovacao',
     needLabel: 'Inovação e treinamento',
     title: 'Criatividade para resolver problemas',
+    titleHighlight: 'Criatividade',
+    typeLabel: 'Palestra',
     summary:
-      'Uma palestra sobre como a história da arte resolveu problemas com pouco recurso e uma dinâmica em grupos em que a equipe aplica esses mecanismos em desafios reais da empresa.',
-    image: '/images/in-company/card-criatividade.webp',
-    imageAlt: 'Professor da Desenhe orientando um grupo em volta da mesa de trabalho',
+      'Palestra sobre como a arte resolveu problemas com pouco recurso, e uma dinâmica em que a equipe aplica isso a desafios reais.',
+    image: '/images/in-company/card-palestra.webp',
+    imageAlt: 'Professor da Desenhe dando uma palestra para um grupo sentado à sua frente',
     facts: [
       {label: 'Duração', value: 'Cerca de 1h30'},
       {label: 'Participantes', value: '16 a 30 pessoas'},
@@ -83,13 +105,18 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       seoTitle: 'Palestra e Dinâmica de Criatividade para Empresas em Curitiba',
       seoDescription:
         'Palestra com dinâmica em grupos sobre criatividade para resolver problemas, para equipes de 16 a 30 pessoas. Conduzida por professores de arte, na sua empresa em Curitiba.',
-      kicker: 'Palestra + dinâmica',
-      lead: 'Três lições da história da arte sobre resolver problemas com pouco recurso, aplicadas pela equipe em um desafio real da empresa.',
+      lead: 'Três lições da história da arte sobre criar com pouco recurso, aplicadas a um desafio real da empresa.',
       deck: [
         '/images/in-company/deck-criatividade-1.webp',
         '/images/in-company/deck-criatividade-2.webp',
         '/images/in-company/deck-criatividade-3.webp',
         '/images/in-company/deck-criatividade-4.webp',
+      ],
+      relics: [
+        {src: '/images/in-company/objeto-criatividade-estojo.webp'},
+        {src: '/images/in-company/objeto-criatividade-post-its.webp', scale: 0.65},
+        {src: '/images/in-company/objeto-criatividade-livro.webp'},
+        {src: '/images/in-company/objeto-criatividade-votacao.webp'},
       ],
       description: [
         'A história da arte está cheia de problemas técnicos resolvidos com pouco recurso. A palestra traduz três desses mecanismos para o trabalho do grupo, e a dinâmica coloca todo mundo para usá-los num desafio real da empresa.',
@@ -97,8 +124,9 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
         'Não é um sprint de design nem uma sessão para resolver problemas complexos. É uma experiência para a equipe aprender um jeito de pensar e sair com quatro propostas visuais aproveitáveis.',
       ],
       details: [
-        {label: 'Equipe', value: '1 condutor e 1 apoio'},
-        {label: 'Ideal para', value: 'Treinamentos, convenções, planejamento e semanas de inovação'},
+        {label: 'Equipe', value: '1 condutor e 2 apoios'},
+        {label: 'Para quem', value: 'Times de RH, liderança e áreas de inovação, produto e estratégia'},
+        {label: 'Ideal para', value: 'Convenções, treinamentos, planejamento e semanas de inovação'},
         {label: 'A empresa recebe', value: '4 propostas visuais para desafios reais e devolutiva à equipe de RH'},
       ],
       stepsTitle: 'Uma hora e meia, quatro tempos',
@@ -125,6 +153,21 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
           title: 'Fechamento',
           text: 'O condutor mostra qual mecanismo cada grupo usou sem perceber.',
         },
+      ],
+      speaker: {
+        name: 'Renan Negrão',
+        credential: 'Mestre e doutorando em História pela UFPR',
+        bio: [
+          'Licenciado em Artes Visuais, mestre e doutorando em História pela UFPR, Renan pesquisa cultura material, história da cor e arte islâmica medieval na Península Ibérica.',
+          'Há mais de 14 anos ensina práticas artísticas. Na palestra, traz da pesquisa os casos em que artistas resolveram problemas com pouco recurso e conduz a dinâmica em que a equipe aplica esses mecanismos aos próprios desafios.',
+        ],
+        photo: '/images/cursos/historia-da-arte/prof-renan.webp',
+        photoAlt: 'Retrato de Renan Negrão, professor da Desenhe',
+      },
+      gallery: [
+        {src: '/images/in-company/deck-criatividade-1.webp', caption: 'Professor orientando o grupo'},
+        {src: '/images/in-company/deck-criatividade-2.webp', caption: 'Livros de arte na mesa'},
+        {src: '/images/in-company/deck-criatividade-3.webp', caption: 'Referências da história da arte'},
       ],
       prepare: [
         {
@@ -191,8 +234,10 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
     need: 'bem-estar',
     needLabel: 'Bem-estar',
     title: 'Pausa de descompressão',
+    titleHighlight: 'descompressão',
+    typeLabel: 'Intervalo',
     summary:
-      'Trinta minutos em pé, sem cadeira e sem tela em branco. Cada pessoa sobrepõe lâminas de cor às de um colega num painel iluminado, e o grupo vê as cores nascerem juntas.',
+      'Trinta minutos pela saúde mental da equipe: em pé, cada pessoa sobrepõe lâminas de cor às de um colega num painel iluminado.',
     image: '/images/in-company/card-descompressao.webp',
     imageAlt: 'Aluno pintando um círculo cromático com as cores primárias',
     facts: [
@@ -204,13 +249,18 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       seoTitle: 'Pausa de Descompressão com Arte para Empresas em Curitiba',
       seoDescription:
         'Atividade de bem-estar de 30 minutos para equipes: cor, movimento e criação coletiva num painel iluminado, sem precisar saber desenhar. Para SIPAT, semana de saúde e intervalos de reunião, em Curitiba.',
-      kicker: 'Bem-estar',
-      lead: 'Trinta minutos em pé e sem tela em branco: a equipe sobrepõe lâminas de cor num painel iluminado e volta para o dia em outro ritmo.',
+      lead: 'Trinta minutos pela saúde mental: em pé, a equipe sobrepõe lâminas de cor num painel iluminado.',
       deck: [
         '/images/in-company/deck-descompressao-1.webp',
         '/images/in-company/deck-descompressao-2.webp',
         '/images/in-company/deck-descompressao-3.webp',
         '/images/in-company/deck-descompressao-4.webp',
+      ],
+      relics: [
+        {src: '/images/in-company/objeto-pausa-acetatos.webp', translucent: true, overlap: 0.16},
+        {src: '/images/in-company/objeto-pausa-fita.webp', scale: 0.62},
+        {src: '/images/in-company/objeto-pausa-circulo.webp', scale: 0.9},
+        {src: '/images/in-company/objeto-pausa-ampulheta.webp'},
       ],
       description: [
         'Um momento para se afastar dos problemas da rotina e voltar às atividades do dia com outro olhar e em outro ritmo. Formato curto, em pé, sem cadeira e sem uma tela em branco individual para encarar.',
@@ -218,7 +268,8 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
         'A regra obriga as pessoas a circular e a encostar no trabalho dos outros, sem exigir conversa de ninguém. No final, o grupo dá três passos para trás e descobre o que ninguém tinha planejado.',
       ],
       details: [
-        {label: 'Equipe', value: '1 condutor'},
+        {label: 'Equipe', value: '1 condutor e 1 apoio'},
+        {label: 'Para quem', value: 'RH, SESMT e comitês de saúde e bem-estar, para equipes de qualquer área'},
         {label: 'Ideal para', value: 'SIPAT, semana de saúde, Setembro Amarelo e intervalo de reunião longa'},
         {label: 'A empresa recebe', value: 'O painel coletivo de cor e o registro em foto'},
       ],
@@ -246,6 +297,11 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
           title: 'Leitura coletiva',
           text: 'O grupo se afasta do painel e o condutor aponta onde nasceram o verde, o laranja e o violeta, e o que ninguém tinha planejado.',
         },
+      ],
+      gallery: [
+        {src: '/images/in-company/deck-descompressao-2.webp', caption: 'Círculo cromático'},
+        {src: '/images/in-company/deck-descompressao-1.webp', caption: 'Mistura das primárias'},
+        {src: '/images/in-company/deck-descompressao-4.webp', caption: 'Cores primárias'},
       ],
       prepare: [
         {
@@ -311,8 +367,10 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
     need: 'eventos',
     needLabel: 'Eventos e confraternização',
     title: 'Retratos em dupla',
+    titleHighlight: 'Retratos',
+    typeLabel: 'Dinâmica',
     summary:
-      'Em duplas, as pessoas se desenham uma à outra através de uma placa de acrílico. Cada um assina e entrega o retrato a quem posou: todo mundo leva para casa um retrato feito por um colega.',
+      'Dinâmica para confraternização: em duplas, as pessoas se desenham através de uma placa de acrílico e levam o retrato para casa.',
     image: '/images/in-company/card-retratos.webp',
     imageAlt: 'Mãos desenhando as proporções de um rosto a lápis, vistas de cima',
     facts: [
@@ -324,20 +382,27 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       seoTitle: 'Atividade de Confraternização para Empresas: Retratos em Dupla',
       seoDescription:
         'Atração de arte para confraternização e eventos corporativos em Curitiba: a própria equipe se desenha em duplas, através de acrílico. De 20 a 80 pessoas, no local do evento.',
-      kicker: 'Confraternização e eventos',
-      lead: 'Em duplas, frente a frente, as pessoas se desenham através de uma placa de acrílico. No final, cada um entrega o retrato a quem posou.',
+      lead: 'Dinâmica para confraternização: em duplas, as pessoas se desenham através de uma placa de acrílico.',
       deck: [
         '/images/in-company/deck-retratos-1.webp',
         '/images/in-company/deck-retratos-2.webp',
         '/images/in-company/deck-retratos-3.webp',
         '/images/in-company/deck-retratos-4.webp',
       ],
+      relics: [
+        {src: '/images/in-company/objeto-retratos-placa.webp'},
+        {src: '/images/in-company/objeto-retratos-marcadores.webp', scale: 0.9},
+        {src: '/images/in-company/objeto-retratos-envelope.webp'},
+        {src: '/images/in-company/objeto-retratos-laco.webp', scale: 0.7, overlap: 0.3},
+        {src: '/images/in-company/objeto-retratos-placa-2.webp'},
+      ],
       description: [
-        'Duas pessoas, frente a frente, desenham uma à outra através de uma placa de acrílico transparente, a mesma técnica da "janela" usada por artistas do Renascimento. O contorno já está ali, é só seguir: o resultado surpreende quem nunca desenhou.',
+        'Retratos em dupla é uma dinâmica de arte pensada para confraternizações, festas de fim de ano e eventos da empresa. Duas pessoas, frente a frente, desenham uma à outra através de uma placa de acrílico transparente, a mesma técnica da "janela" usada por artistas do Renascimento. O contorno já está ali, é só seguir: o resultado surpreende quem nunca desenhou.',
         'No final, cada um assina, escreve uma dedicatória e entrega o retrato a quem posou. Diferente da caricatura ao vivo, aqui quem desenha é a própria equipe: ninguém fica só assistindo, e todo mundo volta para casa com um retrato feito por um colega.',
       ],
       details: [
         {label: 'Equipe', value: '1 condutor e 1 apoio'},
+        {label: 'Para quem', value: 'RH, endomarketing e quem organiza as festas e eventos da empresa'},
         {label: 'Ideal para', value: 'Fim de ano, integração, aniversário da empresa e eventos com clientes'},
         {label: 'Cada pessoa leva', value: 'O próprio retrato, feito por um colega, em um envelope'},
       ],
@@ -355,6 +420,11 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
           title: 'Rodízio livre, sem parar a festa',
           text: 'Duas a quatro estações num canto iluminado, com rodízio livre. Não interrompe nada e combina com coquetel em pé. Atende de 40 a 80 pessoas no período.',
         },
+      ],
+      gallery: [
+        {src: '/images/in-company/deck-retratos-1.webp', caption: 'Proporções do rosto'},
+        {src: '/images/in-company/deck-retratos-4.webp', caption: 'Retrato a partir do molde'},
+        {src: '/images/in-company/deck-retratos-2.webp', caption: 'Luz e sombra no retrato'},
       ],
       prepare: [
         {
@@ -421,8 +491,10 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
     need: 'outros',
     needLabel: 'Outros formatos',
     title: 'Oficina sob medida no ateliê',
+    titleHighlight: 'sob medida',
+    typeLabel: 'Workshop',
     summary:
-      'Sua equipe vem até a Desenhe e cria uma peça com tema definido junto com a gente, como telas para o escritório, cadernos ou cartões.',
+      'Sua equipe vem ao ateliê e cria uma peça com tema definido junto com a gente, como telas, cadernos ou cartões.',
     image: '/images/in-company/card-oficina.webp',
     imageAlt: 'Turma desenhando e pintando nas mesas do ateliê da Desenhe',
     facts: [
@@ -434,20 +506,26 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
       seoTitle: 'Oficina de Arte para Empresas no Ateliê da Desenhe, Curitiba',
       seoDescription:
         'Oficina de desenho e pintura sob medida para equipes, no ateliê da Desenhe em Curitiba: a equipe cria peças com o tema da empresa, com orientação de professores e materiais inclusos.',
-      kicker: 'No ateliê da Desenhe',
-      lead: 'Sua equipe vem até o nosso ateliê e cria, com orientação de professores, uma peça com tema definido junto com vocês.',
+      lead: 'Sua equipe vem ao nosso ateliê e cria, com nossos professores, uma peça com tema definido junto.',
       deck: [
         '/images/in-company/deck-oficina-1.webp',
         '/images/in-company/deck-oficina-2.webp',
         '/images/in-company/deck-oficina-3.webp',
         '/images/in-company/deck-oficina-4.webp',
       ],
+      relics: [
+        {src: '/images/in-company/objeto-oficina-pinceis.webp', scale: 0.88},
+        {src: '/images/in-company/objeto-oficina-caderno.webp', scale: 0.9},
+        {src: '/images/in-company/objeto-oficina-paleta.webp', scale: 0.7},
+        {src: '/images/in-company/objeto-oficina-cavalete.webp', scale: 1.1},
+      ],
       description: [
         'Em vez de levar a arte até a empresa, a equipe sai do escritório e passa algumas horas no ateliê da Desenhe, entre cavaletes, mesas de desenho e luz natural, no mesmo espaço em que acontecem as nossas aulas.',
         'O tema e a peça são definidos junto com vocês: telas para decorar o escritório, cadernos, cartões ou outra ideia que faça sentido para a ocasião. Começamos com uma orientação rápida de desenho e cor e seguimos para a prática, com moldes e paletas que garantem um resultado bonito mesmo para quem nunca desenhou.',
       ],
       details: [
-        {label: 'Equipe', value: 'Professor e monitor'},
+        {label: 'Equipe', value: '1 condutor e 1 apoio'},
+        {label: 'Para quem', value: 'Times pequenos de qualquer área, lideranças e RH em busca de integração fora do escritório'},
         {label: 'Ideal para', value: 'Integração de equipes, datas comemorativas e peças para o escritório'},
         {label: 'A empresa recebe', value: 'As peças criadas pela equipe'},
       ],
@@ -475,6 +553,11 @@ export const IN_COMPANY_FORMATS: InCompanyFormat[] = [
           title: 'Peças prontas',
           text: 'Os trabalhos ficam com a equipe, para levar para casa ou para o escritório.',
         },
+      ],
+      gallery: [
+        {src: '/images/in-company/deck-oficina-1.webp', caption: 'Grupo no ateliê'},
+        {src: '/images/in-company/deck-oficina-2.webp', caption: 'Mesa preparada'},
+        {src: '/images/in-company/deck-oficina-3.webp', caption: 'Mão na massa'},
       ],
       prepare: [
         {

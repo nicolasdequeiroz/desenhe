@@ -15,7 +15,8 @@ import {
 } from '@phosphor-icons/react';
 import {Button} from '../ui';
 import {Seo} from '../components/Seo';
-import {FactsSummary, type Fact} from '../components/FactsSummary';
+import type {Fact} from '../components/FactsSummary';
+import {InCompanyFacts} from '../components/InCompanyFacts';
 import {FaqItem} from '../components/FaqItem';
 import {NoteGrid, type Note} from '../components/NoteGrid';
 import {Timeline} from '../components/Timeline';
@@ -107,7 +108,7 @@ export function InCompany() {
       <section className="hero hero--coworking hero--ic">
         <div className="hero__background" aria-hidden="true">
           <img
-            src={asset('/images/in-company/hero-turma.webp')}
+            src={asset('/images/in-company/hero-palestra.webp')}
             alt=""
             className="hero__background-image"
           />
@@ -123,7 +124,7 @@ export function InCompany() {
                     In Company · Para empresas
                   </span>
                   <h1 className="hero__title">
-                    Arte que move equipes
+                    <span className="text-color-accent">Arte</span> que move equipes
                   </h1>
                   <div className="hero__lead">
                     <p>
@@ -145,7 +146,7 @@ export function InCompany() {
       </section>
 
       <div className="container about-facts">
-        <FactsSummary items={HERO_FACTS} />
+        <InCompanyFacts stats={HERO_FACTS} />
       </div>
 
       <section id="formatos" className="section ic-section">
@@ -158,8 +159,8 @@ export function InCompany() {
 
           {/* Mesma grade de polaroids da listagem de /cursos. */}
           <div className="course-grid ic-format-grid">
-            {IN_COMPANY_FORMATS.map((format) => (
-              <InCompanyFormatCard key={format.slug} format={format} />
+            {IN_COMPANY_FORMATS.map((format, i) => (
+              <InCompanyFormatCard key={format.slug} format={format} featured={i === 0} />
             ))}
           </div>
         </div>
