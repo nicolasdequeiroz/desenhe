@@ -1803,7 +1803,9 @@ body {
   align-items: center;
   padding: var(--spacing-1) var(--spacing-3);
   border-radius: 9999px;
-  background: var(--category-color, var(--color-accent));
+  /* Escurecido contra preto: o bege do texto precisa de pelo menos 4,5:1 sobre
+     o laranja e o vermelho das categorias (com a cor cheia ficava em 3:1). */
+  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 78%, #000);
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
   font-size: var(--text-size-tiny);
@@ -1832,6 +1834,13 @@ body {
 .category-tag--infantil,
 .category-tint--infantil {
   --category-color: var(--color-category-infantil);
+}
+
+/* O âmbar é claro demais para texto bege (1,6:1): mantém a cor cheia e usa o
+   marrom escuro dos botões laranja. */
+.category-tag--infantil {
+  background: var(--category-color);
+  color: var(--color-on-accent-brand);
 }
 
 /*
@@ -3917,8 +3926,14 @@ body {
   padding-top: clamp(88px, 7vw, 96px);
   /* A cor da categoria é escurecida contra o fundo do site: mantém o tom do
      curso e garante contraste do texto branco por cima. */
-  background: color-mix(in srgb, var(--category-color) 80%, #171310);
+  background: color-mix(in srgb, var(--category-color) 72%, #171310);
   color: var(--color-text-primary);
+}
+
+/* Fundo âmbar (Desenho Infantil): bege some nele, então o texto vai no marrom
+   escuro dos botões laranja. */
+.course-deck--infantil {
+  color: var(--color-on-accent-brand);
 }
 
 .course-deck--desenho {
@@ -4015,7 +4030,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.75;
+  opacity: 0.9;
 }
 
 .course-deck__lead {
@@ -4025,7 +4040,7 @@ body {
   font-size: var(--text-size-large);
   line-height: 1.6;
   color: inherit;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
 .course-deck__cards {
