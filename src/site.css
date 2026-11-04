@@ -1895,6 +1895,34 @@ body {
   left: var(--spacing-3);
 }
 
+/* Seta de "abrir": canto superior direito da capa, só no hover/foco. */
+.course-card__arrow {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-8);
+  height: var(--spacing-8);
+  border-radius: 50%;
+  background: var(--color-accent-brand);
+  color: var(--color-on-accent-brand);
+  box-shadow: 0 6px 16px color-mix(in srgb, #000 40%, transparent);
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity var(--duration-medium),
+    transform var(--duration-medium);
+  pointer-events: none;
+}
+
+.course-card:hover .course-card__arrow,
+.course-card:focus-visible .course-card__arrow {
+  opacity: 1;
+  transform: none;
+}
+
 .course-card__title {
   font-family: var(--font-family-heading);
   font-size: var(--heading-h5);

@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {ArrowUpRight} from '@phosphor-icons/react';
 import {Text} from '../ui';
 import {asset, COURSE_CATEGORY_LABELS, type Course} from '../data';
 
@@ -39,6 +40,10 @@ export function CourseCard({
           <span className={`category-tag category-tag--${course.category}`}>
             {COURSE_CATEGORY_LABELS[course.category]}
           </span>
+          {/* Só aparece no hover/foco: ver .course-card__arrow no CSS. */}
+          <span className="course-card__arrow" aria-hidden="true">
+            <ArrowUpRight size={18} weight="bold" />
+          </span>
         </div>
       </div>
       <div className="course-card__body">
@@ -61,10 +66,6 @@ export function CourseCard({
             ))}
           </ul>
         )}
-        {/* Só aparece no hover/foco: ver .course-card__cta no CSS. */}
-        <span className="course-card__cta">
-          Conhecer o curso <span className="course-card__cta-arrow">→</span>
-        </span>
       </div>
     </Link>
   );
