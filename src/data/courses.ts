@@ -721,6 +721,10 @@ export const COURSES: Course[] = [
       '/images/cursos/desenho-infantil/galeria-3.webp',
       '/images/cursos/desenho-infantil/galeria-4.webp',
       '/images/cursos/desenho-infantil/galeria-5.webp',
+      '/images/cursos/desenho-infantil/galeria-6.webp',
+      '/images/cursos/desenho-infantil/galeria-7.webp',
+      '/images/cursos/desenho-infantil/galeria-8.webp',
+      '/images/cursos/desenho-infantil/galeria-9.webp',
     ],
     galleryCaption: 'Atividades e trabalhos das turmas infantis',
     galleryCredits: [
@@ -729,6 +733,10 @@ export const COURSES: Course[] = [
       {technique: 'Caneta e lápis de cor'},
       {technique: 'Caneta e lápis de cor'},
       {technique: 'Caneta e lápis de cor'},
+      {technique: 'Aquarela', year: '2023'},
+      {technique: 'Aquarela', year: '2023'},
+      {technique: 'Aquarela', year: '2023'},
+      {technique: 'Lápis de cor', year: '2023'},
     ],
   },
   {
