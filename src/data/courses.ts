@@ -288,6 +288,7 @@ export const COURSES: Course[] = [
     ],
     pricingTier: 'consultar',
     cover: '/images/cursos/figura-humana/capa.webp',
+    featuredCover: '/images/cursos/figura-humana/destaque.webp',
     ogImage: '/images/og/desenho-de-figura-humana.jpg',
     priceNotes: ['Valores e condições sob consulta'],
     gallery: [

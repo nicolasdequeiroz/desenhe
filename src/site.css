@@ -1515,24 +1515,28 @@ body {
   transition: transform var(--duration-medium) ease;
 }
 
-/* Bolinha na cor do curso, à frente do título: cresce a partir do zero no
-   hover/foco/linha ativa (nas outras horas fica colapsada, sem recuo).
-   Largura e altura animam juntas para o círculo crescer do centro em vez de
-   esticar como uma barra até virar redondo só no fim da transição. */
+/* Bolinha na cor do curso, à frente do título: aparece no hover/foco/linha
+   ativa. Fica fora do fluxo, na calha à esquerda do título: se ocupasse
+   largura (como antes), títulos longos como "Desenho de Figura Humana"
+   quebravam em duas linhas no hover e a lista inteira dava um salto. Cresce
+   do centro por `scale`. */
+.featured-courses__link-title {
+  position: relative;
+}
+
 .featured-courses__link-title::before {
   content: '';
-  display: inline-block;
-  width: 0;
-  height: 0;
-  margin-right: 0;
+  position: absolute;
+  top: 0.43em;
+  left: -0.62em;
+  width: 0.34em;
+  height: 0.34em;
   border-radius: 999px;
   background: var(--category-color, var(--color-accent));
-  vertical-align: 0.05em;
   opacity: 0;
+  transform: scale(0);
   transition:
-    width var(--duration-medium) ease,
-    height var(--duration-medium) ease,
-    margin var(--duration-medium) ease,
+    transform var(--duration-medium) ease,
     opacity var(--duration-medium) ease;
 }
 
@@ -1546,10 +1550,8 @@ body {
 .featured-courses__link:hover .featured-courses__link-title::before,
 .featured-courses__link:focus-visible .featured-courses__link-title::before,
 .featured-courses__link.is-active .featured-courses__link-title::before {
-  width: 0.34em;
-  height: 0.34em;
-  margin-right: 0.36em;
   opacity: 1;
+  transform: scale(1);
 }
 
 .featured-courses__link-subtitle {
