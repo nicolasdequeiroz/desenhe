@@ -315,6 +315,9 @@ export const COURSES: Course[] = [
       {technique: 'Grafite sobre papel', year: '2023'},
       {technique: 'Grafite sobre papel', year: '2023'},
     ],
+    galleryVideos: [
+      {src: '/videos/cursos/figura-humana/retrato-senhor-grafite.mp4', loop: '/videos/cursos/figura-humana/retrato-senhor-grafite-loop.mp4'},
+    ],
   },
   {
     slug: 'quadrinhos-hq-manga-cartoon',
