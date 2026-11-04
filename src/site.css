@@ -1930,7 +1930,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-1);
-  margin-top: auto;
+  /* Logo depois do texto, não no pé do card: com `margin-top: auto` o botão
+     descia até o fim da linha e ficava a distâncias diferentes do texto em
+     cada card (efeito escada). O espaço dele já é reservado (opacity: 0). */
   padding-top: var(--spacing-2);
   color: var(--color-accent);
   font-weight: 600;
