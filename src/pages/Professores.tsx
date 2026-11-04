@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useLocation} from 'react-router-dom';
+import {ArrowUpRight} from '@phosphor-icons/react';
 import {Text} from '../ui';
 import {Seo} from '../components/Seo';
 import {Section} from '../components/Section';
@@ -53,6 +54,10 @@ export function Professores() {
                     alt={`${teacher.name}, ${teacher.role.toLowerCase()} da Desenhe`}
                     loading="lazy"
                   />
+                  {/* Só aparece no hover/foco: ver .professor-card__arrow no CSS. */}
+                  <span className="professor-card__arrow" aria-hidden="true">
+                    <ArrowUpRight size={18} weight="bold" />
+                  </span>
                 </span>
                 <span className="professor-card__details">
                   <Text as="span" weight="bold" display="block">
@@ -61,7 +66,6 @@ export function Professores() {
                   <Text type="supporting" display="block">
                     {teacher.role}
                   </Text>
-                  <span className="professor-card__cta">Ler biografia →</span>
                 </span>
               </button>
             ))}

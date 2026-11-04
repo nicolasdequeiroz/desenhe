@@ -8378,24 +8378,32 @@ body {
   margin-top: var(--spacing-3);
 }
 
-.professor-card__cta {
-  display: inline-block;
-  margin-top: var(--spacing-2);
-  color: var(--color-teacher-tone-1);
-  font-family: var(--font-family-body);
-  font-weight: 600;
-  font-size: var(--text-size-small);
+.professor-card__arrow {
+  position: absolute;
+  /* Dentro da foto: o padding da moldura mais o respiro de dentro dela. */
+  top: calc(var(--spacing-3) * 2);
+  right: calc(var(--spacing-3) * 2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--spacing-8);
+  height: var(--spacing-8);
+  border-radius: 50%;
+  background: var(--color-accent-brand);
+  color: var(--color-on-accent-brand);
+  box-shadow: 0 6px 16px color-mix(in srgb, #000 40%, transparent);
   opacity: 0;
-  transform: translateY(2px);
+  transform: translate(-4px, 4px);
   transition:
     opacity var(--duration-medium) ease,
     transform var(--duration-medium) ease;
+  pointer-events: none;
 }
 
-.professor-card:hover .professor-card__cta,
-.professor-card:focus-visible .professor-card__cta {
+.professor-card:hover .professor-card__arrow,
+.professor-card:focus-visible .professor-card__arrow {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .professor-modal-backdrop {
