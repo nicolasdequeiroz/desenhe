@@ -466,6 +466,7 @@ export function CursoDetalhe({slug}: {slug: string}) {
             images={course.gallery}
             caption={galleryCaption}
             credits={course.galleryCredits}
+            videos={course.galleryVideos}
             variant={course.category === 'teorico' ? 'plain' : 'polaroid'}
           />
         </Section>

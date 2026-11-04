@@ -143,6 +143,12 @@ export interface Course {
    * (ver CourseGallery.tsx). Índice sem entrada aqui cai no texto genérico.
    */
   galleryCredits?: GalleryCredit[];
+  /**
+   * Vídeo de processo de algumas obras da `gallery`, no mesmo índice: a foto
+   * do índice vira o cartaz e o vídeo toca na parede (mudo, em loop) e no
+   * visor (com som). Índice sem vídeo fica `undefined`.
+   */
+  galleryVideos?: (GalleryVideo | undefined)[];
 }
 
 export const COURSES: Course[] = [
