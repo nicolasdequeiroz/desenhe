@@ -254,13 +254,19 @@ export function WorkViewer({
   const applyPhotoRatio = useCallback(() => {
     const polaroid = polaroidRef.current;
     const image = imageRef.current;
-    if (!polaroid || !image || !bare) return;
+    if (!polaroid || !image) return;
     if (!image.naturalWidth || !image.naturalHeight) return;
     polaroid.style.setProperty(
       '--photo-ratio',
       `${image.naturalWidth} / ${image.naturalHeight}`,
     );
-  }, [bare]);
+    // Número puro, para a largura do polaroid com moldura caber na altura:
+    // uma foto em pé também abre em pé nos cursos, só a parede a recorta em 4:3.
+    polaroid.style.setProperty(
+      '--photo-aspect',
+      (image.naturalWidth / image.naturalHeight).toFixed(4),
+    );
+  }, []);
 
   useLayoutEffect(() => {
     const image = imageRef.current;
