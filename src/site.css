@@ -1836,11 +1836,9 @@ body {
   --category-color: var(--color-category-infantil);
 }
 
-/* O âmbar é claro demais para texto bege (1,6:1): mantém a cor cheia e usa o
-   marrom escuro dos botões laranja. */
+/* Etiqueta do Desenho Infantil mantém a cor cheia de antes. */
 .category-tag--infantil {
   background: var(--category-color);
-  color: var(--color-on-accent-brand);
 }
 
 /*
@@ -3930,10 +3928,18 @@ body {
   color: var(--color-text-primary);
 }
 
-/* Fundo âmbar (Desenho Infantil): bege some nele, então o texto vai no marrom
-   escuro dos botões laranja. */
+/* Desenho Infantil mantém o visual de antes: fundo âmbar menos escurecido e
+   texto bege. */
 .course-deck--infantil {
-  color: var(--color-on-accent-brand);
+  background: color-mix(in srgb, var(--category-color) 80%, #171310);
+}
+
+.course-deck--infantil .course-deck__eyebrow {
+  opacity: 0.75;
+}
+
+.course-deck--infantil .course-deck__lead {
+  opacity: 0.85;
 }
 
 .course-deck--desenho {
