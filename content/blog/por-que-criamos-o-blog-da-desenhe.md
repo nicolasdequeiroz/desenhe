@@ -8,6 +8,7 @@ cover: "/images/blog/por-que-criamos-o-blog-da-desenhe/capa.webp"
 coverAlt: "Corredor da Desenhe, em Curitiba, com desenhos emoldurados nas paredes e banquinhos laranja"
 ogImage: "/images/blog/por-que-criamos-o-blog-da-desenhe/capa-og.jpg"
 legacyPath: "post/blog-desenhe-arte-desenhe-curitiba"
+clickupId: "wdynhjetc2"
 ---
 
 Olá! Eu sou a Ana Clara e hoje quero te dar as boas-vindas ao Blog da Desenhe.

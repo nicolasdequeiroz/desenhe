@@ -7,6 +7,7 @@ category: "Bastidores"
 cover: "/images/blog/um-dia-na-desenhe/capa.webp"
 coverAlt: "Fachada da Desenhe, escola de arte na Rua Padre Anchieta, no bairro Mercês, em Curitiba"
 ogImage: "/images/blog/um-dia-na-desenhe/capa-og.jpg"
+clickupId: "wdynhjetc1"
 ---
 
 Há 38 anos, a Desenhe ensina desenho e pintura em Curitiba. Muita gente nos conhece pelos trabalhos dos alunos nas redes, mas pouca gente sabe como é o dia a dia aqui dentro. Este post abre as portas da escola.

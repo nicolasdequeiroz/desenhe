@@ -9,6 +9,7 @@ coverAlt: "Desenho a grafite de quatro garrafas de vidro, claras e escuras, com 
 ogImage: "/images/blog/luz-e-sombra-valor-tonal/capa-og.jpg"
 course: "desenho-artistico"
 exercise: "Desenhe uma escala de 7 tons, do branco ao mais escuro que conseguir."
+clickupId: "wdynhjetbx"
 ---
 
 Sabe quando um desenho está com as proporções certas, mas ainda parece achatado? Quase sempre o que falta é valor tonal: a variação entre claro e escuro que faz o olho enxergar volume, profundidade e luz.

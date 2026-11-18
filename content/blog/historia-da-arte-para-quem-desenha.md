@@ -9,6 +9,7 @@ coverAlt: "Mãos segurando a reprodução de uma gravura antiga durante um encon
 ogImage: "/images/blog/historia-da-arte-para-quem-desenha/capa-og.jpg"
 course: "historia-da-arte"
 exercise: "Faça uma cópia de estudo de uma obra que você admira."
+clickupId: "wdynhjetbw"
 ---
 
 Quem desenha ou pinta costuma pensar que o importante é praticar, e é mesmo. Mas olhar com atenção para o que outros artistas fizeram, em outras épocas e culturas, acelera a prática de um jeito que só o treino não consegue.

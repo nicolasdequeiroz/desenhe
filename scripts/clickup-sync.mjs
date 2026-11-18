@@ -154,18 +154,26 @@ function readFields(task) {
   return result;
 }
 
-/** Posts que já existem, por id de tarefa: um post atualizado mantém o endereço. */
+/**
+ * Posts que já existem, por id de tarefa: um post atualizado mantém o
+ * endereço. Guarda também o endereço antigo do Wix (legacyPath), que não
+ * existe no ClickUp e não pode se perder quando o post é regravado.
+ */
 function existingPosts() {
   const byTask = new Map();
   const slugs = new Set();
-  if (!existsSync(CONTENT)) return {byTask, slugs};
+  const legacy = new Map();
+  if (!existsSync(CONTENT)) return {byTask, slugs, legacy};
   for (const file of readdirSync(CONTENT).filter((f) => f.endsWith('.md'))) {
     const slug = file.slice(0, -3);
     slugs.add(slug);
-    const id = readFileSync(join(CONTENT, file), 'utf8').match(/^clickupId:\s*"?([\w-]+)"?/m)?.[1];
+    const text = readFileSync(join(CONTENT, file), 'utf8');
+    const id = text.match(/^clickupId:\s*"?([\w-]+)"?/m)?.[1];
     if (id) byTask.set(id, slug);
+    const old = text.match(/^legacyPath:\s*"?([^"\n]+)"?/m)?.[1];
+    if (old) legacy.set(slug, old.trim());
   }
-  return {byTask, slugs};
+  return {byTask, slugs, legacy};
 }
 
 // ---------------------------------------------------------------- importação
@@ -184,6 +192,17 @@ async function importTask(summary, existing, {saveCover, saveInline, saveVideo, 
 
   let body = (task.markdown_description || '').trim();
   if (!body) errors.push('o texto do post (descrição da tarefa) está vazio.');
+  // Link para o próprio site vira caminho relativo, para valer também no
+  // endereço provisório do GitHub Pages. O ClickUp estraga link relativo
+  // ("/cursos" vira "http:///cursos"), então no texto ele vem completo.
+  body = body.replace(/\]\((?:https?:\/\/(?:www\.)?desenhe\.com\.br|http:\/\/)(\/[^)\s]*)/g, ']($1');
+  // Legenda de imagem: o ClickUp não guarda o título da imagem do Markdown,
+  // então a legenda é uma linha em itálico logo abaixo dela. A linha sai do
+  // texto e vira a legenda, e as imagens vizinhas continuam lado a lado.
+  body = body.replace(
+    /^(!\[[^\]]*\]\(\S+?)\)[ \t]*\n[ \t]*([*_])([^*_\n]+)\2[ \t]*$/gm,
+    (_, image, __, caption) => `${image} "${caption.trim().replace(/"/g, "'")}")`,
+  );
 
   const images = (task.attachments || []).filter(
     (a) => IMAGE_EXT.test(a.title || '') || IMAGE_EXT.test(a.extension ? `.${a.extension}` : ''),
@@ -275,6 +294,7 @@ async function importTask(summary, existing, {saveCover, saveInline, saveVideo, 
     ogImage,
     ...(fields.course ? {course: fields.course} : {}),
     ...(fields.exercise ? {exercise: fields.exercise} : {}),
+    ...(existing.legacy.get(slug) ? {legacyPath: existing.legacy.get(slug)} : {}),
     clickupId: task.id,
   };
   writeFileSync(

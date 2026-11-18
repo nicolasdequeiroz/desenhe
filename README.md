@@ -124,6 +124,13 @@ ele é regravado no mesmo endereço. Mexer na tarefa sem mudar o status não
 altera o site. Para publicar sem esperar a próxima hora: aba Actions >
 *Blog (ClickUp)* > *Run workflow*.
 
+Todo post do site tem a sua tarefa: os que existiam antes do sync (os
+migrados do Wix e os primeiros escritos aqui) foram copiados para a lista
+em 18/11/2026, já em **publicado**, e cada arquivo guarda o id da tarefa em
+`clickupId`. Editar um post à mão no repositório funciona, mas a próxima
+publicação pelo ClickUp regrava o arquivo com o que está na tarefa. O
+`legacyPath` é a exceção: ele não existe no ClickUp e o sync o mantém.
+
 ### Configurar o ClickUp (uma vez)
 
 Na lista do blog:
@@ -188,8 +195,13 @@ Na lista do blog:
   citado no texto fica de fora, e o comentário de "publicado" avisa.
 - **Tabela**: vira a tabela comparativa do post, com rolagem lateral em telas
   muito estreitas.
-- **Imagens do texto**: abrem ampliadas no visor ao clicar. Uma legenda entre
-  aspas depois do link da imagem aparece embaixo dela.
+- **Imagens do texto**: abrem ampliadas no visor ao clicar. Para dar uma
+  legenda, escreva uma linha em itálico logo abaixo da imagem, sem linha em
+  branco entre as duas: ela sai do texto e aparece embaixo da foto. (O
+  ClickUp não guarda legenda de imagem, por isso o itálico.)
+- **Links para o site**: cole o endereço completo
+  (`https://www.desenhe.com.br/cursos`); o sync troca por um caminho do
+  próprio site. Link relativo (`/cursos`) o ClickUp estraga.
 
 No GitHub (Settings > Secrets and variables > Actions):
 
