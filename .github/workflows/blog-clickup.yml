@@ -38,7 +38,10 @@ jobs:
     env:
       CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
       CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
-      BLOG_SYNC_STATE: ${{ runner.temp }}/blog-sync.json
+      # O estado entre as etapas do sync fica no padrão do script,
+      # .blog-sync.json na raiz (ignorado pelo git e fora do `git add`). O
+      # contexto `runner` não existe no `env` do job: usá-lo aqui invalidava
+      # o workflow inteiro.
     steps:
       - uses: actions/checkout@v4
 
