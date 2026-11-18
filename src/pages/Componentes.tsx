@@ -22,10 +22,11 @@ import {FaqItem} from '../components/FaqItem';
 import {StrandAccordions} from '../components/StrandAccordions';
 import {Timeline} from '../components/Timeline';
 import {CourseCard} from '../components/CourseCard';
+import {BlogCard} from '../components/BlogCard';
 import {CourseGallery} from '../components/CourseGallery';
 import {InCompanyFormatCard} from '../components/InCompanyFormatCard';
 import {WhatsCta} from '../components/WhatsCta';
-import {COURSES, IN_COMPANY_FORMATS, IN_COMPANY_STEPS} from '../data';
+import {BLOG_POSTS, COURSES, IN_COMPANY_FORMATS, IN_COMPANY_STEPS} from '../data';
 
 /**
  * Página escondida (fora do menu, do sitemap e do Google) com o inventário
@@ -303,6 +304,13 @@ export function Componentes() {
           <div className="course-grid">
             {COURSES.slice(0, 3).map((c) => (
               <CourseCard key={c.slug} course={c} fullTitle />
+            ))}
+          </div>
+        </Specimen>
+        <Specimen name="BlogCard" file="src/components/BlogCard.tsx" usage="Post do blog em /blog e no fim de cada post. Mesmo polaroid do CourseCard.">
+          <div className="course-grid">
+            {BLOG_POSTS.slice(0, 3).map((post) => (
+              <BlogCard key={post.slug} post={post} />
             ))}
           </div>
         </Specimen>

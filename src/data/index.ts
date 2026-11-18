@@ -8,3 +8,4 @@ export * from './testimonials';
 export * from './inCompany';
 export * from './seo';
 export * from './brand';
+export * from './blog';

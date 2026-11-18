@@ -26,3 +26,6 @@ docs
 *.njsproj
 *.sln
 *.sw?
+
+# Estado do sync do blog com o ClickUp (scripts/clickup-sync.mjs)
+.blog-sync.json

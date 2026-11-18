@@ -1,0 +1,97 @@
+# Publica os posts do blog que estão prontos no ClickUp.
+#
+# De hora em hora (das 8h às 23h de Curitiba) procura tarefas da lista do
+# blog no status "publicar". Se houver, o scripts/clickup-sync.mjs grava o
+# post em content/blog/, as imagens em public/images/blog/ e os vídeos em
+# public/videos/blog/, o build confere
+# que o site aceita o post, e só então o commit vai para a main e o deploy é
+# disparado. Por último a tarefa vai para "publicado", com o link do post.
+#
+# Configuração (Settings > Secrets and variables > Actions):
+#   secret   CLICKUP_TOKEN    token pessoal do ClickUp (pk_...)
+#   variable CLICKUP_LIST_ID  id da lista do blog no ClickUp
+# Ver README, seção Blog.
+name: Blog (ClickUp)
+
+on:
+  schedule:
+    # Minuto 7 para fugir do pico do começo da hora no GitHub. Horário em UTC:
+    # 11-23 e 0-2 UTC são 8h às 23h em Curitiba.
+    - cron: '7 0-2,11-23 * * *'
+  # "Run workflow" na aba Actions: publica na hora, sem esperar a próxima rodada.
+  workflow_dispatch:
+  # Para um gatilho imediato no futuro (automação do ClickUp chamando a API).
+  repository_dispatch:
+    types: [clickup-publish]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: blog-clickup
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
+      CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
+      BLOG_SYNC_STATE: ${{ runner.temp }}/blog-sync.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Consulta leve, sem instalar nada: na maioria das rodadas não há post
+      # novo e o job termina aqui em poucos segundos.
+      - id: check
+        run: node scripts/clickup-sync.mjs --check
+
+      - if: steps.check.outputs.pending == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - if: steps.check.outputs.pending == 'true'
+        run: npm ci
+
+      # ffmpeg para os vídeos anexados (scripts/blog-video.mjs). O do Ubuntu
+      # traz o filtro zscale, que converte os vídeos HDR de iPhone para SDR.
+      - if: steps.check.outputs.pending == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - id: sync
+        if: steps.check.outputs.pending == 'true'
+        run: node scripts/clickup-sync.mjs
+
+      # O mesmo build do deploy: um post que quebraria o site não chega à main.
+      - id: build
+        if: steps.sync.outputs.changed == 'true'
+        # O shell do Actions roda com pipefail: se o build falha, o passo falha.
+        run: npm run build 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      - if: failure() && steps.build.outcome == 'failure'
+        run: node scripts/clickup-sync.mjs --fail "$(grep -m1 '\[blog\]' "$RUNNER_TEMP/build.log" || echo 'o build falhou')"
+
+      - if: steps.sync.outputs.changed == 'true'
+        env:
+          TITLES: ${{ steps.sync.outputs.titles }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "Blog Desenhe (ClickUp)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/blog public/images/blog
+          [ -d public/videos/blog ] && git add public/videos/blog
+          git commit -m "Blog: publica $TITLES"
+          git push
+          # Um push feito com o token do Actions não dispara outro workflow,
+          # então o deploy é chamado à mão.
+          gh workflow run deploy.yml --ref main
+
+      - if: steps.sync.outputs.changed == 'true'
+        run: node scripts/clickup-sync.mjs --finish

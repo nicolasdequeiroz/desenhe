@@ -44,7 +44,7 @@ Todo `font-size` vem da escala semântica de `tokens.css`: pela classe utilitár
 - `heading-style-*` já traz o visual de título (Courier Prime, bold, caixa alta, entrelinha curta): o título não precisa de regra de tipografia própria.
 - `<Text type="large">` e `<Section lead>` já saem em `--text-size-large`; um lead escrito à mão usa o mesmo tamanho, nunca maior.
 - Uma nota ao lado de título ("Não achou a sua? Chame no WhatsApp") é texto corrido (`text-size-regular`), não lead.
-- Kicker de seção continua com `.section__eyebrow`.
+- Kicker de seção continua com `.section__eyebrow`. O respiro entre o fio do kicker e o título é do próprio kicker (`margin-bottom` de 12px): nunca coloque o kicker num contexto novo contando com o pai para dar esse espaço, e nunca escreva uma regra de contexto com `margin-bottom` para ele. Se o pai for uma coluna flex com `gap` (que já separa os filhos), acrescente esse pai à lista `:is(...) > .section__eyebrow` logo abaixo da regra do kicker em `site.css`, para o espaço não dobrar. Ao criar qualquer cabeçalho com kicker, confira no navegador que o fio não encosta no título.
 - 48px (`--heading-display`) é o teto. Se pedirem um título "bem maior", use `--heading-display`; passar disso é abrir exceção à escala, e isso se confirma antes com quem pediu.
 - Para conferir: `grep -n "font-size: " src/site.css | grep -v "var(--heading\|var(--text-size"` só deve listar os casos em `em`.
 
@@ -74,26 +74,26 @@ O site é **dark fixo** (`color-scheme: dark`, independente do sistema).
 
 | Uso | Token | Valor |
 | --- | --- | --- |
-| Fundo da página | `--color-background-body` | `#171310` |
+| Fundo da página | `--color-background-body` | Marrom bem escuro, `#171310` (escolha: não trocar pelo Chumbo) |
 | Card, fundo "muted" | `--color-background-card` / `--color-background-muted` | `#1d1813` |
 | Superfície mais clara (contraste deliberado) | `--color-background-surface` | `#282219` |
-| Texto principal | `--color-text-primary` | `#eee0d7` |
-| Texto secundário | `--color-text-secondary` | `#bba79c` |
+| Texto principal | `--color-text-primary` | Bege da marca, `#fff4e0` |
+| Texto secundário | `--color-text-secondary` | Bege com 28% do fundo |
 | Laranja da marca (acento) | `--color-accent` | `#f67800` |
-| Borda | `--color-border` / `--color-border-emphasized` | translúcida / `#53443a` |
-| Marrom café (faixas de In Company) | `--color-corporate` | `#6b4630` |
+| Borda | `--color-border` / `--color-border-emphasized` | Bege a 10% / `#53443a` |
+| Café (faixas de In Company) | `--color-corporate` | Café da marca, `#552a15` |
 
 - Texto colorido via `text-color-primary` / `text-color-secondary` / `text-color-accent` (ou os tokens).
 - Fundo de seção é a cor padrão da página; `section--muted` e `--color-background-surface` só para contraste deliberado.
 - Cores de categoria de curso (`--color-category-*`), de professor (`--color-teacher-tone-*`) e da grade de horários (`--color-course-*`) têm uso próprio: não reaproveite como cor de interface genérica.
 - O creme "papel" (`--surface-warm-*`, `#fff4e0`) é o light mode da Desenhe e fica **reservado** aos depoimentos e ao rodapé. Não use em blocos novos.
 - Título é de uma cor só; não pinte uma palavra de laranja. **Exceção:** o `h1` das páginas de In Company destaca uma palavra-chave com `text-color-accent` (nas páginas de formato ela vem de `titleHighlight` em `src/data/inCompany.ts`).
-- Uma cor nova vira token em `tokens.css` com um comentário de uso; nunca hex solto em `site.css`. O fundo `#171310` aparece escrito direto em vários `color-mix()` antigos: em código novo, use `var(--color-background-body)`.
+- Toda cor sai da paleta da Central da Marca (`src/data/brand.ts`). As de interface são os tokens `--brand-*` de `tokens.css` (Bege, Café, Branco) ou misturas deles com `color-mix()`; nunca um tom "parecido" inventado. Exceção decidida: os fundos escuros são marrons (`#171310`, `#1d1813`, `#282219`), não o Chumbo. Uma cor nova vira token em `tokens.css` com um comentário de uso; nunca hex solto em `site.css`.
 - Fora da paleta e aceitos de propósito: verde do WhatsApp (`#25d366`), vermelho de erro do livro de visitas (`#a33333`), cores de pincel do livro de visitas, branco e preto da Central da Marca, preto translúcido em sombras. Os selos (`Badge`, em `ui.css`) também saem da paleta: laranja do acento, texto principal e o âmbar `--color-category-infantil` no `warning`.
 
 ## Botões
 
-Os botões de `/componentes` são a verdade absoluta: `Button` (`src/ui/Button.tsx`) com as variantes `primary`, `secondary`, `ghost`, `tint` e os tamanhos `sm`, `md`, `lg`. O `.btn` fixa `--color-accent` e `--color-on-accent` nos tokens da marca (`--color-accent-brand`, `--color-on-accent-brand`), então o laranja é o mesmo em qualquer página, inclusive nas de curso que trocam `--color-accent` pela cor da categoria. Não sobrescreva cor, tamanho ou fonte de `.btn` por página ou contexto; ajuste de layout (largura, margem) pode. Se um fundo não combinar com o primário, troque a variante (`secondary`, `ghost`), não a cor. Botão novo usa o componente, não uma classe própria. Texto de botão curto (até 3 palavras): o contexto vem do título, não do botão.
+Os botões de `/componentes` são a verdade absoluta: `Button` (`src/ui/Button.tsx`) com as variantes `primary`, `secondary`, `ghost`, `tint` e os tamanhos `sm`, `md`, `lg`. O `.btn` fixa `--color-accent` e `--color-on-accent` nos tokens da marca (`--color-accent-brand`, `--color-on-accent-brand`), então o laranja é o mesmo em qualquer página, inclusive nas de curso que trocam `--color-accent` pela cor da categoria. Não sobrescreva cor, tamanho ou fonte de `.btn` por página ou contexto; ajuste de layout (largura, margem) pode. **Única exceção:** dentro de `.course-page` o botão `primary` veste a cor da categoria do curso (`--category-color`), com o texto em Preto ou Branco da paleta (`--color-on-category-*` em `tokens.css`, escolhidos por contraste de 4,5:1). Vale também para o "Matricule-se" do header nessas páginas (`.site-header--course`); fora delas, tudo continua no laranja. Se um fundo não combinar com o primário, troque a variante (`secondary`, `ghost`), não a cor. Botão novo usa o componente, não uma classe própria. Texto de botão curto (até 3 palavras): o contexto vem do título, não do botão.
 
 ## Reaproveite antes de inventar
 
@@ -104,11 +104,14 @@ Antes de criar seção ou componente, procure um existente e adapte com props ou
 - `Section` (kicker, título, lead, children): qualquer seção com título.
 - `Timeline`: processos passo a passo ("Como funciona", "Como trabalhamos").
 - `NoteGrid`, com notas `icon` dentro de `.coworking-highlights`: cards curtos de título + texto.
-- `.course-grid` + `.course-card` (polaroids): lista de ofertas com foto.
+- `.course-grid` + `.course-card` (polaroids): lista de ofertas com foto. Nada de etiqueta sobre a foto: a categoria vai na linha acima do título, com uma bolinha na cor exata da categoria e o texto claro (vermelho e terracota não têm contraste como letra no fundo escuro).
 - `.course-summary` (via `FactsSummary`): ficha de fatos em duas colunas sob um hero. Em In Company, `InCompanyFacts` (régua de dados curtos + linha de textos, com fios).
 - `.course-deck`: primeira dobra colorida com baralho de fotos em leque. `.hero` com `hero__background`: primeira dobra com foto sangrando.
 - `.course-deck__relics`: objetos recortados (PNG/WebP transparente) no lugar do baralho, como em História da Arte e In Company.
 - `CourseGallery` (parede de polaroids com visor): aceita `videos` no mesmo índice de `images` (a imagem vira o cartaz). Na parede o vídeo toca mudo, em loop e só enquanto está à vista (`LoopVideo`, arquivo `-loop.mp4` leve e sem áudio); no visor abre o arquivo completo com som e controles nativos, sem moldura e na proporção dele. Vídeo novo: H.264 + AAC, `+faststart`, 720px de largura no completo e 540px sem áudio no loop, em `public/videos/`. Vídeo de iPhone vem em HLG (HDR): converter para SDR com tone mapping, senão fica lavado.
+- Blog: `.blog-hero` (abertura do post: capa de ponta a ponta em menos da metade da altura da tela, por trás do header flutuante, com fade para a cor da página e o título subindo por cima do fade), `BlogCard` (o polaroid do `CourseCard`, mas sem etiqueta sobre a foto: embaixo da capa, a categoria em laranja seguida de um fio curto, data e leitura), `.blog-feature` (post em destaque na abertura de `/blog`), `.blog-filter` (pílulas de categoria acima da grade, contornadas e cheias de laranja quando escolhidas; no celular correm de lado), `.blog-byline` (assinatura embaixo do título; professor da escola entra com a foto num círculo fechado no rosto), `.blog-sheet` (ficha lateral do post: materiais, paleta, compartilhar; as amostras da paleta usam `PaintBlob`, um borrão de formato sorteado por semente, e no celular a ficha vem depois do texto), `.blog-turn` (bloco "Sua vez", que abre o quadro do livro de visitas com `openGuestbook`) e `.blog-course` (fecho na cor da categoria do curso, com ficha de rótulo e resposta e a capa num polaroid saindo pela borda). O corpo do post é HTML vindo do Markdown, estilizado por tag dentro de `.blog-article__body`: é o único lugar em que seletor de tag é aceito.
+- Movimento de rolagem: a galeria do "Nosso espaço" (`useGalleryMotion` em `SpaceShowcaseSection.tsx`) é a referência. A foto entra uma vez ao chegar à tela como peça de mosaico (sobe de baixo, de distância e giro próprios, um pouco reduzida, e encaixa; as que chegam juntas entram em sequência; etiqueta e legenda vêm depois; nada de cortina com `clip-path`, que foi testada e recusada), as colunas fazem parallax leve só no desktop e a foto assenta de um zoom de 1.12 para 1. Regras: o HTML do build sai com tudo visível e só uma classe adicionada depois de montar (`is-armed`) esconde o que vai entrar; nada anima com "reduzir movimento"; parallax e zoom usam `translate` e `scale` (propriedades separadas de `transform`) para somar com o hover sem conflito; o cálculo de rolagem só roda enquanto a seção está à vista.
+- Selo da exposição de fim de ano: `ExpoSeal` (SVG do Figma, disco escuro com borda laranja e a marca DSN; só o anel de texto gira, em Courier Prime de verdade num caminho circular, parado com "reduzir movimento"). Acompanha a exposição onde ela aparecer; o tamanho vem da largura que quem usa der.
 - `FaqItem` dentro de `.coworking-faq`: FAQ. `.course-cta`: faixa colorida de fechamento.
 
 ## Padrões de In Company (páginas de formato)

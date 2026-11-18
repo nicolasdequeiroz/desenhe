@@ -176,6 +176,26 @@ body {
   box-shadow: 0 1px 4px color-mix(in srgb, var(--color-accent) 22%, transparent);
 }
 
+/*
+ * Exceção à regra do laranja fixo: dentro das páginas de curso o botão
+ * principal veste a cor da categoria do curso, com o texto em Preto ou
+ * Branco da paleta conforme o contraste (ver --color-on-category-* em
+ * tokens.css). Vale também para o "Matricule-se" do header nessas páginas
+ * (o header ganha .site-header--course e a classe da categoria). O brilho
+ * em volta é recalculado aqui porque o de :root foi resolvido com o laranja.
+ */
+.course-page .btn.primary,
+.site-header--course .btn.primary {
+  --color-accent: var(--category-color, var(--color-accent-brand));
+  --color-on-accent: var(--category-on-color, var(--color-on-accent-brand));
+  --site-button-shadow:
+    0 2px 6px color-mix(in srgb, var(--color-accent) 18%, transparent),
+    0 8px 20px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --site-button-shadow-hover:
+    0 4px 10px color-mix(in srgb, var(--color-accent) 28%, transparent),
+    0 14px 28px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
 .btn.secondary {
   background-color: var(--color-background-card);
   background-image: none;
@@ -976,6 +996,36 @@ body {
   color: inherit;
 }
 
+/* Selo animado da exposição no canto do card (ver ExpoSeal). */
+.hero__featured-card {
+  position: relative;
+}
+
+.hero__featured-seal {
+  position: absolute;
+  left: var(--spacing-3);
+  bottom: var(--spacing-3);
+  width: 30%;
+  max-width: 120px;
+  filter: drop-shadow(0 6px 14px color-mix(in srgb, #000 40%, transparent));
+  pointer-events: none;
+}
+
+/* Campanha sem página própria: o card é um botão que abre o pop-up. */
+button.hero__featured-card {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+button.promo-summary__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
 .hero__featured-card img {
   width: 100%;
   height: 100%;
@@ -1308,23 +1358,49 @@ body {
   margin-inline: auto;
 }
 
-.section__head--centered .section__eyebrow {
-  margin-bottom: var(--spacing-3);
-}
-
 .section__head--centered h2 {
   font-size: var(--heading-h2);
   font-weight: 700;
   line-height: 1.15;
 }
 
+/*
+ * Kicker de seção: rótulo laranja com um fio embaixo. O respiro entre o fio
+ * e o título é do próprio kicker (margin-bottom), não de quem o usa. Antes
+ * ele vinha de cada contexto (o cabeçalho centralizado, a arc de trabalhos,
+ * o `gap` de cada coluna) e todo uso novo que esquecia disso colava o fio no
+ * título, como no cabeçalho alinhado à esquerda do `Section`.
+ */
 .section__eyebrow {
   display: block;
+  margin-bottom: var(--spacing-3);
   font-size: var(--text-size-small);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
+}
+
+/*
+ * Colunas que já separam os filhos com `gap`: ali o gap faz o respiro e a
+ * margem do kicker somaria em dobro. Coluna nova com gap que não estiver na
+ * lista só fica com um respiro um pouco maior; o fio nunca mais cola.
+ */
+:is(
+    .hero__heading,
+    .featured-courses__block,
+    .space-showcase__content,
+    .testimonials__intro,
+    .course-timeline__header,
+    .ic-head,
+    .ic-speaker__text,
+    .ic-contact__copy,
+    .blog-index__head,
+    .blog-article__header,
+    .blog-turn__copy
+  )
+  > .section__eyebrow {
+  margin-bottom: 0;
 }
 
 .section__eyebrow::after {
@@ -1686,7 +1762,8 @@ body {
  * para não mexer na lista completa de /cursos.
  */
 @media (max-width: 640px) {
-  .course-page .course-grid {
+  .course-page .course-grid,
+  .home-blog .course-grid {
     display: flex;
     grid-template-columns: none;
     row-gap: 0;
@@ -1705,11 +1782,13 @@ body {
     scrollbar-width: none;
   }
 
-  .course-page .course-grid::-webkit-scrollbar {
+  .course-page .course-grid::-webkit-scrollbar,
+  .home-blog .course-grid::-webkit-scrollbar {
     display: none;
   }
 
-  .course-page .course-grid > .course-card {
+  .course-page .course-grid > .course-card,
+  .home-blog .course-grid > .course-card {
     flex: 0 0 80%;
     scroll-snap-align: start;
     /* Sem o torto no carrossel: com ele o card parecia cortado na borda. */
@@ -1799,47 +1878,38 @@ body {
   flex: 1;
 }
 
-.category-tag {
+.course-card__category {
   display: inline-flex;
   align-items: center;
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: 9999px;
-  /* Escurecido contra preto: o bege do texto precisa de pelo menos 4,5:1 sobre
-     o laranja e o vermelho das categorias (com a cor cheia ficava em 3:1). */
-  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 78%, #000);
-  color: var(--color-text-primary);
-  font-family: var(--font-family-body);
-  font-size: var(--text-size-tiny);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
 }
 
-.category-tag--desenho,
+.course-card__category-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--category-color, var(--color-accent));
+  /* Contorno claro: a bolinha não some quando o card fica sobre a faixa na
+     cor da própria categoria (fim das páginas de curso). */
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+}
+
 .category-tint--desenho {
   --category-color: var(--color-category-desenho);
 }
 
-.category-tag--pintura,
 .category-tint--pintura {
   --category-color: var(--color-category-pintura);
 }
 
-.category-tag--institucional,
 .category-tint--institucional {
   --category-color: var(--color-category-institucional);
 }
 
-.category-tag--infantil,
 .category-tint--infantil {
   --category-color: var(--color-category-infantil);
-}
-
-/* Etiqueta do Desenho Infantil mantém a cor cheia de antes. */
-.category-tag--infantil {
-  background: var(--category-color);
 }
 
 /*
@@ -1848,7 +1918,6 @@ body {
  * sempre o mesmo. Como o terracota é escuro, o texto que fica por cima
  * dele (botão primário) vai claro, via --color-on-accent.
  */
-.category-tag--teorico,
 .category-tint--teorico,
 .course-page--teorico,
 .course-deck--teorico,
@@ -1860,11 +1929,15 @@ body {
 .course-page--teorico,
 .course-cta--teorico,
 .pricing-card--theory {
-  --color-on-accent: #fdece2;
+  --color-on-accent: var(--brand-bege);
+}
+
+.course-page--teorico {
+  --category-on-color: var(--color-on-category-teorico);
 }
 
 .section.testimonials:has(+ .course-cta--teorico) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-teorico) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-teorico) 82%, var(--color-background-body));
 }
 
 /*
@@ -1879,8 +1952,8 @@ body {
   padding: var(--spacing-6);
   background: linear-gradient(
     150deg,
-    color-mix(in srgb, var(--category-color) 70%, #171310),
-    color-mix(in srgb, var(--category-color) 28%, #171310)
+    color-mix(in srgb, var(--category-color) 70%, var(--color-background-body)),
+    color-mix(in srgb, var(--category-color) 28%, var(--color-background-body))
   );
   color: var(--color-text-primary);
   text-align: center;
@@ -1897,12 +1970,6 @@ body {
 
 .course-card__cover-placeholder {
   aspect-ratio: 16 / 10;
-}
-
-.course-card__cover .category-tag {
-  position: absolute;
-  top: var(--spacing-3);
-  left: var(--spacing-3);
 }
 
 /* Seta de "abrir": canto superior direito da capa, só no hover/foco. */
@@ -2558,6 +2625,103 @@ body {
   /* Cozinha (única foto "sm" centralizada) ganha jitter à direita aqui. */
   .space-showcase__gallery-item--sm.space-showcase__gallery-item--center {
     align-self: flex-end;
+  }
+}
+
+/*
+ * Movimento da galeria ao rolar (ver useGalleryMotion em
+ * SpaceShowcaseSection). As colunas usam `translate` e as fotos `scale`,
+ * propriedades separadas de `transform`: o parallax, o zoom de rolagem e o
+ * hover se somam sem um apagar o outro.
+ */
+.space-showcase__gallery-col {
+  translate: 0 var(--col-shift, 0px);
+  will-change: translate;
+}
+
+.space-showcase__gallery-card img {
+  scale: var(--zoom, 1);
+  transition: transform var(--duration-slow) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/*
+ * Entrada em mosaico: cada foto sobe de baixo, de uma distância e com um
+ * giro próprios, levemente reduzida, e encaixa no lugar com um assentamento
+ * suave. As que chegam juntas à tela entram em sequência (o atraso vem do
+ * JS, em --enter-delay), como peças de um mosaico se montando.
+ */
+.space-showcase__gallery-item--start {
+  --enter-y: 140px;
+  --enter-tilt: -4deg;
+}
+
+.space-showcase__gallery-item--end {
+  --enter-y: 180px;
+  --enter-tilt: 3.5deg;
+}
+
+.space-showcase__gallery-item--center {
+  --enter-y: 110px;
+  --enter-tilt: 1.5deg;
+}
+
+.space-showcase__gallery.is-armed .space-showcase__gallery-item {
+  opacity: 0;
+  transform: translateY(var(--enter-y, 140px)) rotate(var(--enter-tilt, 0deg)) scale(0.9);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 700ms ease-out var(--enter-delay, 0ms),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay, 0ms);
+}
+
+.space-showcase__gallery.is-armed .space-showcase__gallery-badge,
+.space-showcase__gallery.is-armed .space-showcase__gallery-caption {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--duration-slow) ease-out,
+    transform var(--duration-slow) ease-out;
+}
+
+.space-showcase__gallery.is-armed .space-showcase__gallery-badge {
+  transform: translateY(-10px);
+  transition-delay: calc(var(--enter-delay, 0ms) + 600ms);
+}
+
+.space-showcase__gallery.is-armed .space-showcase__gallery-caption {
+  transition-delay: calc(var(--enter-delay, 0ms) + 750ms);
+}
+
+.space-showcase__gallery.is-armed .space-showcase__gallery-item.is-in,
+.space-showcase__gallery.is-armed .is-in .space-showcase__gallery-badge,
+.space-showcase__gallery.is-armed .is-in .space-showcase__gallery-caption {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hover: a foto aproxima um pouco e o número da etiqueta anda para o lado. */
+.space-showcase__gallery-badge span:last-child {
+  transition: transform var(--duration-medium) ease;
+}
+
+@media (hover: hover) {
+  .space-showcase__gallery-card:hover img {
+    transform: scale(1.04);
+  }
+
+  .space-showcase__gallery-card:hover .space-showcase__gallery-badge span:last-child {
+    transform: translateX(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-showcase__gallery-col {
+    translate: none;
+  }
+
+  .space-showcase__gallery-card img {
+    scale: none;
+    transition: none;
   }
 }
 
@@ -3313,7 +3477,7 @@ body {
    * e a que mais travava o movimento. A opacidade maior compensa a leitura
    * que o desfoque dava.
    */
-  background: color-mix(in srgb, #171310 88%, transparent);
+  background: color-mix(in srgb, var(--color-background-body) 88%, transparent);
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
   font-size: var(--text-size-tiny);
@@ -3521,7 +3685,7 @@ body {
 .work-viewer__backdrop {
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, #171310 88%, transparent);
+  background: color-mix(in srgb, var(--color-background-body) 88%, transparent);
   backdrop-filter: blur(6px);
   cursor: zoom-out;
   animation: work-viewer-fade var(--duration-medium) ease both;
@@ -3773,7 +3937,7 @@ body {
   height: 44px;
   border: 1px solid color-mix(in srgb, #fff 22%, transparent);
   border-radius: 50%;
-  background: color-mix(in srgb, #171310 70%, transparent);
+  background: color-mix(in srgb, var(--color-background-body) 70%, transparent);
   color: var(--color-text-primary);
   cursor: pointer;
   transition:
@@ -3882,18 +4046,22 @@ body {
  */
 .course-page--desenho {
   --category-color: var(--color-category-desenho);
+  --category-on-color: var(--color-on-category-desenho);
 }
 
 .course-page--pintura {
   --category-color: var(--color-category-pintura);
+  --category-on-color: var(--color-on-category-pintura);
 }
 
 .course-page--institucional {
   --category-color: var(--color-category-institucional);
+  --category-on-color: var(--color-on-category-institucional);
 }
 
 .course-page--infantil {
   --category-color: var(--color-category-infantil);
+  --category-on-color: var(--color-on-category-infantil);
 }
 
 .course-page .section__eyebrow {
@@ -3925,14 +4093,14 @@ body {
   padding-top: clamp(88px, 7vw, 96px);
   /* A cor da categoria é escurecida contra o fundo do site: mantém o tom do
      curso e garante contraste do texto branco por cima. */
-  background: color-mix(in srgb, var(--category-color) 72%, #171310);
+  background: color-mix(in srgb, var(--category-color) 72%, var(--color-background-body));
   color: var(--color-text-primary);
 }
 
 /* Desenho Infantil mantém o visual de antes: fundo âmbar menos escurecido e
    texto bege. */
 .course-deck--infantil {
-  background: color-mix(in srgb, var(--category-color) 80%, #171310);
+  background: color-mix(in srgb, var(--category-color) 80%, var(--color-background-body));
 }
 
 .course-deck--infantil .course-deck__eyebrow {
@@ -3985,9 +4153,9 @@ body {
   background:
     linear-gradient(
       to bottom,
-      color-mix(in srgb, #171310 58%, transparent) 0%,
-      color-mix(in srgb, #171310 22%, transparent) 42%,
-      color-mix(in srgb, #171310 48%, transparent) 100%
+      color-mix(in srgb, var(--color-background-body) 58%, transparent) 0%,
+      color-mix(in srgb, var(--color-background-body) 22%, transparent) 42%,
+      color-mix(in srgb, var(--color-background-body) 48%, transparent) 100%
     ),
     color-mix(in srgb, var(--category-color) 52%, transparent);
 }
@@ -4406,7 +4574,7 @@ body {
   padding: var(--spacing-3);
   border-radius: var(--radius-container);
   overflow: hidden;
-  background: color-mix(in srgb, var(--color-category-teorico) 32%, #171310 68%);
+  background: color-mix(in srgb, var(--color-category-teorico) 32%, var(--color-background-body) 68%);
   transition: box-shadow var(--duration-medium) ease;
 }
 
@@ -4417,11 +4585,11 @@ body {
 }
 
 .course-teacher:nth-child(3n + 2) .course-teacher__frame {
-  background: color-mix(in srgb, var(--color-category-teorico) 20%, #171310 80%);
+  background: color-mix(in srgb, var(--color-category-teorico) 20%, var(--color-background-body) 80%);
 }
 
 .course-teacher:nth-child(3n) .course-teacher__frame {
-  background: color-mix(in srgb, var(--color-category-teorico) 44%, #171310 56%);
+  background: color-mix(in srgb, var(--color-category-teorico) 44%, var(--color-background-body) 56%);
 }
 
 .course-teacher__photo {
@@ -5024,7 +5192,7 @@ body {
     to bottom,
     var(--color-background-muted) 0,
     var(--color-background-muted) calc(100% - var(--course-cta-fade)),
-    color-mix(in srgb, var(--category-color) 82%, #171310) 100%
+    color-mix(in srgb, var(--category-color) 82%, var(--color-background-body)) 100%
   );
 }
 
@@ -5046,19 +5214,19 @@ body {
 }
 
 .section.testimonials:has(+ .course-cta--desenho) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-desenho) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-desenho) 82%, var(--color-background-body));
 }
 
 .section.testimonials:has(+ .course-cta--pintura) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-pintura) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-pintura) 82%, var(--color-background-body));
 }
 
 .section.testimonials:has(+ .course-cta--institucional) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, var(--color-background-body));
 }
 
 .section.testimonials:has(+ .course-cta--infantil) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-infantil) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-infantil) 82%, var(--color-background-body));
 }
 
 /* Em /precos quem antecede a faixa final é a própria seção de planos:
@@ -5073,13 +5241,13 @@ body {
 }
 
 .section--pricing:has(+ .course-cta--institucional) {
-  --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, #171310);
+  --cta-fade-color: color-mix(in srgb, var(--color-category-institucional) 82%, var(--color-background-body));
 }
 
 .course-cta {
   padding-block: clamp(56px, 8vw, 96px);
   /* Continua exatamente da cor em que o gradiente acima termina. */
-  background: color-mix(in srgb, var(--category-color) 82%, #171310);
+  background: color-mix(in srgb, var(--category-color) 82%, var(--color-background-body));
   color: var(--color-text-primary);
 }
 
@@ -5488,7 +5656,7 @@ body {
   padding: var(--spacing-2) var(--spacing-2) var(--spacing-1);
   border-radius: 4px;
   background: var(--surface-warm-card);
-  box-shadow: 0 6px 16px color-mix(in srgb, #231a13 18%, transparent);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--surface-warm-text) 18%, transparent);
 }
 
 .doodle-pile__card canvas {
@@ -5889,7 +6057,7 @@ body {
 }
 
 .guestbook-panel__close:hover {
-  background: color-mix(in srgb, #231a13 8%, transparent);
+  background: color-mix(in srgb, var(--surface-warm-text) 8%, transparent);
   color: var(--surface-warm-text);
 }
 
@@ -5932,7 +6100,7 @@ body {
   color: var(--surface-warm-text);
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 50%, transparent),
-    0 2px 6px color-mix(in srgb, #231a13 12%, transparent);
+    0 2px 6px color-mix(in srgb, var(--surface-warm-text) 12%, transparent);
 }
 
 .guestbook-panel__view {
@@ -5947,7 +6115,7 @@ body {
   border: 1px solid var(--surface-warm-border);
   border-radius: var(--radius-element);
   background: #fffbf7;
-  box-shadow: inset 0 1px 4px color-mix(in srgb, #231a13 10%, transparent);
+  box-shadow: inset 0 1px 4px color-mix(in srgb, var(--surface-warm-text) 10%, transparent);
   overflow: hidden;
 }
 
@@ -6133,7 +6301,7 @@ body {
   padding: var(--spacing-1);
   border-radius: 2px;
   background: #fffbf7;
-  box-shadow: 0 2px 6px color-mix(in srgb, #231a13 14%, transparent);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--surface-warm-text) 14%, transparent);
 }
 
 .guestbook-panel__polaroid canvas {
@@ -7034,7 +7202,7 @@ body {
  * dentro volta ao terracota cheio para o botão.
  */
 .pricing-block--theory {
-  --color-accent: color-mix(in srgb, var(--color-category-teorico) 55%, #fdece2);
+  --color-accent: color-mix(in srgb, var(--color-category-teorico) 55%, var(--brand-bege));
 }
 
 .pricing-block__head {
@@ -7214,11 +7382,11 @@ body {
 /* Elementos pequenos (checks, fio do aviso, botão tint) numa versão
    clareada do terracota, para não sumirem no fundo escuro do card. */
 .pricing-card--theory .pricing-check__icon {
-  color: color-mix(in srgb, var(--color-accent) 52%, #fdece2);
+  color: color-mix(in srgb, var(--color-accent) 52%, var(--brand-bege));
 }
 
 .pricing-card--theory .pricing-card__intake {
-  border-left-color: color-mix(in srgb, var(--color-accent) 58%, #fdece2);
+  border-left-color: color-mix(in srgb, var(--color-accent) 58%, var(--brand-bege));
   background: color-mix(in srgb, var(--color-accent) 15%, transparent);
   color: var(--color-text-primary);
 }
@@ -7226,7 +7394,7 @@ body {
 /* Selo "História da Arte": no tom terracota, não neutro. */
 .pricing-card--theory .pricing-card__head .badge {
   background: color-mix(in srgb, var(--color-accent) 22%, transparent);
-  color: color-mix(in srgb, var(--color-accent) 45%, #fdece2);
+  color: color-mix(in srgb, var(--color-accent) 45%, var(--brand-bege));
 }
 
 /* Lista de itens dos pacotes da Colônia de Férias (ver ColoniaDeFerias). */
@@ -7263,10 +7431,6 @@ body {
   max-width: 640px;
   margin: 0 auto var(--spacing-12);
   text-align: center;
-}
-
-.works-arc-section__head .section__eyebrow {
-  margin-bottom: var(--spacing-3);
 }
 
 .works-arc-section__head .section__eyebrow::after {
@@ -7825,7 +7989,7 @@ body {
  */
 .colonia-cta {
   padding-block: clamp(56px, 8vw, 96px);
-  background: color-mix(in srgb, var(--colonia-color) 82%, #171310);
+  background: color-mix(in srgb, var(--colonia-color) 82%, var(--color-background-body));
   color: var(--color-text-primary);
 }
 
@@ -8367,7 +8531,7 @@ body {
   padding: var(--spacing-3);
   border-radius: var(--radius-container);
   overflow: hidden;
-  background: color-mix(in srgb, var(--color-teacher-tone-1) 55%, #171310 45%);
+  background: color-mix(in srgb, var(--color-teacher-tone-1) 55%, var(--color-background-body) 45%);
   transition: box-shadow var(--duration-medium) ease;
 }
 
@@ -8413,8 +8577,10 @@ body {
   width: var(--spacing-8);
   height: var(--spacing-8);
   border-radius: 50%;
-  background: var(--color-accent-brand);
-  color: var(--color-on-accent-brand);
+  /* Na cor dos professores (a mesma do kicker e das molduras da página),
+     não no laranja da marca. */
+  background: var(--color-teacher-tone-1);
+  color: var(--color-background-body);
   box-shadow: 0 6px 16px color-mix(in srgb, #000 40%, transparent);
   opacity: 0;
   transform: translate(-4px, 4px);
@@ -8565,6 +8731,228 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Selo da exposição de fim de ano (ExpoSeal)
+
+   Só o anel de texto gira, em volta do centro do selo; o disco e a marca DSN
+   ficam parados. As cores do selo vêm do desenho do Figma, dentro do SVG.
+--------------------------------------------------------------------------- */
+.expo-seal {
+  display: block;
+  overflow: visible;
+}
+
+.expo-seal__text {
+  font-family: var(--font-family-heading);
+  /* Unidades do desenho do SVG (viewBox de 294), não tamanho de texto da
+     interface: escala junto com o selo. */
+  font-size: 22px;
+  font-weight: 700;
+  fill: #fff4e0;
+}
+
+.expo-seal__ring {
+  transform-box: view-box;
+  transform-origin: 147px 147px;
+  animation: expo-seal-spin 24s linear infinite;
+}
+
+@keyframes expo-seal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expo-seal__ring {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Pop-up de evento do destaque da home (PromoEventModal)
+
+   Mesma base do modal dos professores (fundo, entrada, botão de fechar),
+   mais largo e em duas colunas: a arte do card à esquerda, o texto à
+   direita, rolando por dentro se não couber. No celular a arte vai para
+   cima, cortada no alto, onde fica o título da arte.
+--------------------------------------------------------------------------- */
+.promo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: color-mix(in srgb, #000 60%, transparent);
+  animation: professor-modal-backdrop-in var(--duration-medium) ease both;
+}
+
+.promo-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  width: min(960px, calc(100vw - 2 * var(--spacing-4)));
+  max-height: min(720px, calc(100dvh - 2 * var(--spacing-8)));
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+  box-shadow: 0 24px 60px color-mix(in srgb, #000 45%, transparent);
+  transform: translate(-50%, -50%);
+  animation: professor-modal-in var(--duration-medium) var(--site-button-ease, ease) both;
+}
+
+.promo-modal__close {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, #fff 20%, transparent);
+  background: color-mix(in srgb, #000 35%, transparent);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+}
+
+.promo-modal__close:hover {
+  background: color-mix(in srgb, #000 55%, transparent);
+}
+
+.promo-modal__media {
+  position: relative;
+  min-height: 0;
+  /* A arte é inteira, sem corte: a sobra em volta pega a cor de papel das
+     artes do destaque. */
+  background: var(--surface-warm-bg);
+}
+
+.promo-modal__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.promo-modal__seal {
+  position: absolute;
+  left: var(--spacing-5);
+  bottom: var(--spacing-5);
+  width: 30%;
+  max-width: 132px;
+  filter: drop-shadow(0 6px 14px color-mix(in srgb, #000 40%, transparent));
+}
+
+.promo-modal__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 0;
+  padding: var(--spacing-8);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, #fff 25%, transparent) transparent;
+}
+
+.promo-modal__title {
+  text-wrap: balance;
+}
+
+.promo-modal__subtitle {
+  margin-top: var(--spacing-1);
+  color: var(--color-accent);
+  font-size: var(--text-size-large);
+  font-weight: 600;
+}
+
+.promo-modal__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-5);
+  color: var(--color-text-secondary);
+  font-size: var(--text-size-regular);
+  line-height: 1.65;
+}
+
+/* Ficha do evento: rótulo à esquerda e resposta à direita, entre fios. */
+.promo-modal__facts {
+  align-self: stretch;
+  margin-top: var(--spacing-6);
+}
+
+.promo-modal__fact {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--spacing-4);
+  align-items: baseline;
+  padding-block: var(--spacing-3);
+  border-top: 1px solid var(--color-border-emphasized);
+}
+
+.promo-modal__fact:last-child {
+  border-bottom: 1px solid var(--color-border-emphasized);
+}
+
+.promo-modal__fact dt {
+  color: var(--color-accent);
+}
+
+.promo-modal__fact dd {
+  color: var(--color-text-primary);
+  font-size: var(--text-size-regular);
+  line-height: 1.5;
+}
+
+.promo-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
+}
+
+@media (max-width: 760px) {
+  .promo-modal {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .promo-modal__media {
+    height: min(34dvh, 280px);
+  }
+
+  .promo-modal__seal {
+    left: auto;
+    right: var(--spacing-4);
+    bottom: var(--spacing-4);
+    width: 84px;
+  }
+
+  /* No celular a faixa é baixa e larga: a arte preenche e mostra o alto,
+     onde está o título. */
+  .promo-modal__media img {
+    object-fit: cover;
+    object-position: 50% 0;
+  }
+
+  .promo-modal__body {
+    padding: var(--spacing-5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-modal-backdrop,
+  .promo-modal {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Aviso de redirect (URLs antigas do Wix)
 
    O visitante só vê isto por uma fração de segundo, ou nem isso: o meta
@@ -8613,7 +9001,7 @@ body {
         var(--color-background-body)
       )
       calc(100% - var(--course-cta-fade) * 0.45),
-    color-mix(in srgb, var(--color-category-institucional) 82%, #171310) 100%
+    color-mix(in srgb, var(--color-category-institucional) 82%, var(--color-background-body)) 100%
   );
 }
 
@@ -8736,7 +9124,7 @@ body {
     to bottom,
     var(--ic-fade-from) 0,
     var(--ic-fade-from) calc(100% - var(--course-cta-fade)),
-    color-mix(in srgb, var(--ic-band, var(--color-category-institucional)) 82%, #171310) 100%
+    color-mix(in srgb, var(--ic-band, var(--color-category-institucional)) 82%, var(--color-background-body)) 100%
   );
 }
 
@@ -8816,9 +9204,9 @@ body {
     linear-gradient(90deg, var(--blueprint-minor) 1px, transparent 1px),
     linear-gradient(
       150deg,
-      color-mix(in srgb, var(--color-corporate) 92%, #171310) 0%,
-      color-mix(in srgb, var(--color-corporate) 80%, #171310) 55%,
-      color-mix(in srgb, var(--color-corporate) 62%, #171310) 100%
+      color-mix(in srgb, var(--color-corporate) 92%, var(--color-background-body)) 0%,
+      color-mix(in srgb, var(--color-corporate) 80%, var(--color-background-body)) 55%,
+      color-mix(in srgb, var(--color-corporate) 62%, var(--color-background-body)) 100%
     );
   background-size:
     calc(var(--blueprint-cell) * 5) calc(var(--blueprint-cell) * 5),
@@ -9503,7 +9891,7 @@ body {
 }
 
 /* Seta própria no select: a nativa muda de navegador para navegador e destoa
-   do resto. Chevron fino na cor do texto secundário (#bba79c), com respiro
+   do resto. Chevron fino na cor do texto secundário, com respiro
    à direita. */
 .ic-form select {
   padding-right: 44px;
@@ -9660,7 +10048,7 @@ body {
   border-radius: var(--radius-element);
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  color: #231a13;
+  color: var(--surface-warm-text);
   font-size: var(--text-size-small);
   font-weight: 600;
   text-decoration: none;
@@ -10220,5 +10608,1086 @@ body {
   .ds-specimen {
     grid-template-columns: 1fr;
     gap: var(--spacing-4);
+  }
+}
+
+/* ---------- Blog ---------- */
+
+/* Categoria, data e leitura em cima do título do card. */
+.blog-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-1) var(--spacing-3);
+}
+
+.blog-card__category {
+  color: var(--color-accent);
+}
+
+.blog-card__when {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+}
+
+/* Mesmo fio curto do post em destaque, entre a categoria e a data. */
+.blog-card__category + .blog-card__when::before {
+  content: '';
+  width: 12px;
+  height: 2px;
+  margin-right: var(--spacing-1);
+  background: var(--color-border-emphasized);
+}
+
+.blog-card .course-card__title {
+  text-wrap: balance;
+}
+
+/* ----- Lista (/blog): abertura de revista ----- */
+
+.blog-index__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-12);
+}
+
+/*
+ * Post em destaque: a capa num polaroid grande, levemente torto como os dos
+ * cursos, e o texto ao lado. O bloco inteiro é um link.
+ */
+.blog-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--spacing-12);
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-feature__frame {
+  border: 10px solid var(--surface-warm-card);
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  /* Sombra fixa, fora da transição, como em .course-card__frame. */
+  box-shadow: 0 16px 34px color-mix(in srgb, #000 42%, transparent);
+  transform: rotate(-0.8deg);
+  transition: transform var(--duration-medium) ease;
+  overflow: hidden;
+}
+
+.blog-feature:hover .blog-feature__frame,
+.blog-feature:focus-visible .blog-feature__frame {
+  transform: rotate(0deg) translateY(-6px);
+}
+
+.blog-feature__cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: calc(var(--radius-container) - 10px);
+  transition: transform var(--duration-slow);
+}
+
+.blog-feature:hover .blog-feature__cover {
+  transform: scale(1.04);
+}
+
+.blog-feature__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+.blog-feature__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-2) var(--spacing-4);
+}
+
+.blog-feature__category {
+  color: var(--color-accent);
+}
+
+/* Separada da categoria por um fio curto, como o do kicker das seções. */
+.blog-feature__when {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+}
+
+.blog-feature__category + .blog-feature__when::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  margin-right: var(--spacing-2);
+  background: var(--color-border-emphasized);
+}
+
+.blog-feature__title {
+  text-wrap: balance;
+}
+
+.blog-feature__more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+  color: var(--color-text-primary);
+  font-size: var(--text-size-regular);
+  font-weight: 700;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--spacing-1);
+}
+
+.blog-feature__more svg {
+  transition: transform var(--duration-fast);
+}
+
+.blog-feature:hover .blog-feature__more svg,
+.blog-feature:focus-visible .blog-feature__more svg {
+  transform: translate(2px, -2px);
+}
+
+/* Título da grade e filtro de categorias, na mesma linha no desktop. */
+.blog-index__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4) var(--spacing-8);
+  margin-top: calc(var(--spacing-10) * 2);
+  margin-bottom: var(--spacing-8);
+  /* Ao rolar até o filtro, ele não fica escondido atrás do cabeçalho fixo. */
+  scroll-margin-top: calc(var(--spacing-10) * 2);
+}
+
+.blog-index__more {
+  flex: none;
+}
+
+/*
+ * Filtro por categoria: pílulas no formato da etiqueta de categoria das
+ * fotos, contornadas quando soltas e cheias de laranja quando escolhidas.
+ */
+.blog-filter {
+  /* Referência do offsetLeft das pílulas (ver Blog.tsx). */
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.blog-filter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border-emphasized);
+  border-radius: 9999px;
+  background: none;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-body);
+  font-size: var(--text-size-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast),
+    color var(--duration-fast),
+    background-color var(--duration-fast);
+}
+
+.blog-filter__chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.blog-filter__chip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.blog-filter__chip[aria-pressed='true'] {
+  border-color: var(--color-accent-brand);
+  background: var(--color-accent-brand);
+  color: var(--color-on-accent-brand);
+}
+
+.blog-filter__count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.65;
+}
+
+/* No celular as pílulas correm de lado numa faixa só, em vez de empilhar
+   quatro linhas de filtro antes dos posts. */
+@media (max-width: 640px) {
+  .blog-index__bar {
+    margin-top: var(--spacing-12);
+  }
+
+  .blog-filter {
+    flex-wrap: nowrap;
+    /* Vai até as bordas da tela, descontando o recuo do .container no celular. */
+    width: calc(100% + var(--spacing-4) * 2);
+    margin-inline: calc(-1 * var(--spacing-4));
+    padding-inline: var(--spacing-4);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .blog-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  .blog-filter__chip {
+    flex: none;
+  }
+}
+
+/* A categoria no topo do post leva ao filtro da /blog. */
+.blog-article__category {
+  text-decoration: none;
+}
+
+.blog-article__category:hover,
+.blog-article__category:focus-visible {
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 860px) {
+  .blog-feature {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  .blog-index__head {
+    margin-bottom: var(--spacing-8);
+  }
+}
+
+/* ----- Post ----- */
+
+.blog-article {
+  --blog-measure: 44rem;
+  --blog-sheet: 17rem;
+  /* Largura do conjunto texto + ficha: cabeçalho e fechos alinham por ela. */
+  --blog-frame: calc(var(--blog-measure) + var(--blog-sheet) + var(--spacing-12) + var(--spacing-6) * 2);
+}
+
+/*
+ * Abertura do post. A capa ocupa a largura toda e menos da metade da altura
+ * da tela, começando no topo, por trás do header flutuante (ver o `overlay`
+ * em SiteHeader). Um véu escuro no alto garante o contraste do header e, na
+ * base, a foto se desfaz na cor da página. O cabeçalho do post sobe por cima
+ * desse fade com margem negativa.
+ */
+.blog-hero {
+  --blog-hero-height: clamp(300px, 46vh, 540px);
+  /* Quanto o título invade a foto. */
+  --blog-hero-overlap: clamp(96px, 14vh, 160px);
+  position: relative;
+}
+
+.blog-hero__media {
+  position: relative;
+  height: var(--blog-hero-height);
+  overflow: hidden;
+}
+
+.blog-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-hero__fade {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Capas claras (papel branco, grafite) pedem um véu mais forte no alto
+       para os links do header continuarem legíveis. */
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #000 60%, transparent) 0,
+      transparent 180px
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 30%,
+      color-mix(in srgb, var(--color-background-body) 65%, transparent) 70%,
+      var(--color-background-body) 100%
+    );
+}
+
+.blog-hero__header {
+  position: relative;
+  z-index: 1;
+  /* Mesma coluna do texto e da ficha logo abaixo. */
+  max-width: var(--blog-frame);
+  margin-top: calc(-1 * var(--blog-hero-overlap));
+}
+
+@media (max-width: 640px) {
+  .blog-hero {
+    --blog-hero-height: clamp(240px, 42vh, 360px);
+    --blog-hero-overlap: 72px;
+  }
+}
+
+.blog-article > .container {
+  max-width: var(--blog-frame);
+}
+
+.blog-article__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+}
+
+/* Fio que fecha o cabeçalho e separa a abertura do texto. */
+.blog-article__header::after {
+  content: '';
+  align-self: stretch;
+  height: 1px;
+  margin-top: var(--spacing-6);
+  background: var(--color-border-emphasized);
+}
+
+.blog-article__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.blog-article__back:hover,
+.blog-article__back:focus-visible {
+  color: var(--color-accent);
+}
+
+.blog-article__title {
+  max-width: 52rem;
+  text-wrap: balance;
+}
+
+/* Texto à esquerda, ficha à direita acompanhando a rolagem. */
+.blog-article__layout {
+  display: grid;
+  grid-template-columns: minmax(0, var(--blog-measure)) var(--blog-sheet);
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  align-items: start;
+  margin-top: var(--spacing-12);
+}
+
+/*
+ * Corpo do post. O HTML vem pronto do Markdown (scripts/blog-markdown.ts),
+ * então o estilo é por tag, escopado a esta coluna. `#` no Markdown vira h2,
+ * `##` vira h3.
+ */
+.blog-article__body {
+  color: var(--color-text-primary);
+  font-size: var(--text-size-large);
+  line-height: 1.75;
+}
+
+.blog-article__body > * + * {
+  margin-top: var(--spacing-5);
+}
+
+.blog-article__body h2,
+.blog-article__body h3,
+.blog-article__body h4 {
+  margin-top: var(--spacing-12);
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+  /* Âncora não fica escondida atrás do cabeçalho fixo. */
+  scroll-margin-top: calc(var(--spacing-10) * 2);
+}
+
+.blog-article__body h2 {
+  font-size: var(--heading-h4);
+}
+
+.blog-article__body h3,
+.blog-article__body h4 {
+  font-size: var(--heading-h5);
+}
+
+.blog-article__body :is(h2, h3, h4) + * {
+  margin-top: var(--spacing-4);
+}
+
+.blog-article__body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.blog-article__body strong {
+  font-weight: 700;
+}
+
+.blog-article__body ul,
+.blog-article__body ol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding-left: var(--spacing-6);
+}
+
+.blog-article__body ul {
+  list-style: disc;
+}
+
+.blog-article__body ol {
+  list-style: decimal;
+}
+
+.blog-article__body li::marker {
+  color: var(--color-accent);
+}
+
+.blog-article__body blockquote {
+  padding-left: var(--spacing-5);
+  border-left: 2px solid var(--color-accent);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.blog-article__body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-element);
+}
+
+/* Imagem do texto: o botão em volta abre o visor (ver BlogPost). */
+.blog-article__zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-element);
+  background: none;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.blog-article__zoom img {
+  transition: transform var(--duration-slow);
+}
+
+/* Vídeo em loop no texto: mesmo lugar e mesmo recorte de uma imagem. */
+.blog-article__zoom video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-element);
+  object-fit: cover;
+}
+
+.blog-article__gallery:not(.blog-article__gallery--1) video {
+  aspect-ratio: 4 / 5;
+}
+
+.blog-article__zoom--video {
+  cursor: pointer;
+}
+
+.blog-article__zoom:hover img {
+  transform: scale(1.02);
+}
+
+.blog-article__zoom:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Galeria: o parágrafo só de imagens do Markdown. Sozinha, a imagem ocupa a
+   coluna; em dupla ou trio, ficam lado a lado no mesmo recorte em pé (o
+   visor mostra a imagem inteira). */
+.blog-article__gallery {
+  display: grid;
+  gap: var(--spacing-4);
+  align-items: start;
+  margin-block: var(--spacing-8);
+}
+
+.blog-article__gallery--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.blog-article__gallery--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.blog-article__gallery:not(.blog-article__gallery--1) img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+@media (max-width: 480px) {
+  .blog-article__gallery--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tabela comparativa. O contêiner rola de lado quando a tela é estreita. */
+.blog-article__table {
+  margin-block: var(--spacing-8);
+  overflow-x: auto;
+}
+
+.blog-article__body table {
+  width: 100%;
+  /* Cabe em três colunas num celular de 375px; abaixo disso, rola de lado. */
+  min-width: 20rem;
+  border-collapse: collapse;
+  font-size: var(--text-size-regular);
+  line-height: 1.5;
+  text-align: left;
+}
+
+.blog-article__body th,
+.blog-article__body td {
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) 0;
+  border-bottom: 1px solid var(--color-border-emphasized);
+  vertical-align: top;
+}
+
+.blog-article__body thead th {
+  padding-top: 0;
+  color: var(--color-accent);
+  font-family: var(--font-family-heading);
+  font-size: var(--text-size-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Primeira coluna: o critério, como rótulo. */
+.blog-article__body tbody td:first-child {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.blog-article__body figcaption {
+  margin-top: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-size-small);
+  text-align: center;
+}
+
+.blog-article__body hr {
+  margin-block: var(--spacing-12);
+  border: 0;
+  border-top: 1px solid var(--color-border-emphasized);
+}
+
+/* ----- Assinatura do post ----- */
+
+/*
+ * Logo abaixo do título. A foto do professor vai num círculo fechado no
+ * rosto; quem não é professor da escola assina só com o nome.
+ */
+.blog-byline {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-3);
+}
+
+.blog-byline__photo {
+  flex: none;
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  /* Anel fino na cor do papel, para a foto não se perder no fundo escuro. */
+  box-shadow: 0 0 0 2px var(--surface-warm-card);
+  transition: box-shadow var(--duration-fast);
+}
+
+.blog-byline__photo:hover,
+.blog-byline__photo:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+/*
+ * As fotos de /professores são de meio corpo, com o rosto no alto: a escala
+ * aproxima o rosto e a origem perto do topo mantém o cabelo dentro do
+ * círculo. Ajustado na foto do Rafael Mesquita; outro professor com o rosto
+ * em outro lugar da foto pode pedir outros números.
+ */
+.blog-byline__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 47% 0;
+  /* Rosto no centro do círculo, olhos na linha do meio. */
+  transform: scale(2);
+  transform-origin: 40.9% 12.2%;
+}
+
+.blog-byline__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.blog-byline__name {
+  color: var(--color-text-primary);
+  font-family: var(--font-family-heading);
+  font-size: var(--heading-h6);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.blog-byline__name a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  transition: color var(--duration-fast);
+}
+
+.blog-byline__name a:hover,
+.blog-byline__name a:focus-visible {
+  color: var(--color-accent);
+}
+
+/* ----- Ficha do post (materiais, paleta, compartilhar) ----- */
+
+.blog-sheet {
+  position: sticky;
+  top: calc(var(--spacing-10) * 2 + var(--spacing-4));
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-2) var(--spacing-5);
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+}
+
+.blog-sheet__block {
+  padding-block: var(--spacing-5);
+}
+
+.blog-sheet__block + .blog-sheet__block {
+  border-top: 1px solid var(--color-border-emphasized);
+}
+
+.blog-sheet__label {
+  display: block;
+  margin-bottom: var(--spacing-3);
+  color: var(--color-accent);
+}
+
+.blog-sheet__materials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  color: var(--color-text-primary);
+  font-size: var(--text-size-regular);
+  line-height: 1.5;
+}
+
+.blog-sheet__materials li {
+  position: relative;
+  padding-left: var(--spacing-4);
+}
+
+/* Bolinha laranja, centrada na primeira linha do item. */
+.blog-sheet__materials li::before {
+  content: '';
+  position: absolute;
+  top: calc(0.75em - 3px);
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.blog-sheet__note {
+  margin-top: calc(-1 * var(--spacing-2));
+  margin-bottom: var(--spacing-3);
+}
+
+.blog-sheet__palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.blog-sheet__color {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--color-text-primary);
+  font-size: var(--text-size-regular);
+  line-height: 1.3;
+}
+
+/* Amostra de tinta: um borrão de formato próprio por cor (ver PaintBlob),
+   com um fio claro para as cores escuras não sumirem no fundo. */
+.blog-sheet__swatch {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  overflow: visible;
+}
+
+.blog-sheet__swatch path {
+  stroke: color-mix(in srgb, var(--color-text-primary) 18%, transparent);
+  stroke-width: 1;
+}
+
+.blog-sheet__hex {
+  display: block;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.blog-sheet__share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.blog-sheet__share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-border-emphasized);
+  border-radius: var(--radius-element);
+  background: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-body);
+  font-size: var(--text-size-small);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+}
+
+.blog-sheet__share-button:hover,
+.blog-sheet__share-button:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Tablet e celular: a ficha vai para depois do texto, para quem chega
+   começar pela leitura e não por uma lista de materiais e cores. */
+@media (max-width: 1040px) {
+  .blog-article__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-8);
+    margin-top: var(--spacing-8);
+  }
+
+  .blog-article__body {
+    max-width: var(--blog-measure);
+  }
+
+  .blog-sheet {
+    position: static;
+    max-width: var(--blog-measure);
+  }
+}
+
+/* ----- Sua vez: o exercício do post ----- */
+
+.blog-turn {
+  margin-top: calc(var(--spacing-10) * 2);
+}
+
+.blog-turn__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--spacing-8);
+  align-items: end;
+  padding: var(--spacing-12);
+  border-radius: var(--radius-container);
+  background: var(--color-background-surface);
+  overflow: hidden;
+}
+
+.blog-turn__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  max-width: 40rem;
+}
+
+.blog-turn__exercise {
+  text-wrap: balance;
+}
+
+.blog-turn__button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Lápis gigante de fundo, cortado pelo canto do cartão. */
+.blog-turn__pencil {
+  position: absolute;
+  top: calc(-1 * var(--spacing-8));
+  right: calc(-1 * var(--spacing-6));
+  width: 220px;
+  height: 220px;
+  color: var(--color-accent);
+  opacity: 0.14;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .blog-turn {
+    margin-top: var(--spacing-12);
+  }
+
+  .blog-turn__card {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: var(--spacing-6);
+  }
+
+  .blog-turn__button {
+    justify-self: start;
+  }
+}
+
+/* Exercício dentro do quadro de desenho (ver GuestbookPanel). */
+.guestbook-panel__prompt {
+  margin: 0;
+  padding: var(--spacing-3);
+  border-radius: var(--radius-element);
+  background: var(--surface-warm-bg);
+  color: var(--surface-warm-text);
+  font-size: var(--text-size-small);
+  line-height: 1.45;
+}
+
+/* ----- Aprenda isso em aula: o curso do assunto ----- */
+
+.blog-course {
+  margin-top: calc(var(--spacing-10) * 2);
+}
+
+/*
+ * Faixa na cor da categoria do curso, no mesmo tom da .course-cta que fecha
+ * as páginas de curso. A capa do curso entra num polaroid torto que vaza
+ * pela borda de cima, como as cartas da primeira dobra dos cursos.
+ */
+.blog-course__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: var(--spacing-12);
+  align-items: center;
+  padding: var(--spacing-12);
+  border-radius: var(--radius-container);
+  background: color-mix(in srgb, var(--category-color, var(--color-accent)) 82%, var(--color-background-body));
+  color: var(--color-text-primary);
+}
+
+.blog-course--desenho {
+  --category-color: var(--color-category-desenho);
+}
+
+.blog-course--pintura {
+  --category-color: var(--color-category-pintura);
+}
+
+.blog-course--institucional {
+  --category-color: var(--color-category-institucional);
+}
+
+.blog-course--infantil {
+  --category-color: var(--color-category-infantil);
+}
+
+.blog-course--teorico {
+  --category-color: var(--color-category-teorico);
+}
+
+.blog-course__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  max-width: 34rem;
+}
+
+.blog-course__eyebrow {
+  opacity: 0.8;
+}
+
+.blog-course__title {
+  color: inherit;
+  text-wrap: balance;
+}
+
+.blog-course__lead {
+  opacity: 0.9;
+}
+
+/* Ficha do curso: três linhas de rótulo e resposta, separadas por um fio
+   claro sobre a cor da faixa. */
+.blog-course__facts {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-course__fact {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--spacing-4);
+  align-items: baseline;
+  padding-block: var(--spacing-3);
+  border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 22%, transparent);
+}
+
+.blog-course__fact:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text-primary) 22%, transparent);
+}
+
+.blog-course__fact dt {
+  opacity: 0.75;
+}
+
+.blog-course__fact dd {
+  font-size: var(--text-size-regular);
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .blog-course__fact {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-1);
+  }
+}
+
+.blog-course__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-4) var(--spacing-6);
+  margin-top: var(--spacing-2);
+}
+
+.blog-course__photo {
+  display: block;
+  /* Sobe além da faixa: o polaroid fica metade dentro, metade fora. */
+  margin-top: calc(-1 * var(--spacing-12) - var(--spacing-12));
+  border: 10px solid var(--surface-warm-card);
+  border-bottom-width: 36px;
+  border-radius: var(--radius-container);
+  background: var(--surface-warm-card);
+  box-shadow: 0 18px 38px color-mix(in srgb, #000 45%, transparent);
+  transform: rotate(3deg);
+  transition: transform var(--duration-medium) ease;
+}
+
+.blog-course__photo:hover {
+  transform: rotate(0deg) translateY(-6px);
+}
+
+.blog-course__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: calc(var(--radius-container) - 10px);
+}
+
+@media (max-width: 760px) {
+  .blog-course {
+    margin-top: var(--spacing-12);
+  }
+
+  .blog-course__panel {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-8);
+    padding: var(--spacing-6);
+  }
+
+  /* No celular o polaroid vai para cima do texto, ainda vazando a borda. */
+  .blog-course__photo {
+    order: -1;
+    width: min(70%, 16rem);
+    margin-top: calc(-1 * var(--spacing-12));
+    justify-self: center;
+  }
+}
+
+/* Fecho sem curso relacionado: uma chamada curta, separada por um fio. */
+.blog-article__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-12);
+}
+
+.blog-article__cta::before {
+  content: '';
+  flex-basis: 100%;
+  border-top: 1px solid var(--color-border-emphasized);
+  margin-bottom: var(--spacing-4);
+}
+
+/* ---------- Blog na home ---------- */
+
+/*
+ * Cabeçalho alinhado à esquerda com o botão "Ver o blog" ao lado. O título
+ * tem o mesmo tamanho dos títulos das outras seções da home (que são
+ * centralizadas e ganham esse tamanho por .section__head--centered).
+ */
+.home-blog .section__head {
+  margin-bottom: var(--spacing-12);
+}
+
+.home-blog .section__head h2 {
+  font-size: var(--heading-h2);
+  line-height: 1.15;
+}
+
+.home-blog .section__head .btn {
+  flex: none;
+}
+
+/* No celular o botão desce para baixo do texto, em vez de espremer ao lado. */
+@media (max-width: 640px) {
+  .home-blog .section__head {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-8);
   }
 }

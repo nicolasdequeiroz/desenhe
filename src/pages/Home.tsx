@@ -4,6 +4,7 @@ import {Seo} from '../components/Seo';
 import {JsonLd} from '../components/JsonLd';
 import {FeaturedPromoCard} from '../components/FeaturedPromoCard';
 import {FeaturedCoursesSection} from '../components/FeaturedCoursesSection';
+import {HomeBlogSection} from '../components/HomeBlogSection';
 import {SpaceShowcaseSection} from '../components/SpaceShowcaseSection';
 import {TestimonialsSection} from '../components/TestimonialsSection';
 import {WhatsCta} from '../components/WhatsCta';
@@ -158,6 +159,8 @@ export function Home() {
       )}
 
       <FeaturedCoursesSection />
+
+      <HomeBlogSection />
 
       <SpaceShowcaseSection />
 

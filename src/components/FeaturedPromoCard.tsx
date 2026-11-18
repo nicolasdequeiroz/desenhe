@@ -1,8 +1,11 @@
 import {useRef, useState, type CSSProperties} from 'react';
+import {createPortal} from 'react-dom';
 import {Link} from 'react-router-dom';
 import {ArrowRight, CaretLeft, CaretRight} from '@phosphor-icons/react';
 import {asset, type FeaturedPromo} from '../data';
 import {usePromoRotation} from './usePromoRotation';
+import {PromoEventModal} from './PromoEventModal';
+import {ExpoSeal} from './ExpoSeal';
 
 /** Distância mínima (px) de um arrasto horizontal para contar como swipe. */
 const SWIPE_THRESHOLD = 40;
@@ -31,6 +34,8 @@ export function FeaturedPromoCard({
   withSummary?: boolean;
 }) {
   const [paused, setPaused] = useState(false);
+  // Campanha sem página própria (evento): o card abre este pop-up.
+  const [openEvent, setOpenEvent] = useState<FeaturedPromo | null>(null);
   const [index, setIndex] = usePromoRotation(promos.length, paused);
   const touchStartX = useRef<number | null>(null);
   const active = promos[index];
@@ -99,14 +104,26 @@ export function FeaturedPromoCard({
             >
               <h2 className="promo-summary__title">{promo.summary.title}</h2>
               <p className="promo-summary__text">{promo.summary.text}</p>
-              <Link
-                to={promo.path}
-                className="promo-summary__link"
-                tabIndex={i === index ? undefined : -1}
-              >
-                {promo.summary.cta}
-                <ArrowRight size={16} weight="bold" aria-hidden="true" />
-              </Link>
+              {promo.path ? (
+                <Link
+                  to={promo.path}
+                  className="promo-summary__link"
+                  tabIndex={i === index ? undefined : -1}
+                >
+                  {promo.summary.cta}
+                  <ArrowRight size={16} weight="bold" aria-hidden="true" />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  className="promo-summary__link"
+                  tabIndex={i === index ? undefined : -1}
+                  onClick={() => setOpenEvent(promo)}
+                >
+                  {promo.summary.cta}
+                  <ArrowRight size={16} weight="bold" aria-hidden="true" />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -130,25 +147,53 @@ export function FeaturedPromoCard({
           className="hero__featured-track"
           style={{'--index': index} as CSSProperties}
         >
-          {promos.map((promo, i) => (
-            <Link
-              key={promo.id}
-              to={promo.path}
-              className="hero__featured-card"
-              aria-hidden={i === index ? undefined : true}
-              tabIndex={i === index ? undefined : -1}
-              draggable={false}
-            >
-              <img
-                src={asset(withSummary ? promo.hero.imageMobile : promo.hero.image)}
-                alt={promo.hero.imageAlt}
-                draggable={false}
-              />
-            </Link>
-          ))}
+          {promos.map((promo, i) => {
+            const image = (
+              <>
+                <img
+                  src={asset(withSummary ? promo.hero.imageMobile : promo.hero.image)}
+                  alt={promo.hero.imageAlt}
+                  draggable={false}
+                />
+                {promo.seal && <ExpoSeal className="hero__featured-seal" />}
+              </>
+            );
+            const shared = {
+              className: 'hero__featured-card',
+              'aria-hidden': i === index ? undefined : true,
+              tabIndex: i === index ? undefined : -1,
+              draggable: false,
+            } as const;
+            return promo.path ? (
+              <Link key={promo.id} to={promo.path} {...shared}>
+                {image}
+              </Link>
+            ) : (
+              <button
+                key={promo.id}
+                type="button"
+                {...shared}
+                aria-haspopup="dialog"
+                onClick={() => setOpenEvent(promo)}
+              >
+                {image}
+              </button>
+            );
+          })}
         </div>
       </div>
       {!withSummary && dots}
+      {/* No <body>: o card fica dentro de blocos com transform, que prenderiam
+          um `position: fixed` à área deles em vez da tela. */}
+      {openEvent?.event &&
+        createPortal(
+          <PromoEventModal
+            promo={openEvent}
+            event={openEvent.event}
+            onClose={() => setOpenEvent(null)}
+          />,
+          document.body,
+        )}
     </div>
   );
 }

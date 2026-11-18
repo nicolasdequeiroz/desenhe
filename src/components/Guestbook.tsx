@@ -1,7 +1,12 @@
 import {lazy, Suspense, useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 import {PencilSimple} from '@phosphor-icons/react';
-import {isRemoteEnabled, listDoodles, type Doodle} from '../data/guestbook';
+import {
+  GUESTBOOK_OPEN_EVENT,
+  isRemoteEnabled,
+  listDoodles,
+  type Doodle,
+} from '../data/guestbook';
 import {DoodlePile} from './DoodlePile';
 
 /* O painel só é baixado quando alguém decide desenhar. */
@@ -52,6 +57,8 @@ interface Toast {
 export function Guestbook() {
   const [doodles, setDoodles] = useState<Doodle[]>([]);
   const [open, setOpen] = useState(false);
+  // Exercício do post que pediu o quadro (bloco "Sua vez" do blog), se houver.
+  const [prompt, setPrompt] = useState<string | undefined>();
   const [mounted, setMounted] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
   // Desenhos enviados nesta sessão: sempre visíveis na pilha (mesmo quando a
@@ -74,6 +81,16 @@ export function Guestbook() {
     return () => {
       active = false;
     };
+  }, []);
+
+  // O bloco "Sua vez" dos posts abre o quadro por evento, já com o exercício.
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      setPrompt((event as CustomEvent<{prompt?: string}>).detail?.prompt);
+      setOpen(true);
+    };
+    window.addEventListener(GUESTBOOK_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(GUESTBOOK_OPEN_EVENT, onOpen);
   }, []);
 
   // O lápis treme só a partir de 90% da página; antes disso fica quieto.
@@ -151,7 +168,10 @@ export function Guestbook() {
         className={`guestbook-fab${open ? ' is-open' : ''}${
           nearFooter && !open ? ' is-shaking' : ''
         }`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          setPrompt(undefined);
+          setOpen((v) => !v);
+        }}
         aria-expanded={open}
         aria-label={open ? 'Fechar o quadro de desenho' : 'Abrir o quadro de desenho'}
       >
@@ -160,7 +180,12 @@ export function Guestbook() {
 
       {open && (
         <Suspense fallback={null}>
-          <GuestbookPanel doodles={doodles} onClose={() => setOpen(false)} onSubmitted={handleSubmitted} />
+          <GuestbookPanel
+            doodles={doodles}
+            prompt={prompt}
+            onClose={() => setOpen(false)}
+            onSubmitted={handleSubmitted}
+          />
         </Suspense>
       )}
 

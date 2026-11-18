@@ -1,4 +1,4 @@
-import type {ReactElement} from 'react';
+import {useEffect, useRef, type ReactElement} from 'react';
 import {UsersThree, ChartLineUp} from '@phosphor-icons/react';
 import {Button} from '../ui';
 import {WhatsCta} from './WhatsCta';
@@ -102,8 +102,106 @@ function GalleryFigure({
  * maiores levam uma legenda breve. O espaço vazio generoso é
  * intencional: o scroll da seção é longo.
  */
+/**
+ * Movimento da galeria ao rolar, em três camadas:
+ * 1. cada foto entra uma vez quando chega à tela, subindo de baixo e
+ *    encaixando no lugar como peça de mosaico (as que chegam juntas entram
+ *    em sequência; a etiqueta e a legenda vêm logo depois);
+ * 2. enquanto a galeria está à vista, as duas colunas andam em velocidades
+ *    diferentes (parallax leve, só no desktop, onde ficam lado a lado);
+ * 3. cada foto começa um pouco ampliada e assenta no tamanho real conforme
+ *    atravessa a tela.
+ *
+ * Tudo começa visível no HTML do build: só depois de montar, e se a pessoa
+ * não pediu "reduzir movimento", a galeria ganha `is-armed` e as fotos
+ * passam a esperar a vez delas. Sem JavaScript, nada fica escondido.
+ */
+function useGalleryMotion() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const gallery = ref.current;
+    if (!gallery || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const items = Array.from(gallery.querySelectorAll<HTMLElement>('.space-showcase__gallery-item'));
+    const columns = Array.from(gallery.querySelectorAll<HTMLElement>('.space-showcase__gallery-col'));
+    const cards = Array.from(gallery.querySelectorAll<HTMLElement>('.space-showcase__gallery-card'));
+    gallery.classList.add('is-armed');
+
+    // 1. Entrada: uma vez por foto.
+    // As que chegam juntas entram em sequência, de cima para baixo e da
+    // esquerda para a direita, como peças de um mosaico.
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        const arriving = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) => entry.target as HTMLElement)
+          .sort((a, b) => {
+            const ra = a.getBoundingClientRect();
+            const rb = b.getBoundingClientRect();
+            return ra.top - rb.top || ra.left - rb.left;
+          });
+        arriving.forEach((item, order) => {
+          item.style.setProperty('--enter-delay', `${order * 140}ms`);
+          item.classList.add('is-in');
+          reveal.unobserve(item);
+        });
+      },
+      {rootMargin: '0px 0px -12% 0px', threshold: 0.15},
+    );
+    items.forEach((item) => reveal.observe(item));
+
+    // 2 e 3. Parallax e zoom: só calculados enquanto a galeria está na tela.
+    const sideBySide = window.matchMedia('(min-width: 701px)');
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const viewport = window.innerHeight;
+      const box = gallery.getBoundingClientRect();
+      // -1 quando a galeria entra por baixo, 1 quando sai por cima.
+      const progress = Math.max(-1, Math.min(1, (viewport / 2 - (box.top + box.height / 2)) / (box.height / 2 + viewport / 2)));
+      columns.forEach((column, index) => {
+        const speed = index === 0 ? -36 : 44;
+        column.style.setProperty('--col-shift', sideBySide.matches ? `${(progress * speed).toFixed(1)}px` : '0px');
+      });
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect();
+        // 0 com a foto entrando por baixo, 1 quando ela chega ao meio da tela.
+        const t = Math.max(0, Math.min(1, (viewport - rect.top) / (viewport / 2 + rect.height / 2)));
+        card.style.setProperty('--zoom', (1.12 - 0.12 * t).toFixed(3));
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const watch = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        window.addEventListener('scroll', onScroll, {passive: true});
+        window.addEventListener('resize', onScroll);
+        onScroll();
+      } else {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      }
+    });
+    watch.observe(gallery);
+
+    return () => {
+      reveal.disconnect();
+      watch.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(frame);
+      gallery.classList.remove('is-armed');
+    };
+  }, []);
+
+  return ref;
+}
+
 export function SpaceShowcaseSection() {
   const [g1, g2, g3, g4, g5] = GALLERY;
+  const galleryRef = useGalleryMotion();
 
   return (
     <section className="section space-showcase">
@@ -159,7 +257,7 @@ export function SpaceShowcaseSection() {
           </div>
         </div>
 
-        <div className="space-showcase__gallery" aria-label="Imagens do espaço">
+        <div className="space-showcase__gallery" aria-label="Imagens do espaço" ref={galleryRef}>
           <div className="space-showcase__gallery-col">
             <GalleryFigure
               item={g1}

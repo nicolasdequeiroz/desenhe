@@ -10,7 +10,12 @@ on:
   push:
     branches: [main]
   # Permite republicar pelo botão "Run workflow", sem precisar de um commit.
+  # O workflow do blog (blog-clickup.yml) também publica por aqui.
   workflow_dispatch:
+  # Todo dia às 6h05 de Curitiba: um post do blog com data futura só entra
+  # no site no build do dia dele (ver src/data/blog.ts).
+  schedule:
+    - cron: '5 9 * * *'
 
 # Permissões mínimas que o deploy do Pages exige.
 permissions:
