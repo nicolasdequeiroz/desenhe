@@ -5,7 +5,7 @@ import {WhatsCta} from './WhatsCta';
 import {NavCoursesDropdown} from './NavCoursesDropdown';
 import {NavDropdown} from './NavDropdown';
 import {BrandLogo} from './BrandLogo';
-import {FEATURED_PROMOS, IN_COMPANY_FORMATS, IN_COMPANY_MESSAGE} from '../data';
+import {COURSES, FEATURED_PROMOS, IN_COMPANY_FORMATS, IN_COMPANY_MESSAGE} from '../data';
 
 const HORARIOS_ITEM = {to: '/horarios', label: 'Horários'};
 const PROFESSORES_ITEM = {to: '/professores', label: 'Professores'};
@@ -26,13 +26,16 @@ const SERVICE_ITEMS = [EMPRESAS_ITEM, COWORKING_ITEM];
 const PRECOS_ITEM = {to: '/precos', label: 'Preços'};
 const SOBRE_ITEM = {to: '/sobre', label: 'Sobre'};
 const CONTATO_ITEM = {to: '/contato', label: 'Contato'};
+const BLOG_ITEM = {to: '/blog', label: 'Blog'};
 
 // Cada campanha em destaque (Colônia de Férias, Coworking, etc.) entra na nav
 // como um link enquanto estiver em `FEATURED_PROMOS` (ver src/data/promo.ts).
 // In Company e Coworking são permanentes (menu "Outros serviços"): se também
 // estiverem em cartaz, o link da campanha não duplica o do menu.
+// Campanha sem página própria (um evento que abre pop-up) não entra na nav.
 const PROMO_ITEMS = FEATURED_PROMOS.filter(
-  (promo) => !SERVICE_ITEMS.some((item) => item.to === promo.path),
+  (promo): promo is typeof promo & {path: string} =>
+    Boolean(promo.path) && !SERVICE_ITEMS.some((item) => item.to === promo.path),
 ).map(
   (promo) => ({
     to: promo.path,
@@ -42,8 +45,8 @@ const PROMO_ITEMS = FEATURED_PROMOS.filter(
 
 const NAV_ITEMS = [HORARIOS_ITEM, PROFESSORES_ITEM, ...PROMO_ITEMS];
 
-/** Itens auxiliares (Preços, Sobre, Contato) agrupados perto das ações. */
-const AUX_NAV_ITEMS = [PRECOS_ITEM, SOBRE_ITEM, CONTATO_ITEM];
+/** Itens auxiliares (Preços, Blog, Sobre, Contato) agrupados perto das ações. */
+const AUX_NAV_ITEMS = [PRECOS_ITEM, BLOG_ITEM, SOBRE_ITEM, CONTATO_ITEM];
 
 /** Itens do menu mobile: mesma ordem lógica da nav + Cursos como link direto. */
 const MOBILE_NAV_ITEMS = [
@@ -53,13 +56,14 @@ const MOBILE_NAV_ITEMS = [
   PROFESSORES_ITEM,
   ...SERVICE_ITEMS,
   ...PROMO_ITEMS,
+  BLOG_ITEM,
   SOBRE_ITEM,
   CONTATO_ITEM,
 ];
 
 export function SiteHeader() {
   const {pathname} = useLocation();
-  // A home, o Sobre, os Preços e as páginas de curso deixam o header flutuar
+  // A home, o Sobre, os Preços, as páginas de curso e os posts do blog deixam o header flutuar
   // por cima do conteúdo (transparente no topo, ganha fundo ao rolar), em vez
   // de empurrar tudo com uma faixa opaca.
   const overlay =
@@ -68,7 +72,9 @@ export function SiteHeader() {
     pathname === '/precos' ||
     pathname === '/coworking-artistico' ||
     pathname.startsWith('/in-company') ||
-    /^\/cursos\/[^/]+$/.test(pathname);
+    /^\/cursos\/[^/]+$/.test(pathname) ||
+    // Post do blog: a capa sangra até o topo, por trás do header.
+    /^\/blog\/[^/]+$/.test(pathname);
   // /precos flutua como o Sobre, mas já entra com o fundo do estado rolado
   // (nada de transparência sobre o conteúdo antes do primeiro scroll).
   const alwaysScrolled = pathname === '/precos';
@@ -78,6 +84,9 @@ export function SiteHeader() {
     ? IN_COMPANY_MESSAGE
     : 'Olá! Gostaria de mais informações sobre os cursos da Desenhe.';
   const ctaLabel = empresas ? 'Peça uma proposta' : 'Matricule-se';
+  // Na página de um curso o botão do header veste a cor da categoria dele,
+  // como o botão principal da própria página (ver .site-header--course).
+  const course = COURSES.find((c) => pathname === `/cursos/${c.slug}`);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -106,7 +115,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled || alwaysScrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}`}
+      className={`site-header${overlay ? ' site-header--overlay' : ''}${scrolled || alwaysScrolled ? ' site-header--scrolled' : ''}${menuOpen ? ' is-menu-open' : ''}${course ? ` site-header--course course-page--${course.category}` : ''}`}
     >
       <div className="container site-header__inner">
         <button

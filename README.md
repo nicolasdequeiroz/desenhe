@@ -98,11 +98,128 @@ site antigo (Wix) do ar.
    Google Search Console e conferir no relatório de cobertura se as URLs
    antigas do Wix estão sendo consolidadas nas novas.
 
+## Blog
+
+Os posts moram em `content/blog/<slug>.md` (o nome do arquivo é o endereço,
+`/blog/<slug>`) e as imagens em `public/images/blog/<slug>/`. Quem escreve
+não mexe no repositório: os posts nascem no **ClickUp** e um workflow os traz
+para cá.
+
+### Como um post chega ao site
+
+1. Cada tarefa da lista do blog no ClickUp é um post: o **nome** da tarefa é o
+   título e a **descrição** é o texto (Título 1 vira subtítulo no site).
+2. Quando a tarefa vai para o status **publicar**, o workflow
+   [`blog-clickup.yml`](.github/workflows/blog-clickup.yml) (de hora em hora,
+   das 8h às 23h) roda `scripts/clickup-sync.mjs`: baixa texto e imagens,
+   converte as fotos para WebP (e a capa também para um JPEG de preview de
+   link), grava o post, confere com o build, faz o commit e dispara o deploy.
+3. A tarefa vai para **publicado** e ganha um comentário com o link. Se faltar
+   algo (resumo, capa) ou o build recusar o post, ela volta para
+   **escrevendo** com um comentário dizendo o que ajustar; o site no ar não
+   muda.
+
+Para atualizar um post já publicado, basta voltar a tarefa para **publicar**:
+ele é regravado no mesmo endereço. Mexer na tarefa sem mudar o status não
+altera o site. Para publicar sem esperar a próxima hora: aba Actions >
+*Blog (ClickUp)* > *Run workflow*.
+
+### Configurar o ClickUp (uma vez)
+
+Na lista do blog:
+
+- **Status**: `pauta`, `escrevendo`, `publicar`, `publicado` (os três últimos
+  são os que o script usa; nomes diferentes vão nas variáveis
+  `CLICKUP_STATUS_READY`, `CLICKUP_STATUS_ERROR` e `CLICKUP_STATUS_DONE` do
+  workflow).
+- **Campos personalizados** (o script acha pelo nome, sem ligar para acento):
+
+  | Campo | Tipo | Obrigatório | Se vazio |
+  | --- | --- | --- | --- |
+  | Resumo | texto | sim | a tarefa volta com aviso |
+  | Data de publicação | data | não | dia em que foi publicado |
+  | Autora | texto ou lista | não | quem criou a tarefa |
+  | Categoria | lista suspensa | não | sem categoria |
+  | Descrição da capa | texto | não | o título (melhor preencher: é o texto alternativo da foto) |
+  | Endereço | texto | não | gerado do título |
+  | Curso relacionado | lista suspensa ou texto | não | sem o bloco "Aprenda isso em aula" |
+  | Sua vez | texto | não | sem o exercício no fim do post |
+
+- **Vídeos**: também como anexo (ver "Vídeo" abaixo).
+- **Capa**: anexo da tarefa, de preferência com o nome começando por `capa`
+  (senão vale a primeira imagem anexada). JPG ou PNG; HEIC do iPhone não é
+  lido.
+
+### O que a pessoa escreve vira o quê
+
+- **Categoria**: vira uma pílula do filtro da `/blog`, com a contagem de
+  posts. Categoria nova aparece no filtro sozinha. O filtro tem endereço
+  próprio (`/blog?categoria=dicas-de-desenho`), e a categoria no topo de cada
+  post leva até ele. Vale usar sempre os mesmos nomes no ClickUp: "Dicas de
+  desenho" e "Dica de desenho" virariam duas pílulas.
+- **Curso relacionado**: o nome do curso (basta um pedaço que só um curso
+  tenha, como "Aquarela" ou "Figura Humana"). O post fecha com o card do curso
+  e um botão de WhatsApp. Um nome que não bate com nenhum curso devolve a
+  tarefa com a lista dos nomes válidos.
+- **Sua vez**: um exercício de uma frase ("Pinte uma esfera com três tons da
+  mesma cor"). Vira um bloco no fim do post que abre o quadro de desenho do
+  livro de visitas; o desenho vai para o mural do rodapé.
+- **Materiais**: no texto, um título "Materiais" seguido de uma lista. Sai do
+  texto corrido e vira a ficha ao lado do post.
+- **Paleta**: sai sozinha. No build, as cores principais das imagens do
+  post (capa, fotos e cartazes dos vídeos) viram as amostras da ficha, com
+  um nome descritivo ("Vermelho", "Bege", "Azul escuro") e a nota "Cores
+  tiradas das imagens do post". Imagens quase sem cor não rendem paleta.
+  Para mostrar os pigmentos de verdade, escreva um título "Paleta" seguido de
+  uma lista com nome e código da cor em cada linha
+  (`Azul ultramar #1f3a93`): essa lista substitui a automática.
+- **Autora**: se o nome for igual ao de um professor de `/professores`, a
+  assinatura embaixo do título mostra a foto dele num círculo, o papel e o
+  link para a bio.
+- **Duas ou três imagens seguidas** (sem linha em branco entre elas) ficam
+  lado a lado, no mesmo recorte em pé. Uma imagem sozinha ocupa a coluna.
+- **Vídeo**: anexe o arquivo à tarefa (MOV ou MP4, até 90 segundos) e, no
+  texto, escreva o nome do arquivo sozinho numa linha, no lugar em que ele
+  deve aparecer. Pode vir com "Vídeo:" na frente e a legenda depois:
+  `Vídeo: tomates.mov - Aula de pintura a óleo`. O sync converte sozinho
+  (inclusive os vídeos HDR de iPhone) e gera a versão que toca em loop na
+  página, a completa com som para o visor e o cartaz. Colado a uma imagem,
+  sem linha em branco, os dois ficam lado a lado. Vídeo anexado que não for
+  citado no texto fica de fora, e o comentário de "publicado" avisa.
+- **Tabela**: vira a tabela comparativa do post, com rolagem lateral em telas
+  muito estreitas.
+- **Imagens do texto**: abrem ampliadas no visor ao clicar. Uma legenda entre
+  aspas depois do link da imagem aparece embaixo dela.
+
+No GitHub (Settings > Secrets and variables > Actions):
+
+- *Secret* `CLICKUP_TOKEN`: token pessoal do ClickUp (Settings > Apps > API
+  Token, começa com `pk_`). O ideal é gerar com uma conta que só tenha acesso
+  ao espaço do blog.
+- *Variable* `CLICKUP_LIST_ID`: o número que aparece na URL da lista
+  (`.../li/<id>`).
+
+Post com **data futura** fica no repositório mas só aparece no site no dia: o
+`deploy.yml` roda sozinho todo dia às 6h05 para isso.
+
+Um vídeo num post escrito à mão (sem ClickUp) usa o mesmo formato que o
+sync grava: `![descrição](/videos/blog/<slug>/nome.mp4 "legenda")`, com
+`nome.mp4`, `nome-loop.mp4` e `nome.webp` em `public/videos/blog/<slug>/`.
+Quem gera os três é o `saveVideo` de `scripts/blog-video.mjs` (precisa de
+`ffmpeg`), e o build avisa se faltar algum.
+
+Para testar o sync na sua máquina sem esperar o workflow:
+
+```bash
+CLICKUP_TOKEN=pk_... CLICKUP_LIST_ID=... node scripts/clickup-sync.mjs --check
+```
+
 ## URLs antigas
 
 Todas as URLs do site Wix continuam funcionando: estão em `LEGACY_REDIRECTS`
-(páginas, uma a uma) e `LEGACY_WILDCARDS` (posts, categorias do blog e páginas
-de evento) em `src/routes.tsx`. Cada URL nomeada vira um HTML pré-renderizado
+(páginas, uma a uma, mais os posts migrados do blog, que declaram a URL
+antiga no campo `legacyPath`) e `LEGACY_WILDCARDS` (posts não migrados,
+categorias e tags do blog, páginas de evento) em `src/routes.tsx`. Cada URL nomeada vira um HTML pré-renderizado
 com `meta refresh` de 0s mais `canonical` do destino (ver
 `src/components/Redirect.tsx`), que é o mais perto de um 301 possível no GitHub
 Pages, que não emite redirect de servidor.
@@ -126,6 +243,16 @@ export const FEATURED_PROMOS: FeaturedPromo[] = [];                             
 // export const FEATURED_PROMOS: FeaturedPromo[] = [COWORKING_PROMO];                 // uma só, fixa
 // export const FEATURED_PROMOS: FeaturedPromo[] = [COWORKING_PROMO, COLONIA_INVERNO_2026]; // giram
 ```
+
+Campanha **sem página própria** (um evento, como a exposição de fim de ano)
+não leva `path`: preenche `event` (título, texto, ficha com quando, onde e
+entrada, e a mensagem do WhatsApp), e o card abre um pop-up
+(`src/components/PromoEventModal.tsx`) em vez de levar a uma rota. Ela não
+entra no menu do topo. Com `until: 'AAAA-MM-DD'`, a campanha sai do destaque
+sozinha no primeiro build depois desse dia (o deploy roda todo dia às 6h05).
+`seal: true` põe o selo animado da exposição de fim de ano
+(`src/components/ExpoSeal.tsx`, desenhado no Figma) no canto do card e do
+pop-up; o componente pode ser usado em qualquer outro lugar da exposição.
 
 O site inteiro lê essa lista:
 

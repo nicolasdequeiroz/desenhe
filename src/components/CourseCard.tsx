@@ -37,9 +37,6 @@ export function CourseCard({
               <span>{course.shortTitle}</span>
             </div>
           )}
-          <span className={`category-tag category-tag--${course.category}`}>
-            {COURSE_CATEGORY_LABELS[course.category]}
-          </span>
           {/* Só aparece no hover/foco: ver .course-card__arrow no CSS. */}
           <span className="course-card__arrow" aria-hidden="true">
             <ArrowUpRight size={18} weight="bold" />
@@ -47,6 +44,14 @@ export function CourseCard({
         </div>
       </div>
       <div className="course-card__body">
+        {/* Categoria acima do título, como nos cards do blog, e não mais numa
+            etiqueta sobre a foto. A bolinha leva a cor exata da categoria na
+            paleta da marca; o texto fica claro, porque o vermelho e o
+            terracota não têm contraste como letra sobre o fundo escuro. */}
+        <span className={`course-card__category text-style-label category-tint--${course.category}`}>
+          <span className="course-card__category-dot" aria-hidden="true" />
+          {COURSE_CATEGORY_LABELS[course.category]}
+        </span>
         <h3 className="course-card__title">
           {fullTitle ? course.title : course.shortTitle}
         </h3>

@@ -16,16 +16,27 @@
   --color-on-accent-brand: #651100;
   --color-accent: var(--color-accent-brand);
   --color-on-accent: var(--color-on-accent-brand);
-  --color-background-body: #171310;
-  --color-background-card: #1d1813;
-  --color-background-muted: #1d1813;
-  --color-background-popover: #1d1813;
-  --color-background-surface: #282219;
-  --color-border: rgba(253, 238, 229, 0.1);
-  --color-border-emphasized: #53443a;
+  /*
+   * Cores da paleta da marca (Central da Marca, src/data/brand.ts) que as
+   * cores de interface abaixo usam como base. Fundo e texto saem do Chumbo
+   * e do Bege; os tons intermediários (cartão, superfície, borda, texto
+   * secundário) são misturas dos dois, não cores novas.
+   */
+  --brand-chumbo: #1e1e1e;
+  --brand-bege: #fff4e0;
+  --brand-cafe: #552a15;
+  --brand-branco: #ffffff;
+
+  --color-background-body: var(--brand-chumbo);
+  --color-background-card: color-mix(in srgb, var(--brand-bege) 4%, var(--brand-chumbo));
+  --color-background-muted: var(--color-background-card);
+  --color-background-popover: var(--color-background-card);
+  --color-background-surface: color-mix(in srgb, var(--brand-bege) 8%, var(--brand-chumbo));
+  --color-border: color-mix(in srgb, var(--brand-bege) 10%, transparent);
+  --color-border-emphasized: color-mix(in srgb, var(--brand-bege) 24%, var(--brand-chumbo));
   --color-shadow: rgba(0, 0, 0, 0.3);
-  --color-text-primary: #eee0d7;
-  --color-text-secondary: #bba79c;
+  --color-text-primary: var(--brand-bege);
+  --color-text-secondary: color-mix(in srgb, var(--brand-bege) 72%, var(--brand-chumbo));
 
   /* Cores de categoria (badges/tags de curso) */
   --color-category-desenho: #d55415;
@@ -34,32 +45,33 @@
   /* Cursos voltados ao público infantil (ex.: Laboratório de Desenho Infantil). */
   --color-category-infantil: #f6a12b;
   --color-category-teorico: #a3471a;
-  /* Faixas das páginas de formato In Company: marrom café, mais sóbrio que
-     o laranja, para o tom corporativo da linha. */
-  --color-corporate: #6b4630;
+  /* Texto sobre a cor de cada categoria (botão principal das páginas de
+     curso): Preto ou Branco da paleta, o que passa de 4,5:1 em cada uma. */
+  --color-on-category-desenho: #000000; /* 5,1:1 */
+  --color-on-category-pintura: #ffffff; /* 4,9:1 */
+  --color-on-category-institucional: #000000; /* 6,6:1 */
+  --color-on-category-infantil: #000000; /* 10:1 */
+  --color-on-category-teorico: #ffffff; /* 6:1 */
+  /* Faixas das páginas de formato In Company: o Café da paleta, mais sóbrio
+     que o laranja, para o tom corporativo da linha. */
+  --color-corporate: var(--brand-cafe);
 
   /* Tons esverdeados usados nos cartões de professores */
   --color-teacher-tone-1: #6baaa1;
   --color-teacher-tone-2: #b8cdb5;
-
-  /* Cor de cada curso na grade semanal unificada (/horarios) */
-  --color-course-desenho-artistico: #f6903a;
-  --color-course-desenho-infantil: #e6b450;
-  --color-course-quadrinhos: #d9614a;
-  --color-course-oleo-acrilica: #6baaa1;
-  --color-course-aquarela-guache: #b8cdb5;
 
   /*
    * Superfície clara "papel". Usada pelo rodapé e pelo quadro de desenho:
    * o quadro vive num portal no <body>, fora do rodapé, então estas precisam
    * estar na raiz para ele conseguir resolvê-las.
    */
-  --surface-warm-bg: #fff4e0;
-  --surface-warm-text: #231a13;
-  --surface-warm-text-muted: #53443a;
-  --surface-warm-text-subtle: #736058;
-  --surface-warm-border: color-mix(in srgb, #231a13 14%, #fff4e0);
-  --surface-warm-card: #fffbf7;
+  --surface-warm-bg: var(--brand-bege);
+  --surface-warm-text: var(--brand-chumbo);
+  --surface-warm-text-muted: color-mix(in srgb, var(--brand-chumbo) 78%, var(--brand-bege));
+  --surface-warm-text-subtle: color-mix(in srgb, var(--brand-chumbo) 62%, var(--brand-bege));
+  --surface-warm-border: color-mix(in srgb, var(--brand-chumbo) 14%, var(--brand-bege));
+  /* Cartão de papel sobre o bege: metade Bege, metade Branco. */
+  --surface-warm-card: color-mix(in srgb, var(--brand-branco) 55%, var(--brand-bege));
 
   /* Tipografia */
   --font-family-heading: 'Courier Prime', 'Courier New', Courier, monospace;

@@ -18,6 +18,18 @@
 export const GUESTBOOK_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbyBGFgO5nmZaVDC5eQI52ZcDUeAjdJw7knpmgsHm_pi1Q9Fl1ZVLwqDKLJnQF5W5Jr-mg/exec';
 
+/**
+ * Evento que abre o quadro de desenho de qualquer lugar da página (o bloco
+ * "Sua vez" dos posts do blog). `detail.prompt` é o exercício proposto, que
+ * o quadro mostra em cima do papel.
+ */
+export const GUESTBOOK_OPEN_EVENT = 'desenhe:abrir-quadro';
+
+export function openGuestbook(prompt?: string) {
+  window.dispatchEvent(new CustomEvent(GUESTBOOK_OPEN_EVENT, {detail: {prompt}}));
+}
+
+
 /** Um traço: cor, espessura (fração da largura) e pontos [x0,y0,x1,y1,...]. */
 export interface Stroke {
   c: string;

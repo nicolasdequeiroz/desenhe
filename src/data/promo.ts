@@ -18,12 +18,44 @@
  * seção do mobile some e os links somem da navegação. A página promovida
  * continua acessível por URL direta de qualquer forma.
  */
+/**
+ * Evento divulgado no destaque sem página própria: o card abre um pop-up
+ * com estes dados (ver PromoEventModal), em vez de levar a uma rota.
+ */
+export interface PromoEvent {
+  /** Rótulo acima do título, ex.: "Exposição colaborativa de fim de ano". */
+  kicker: string;
+  title: string;
+  subtitle?: string;
+  /** Texto de apresentação, um parágrafo por item. */
+  paragraphs: string[];
+  /** Ficha do evento: rótulo e resposta ("Quando", "Onde", "Entrada"). */
+  facts: {label: string; value: string}[];
+  /** Mensagem pré-preenchida do botão de WhatsApp do pop-up. */
+  whatsappMessage: string;
+}
+
 export interface FeaturedPromo {
   /** Slug estável da campanha (chave na lista do destaque). */
   id: string;
-  /** Rota interna da página promovida (ex.: `/colonia-de-ferias`). */
-  path: string;
-  /** Item que entra na navegação. */
+  /**
+   * Rota interna da página promovida (ex.: `/colonia-de-ferias`). Campanha
+   * sem página própria deixa vazio e preenche `event`: o card abre um pop-up.
+   */
+  path?: string;
+  /** Dados do pop-up, para campanha sem página própria. */
+  event?: PromoEvent;
+  /**
+   * Mostra o selo animado da exposição de fim de ano (ExpoSeal) no canto do
+   * card e do pop-up. Só para a exposição: o selo é dela.
+   */
+  seal?: boolean;
+  /**
+   * Último dia (AAAA-MM-DD) em que a campanha aparece. Depois disso ela sai
+   * do destaque sozinha no build seguinte (o deploy roda todo dia às 6h05).
+   */
+  until?: string;
+  /** Rótulo da campanha: nos pontos do carrossel e, se tiver página, na navegação. */
   nav: {
     label: string;
   };
@@ -110,11 +142,56 @@ export const IN_COMPANY_PROMO: FeaturedPromo = {
   },
 };
 
+/** Exposição colaborativa de fim de ano (2026): evento, abre um pop-up. */
+export const EXPOSICAO_FIM_DE_ANO_2026: FeaturedPromo = {
+  id: 'exposicao-fim-de-ano-2026',
+  until: '2026-11-28',
+  seal: true,
+  nav: {label: 'Exposição de fim de ano'},
+  hero: {
+    badge: 'Exposição',
+    image: '/images/exposicao/exposicao-fim-de-ano-featured.webp',
+    imageMobile: '/images/exposicao/exposicao-fim-de-ano-featured-mobile.webp',
+    imageAlt:
+      'Exposição colaborativa de fim de ano da Desenhe, em Curitiba: Ponto, linha, plano, as vistas da cidade e seus habitantes',
+  },
+  summary: {
+    title: 'Exposição de fim de ano',
+    text: 'Ponto, linha, plano: Curitiba e quem vive nela nos desenhos dos alunos. Sábado, 28/11, a partir das 16h30, aberta ao público.',
+    cta: 'Ver detalhes',
+  },
+  event: {
+    kicker: 'Exposição colaborativa de fim de ano',
+    title: 'Ponto, linha, plano',
+    subtitle: 'As vistas da cidade e seus habitantes',
+    paragraphs: [
+      'Antes de desenhar a cidade, todo mundo aqui desenhou um ponto. Quando esse ponto se move, vira linha. Quando as linhas se encontram, nasce um plano. A ideia vem de Ponto e linha sobre plano, livro de Kandinsky, é a base de como ensinamos desenho na Desenhe e, neste fim de ano, virou exposição.',
+      'Tem Curitiba nos pontos de ônibus, nos fios cruzando o céu e nas fachadas que a gente vê todo dia e nunca repara. E tem quem vive nela: uma parte da exposição é dedicada aos rostos, gente que cruzou o caminho dos nossos alunos e acabou no papel.',
+      'São trabalhos feitos ao longo do ano por quem decidiu parar e aprender a olhar. Venha ver e fechar o ano com a gente.',
+    ],
+    facts: [
+      {label: 'Quando', value: 'Sábado, 28 de novembro, a partir das 16h30'},
+      {label: 'Onde', value: 'Desenhe, Rua Padre Anchieta, 265A, Mercês, Curitiba'},
+      {label: 'Entrada', value: 'Aberta ao público'},
+    ],
+    whatsappMessage:
+      'Olá! Vi no site a exposição Ponto, linha, plano, no dia 28/11, e gostaria de saber mais.',
+  },
+};
+
+/** Data de hoje em Curitiba, para tirar do ar as campanhas vencidas. */
+const TODAY = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date());
+
 /**
  * Campanhas em cartaz agora, na ordem em que giram no destaque, ou `[]` para
- * não divulgar nenhuma. Ex.: `[IN_COMPANY_PROMO, COWORKING_PROMO]`.
+ * não divulgar nenhuma. Ex.: `[IN_COMPANY_PROMO, COWORKING_PROMO]`. Uma
+ * campanha com `until` vencido sai sozinha.
  */
-export const FEATURED_PROMOS: FeaturedPromo[] = [IN_COMPANY_PROMO, COWORKING_PROMO];
+export const FEATURED_PROMOS: FeaturedPromo[] = [
+  EXPOSICAO_FIM_DE_ANO_2026,
+  IN_COMPANY_PROMO,
+  COWORKING_PROMO,
+].filter((promo) => !promo.until || promo.until >= TODAY);
 
 /** Tempo que cada campanha fica no destaque antes de passar para a próxima. */
 export const PROMO_ROTATION_MS = 6000;

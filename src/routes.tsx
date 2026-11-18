@@ -12,11 +12,13 @@ import {InCompany} from './pages/InCompany';
 import {InCompanyFormato} from './pages/InCompanyFormato';
 import {Sobre} from './pages/Sobre';
 import {Contato} from './pages/Contato';
+import {Blog} from './pages/Blog';
+import {BlogPost} from './pages/BlogPost';
 import {CentralDaMarca} from './pages/CentralDaMarca';
 import {Componentes} from './pages/Componentes';
 import {NotFound} from './pages/NotFound';
 import {Redirect} from './components/Redirect';
-import {COURSES, IN_COMPANY_FORMATS} from './data';
+import {BLOG_POSTS, COURSES, IN_COMPANY_FORMATS} from './data';
 
 /**
  * URLs do site antigo (Wix) → destino no site novo.
@@ -50,19 +52,22 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ['in-company/pausa-de-descompressao', '/in-company/acao-saude-mental'],
   ['in-company/retratos-em-dupla', '/in-company/dinamica-confraternizacao'],
   ['in-company/oficina-sob-medida', '/in-company/workshop-arte-empresas'],
-  // Blog do Wix, descontinuado.
-  ['blog', '/'],
-  ['post/blog-desenhe-arte-desenhe-curitiba', '/'],
+  // Posts do blog do Wix que foram migrados: cada post declara a URL antiga
+  // no campo `legacyPath` do próprio arquivo (content/blog/*.md).
+  ...BLOG_POSTS.filter((post) => post.legacyPath).map(
+    (post): [string, string] => [post.legacyPath!, `/blog/${post.slug}`],
+  ),
 ];
 
 /**
- * Famílias de URL do Wix sem equivalente aqui (posts, categorias do blog e
- * páginas de evento). São rotas coringa: não geram HTML próprio, o redirect
+ * Famílias de URL do Wix sem equivalente aqui (posts não migrados, categorias
+ * e tags do blog, páginas de evento). São rotas coringa: não geram HTML próprio, o redirect
  * acontece pelo 404.html que o GitHub Pages serve como fallback.
  */
 const LEGACY_WILDCARDS: [string, string][] = [
-  ['post/*', '/'],
-  ['blog/categories/*', '/'],
+  ['post/*', '/blog'],
+  ['blog/categories/*', '/blog'],
+  ['blog/tags/*', '/blog'],
   ['informa-es-do-evento-e-registro/*', '/sobre'],
 ];
 
@@ -92,6 +97,12 @@ export const routes: RouteRecord[] = [
       })),
       {path: 'sobre', element: <Sobre />},
       {path: 'contato', element: <Contato />},
+      {path: 'blog', element: <Blog />},
+      // Um HTML por post, como nos cursos (ver src/data/blog.ts).
+      ...BLOG_POSTS.map((post) => ({
+        path: `blog/${post.slug}`,
+        element: <BlogPost slug={post.slug} />,
+      })),
       {path: 'central-da-marca', element: <CentralDaMarca />},
       // Inventário interno de componentes: fora do menu, do sitemap e do Google.
       {path: 'componentes', element: <Componentes />},

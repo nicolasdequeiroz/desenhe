@@ -1,5 +1,6 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
+import {blogMarkdown} from './scripts/blog-markdown.ts';
 
 // BASE_PATH é o caminho em que o site é servido: '/desenhe/' enquanto o
 // endereço for <usuario>.github.io/desenhe/, '/' com o domínio próprio. Quem
@@ -13,7 +14,8 @@ export default defineConfig({
   build: {
     outDir: process.env.BUILD_OUT_DIR || 'dist',
   },
-  plugins: [react()],
+  // blogMarkdown: os posts de content/blog/*.md viram { meta, html } no build.
+  plugins: [blogMarkdown(), react()],
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5173,
   },

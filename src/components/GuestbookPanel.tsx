@@ -39,9 +39,11 @@ interface Props {
   onClose: () => void;
   onSubmitted: (doodle: Doodle, stored: 'remote' | 'local') => void;
   doodles: Doodle[];
+  /** Exercício proposto por um post do blog: aparece em cima do papel. */
+  prompt?: string;
 }
 
-export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
+export function GuestbookPanel({onClose, onSubmitted, doodles, prompt}: Props) {
   const [tab, setTab] = useState<'draw' | 'gallery'>('draw');
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [color, setColor] = useState(COLORS[0]);
@@ -220,6 +222,11 @@ export function GuestbookPanel({onClose, onSubmitted, doodles}: Props) {
 
         {tab === 'draw' ? (
           <div className="guestbook-panel__view">
+            {prompt && (
+              <p className="guestbook-panel__prompt">
+                <strong>Sua vez:</strong> {prompt}
+              </p>
+            )}
             <div className="guestbook-panel__canvas-wrap" style={{aspectRatio: DOODLE_RATIO}}>
               <canvas
                 ref={canvasRef}
