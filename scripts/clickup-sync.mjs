@@ -119,12 +119,28 @@ async function readyTasks() {
  * workspaces com anexos protegidos pedem o token: tenta sem e depois com.
  */
 async function download(url) {
+  // Anexo protegido sem autorização não dá 401: redireciona para a página de
+  // login, que chega como HTML com status 200.
+  const refused = (response) =>
+    response.status === 401 || response.status === 403 || /text\/html/i.test(response.headers.get('content-type') || '');
   let response = await fetch(url);
-  if (response.status === 401 || response.status === 403) {
-    response = await fetch(url, {headers: {Authorization: TOKEN}});
+  if (refused(response)) response = await fetch(url, {headers: {Authorization: TOKEN}});
+  if (!response.ok || refused(response)) {
+    throw new Error(`não consegui baixar o arquivo ${url} (${response.status})`);
   }
-  if (!response.ok) throw new Error(`não consegui baixar a imagem ${url} (${response.status})`);
   return Buffer.from(await response.arrayBuffer());
+}
+
+/**
+ * Link de download de uma imagem do meio do texto. A imagem colada na
+ * descrição também é anexo da tarefa, mas o link que vai no texto é o
+ * "puro", que num workspace com anexos protegidos leva ao login. O anexo
+ * correspondente, achado pelo id no caminho, traz o link autorizado.
+ */
+function attachmentUrl(url, attachments = []) {
+  const id = url.match(/clickup-attachments\.com\/[^/]+\/([0-9a-f-]{36})\//i)?.[1];
+  const match = id && attachments.find((a) => String(a.id).startsWith(id) || String(a.url || '').includes(id));
+  return match?.url || url;
 }
 
 /** Valor legível de um campo personalizado, qualquer que seja o tipo. */
@@ -238,7 +254,7 @@ async function importTask(summary, existing, {saveCover, saveInline, saveVideo, 
     for (const [whole, alt, url, caption] of inline) {
       if (!/^https?:\/\//.test(url)) continue;
       index += 1;
-      const path = await saveInline(await download(url), slug, `imagem-${index}`);
+      const path = await saveInline(await download(attachmentUrl(url, task.attachments)), slug, `imagem-${index}`);
       const altText = alt && !IMAGE_EXT.test(alt) && normalize(alt) !== 'image' ? alt : '';
       body = body.replace(whole, `![${altText}](${path}${caption ? ` "${caption}"` : ''})`);
     }
