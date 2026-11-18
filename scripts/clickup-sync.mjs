@@ -359,12 +359,20 @@ async function fail(message) {
   }
 }
 
+const [mode, arg] = process.argv.slice(2);
+
 if (!TOKEN || !LIST_ID) {
+  // Na consulta de hora em hora, ClickUp ainda não configurado não é erro:
+  // o workflow termina em silêncio em vez de falhar (e mandar e-mail) toda
+  // hora. Nas outras etapas, sem configuração não há o que fazer.
+  if (mode === '--check') {
+    console.log('CLICKUP_TOKEN ou CLICKUP_LIST_ID não configurados: nada a sincronizar.');
+    output('pending', 'false');
+    process.exit(0);
+  }
   console.error('Defina CLICKUP_TOKEN e CLICKUP_LIST_ID.');
   process.exit(1);
 }
-
-const [mode, arg] = process.argv.slice(2);
 if (mode === '--check') {
   const count = (await readyTasks()).length;
   console.log(`${count} tarefa(s) em "${READY}".`);
