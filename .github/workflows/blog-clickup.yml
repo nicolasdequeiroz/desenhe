@@ -63,10 +63,22 @@ jobs:
       - if: steps.check.outputs.pending == 'true'
         run: npm ci
 
-      # ffmpeg para os vídeos anexados (scripts/blog-video.mjs). O do Ubuntu
-      # traz o filtro zscale, que converte os vídeos HDR de iPhone para SDR.
+      # ffmpeg para os vídeos anexados (scripts/blog-video.mjs), com o filtro
+      # zscale (libzimg), que converte os vídeos HDR de iPhone para SDR. O
+      # build estático de johnvansickle.com baixa em segundos; pelo apt, o
+      # `apt-get update` chegou a levar 16 minutos. O download é conferido
+      # pelo MD5 publicado junto; se algo falhar, o apt fica de reserva.
       - if: steps.check.outputs.pending == 'true'
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+        run: |
+          base=https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+          cd "$RUNNER_TEMP"
+          if curl -fsSL --retry 3 -o ffmpeg.tar.xz "$base" \
+            && curl -fsSL --retry 3 "$base.md5" | sed 's/ .*/  ffmpeg.tar.xz/' | md5sum -c --quiet \
+            && mkdir -p ffmpeg && tar -xJf ffmpeg.tar.xz -C ffmpeg --strip-components=1; then
+            echo "$RUNNER_TEMP/ffmpeg" >> "$GITHUB_PATH"
+          else
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
 
       - id: sync
         if: steps.check.outputs.pending == 'true'
