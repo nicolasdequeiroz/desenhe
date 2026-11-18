@@ -9,6 +9,7 @@ coverAlt: "Estudos de orelha a grafite sobre papel, com lápis e borracha ao lad
 ogImage: "/images/blog/desenho-a-mao-livre-por-onde-comecar/capa-og.jpg"
 course: "desenho-artistico"
 exercise: "Desenhe sua própria mão sem olhar para o papel."
+clickupId: "wdynhjetbu"
 ---
 
 Todo mundo que desenha começou do mesmo lugar: uma folha em branco e a sensação de que "não leva jeito". A boa notícia é que desenho é uma habilidade, não um dom. Ela se constrói com treino, e o primeiro mês é o momento de criar o hábito e soltar a mão.

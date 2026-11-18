@@ -8,6 +8,7 @@ cover: "/images/blog/como-olhar-uma-pintura/capa.webp"
 coverAlt: "Professor comenta uma pintura projetada na parede durante um encontro de História da Arte na Desenhe"
 ogImage: "/images/blog/como-olhar-uma-pintura/capa-og.jpg"
 course: "historia-da-arte"
+clickupId: "wdynhjetbr"
 ---
 
 Em museus, a gente costuma passar poucos segundos diante de cada obra: lê a etiqueta, tira uma foto, segue em frente. Não é preciso ser especialista para olhar com mais profundidade. Basta desacelerar e fazer algumas perguntas. Estas cinco funcionam com qualquer pintura, de qualquer época ou lugar.

@@ -8,6 +8,7 @@ cover: "/images/blog/desenho-com-criancas/capa.webp"
 coverAlt: "Desenho de criança feito com lápis de cor: uma casa azul com telhado e contorno preto"
 ogImage: "/images/blog/desenho-com-criancas/capa-og.jpg"
 course: "desenho-infantil"
+clickupId: "wdynhjetbv"
 ---
 
 Toda criança desenha. Em algum momento, muitas param, geralmente quando começam a achar que seus desenhos "não estão bonitos". O jeito como os adultos reagem a esses primeiros traços pesa muito nessa história. Algumas atitudes simples ajudam a manter o lápis na mão por mais tempo.

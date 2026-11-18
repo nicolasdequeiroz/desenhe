@@ -9,6 +9,7 @@ coverAlt: "Desenho em lápis de cor de uma menina de cabelos ruivos cacheados, c
 ogImage: "/images/blog/primeiros-passos-historia-em-quadrinhos/capa-og.jpg"
 course: "quadrinhos-hq-manga-cartoon"
 exercise: "Crie um personagem e desenhe-o de frente, de perfil e de costas."
+clickupId: "wdynhjetbz"
 ---
 
 Muita gente desenha personagens no canto do caderno, mas trava na hora de contar uma história com eles. Quadrinho é desenho e narrativa ao mesmo tempo, e a melhor forma de começar é com uma história curta, de uma página só. Seja HQ, mangá ou cartoon, o caminho é parecido.

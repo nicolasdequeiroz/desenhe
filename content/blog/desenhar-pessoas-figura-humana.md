@@ -9,6 +9,7 @@ coverAlt: "Croqui a lápis de uma figura humana de pé, sobre papel branco, com 
 ogImage: "/images/blog/desenhar-pessoas-figura-humana/capa-og.jpg"
 course: "desenho-de-figura-humana"
 exercise: "Faça um croqui de 30 segundos de uma pessoa, começando pela linha de ação."
+clickupId: "wdynhjetbt"
 ---
 
 Desenhar pessoas assusta muita gente. O corpo humano é a forma que mais conhecemos, então qualquer erro salta aos olhos. Mas é justamente por isso que ele é um professor tão bom: quem aprende a desenhar a figura humana aprende, de quebra, a desenhar quase tudo.

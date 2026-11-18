@@ -8,6 +8,7 @@ cover: "/images/blog/materiais-basicos-de-pintura/capa.webp"
 coverAlt: "Retrato pintado a óleo com pinceladas largas em tons de ocre, azul e rosa"
 ogImage: "/images/blog/materiais-basicos-de-pintura/capa-og.jpg"
 course: "pintura-a-oleo-ou-acrilica"
+clickupId: "wdynhjetby"
 ---
 
 Entrar numa loja de materiais artísticos pela primeira vez pode ser intimidador: dezenas de marcas, pincéis de todos os formatos, papéis com gramaturas diferentes. A boa notícia é que para começar você precisa de bem menos do que parece.

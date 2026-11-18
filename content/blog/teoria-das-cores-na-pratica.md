@@ -9,6 +9,7 @@ coverAlt: "Pássaro de peito laranja e asas cinza pintado em aquarela sobre pape
 ogImage: "/images/blog/teoria-das-cores-na-pratica/capa-og.jpg"
 course: "pintura-em-aquarela-ou-guache"
 exercise: "Pinte um círculo cromático de 12 cores usando só amarelo, vermelho e azul."
+clickupId: "wdynhjetc0"
 ---
 
 Você mistura duas cores bonitas e o resultado é um marrom acinzentado sem graça. Quem pinta conhece bem essa "lama". Ela não é falta de talento: é falta de entender como as cores se comportam juntas.

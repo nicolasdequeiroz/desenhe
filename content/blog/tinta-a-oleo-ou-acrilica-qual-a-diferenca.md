@@ -9,6 +9,7 @@ coverAlt: "Paleta de pintura coberta de tinta a óleo vermelha, marrom e amarela
 ogImage: "/images/blog/tinta-a-oleo-ou-acrilica-qual-a-diferenca/capa-og.jpg"
 course: "pintura-a-oleo-ou-acrilica"
 exercise: "Pinte uma fruta com poucas pinceladas, como na natureza-morta do post."
+clickupId: "wdynhjetbp"
 ---
 
 Quem começa a pintar logo esbarra nesta dúvida: tinta a óleo ou tinta acrílica? As duas servem para pintar sobre tela, as duas rendem cores intensas, e mesmo assim se comportam de jeitos quase opostos. A diferença está, principalmente, no tempo: quanto cada uma demora para secar e o que isso permite fazer enquanto a tinta ainda está fresca.
