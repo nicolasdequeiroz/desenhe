@@ -18,25 +18,29 @@
   --color-on-accent: var(--color-on-accent-brand);
   /*
    * Cores da paleta da marca (Central da Marca, src/data/brand.ts) que as
-   * cores de interface abaixo usam como base. Fundo e texto saem do Chumbo
-   * e do Bege; os tons intermediários (cartão, superfície, borda, texto
-   * secundário) são misturas dos dois, não cores novas.
+   * cores de interface abaixo usam como base. O texto sai do Bege.
    */
   --brand-chumbo: #1e1e1e;
   --brand-bege: #fff4e0;
   --brand-cafe: #552a15;
   --brand-branco: #ffffff;
 
-  --color-background-body: var(--brand-chumbo);
-  --color-background-card: color-mix(in srgb, var(--brand-bege) 4%, var(--brand-chumbo));
+  /*
+   * Fundos: marrom bem escuro, quente, por escolha (testado e preferido ao
+   * Chumbo #1e1e1e da paleta, que deixava o site cinza). Não trocar pelo
+   * Chumbo sem combinar antes.
+   */
+  --color-background-body: #171310;
+  --color-background-card: #1d1813;
   --color-background-muted: var(--color-background-card);
   --color-background-popover: var(--color-background-card);
-  --color-background-surface: color-mix(in srgb, var(--brand-bege) 8%, var(--brand-chumbo));
+  --color-background-surface: #282219;
   --color-border: color-mix(in srgb, var(--brand-bege) 10%, transparent);
-  --color-border-emphasized: color-mix(in srgb, var(--brand-bege) 24%, var(--brand-chumbo));
+  --color-border-emphasized: #53443a;
   --color-shadow: rgba(0, 0, 0, 0.3);
   --color-text-primary: var(--brand-bege);
-  --color-text-secondary: color-mix(in srgb, var(--brand-bege) 72%, var(--brand-chumbo));
+  /* Bege misturado ao próprio fundo marrom: secundário sem esfriar. */
+  --color-text-secondary: color-mix(in srgb, var(--brand-bege) 72%, var(--color-background-body));
 
   /* Cores de categoria (badges/tags de curso) */
   --color-category-desenho: #d55415;

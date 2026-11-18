@@ -74,13 +74,13 @@ O site é **dark fixo** (`color-scheme: dark`, independente do sistema).
 
 | Uso | Token | Valor |
 | --- | --- | --- |
-| Fundo da página | `--color-background-body` | Chumbo da marca, `#1e1e1e` |
-| Card, fundo "muted" | `--color-background-card` / `--color-background-muted` | Chumbo com 4% de Bege |
-| Superfície mais clara (contraste deliberado) | `--color-background-surface` | Chumbo com 8% de Bege |
+| Fundo da página | `--color-background-body` | Marrom bem escuro, `#171310` (escolha: não trocar pelo Chumbo) |
+| Card, fundo "muted" | `--color-background-card` / `--color-background-muted` | `#1d1813` |
+| Superfície mais clara (contraste deliberado) | `--color-background-surface` | `#282219` |
 | Texto principal | `--color-text-primary` | Bege da marca, `#fff4e0` |
-| Texto secundário | `--color-text-secondary` | Bege com 28% de Chumbo |
+| Texto secundário | `--color-text-secondary` | Bege com 28% do fundo |
 | Laranja da marca (acento) | `--color-accent` | `#f67800` |
-| Borda | `--color-border` / `--color-border-emphasized` | Bege a 10% / Chumbo com 24% de Bege |
+| Borda | `--color-border` / `--color-border-emphasized` | Bege a 10% / `#53443a` |
 | Café (faixas de In Company) | `--color-corporate` | Café da marca, `#552a15` |
 
 - Texto colorido via `text-color-primary` / `text-color-secondary` / `text-color-accent` (ou os tokens).
@@ -88,7 +88,7 @@ O site é **dark fixo** (`color-scheme: dark`, independente do sistema).
 - Cores de categoria de curso (`--color-category-*`), de professor (`--color-teacher-tone-*`) e da grade de horários (`--color-course-*`) têm uso próprio: não reaproveite como cor de interface genérica.
 - O creme "papel" (`--surface-warm-*`, `#fff4e0`) é o light mode da Desenhe e fica **reservado** aos depoimentos e ao rodapé. Não use em blocos novos.
 - Título é de uma cor só; não pinte uma palavra de laranja. **Exceção:** o `h1` das páginas de In Company destaca uma palavra-chave com `text-color-accent` (nas páginas de formato ela vem de `titleHighlight` em `src/data/inCompany.ts`).
-- Toda cor sai da paleta da Central da Marca (`src/data/brand.ts`). As de interface são os tokens `--brand-*` de `tokens.css` (Chumbo, Bege, Café, Branco) ou misturas deles com `color-mix()`; nunca um tom "parecido" inventado. Uma cor nova vira token em `tokens.css` com um comentário de uso; nunca hex solto em `site.css`.
+- Toda cor sai da paleta da Central da Marca (`src/data/brand.ts`). As de interface são os tokens `--brand-*` de `tokens.css` (Bege, Café, Branco) ou misturas deles com `color-mix()`; nunca um tom "parecido" inventado. Exceção decidida: os fundos escuros são marrons (`#171310`, `#1d1813`, `#282219`), não o Chumbo. Uma cor nova vira token em `tokens.css` com um comentário de uso; nunca hex solto em `site.css`.
 - Fora da paleta e aceitos de propósito: verde do WhatsApp (`#25d366`), vermelho de erro do livro de visitas (`#a33333`), cores de pincel do livro de visitas, branco e preto da Central da Marca, preto translúcido em sombras. Os selos (`Badge`, em `ui.css`) também saem da paleta: laranja do acento, texto principal e o âmbar `--color-category-infantil` no `warning`.
 
 ## Botões
